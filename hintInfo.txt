@@ -1,0 +1,13 @@
+@name Hint Info
+if(first()){
+    runOnKeys(owner(),1)
+}
+if(keyClkPressed()=="f"& keyClk(keyClk())==1){
+    RD=owner():eyeTraceCursor()
+    if(RD:hit()){
+        if(RD:entity()!=noentity()){
+            T=RD:entity()
+            hint("Name: "+T:name()+" Class/Type: "+T:type(),5)
+        }
+    }
+}

@@ -1,0 +1,67 @@
+@name Let me lend you a *hand*
+@persist [Target,Prop]:entity [Attachment]:string [Data]:table
+if(first()){
+    #Target=findPlayerBySteamID("STEAM_0:0:191182826")
+    #Prop=propSpawn("models/hunter/blocks/cube025x025x025.mdl",entity():toWorld(vec(0,0,50)),1)
+    Data=table(
+        "models/player/zombie_classic.mdl"="Blood_Right",
+        "models/player/mmd/g11/g11_player.mdl"="Emp_Holster",
+        "models/codmw2/codmw2he.mdl"="primary",
+        "models/player/zeus_combine_v2/zeus_combine_v2.mdl"="eholster"
+    )
+    #timer("Check",1000)
+    runOnChat(1)
+}
+if(clk("Check")&Prop){
+    if(Prop:children():count()>0){
+        holoCreate(1,Prop:pos()-vec(-100,0,0),vec(0),ang())
+        Prop:parentTo(holoEntity(1))
+        noCollideAll(Prop,1)
+        noCollideAll(owner(),1)
+        owner():noCollideAll(1)
+        Prop:propDraw(0)
+        timer("Parent",100)
+    }else{
+        if(Prop){
+            timer(clkName(),100)
+        }
+    }
+}
+if(clk("Parent")){
+    holoPos(1,Target:attachmentPos(Attachment))
+    holoAng(1,Target:attachmentAng(Attachment))
+    holoParentAttachment(1,Target,Attachment)
+    print("You are now parented")
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "hello",
+            if(!Prop){
+                Param=lastSaid():sub(LS[1,string]:length()+2)
+                P=findPlayerBySteamID(Param)
+                if(!P){
+                    P=findPlayerByName(Param)
+                }
+                if(P){
+                    print(P:name(),P:model())
+                    printTable(P:attachments())
+                    Target=P
+                    Prop=propSpawn("models/hunter/plates/plate.mdl",owner():toWorld(vec(50,0,50)),1)
+                    if(Data[Target:model(),string]){
+                        Attachment=Data[Target:model(),string]
+                    }else{
+                        Attachment="anim_attachment_RH"
+                    }
+                    timer("Check",1000)
+                }else{
+                    print("Invalid Player")
+                }
+            }
+            break
+        case "fix",
+            owner():noCollideAll(1)
+            break
+    }
+}
+

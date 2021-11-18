@@ -1,0 +1,22 @@
+@name Listen To Two Simaltanious Songs
+@persist Time Prop:entity
+if(first()){
+    
+    Time=5000
+    streamDisable3D(1)
+    findIncludePlayerProps(owner())
+    findByModel("models/maxofs2d/hover_rings.mdl")
+    Prop=find()
+    timer("Song1",Time)
+}
+switch(clkName()){
+    case "Song1",
+        Prop:streamStart(1,"https://www.dropbox.com/s/f5p45lsjwrau5ao/Twenty%20One%20Pilots%20-%20Heathens%20%288D%20AUDIO%29.mp3?dl=1",0.5)
+        timer("Song2",Time)
+        break
+    case "Song2",
+        Prop:streamStart(2,"https://www.dropbox.com/s/sl3n4duk9kbiz2n/Gotye%20-%20Somebody%20That%20I%20Used%20To%20Know%20%28Feat.%20Kimbra%29%20%7C%208D%20Audio.mp3?dl=1",1)
+        break
+    default,
+        break
+}

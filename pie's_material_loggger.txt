@@ -1,0 +1,81 @@
+@name Pie's Material Loggger
+@persist [Settings,RunTime]:table
+if(first()){
+    Settings=table(
+        "FilePath"="logger/materials.txt",
+        "Range"=10000,
+        "Retry"=250
+    )
+    
+    RunTime=table()
+    timer("Load",1000)
+}
+if(clk("GetData")){
+    findInSphere(entity():pos(),Settings["Range",number])
+    RunTime["Entries",array]=findToArray()
+    timer("Process",1000)
+}
+if(clk("Process")){
+    if(RunTime["Entries",array]:count()>0){
+        while(RunTime["Entries",array]:count()>0 & perf(90)){
+            local Data=RunTime["Entries",array]:popEntity()
+            local Mat=Data:getMaterial()
+            local Type=Data:type()
+            if(!RunTime["Data",table][Mat,table]){
+                RunTime["Data",table][Mat,table]=table()
+            }
+            if(!RunTime["Data",table][Mat,table][Type,number]){
+                RunTime["Data",table][Mat,table][Type,number]=1
+            }
+        }
+        timer(clkName(),RunTime["Retry",number])
+    }else{
+        print("All Entries Processed")
+        printTable(RunTime["Data",table]:keys())
+        timer("Save",1000)
+    }
+}
+if(clk("Save")){
+    if(fileCanWrite()){
+        fileWrite(Settings["FilePath",string],jsonEncode(RunTime["Data",table],1))
+        print("File Saved")
+    }else{
+        timer(clkName(),Settings["Retry",number])
+    }
+}
+if(clk("Load")){
+    if(fileCanLoad()){
+        runOnFile(1)
+        fileLoad(Settings["FilePath",string])
+    }else{
+        timer(clkName(),Settings["Retry",number])
+    }
+}
+if(fileClk()){
+    if(fileLoaded()){
+        RunTime["Data",table]=jsonDecode(fileRead())
+        print("Data Loaded")
+        timer("GetData",1000)
+    }else{
+        switch(fileStatus()){
+            case _FILE_OK,
+                print("Error. Fileloaded returned ok?")
+                break
+            case _FILE_404,
+                print("File 404.")
+                RunTime["Data",table]=table()
+                timer("GetData",1000)
+                break  
+            case _FILE_UNKNOWN,
+                print("File unknown")
+                RunTime["Data",table]=table()
+                timer("GetData",1000)
+                break
+            case _FILE_TIMEOUT,
+                print("Timeout Error")
+            case _FILE_TRANSFER_ERROR,
+                print("Transfer Error")
+                break
+        }
+    }
+}

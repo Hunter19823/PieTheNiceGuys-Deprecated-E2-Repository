@@ -1,0 +1,123 @@
+@name Pie's Automatic Mining E2
+@persist [O,Target]:entity [Tab]:vector [OreTier,Mode,MineDuration]
+if(first()){
+    O=owner()
+    
+    MineDuration=25000
+    Mode=1
+    OreTier=4
+    function void moveTo(T:entity){
+        Target=T
+        concmd("+forward")
+        timer("Moving",50)
+    }
+    
+    
+    
+    timer("DestinationMet",1000)
+}
+if(clk("FindOre")){
+    if(findCanQuery()){
+        findClearWhiteList()
+        findClearBlackList()
+        findByClass("zrms_ore")
+        findSortByDistance(owner():pos())
+        foreach(Index, Rock:entity = findToArray()){
+            if(Rock:getSkin()==OreTier){
+                moveTo(Rock)
+                
+                break
+            }
+        }
+        print("Found Ore")
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(clk("FindDumpster")){
+    if(findCanQuery()){
+        findClearWhiteList()
+        findClearBlackList()
+        findIncludePlayerProps(owner())
+        findByClass("zrms_crusher")
+        print("Found Crusher")
+        moveTo(findClosest(O:pos()))
+        
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(clk("DestinationMet")){
+    switch(Mode){
+        case 1,
+            Mode=2
+            timer("FindOre",250)
+            break
+        case 2,
+            Mode=3
+            timer("Mine",250)
+            break
+        case 3,
+            Mode=4
+            timer("FindDumpster",250)
+            break
+        case 4,
+            Mode=1
+            timer("DumpOre",250)
+            break
+    }
+}
+if(clk("Moving")){
+    if(O:pos():distance(Target:pos()+vec(0,0,0)) > 120){
+        setEyeAngles(O:toWorld(-1*heading(O:eyeTrace():toTable()["StartPos",vector],O:angles(),Target:pos()+vec(0,0,0))))
+        timer(clkName(),0)
+    }else{
+        concmd("-forward")
+        setEyeAngles(O:toWorld(-1*heading(O:eyeTrace():toTable()["StartPos",vector],O:angles(),Target:pos()+vec(0,0,0))))
+        timer("DestinationMet",1000)
+    }
+}
+if(clk("DumpOre")){
+    concmd("+attack2")
+    timer("DumpOreRelease",250)
+}
+if(clk("DumpOreRelease")){
+    concmd("-attack2")
+    timer("DumpOre2",500)
+}
+if(clk("DumpOre2")){
+    concmd("+attack2")
+    timer("DumpOreRelease2",500)
+}
+if(clk("DumpOreRelease2")){
+    concmd("-attack2")
+    timer("DumpOre3",500)
+}
+if(clk("DumpOre3")){
+    concmd("+attack2")
+    timer("DumpOreRelease3",500)
+}
+if(clk("DumpOreRelease3")){
+    concmd("-attack2")
+    timer("DumpOre4",500)
+}
+if(clk("DumpOre4")){
+    concmd("+attack2")
+    timer("DumpOreRelease4",500)
+}
+if(clk("DumpOreRelease4")){
+    concmd("-attack2")
+    print("Finished Dumping Ore")
+    timer("DestinationMet",250)
+}
+if(clk("Mine")){
+    concmd("+attack")
+    setEyeAngles(O:toWorld(-1*heading(O:eyeTrace():toTable()["StartPos",vector],O:angles(),Target:pos()+vec(0,0,0))))
+    timer("StopMine",MineDuration)
+}
+if(clk("StopMine")){
+    concmd("-attack")
+    print("Finished Mining Ore")
+    timer("DestinationMet",1000)
+}
+

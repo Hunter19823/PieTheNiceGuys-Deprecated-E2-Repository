@@ -1,0 +1,56 @@
+@persist [File]:string [GunList,KeyWords,RunTime]:table [I,Profit,TotalGuns] [GunKeys]:array
+if(first()){
+    File="gunshop/data.txt"
+    Profit=1.05
+    KeyWords = table()
+    RunTime = table()
+    runOnFile(1)
+     
+    
+    timer("LoadGuns",100)
+}
+if(clk("LoadGuns")){
+    if(fileCanLoad()){
+        fileLoad(File)
+    }else{
+        timer(clkName(),100)
+    }
+}
+if(fileClk()){
+    if(fileStatus() == _FILE_OK){
+        GunList=vonDecodeTable(fileRead())
+        GunKeys=GunList:keys()
+        TotalGuns=GunKeys:count()
+        RunTime["A1",array]=array()
+        RunTime["A2",array]=array()
+        RunTime["A3",array]=array()
+        RunTime["A4",array]=array()
+        #printTable(GunList)
+        I=0
+        timer("Format",100)
+    }else{
+        error("File did not load properly")
+    }
+}
+if(clk("Format")){
+    if(GunKeys:count()>0){
+        while(GunKeys:count()>0 & perf(90)){
+            Key=GunList[GunKeys:popString(),table]
+            if(GunKeys:count()>TotalGuns/4*3){
+                RunTime["A1",array]:pushString(Key["Name",string])
+            }elseif(GunKeys:count()>TotalGuns/4*2){
+                RunTime["A2",array]:pushString(Key["Name",string])
+            }elseif(GunKeys:count()>TotalGuns/4){
+                RunTime["A3",array]:pushString(Key["Name",string])
+            }else{
+                RunTime["A4",array]:pushString(Key["Name",string])
+            }
+        }
+        timer("Format",100)
+    }else{
+        print("1:"+RunTime["A1",array]:concat(","))
+        print("2:"+RunTime["A2",array]:concat(","))
+        print("3:"+RunTime["A3",array]:concat(","))
+        print("4:"+RunTime["A4",array]:concat(","))
+    }
+}

@@ -1,0 +1,50 @@
+@name Music Name Getter
+@persist Player:entity PlayerModel:string Timer Init
+@inputs EGP:wirelink
+if(first()){
+    #PlayerModel="models/alyx.mdl"
+    
+    PlayerModel="models/player/zack/zackhalloween.mdl"
+    
+    Timer=1000
+    Init=0
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Pl=noentity()
+        }else{
+            Player=find()
+            Player["SongName",string]="Test"
+        }
+    }
+    timer("FindModel",Timer)
+}
+if(clk("UpdateScreen") || ~EGP){
+    if(->EGP){
+        EGP:egpClear()
+        EGP:egpText(1,"Song Goes Here",vec2(0,(EGP:egpSize()/2):y()))
+        EGP:egpSize(1,50)
+        Init=1
+        timer("UpdateSong",Timer)
+    }else{
+        timer("FindModel",1000)
+    }
+}
+if(clk("FindModel")){
+    if(!Player:isValid()){
+        searchModel(PlayerModel)
+        timer("FindModel",Timer)
+    }else{
+        timer("UpdateSong",Timer)
+    }
+}
+if(clk("UpdateSong")){
+    if(->EGP && Init){
+        EGP:egpSetText(1,"Current Song: "+Player["SongName",string])
+        timer("UpdateSong",Timer)
+    }else{
+        timer("UpdateScreen",Timer)
+    }
+}

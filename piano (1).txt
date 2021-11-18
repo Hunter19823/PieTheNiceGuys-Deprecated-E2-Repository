@@ -1,0 +1,70 @@
+@name Sound Walker - Made By UnoDrawFour
+@outputs Pos:vector2 Vs:array Note Range Max
+@persist [F O E]:entity Rng:vector2 Old C Spawn
+
+if(first() | duped()){
+    Max = 12*2
+    runOnTick(1)
+    runOnChat(1)
+    if(entity():isWeldedTo()){ E = entity():isWeldedTo() }else{ E = entity() }
+    O = owner()
+    Rng = vec2(3,1)*36/2
+    Spawn = 1
+    H = holoCreate(1001)
+    holoAlpha(1001,0)
+    H:soundPlay("holo",0,"synth/square.wav")
+    soundVolume("holo",0)
+}
+if(clk("Spawn")){
+    if(Spawn){
+        while(C<Max & holoCanCreate() & perf()){
+            C++
+            V = vec2(0,C*36.5)
+            Vs:pushVector2(V)
+            holoCreate(C,E:toWorld(vec(V)),vec(84,36,1)/12,E:angles())
+            holoMaterial(C,"models/debug/debugwhite")
+            Spawn = C>=Max ? 0 : 1
+        }
+    }
+}
+if(clk("Cloests")){
+    if(findCanQuery() & !F){
+        findByClass("player")
+        F = findClosest(E:pos())
+    }
+    if(F){
+        holoPos(1001,F:shootPos())
+        Pos = vec2(E:toLocal(F:pos()))
+        timer("slower",100)
+        if(clk("slower")){
+            for(I=1,Max){
+                V = Vs[I,vector2]
+                Range = inrange(Pos,V-Rng,V+Rng)*I
+                if(Range){break}
+            }
+        }
+        if(changed(Range)){
+            holoColor(Old,vec()+255)
+            Note = Range ? 30+(60/Max)*Range : 0
+            soundPitch("holo",2^(Note/12))
+            soundVolume("holo",sign(Note)*100)
+            holoColor(Range,hsv2rgb((360/Max)*Range,1,1))
+            Old = Range
+        }
+    }
+}
+
+if(chatClk(F)){
+    Lsx = F:lastSaid():lower():explode(" ")
+    Cmd = Lsx[1,string]
+    Num = Lsx[2,string]:toNumber()
+    if(Cmd=="keys"){
+        for(I=1,Max){
+            holoDelete(I)
+        }
+        Max = clamp(Num,1,50)
+        Spawn = 1
+        C = 0
+        timer("setup",10)
+    }
+}

@@ -1,0 +1,26 @@
+@persist [NumberOfKeys,Counter,Time,Max]
+if(first()){
+    Time=1000
+    NumberOfKeys=5
+    Max=5
+    H = holoCreate(1001)
+    H:soundPlay("holo",0,"synth/square.wav")
+    soundVolume("holo",0)
+    timer("CreateKeys",Time)
+}
+if(clk("CreateKeys")){
+    if(Counter<NumberOfKeys){
+        P=propSpawn("models/hunter/blocks/cube025x075x025.mdl",entity():toWorld(vec(20*Counter,0,50)),entity():angles(),1)
+        P:parentTo(entity())
+        P["Note",number]=Counter+1
+        runOnUse(1,P)
+        Counter++
+        timer(clkName(),Time)
+    }
+}
+if(useEntClk():inUse()){
+    P=useEntClk()
+    print("Using Note: "+P["Note",number])
+    soundPitch("holo",2^(P["Note",number]/Max))
+    soundVolume("holo",100)
+}

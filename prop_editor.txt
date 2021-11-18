@@ -1,0 +1,155 @@
+@name Prop Editor
+@persist Ent:entity
+if(first()){
+    runOnChat(1)
+    noDuplications()
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".edit",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                Ent=E
+                timer("createDPanel",100)
+            }
+            break
+        case ".create",
+        case ".spawn",
+            E=propSpawn(LS[2,string],lastSpoke():aimPos(),1)
+            if(E:isValid()){
+                Ent=E
+                timer("createDPanel",100)
+            }
+            break
+        case ".open",
+        case ".show",
+            dShow("Prop Editor",1)
+            break
+        case ".close",
+        case ".hide",
+            dShow("Prop Editor",0)
+            break
+    }
+}
+if(clk("createDPanel")){
+    dPanel("Prop Editor",vec2(50,100),vec2(400,400))
+    dShow("Prop Editor",1)
+    dShowCloseButton("Prop Editor",0)
+    dButton("Close","Prop Editor",vec2(370,0),vec2(30))
+    dSlider("Pitch","Prop Editor",vec2(0,30),360,-180,180)
+    dSlider("Yaw","Prop Editor",vec2(0,60),360,-180,180)
+    dSlider("Roll","Prop Editor",vec2(0,90),360,-180,180)
+    dSlider("Red","Prop Editor",vec2(0,120),255,0,255)
+    dSlider("Green","Prop Editor",vec2(0,150),255,0,255)
+    dSlider("Blue","Prop Editor",vec2(0,180),255,0,255)
+    dLabel("Material: ","Prop Editor",vec2(0,210))
+    dTextBox("Material","Prop Editor",vec2(60,210),200)
+    dDropBox("PreSet Materials","Prop Editor",vec2(260,210),140)
+    dLabel("Render FX: ","Prop Editor",vec2(0,240))
+    dDropBox("Render FX","Prop Editor",vec2(60,240),200)
+    dLabel("Render Mode: ","Prop Editor",vec2(0,270))
+    dDropBox("Render Mode","Prop Editor",vec2(60,270),200)
+    dLabel("Collision: ","Prop Editor",vec2(0,300))
+    dDropBox("Collision","Prop Editor",vec2(60,300),200)
+    dLabel("Prop Model: ","Prop Editor",vec2(0,330))
+    dTextBox("Prop","Prop Editor",vec2(60,330),200)
+    dLabel("Shadow: ","Prop Editor",vec2(0,360))
+    dCheckBox("Shadow","Prop Editor",vec2(60,360))
+    
+    
+    dCheckBox("Update","Prop Editor",vec2(380,380))
+    Ang=Ent:angles()
+    dSetNval("Pitch",Ang:pitch())
+    dSetNval("Yaw",Ang:yaw())
+    dSetNval("Roll",Ang:roll())
+    Col=Ent:getColor()
+    dSetNval("Red",Col:x())
+    dSetNval("Green",Col:y())
+    dSetNval("Blue",Col:z())
+    dSetSval("Material",Ent:getMaterial())
+    dSetSval("Model",Ent:model())
+    dArray("Render FX",array("00: None","01: Slow Pulse","02: Fast Pulse","03: Slow Wide Pulse","04: Fast Wide Pulse","05: Slow Fade Away","06: Fast Fade Away","07: Slow Become Solid","08: Fast Become Solid","09: Slow Strobe","10: Fast Strobe","11: Faster Strobe","12: Slow Flicker","13: Fast Flicker","14: Constant Glow","15: Distort","16: Hologram (Distort + fade)","17: Scale Up","22: Spotlight FX","23: Cull By Distance","24: Fade Wider Pulse","26: Fade Near"))
+    dArray("Render Mode",array("00: Normal","01: TransColor","02: TransTexture","03: Glow","04: TransAlpha","05: TransAdd","06: Enviromental","07: TransAddFrameBlend","08: TransAlphaAdd","09: WorldGlow","10: None"))
+    dArray("Collision",array("00: None","01: BSP (QPhysics)","02: Bounding Box","03: Oriented Bounding Box","04: Oriented Bounding Box, constrained to Yaw only","05: Custom/Test","06: VPhysics"))
+    dArray("PreSet Materials",Ent:getMaterials())
+    dSetNval("Update",1)
+    dSetSval("Render FX","00: None")
+    dSetSval("Render Mode","00: Normal")
+    dSetSval("Collision","06: VPhysics")
+    dSetSval("Prop",Ent:model())
+    dRunOnChange("Pitch",1)
+    dRunOnChange("Yaw",1)
+    dRunOnChange("Roll",1)
+    dRunOnChange("Red",1)
+    dRunOnChange("Green",1)
+    dRunOnChange("Blue",1)
+    dRunOnChange("Material",1)
+    dRunOnChange("Update",1)
+    dRunOnChange("Render FX",1)
+    dRunOnChange("Render Mode",1)
+    dRunOnChange("Collision",1)
+    dRunOnChange("PreSet Materials",1)
+    dRunOnChange("Prop",1)
+    dRunOnChange("Close",1)
+    dRunOnChange("Shadow",1)
+}
+if(Ent:isValid()){
+    switch(1){
+        case dClk("Pitch"),
+        case dClk("Yaw"),
+        case dClk("Roll"),
+            Ent:setAng(ang(dNval("Pitch"),dNval("Yaw"),dNval("Roll")))
+            break
+        case dClk("Red"),
+        case dClk("Green"),
+        case dClk("Blue"),
+            FinColor=vec(dNval("Red"),dNval("Green"),dNval("Blue"))
+            Ent:setColor(FinColor)
+            break
+        case dClk("Material"),
+            Ent:setMaterial(dSval("Material"))
+            dSetSval("PreSet Materials",dSval("Material"))
+            break
+        case dClk("PreSet Materials"),
+            Ent:setMaterial(dSval("PreSet Materials"))
+            dSetSval("Material",dSval("PreSet Materials"))
+            break
+        case dClk("Render FX"),
+            Ent:setKeyValue("renderfx",dSval("Render FX"):sub(0,2):toNumber())
+            break
+        case dClk("Render Mode"),
+            Ent:setRenderMode(dSval("Render Mode"):sub(0,2):toNumber())
+            break
+        case dClk("Collision"),
+            Ent:setKeyValue("solid",dSval("Collision"):sub(0,2):toNumber())
+            break
+        case dClk("Update"),
+            Ang=Ent:angles()
+            dSetNval("Pitch",Ang:pitch())
+            dSetNval("Yaw",Ang:yaw())
+            dSetNval("Roll",Ang:roll())
+            Col=Ent:getColor()
+            dSetNval("Red",Col:x())
+            dSetNval("Green",Col:y())
+            dSetNval("Blue",Col:z())
+            dSetSval("Material",Ent:getMaterial())
+            dSetNval("Update",0)
+            break
+        case dClk("Prop"),
+            E=propSpawn(dSval("Prop"),Ent:pos(),Ent:angles(),1)
+            Ent:propDelete()
+            Ent=E
+            timer("createDPanel",100)
+            break
+        case dClk("Close"),
+            dShow("Prop Editor",0)
+            break
+        case dClk("Shadow"),
+            Ent:setKeyValue("disableshadows",!dNval("Shadow"))
+            Ent:setKeyValue("disablereceiveshadows",!dNval("Shadow"))
+            break
+    }
+}else{
+    dShow("Prop Editor",0)
+}

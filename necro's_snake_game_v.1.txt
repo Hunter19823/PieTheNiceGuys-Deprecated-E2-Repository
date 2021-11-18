@@ -1,0 +1,196 @@
+@name 
+@inputs 
+@outputs 
+@persist [Board,Back]:entity [Score,Direction,MaxPosition,MoveSize,SnakeSize]:number [Food,Snake]:array
+@trigger 
+
+# Not possible due to tickrate on exhib...
+
+if(first()){
+    
+    #Stuff
+    MoveSize = 11.375
+    MaxPosition = 45.5
+    # Board size = 25 * 25
+    
+    Board = holoCreate(999)
+    holoPos(999,entity():pos()+vec(0,0,50))
+    holoAng(999,ang(0,0,90))
+    holoScale(999,vec(8,8,0.2))
+    holoColor(999,vec(50))
+    holoDisableShading(999,1)
+    
+    # Board frame
+    
+    holoCreate(998)
+    holoScale(998,vec(0.1,0.26,8.1))
+    holoColor(998,vec(255,0,0))
+    holoPos(998,Board:pos()+Board:boxCenter()+Board:toWorldAxis(vec(48,0,0)))
+    holoDisableShading(998,1)
+    
+    holoCreate(997)
+    holoScale(997,vec(0.1,0.26,8.1))
+    holoColor(997,vec(255,0,0))
+    holoPos(997,Board:pos()+Board:boxCenter()+Board:toWorldAxis(vec(-48,0,0)))
+    holoDisableShading(997,1)
+    
+    holoCreate(996)
+    holoScale(996,vec(8.1,0.26,0.1))
+    holoColor(996,vec(255,0,0))
+    holoPos(996,Board:pos()+Board:boxCenter()+Board:toWorldAxis(vec(0,48,0)))
+    holoDisableShading(996,1)
+    
+    holoCreate(995)
+    holoScale(995,vec(8.1,0.26,0.1))
+    holoColor(995,vec(255,0,0))
+    holoPos(995,Board:pos()+Board:boxCenter()+Board:toWorldAxis(vec(0,-48,0)))
+    holoDisableShading(995,1)
+
+    # Snake
+    
+    function addLength(){
+        for(I=SnakeSize+1,SnakeSize+2){
+            print(I)
+            holoCreate(I)
+            holoScale(I,vec(0.9,0.1,0.9))
+            holoColor(I,vec(0,200,0))
+            holoPos(I,Board:pos()+Board:boxCenter()+Board:toWorldAxis(Snake[I-1,vector]))
+            holoDisableShading(I,1)
+            Snake[I,vector] = Snake[SnakeSize,vector]
+        }
+        SnakeSize = SnakeSize+2
+    }
+    
+    function spawnSnake(){
+        SnakeSize = 1
+        StartPos = vec(-MaxPosition+MoveSize*randint(3,5),-MaxPosition+MoveSize*randint(3,5),1)
+        for(I=1,SnakeSize){
+            holoCreate(I)
+            holoScale(I,vec(0.9,0.1,0.9))
+            holoColor(I,vec(0,255,0))
+            holoPos(I,Board:pos()+Board:boxCenter()+Board:toWorldAxis(StartPos))
+            holoDisableShading(I,1)
+            Snake[I,vector] = StartPos
+        }
+        Direction = 2
+    }
+    spawnSnake()
+    
+    function moveFood(){
+        Food[1,entity] = holoCreate(994)
+        holoScale(994,vec(0.3,0.1,0.3))
+        holoColor(994,vec(255,255,0))
+        Food[2,vector] = vec(-MaxPosition+MoveSize*randint(1,7),-MaxPosition+MoveSize*randint(1,7),0.8)
+        holoPos(994,Board:pos()+Board:boxCenter()+Board:toWorldAxis(Food[2,vector]))
+        holoDisableShading(994,1)
+    }
+    moveFood()
+    
+    timer("gameTick",1000)
+    timer("spawnBack",500)
+}
+
+if(clk("gameTick")){
+    
+    # Snake Control
+    if(owner():keyUse()){
+        Dif = owner():aimPos()-holoEntity(1):pos()
+        if(abs(Dif:z()) > abs(Dif:x())){
+            if(Dif:z() > 0){
+                if(Direction != 3){
+                    Direction = 1
+                }
+            }else{
+                if(Direction != 1){
+                    Direction = 3
+                }
+            }
+        }else{
+            if(Dif:x() > 0){
+                if(Direction != 4){
+                    Direction = 2
+                }
+            }else{
+                if(Direction != 2){
+                    Direction = 4
+                }
+            }
+        }
+    }
+    
+    
+    # Snake Direction
+        local Break = 0
+        local NewPos = vec(0)
+        if(Direction == 1){
+            NewPos = Snake[1,vector]+vec(0,MoveSize,0)
+            if(NewPos:y() >= MaxPosition){
+                Break = 1
+            }
+        }elseif(Direction == 2){
+            NewPos = Snake[1,vector]+vec(MoveSize,0,0)
+            if(NewPos:x() >= MaxPosition){
+                Break = 1
+            }
+        }elseif(Direction == 3){
+            NewPos = Snake[1,vector]-vec(0,MoveSize,0)
+            if(NewPos:y() <= -MaxPosition){
+                Break = 1
+            }
+        }elseif(Direction == 4){
+            NewPos = Snake[1,vector]-vec(MoveSize,0,0)
+            if(NewPos:x() <= -MaxPosition){
+                Break = 1
+            }
+        }
+        
+        #Food checks
+        if(Food[1,entity]){
+            if(Snake[1,vector]:distance(Food[2,vector])<5){
+                soundPlay(1,3,"buttons/button3.wav")
+                holoDelete(994)
+                Score = Score + 10
+                addLength()
+            }
+        }else{
+            moveFood()
+        }
+        
+        Score = Score + 2
+        
+        #Snake move
+        local I = SnakeSize
+        while(I > 1){
+            holoPos(I,Board:pos()+Board:boxCenter()+Board:toWorldAxis(Snake[I-1,vector]))
+            Snake[I,vector] = Snake[I-1,vector]
+            I--
+        }
+        holoPos(1,Board:pos()+Board:boxCenter()+Board:toWorldAxis(NewPos))
+        Snake[1,vector] = NewPos
+        
+        #Snake Crash check
+        foreach(K,V:vector=Snake){
+            if(V:distance(Snake[1,vector])<5){
+                if(K!=1){
+                    Break = 1
+                }
+            }
+        }
+        
+        #Game end stuff
+        if(!Break){
+            timer("gameTick",1000-Score)
+        }else{
+            soundPlay(1,3,"buttons/button10.wav")
+            timer("reset",2000)
+        }
+        
+}elseif(clk("reset")){
+    if(Back:isValid()){
+        Back:propDelete()
+    }
+    reset()
+}elseif(clk("spawnBack")){
+    Back = propSpawn("models/hunter/plates/plate2x2.mdl",entity():pos()+vec(0,0,50),ang(0,0,90),1)
+    Back:setAlpha(0)
+}

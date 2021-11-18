@@ -1,0 +1,58 @@
+@persist Barrel:entity Continue
+if(first()){
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".shake",
+            E=owner():aimEntity()
+            #E:applyForce(vec(0,0,10)*E:mass())
+            #E:setPos(E:pos()+vec(0,0,200))
+            Barrel=E
+            Continue=1
+            timer("Shake",1000)
+            break
+        case ".stop",
+            Continue=0
+            break
+        case ".cup",
+            concmd("say /buyleancup")
+            timer("Teleport",5000)
+            break
+        case ".crate",
+            E=owner():aimEntity()
+            if(E:type()=="lean_crate"){
+                
+            }
+            break
+        case ".sell",
+            E=owner():aimEntity()
+            if(E:type()=="lean_crate"){
+                E:propManipulate(vec(-745.843628,-7448.629395,-195.718750),ang(),1,gravity(),1)
+                E:noDraw(1)
+            }
+            break
+    }
+}
+if(clk("Shake")){
+    if(Continue){
+        Barrel:setPos(owner():toWorld(vec(50,0,0))+vec(0,0,200))
+        
+        Barrel:setPos(owner():toWorld(vec(50,0,0)))
+        timer(clkName(),500)
+    }
+}
+if(clk("Teleport")){
+    
+    findByClass("lean_cup")
+    findSortByDistance(owner():pos())
+    Cup=find()
+    
+    
+    findByClass("lean_crate")
+    findSortByDistance(owner():pos())
+    
+    Box=find()
+    Cup:setPos(Box:pos()+vec(0,0,100))
+}

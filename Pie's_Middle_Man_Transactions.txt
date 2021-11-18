@@ -1,0 +1,51 @@
+@name Pie's Middle Man Transaction
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    noDuplications()
+    runOnChat(1)
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+}
+if(chatClk()){
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".charge",
+        case "/charge",
+        case "!charge",
+        case "charge",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isValid()){
+                moneyRequest(P,LS[3,string]:toNumber(),lastSpoke():steamID())
+            }
+            break
+        case ".donate",
+        case "/donate",
+        case "donate",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isValid()){
+                moneyRequest(lastSpoke(),LS[3,string]:toNumber(),P:steamID())
+            }
+            break
+        default,
+            break
+    }
+}
+if(moneyClk()){
+    local P=searchForPlayer(moneyClkTitle())
+    if(P:isPlayer()){
+        moneyGive(P,moneyClkAmount())
+    }else{
+        moneyGive(moneyClkPlayer(),moneyClkAmount())
+    }
+}

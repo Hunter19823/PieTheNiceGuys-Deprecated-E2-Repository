@@ -1,0 +1,366 @@
+@name Donation Screen Non Crash
+@inputs E:wirelink User:entity
+@persist Cursor:vector2 StartSpawning Spawn Money Total Loaded Color1:vector Color2:vector TextColor:vector BackgroundColor:vector
+
+if(first()){
+    entity():createWire(entity():isWeldedTo(),"E","wirelink")
+    entity():createWire(entity():isWeldedTo(),"User","User")
+    
+    Color1=vec(39,232,100)
+    Color2=vec(79,255,132)
+    BackgroundColor=vec(0,0,0)
+    TextColor=vec(0,0,0)
+    Total=0
+    runOnChat(1)
+    E:egpClear()
+    StartSpawning=1
+    Spawn=0
+    Loaded=0
+    Money=10000
+    function number checkButton(Num){
+        local Width = E:egpSize(Num)/2
+        local Pos = E:egpPos(Num)
+        return inrange(Cursor,Pos - Width,Pos + Width)
+    }
+}
+
+if(Loaded==0){
+    if(StartSpawning==1){
+        interval(150)
+        Spawn++
+    }
+    elseif(StartSpawning==0){   
+        Loaded=1
+    }
+    
+    if(Spawn==1){ 
+        E:egpBox(1,vec2(256,256),vec2(900,900))
+        E:egpColor(1,Color1)
+        E:egpMaterial(1,"gui/center_gradient")
+    }
+    elseif(Spawn==2){
+        E:egpRoundedBox(2,vec2(40,40),vec2(65,65))
+        E:egpColor(2,BackgroundColor)
+    }
+    elseif(Spawn==3){
+        E:egpRoundedBox(3,vec2(472,40),vec2(65,65))
+        E:egpColor(3,BackgroundColor)
+    }
+    elseif(Spawn==4){
+        E:egpRoundedBox(4,vec2(40,472),vec2(65,65))
+        E:egpColor(4,BackgroundColor)
+    }
+    elseif(Spawn==5){
+        E:egpRoundedBox(5,vec2(472,472),vec2(65,65))
+        E:egpColor(5,BackgroundColor)
+    }
+    elseif(Spawn==6){ 
+        E:egpBox(6,vec2(256,40),vec2(490,30))
+        E:egpColor(6,BackgroundColor)
+    }
+    elseif(Spawn==7){
+        E:egpBox(7,vec2(256,472),vec2(490,30))
+        E:egpColor(7,BackgroundColor)
+    }
+    elseif(Spawn==8){
+        E:egpBox(8,vec2(472,256),vec2(30,490))
+        E:egpColor(8,BackgroundColor)
+    }
+    elseif(Spawn==9){
+        E:egpBox(9,vec2(40,256),vec2(30,490))
+        E:egpColor(9,BackgroundColor)
+    }
+    elseif(Spawn==10){
+        E:egpRoundedBox(10,vec2(40,40),vec2(55,55))
+        E:egpColor(10,Color2) 
+    }
+    elseif(Spawn==11){
+        E:egpRoundedBox(11,vec2(472,40),vec2(55,55))
+        E:egpColor(11,Color2)
+    }
+    elseif(Spawn==12){
+        E:egpRoundedBox(12,vec2(40,472),vec2(55,55))
+        E:egpColor(12,Color2)
+    }
+    elseif(Spawn==13){
+        E:egpRoundedBox(13,vec2(472,472),vec2(55,55))
+        E:egpColor(13,Color2)
+    }
+    elseif(Spawn==14){
+        E:egpBox(14,vec2(256,40),vec2(480,20))
+        E:egpColor(14,Color2)
+    }
+    elseif(Spawn==15){ 
+        E:egpBox(15,vec2(256,472),vec2(480,20))
+        E:egpColor(15,Color2)
+    }
+    elseif(Spawn==16){     
+        E:egpBox(16,vec2(472,256),vec2(20,480))
+        E:egpColor(16,Color2)
+    }
+    elseif(Spawn==17){
+        E:egpBox(17,vec2(40,256),vec2(20,480))
+        E:egpColor(17,Color2)
+    }
+    elseif(Spawn==18){
+        E:egpRoundedBox(18,vec2(256,40),vec2(356,60))
+        E:egpColor(18,BackgroundColor)
+    }
+    elseif(Spawn==19){
+        E:egpRoundedBox(19,vec2(256,40),vec2(346,50))
+        E:egpColor(19,Color2)
+    }
+    elseif(Spawn==20){
+        E:egpText(20,"Donate To "+owner():name():left(14), vec2(256,25))
+        E:egpColor(20,TextColor)
+        E:egpSize(20,30)
+        E:egpAlign(20,1)
+    }
+    elseif(Spawn==21){
+        E:egpRoundedBox(21,vec2(256,254),vec2(356,330))
+        E:egpColor(21,BackgroundColor)
+    }
+    elseif(Spawn==22){
+        E:egpRoundedBox(22,vec2(256,254),vec2(346,320))
+        E:egpColor(22,Color1)    
+    }
+    elseif(Spawn==23){
+        E:egpRoundedBox(229,vec2(256,180),vec2(256,50))
+        E:egpColor(229,BackgroundColor)
+    }
+    elseif(Spawn==24){
+        E:egpRoundedBox(230,vec2(256,180),vec2(246,40))
+        E:egpColor(230,Color2)
+    }
+    elseif(Spawn==25){
+        E:egpRoundedBox(129,vec2(256,472),vec2(356,60))
+        E:egpColor(129,BackgroundColor)
+    }
+    elseif(Spawn==26){
+        E:egpRoundedBox(130,vec2(256,472),vec2(346,50))
+        E:egpColor(130,Color2)
+
+    }
+    elseif(Spawn==27){
+        E:egpText(131,"Press ''Donate'' To Send", vec2(256,448))
+        E:egpColor(131,TextColor)
+        E:egpSize(131,27)
+        E:egpAlign(131,1)  
+    }
+    elseif(Spawn==28){
+        E:egpText(132,"The Displayed Amount", vec2(256,468))
+        E:egpColor(132,TextColor)
+        E:egpSize(132,27)
+        E:egpAlign(132,1)
+    }
+    elseif(Spawn==29){
+        E:egpRoundedBox(23,vec2(134,120),vec2(100,50))
+        E:egpColor(23,BackgroundColor)
+    }
+    elseif(Spawn==30){
+        E:egpRoundedBox(24,vec2(378,120),vec2(100,50))
+        E:egpColor(24,BackgroundColor)
+    }
+    elseif(Spawn==31){
+        E:egpRoundedBox(25,vec2(256,120),vec2(100,50))
+        E:egpColor(25,BackgroundColor)
+    }
+    elseif(Spawn==32){
+        E:egpRoundedBox(26,vec2(134,388),vec2(100,50))
+        E:egpColor(26,BackgroundColor)
+    }
+    elseif(Spawn==33){
+        E:egpRoundedBox(27,vec2(378,388),vec2(100,50))
+        E:egpColor(27,BackgroundColor)
+    }
+    elseif(Spawn==34){
+        E:egpRoundedBox(28,vec2(256,388),vec2(100,50))
+        E:egpColor(28,BackgroundColor)
+    }
+    elseif(Spawn==35){
+        E:egpRoundedBox(29,vec2(134,120),vec2(90,40))
+        E:egpColor(29,Color2)
+    }
+    elseif(Spawn==36){
+        E:egpRoundedBox(30,vec2(378,120),vec2(90,40))
+        E:egpColor(30,Color2)
+
+    }
+    elseif(Spawn==37){
+        E:egpRoundedBox(31,vec2(256,120),vec2(90,40))
+        E:egpColor(31,Color2)
+    }
+    elseif(Spawn==38){
+        E:egpRoundedBox(32,vec2(134,388),vec2(90,40))
+        E:egpColor(32,Color2)
+    }
+    elseif(Spawn==39){
+        E:egpRoundedBox(33,vec2(378,388),vec2(90,40))
+        E:egpColor(33,Color2)
+    }
+    elseif(Spawn==40){
+        E:egpRoundedBox(34,vec2(256,388),vec2(90,40))
+        E:egpColor(34,Color2)
+    }
+    elseif(Spawn==41){
+        E:egpText(35,"+1K", vec2(134,105))
+        E:egpColor(35,TextColor)
+        E:egpSize(35,30)
+        E:egpAlign(35,1)
+    }
+    elseif(Spawn==42){
+        E:egpText(36,"+50K", vec2(378,105))
+        E:egpColor(36,TextColor)
+        E:egpSize(36,30)
+        E:egpAlign(36,1)
+    }
+    elseif(Spawn==43){
+        E:egpText(37,"+10K", vec2(256,105))
+        E:egpColor(37,TextColor)
+        E:egpSize(37,30)
+        E:egpAlign(37,1)
+    }
+    elseif(Spawn==44){
+        E:egpText(38,"-1K", vec2(134,373))
+        E:egpColor(38,TextColor)
+        E:egpSize(38,30)
+        E:egpAlign(38,1)
+    }
+    elseif(Spawn==45){
+        E:egpText(39,"-50K", vec2(378,373))
+        E:egpColor(39,TextColor)
+        E:egpSize(39,30)
+        E:egpAlign(39,1)
+    }
+    elseif(Spawn==46){
+        E:egpText(40,"-10K", vec2(256,373))
+        E:egpColor(40,TextColor)
+        E:egpSize(40,30)
+        E:egpAlign(40,1)
+    }
+    elseif(Spawn==47){
+        E:egpRoundedBox(42,vec2(256,256),vec2(226,70))
+        E:egpColor(42,BackgroundColor)
+    }
+    elseif(Spawn==48){
+        E:egpRoundedBox(43,vec2(256,256),vec2(216,60))
+        E:egpColor(43,Color2)
+    }
+    elseif(Spawn==49){
+        E:egpText(44,"Donate", vec2(256,235))
+        E:egpColor(44,TextColor)
+        E:egpSize(44,40)
+        E:egpAlign(44,1)
+    }
+    elseif(Spawn==50){
+        E:egpRoundedBox(45,vec2(352,325),vec2(150,50))
+        E:egpColor(45,BackgroundColor)
+    }
+    elseif(Spawn==51){
+        E:egpRoundedBox(46,vec2(352,325),vec2(140,40))
+        E:egpColor(46,Color2)
+    }
+    elseif(Spawn==52){
+        E:egpRoundedBox(47,vec2(160,325),vec2(150,50))
+        E:egpColor(47,BackgroundColor)
+    }
+    elseif(Spawn==53){
+        E:egpRoundedBox(48,vec2(160,325),vec2(140,40))
+        E:egpColor(48,Color2)
+    }
+    elseif(Spawn==54){
+        E:egpText(49,"Reset $", vec2(352,305))
+        E:egpColor(49,TextColor)
+        E:egpSize(49,40)
+        E:egpAlign(49,1)
+    }
+    elseif(Spawn==55){
+        E:egpText(50,"Donate 1M", vec2(160,305))
+        E:egpColor(50,TextColor)
+        E:egpSize(50,30)
+        E:egpAlign(50,1)
+    }
+    elseif(Spawn==56){
+        E:egpText(51,"Gang Shit", vec2(160,325))
+        E:egpColor(51,TextColor)
+        E:egpSize(51,20)
+        E:egpAlign(51,1)
+    }
+    elseif(Spawn==57){
+        function monies(){
+            E:egpText(52,"$"+Money, vec2(256,160))
+            E:egpColor(52,TextColor)
+            E:egpSize(52,40)
+            E:egpAlign(52,1)
+        }
+    }
+    elseif(Spawn==58){
+        monies()
+        StartSpawning=0    
+    }
+}
+else{
+    if(Money<=999){
+        Money=1000
+        monies()
+    }
+    elseif(Money>=2000000){
+        Money=2000000
+        monies()
+    }
+    if(perf(30)){
+        Cursor = E:egpCursor(User)
+        if(checkButton(29)){
+            Money+=1000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(30)){
+            Money+=50000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(31)){
+            Money+=10000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(32)){
+            Money-=1000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(33)){
+            Money-=50000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(34)){
+            Money-=10000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(46)){
+            Money=1000
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+            monies()
+        }
+        elseif(checkButton(48)){
+            moneyRequest(User,1000000,"Gang Shit Donation")
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+        }
+        elseif(checkButton(43)){
+            moneyRequest(User,Money,"Donation")
+            User:soundPlay(1,2,"garrysmod/ui_click.wav")
+        }
+    }
+    if(moneyClk()){
+        User:soundPlay(1,5,"vo/k_lab/ba_geethanks.wav")
+        DonatorSID=moneyClkPlayer():steamID()
+        Me=owner()
+        Me[DonatorSID,number]=Me[DonatorSID,number]+moneyClkAmount()
+        Me["TopPlayer",entity]=moneyClkPlayer()
+        Money=10000
+        monies()
+    }
+}

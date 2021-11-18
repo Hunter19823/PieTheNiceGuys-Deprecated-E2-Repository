@@ -1,0 +1,20 @@
+@name Light
+@outputs Boolean
+if (first()){
+    function vector randomColor(){
+        Limit=225
+        R=random(Limit)
+        G=random(Limit)
+        B=random(Limit)
+        return vec(R,G,B)
+    }
+    entity():setdLight(entity():pos(),randomColor(),1000,375,1)
+    Boolean=0
+}
+interval(250)
+if (Boolean==1){
+    Boolean=0
+    entity():dLightColor(randomColor())
+}else{
+    Boolean=1
+}

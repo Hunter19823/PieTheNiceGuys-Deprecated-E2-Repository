@@ -1,0 +1,40 @@
+@name Prop Ownership Checker
+@persist [WantToRemove] [EntityToRemove]:entity
+if(first()){
+    runOnChat(1)
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "/surprise",
+            P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                findIncludePlayerProps(owner())
+                findByClass("welcomemat_entitiy")
+                Mat=findClosest(owner():pos())
+                if(Mat:isValid()){
+                    Mat:setPos(P:pos())
+                    Mat:tele(P:pos())
+                    Mat:propManipulate(P:pos(),P:angles(),0,P:gravity(),0)
+                    print("Time to Kill: "+P:name()+"!")
+                }else{
+                    print("No Kill Mats Found")
+                }
+            }
+            break
+    }
+    
+}

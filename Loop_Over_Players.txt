@@ -1,0 +1,106 @@
+@name Loop Over Players
+@persist [Players]:array [Case,Operation,Timer,TotalRuns] [TopPlayer]:string [Player]:entity [ServerStats]:gtable
+if(first()){
+    Case=0
+    Operation=1
+    TotalRuns=0
+    Timer=50
+    ServerStats=gTable("Server Stats",1)
+    ServerStats:clear()
+    function void entity:checkMoney(){
+        if(!ServerStats:toTable():exists(This:steamID())){
+            ServerStats[This:steamID(),table]=table("Name"=This:name())
+        }
+        ServerStats[This:steamID(),table]["Cash",number]=This:money()
+        if(!ServerStats:toTable():exists("TotalMoney")){
+            ServerStats["TotalMoney",number]=0
+        }
+        ServerStats["TotalMoney",number]=ServerStats["TotalMoney",number]+This:money()
+        ServerStats["AverageMoney",number]=ServerStats["TotalMoney",number]/(ServerStats:count()-4)
+    }
+    function void entity:checkFrags(){
+        if(!ServerStats:toTable():exists(This:steamID())){
+            ServerStats[This:steamID(),table]=table("Name"=This:name())
+        }
+        ServerStats[This:steamID(),table]["Frags",number]=This:frags()
+        if(!ServerStats:toTable():exists("TotalFrags")){
+            ServerStats["TotalFrags",number]=0
+        }
+        ServerStats["TotalFrags",number]=ServerStats["TotalFrags",number]+This:frags()
+        ServerStats["AverageFrags",number]=ServerStats["TotalFrags",number]/(ServerStats:count()-4)
+    }
+    function void entity:checkDeaths(){
+        if(!ServerStats:toTable():exists(This:steamID())){
+            ServerStats[This:steamID(),table]=table("Name"=This:name())
+        }
+        ServerStats[This:steamID(),table]["Deaths",number]=This:deaths()
+        if(!ServerStats:toTable():exists("TotalDeaths")){
+            ServerStats["TotalDeaths",number]=0
+        }
+        ServerStats["TotalDeaths",number]=ServerStats["TotalDeaths",number]+This:deaths()
+        ServerStats["AverageDeaths",number]=ServerStats["TotalDeaths",number]/(ServerStats:count()-4)
+    }
+    function void entity:checkPing(){
+        if(!ServerStats:toTable():exists(This:steamID())){
+            ServerStats[This:steamID(),table]=table("Name"=This:name())
+        }
+        ServerStats[This:steamID(),table]["Ping",number]=This:ping()
+        if(!ServerStats:toTable():exists("TotalPing")){
+            ServerStats["TotalPing",number]=0
+        }
+        ServerStats["TotalPing",number]=ServerStats["TotalPing",number]+This:ping()
+        ServerStats["AveragePing",number]=ServerStats["TotalPing",number]/(ServerStats:count()-4)
+    }
+    timer("Case",Timer)
+}
+if(clk("Case")){
+    switch(Case){
+        case 0,
+            Players=players()
+            Case++
+            timer("Case",Timer)
+            break
+        case 1,
+            if(Operation==1){
+                TotalRuns++
+                if(Players:count()>0){
+                    Player=Players:popEntity()
+                }else{
+                    Case++
+                }
+                Operation=0
+                timer("Case",Timer)
+            }elseif(Operation==0){
+                Player:checkMoney()
+                Operation--
+                timer("Case",Timer)
+            }elseif(Operation==-1){
+                Player:checkFrags()
+                Operation--
+                timer("Case",Timer)
+            }elseif(Operation==-2){
+                Player:checkDeaths()
+                Operation--
+                timer("Case",Timer)
+            }elseif(Operation==-3){
+                Player:checkPing()
+                Operation=1
+                timer("Case",Timer)
+            }
+            #setName("Operation: "+Operation+" OperationCost: "+opcounter()+" Players Left: "+Players:count())
+            break
+        case 2,
+            print("Current Time: "+time("hour")+":"+time("min")+":"+time("sec"))
+            print("Total Money: "+ServerStats["TotalMoney",number]+"<br>Average Money: "+ServerStats["AverageMoney",number])
+            print("Total Frags: "+ServerStats["TotalFrags",number]+"<br>Average Frags: "+ServerStats["AverageFrags",number])
+            print("Total Deaths: "+ServerStats["TotalDeaths",number]+"<br>Average Deaths: "+ServerStats["AverageDeaths",number])
+            print("Total Ping: "+ServerStats["TotalPing",number]+"<br>Average Ping: "+ServerStats["AveragePing",number])
+            Case++
+            timer("Case",Timer)
+            break
+        default,
+            reset()
+            break
+    }
+}
+setName("Average Money: "+ServerStats["AverageMoney",number]+" Average Frags: "+ServerStats["AverageFrags",number]+" Average Deaths: "+ServerStats["AverageDeaths",number]+" Average Ping: "+ServerStats["AveragePing",number]+" Total Entries: "+(ServerStats:count()-4))

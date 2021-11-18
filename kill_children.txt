@@ -1,0 +1,17 @@
+@name Kill Children
+@persist Children:array
+if(first()){
+    Children=entity():children()
+    timer("KillChild",1000)
+}
+if(clk("KillChild")){
+    if(Children:count()>0){
+        Child=Children:popEntity()
+        if(Child:isValidPhysics()){
+            if(Child:model()!="models/hunter/plates/plate24x32.mdl"){
+                Child:propDelete()
+                timer("KillChild",0)
+            }
+        }
+    }
+}

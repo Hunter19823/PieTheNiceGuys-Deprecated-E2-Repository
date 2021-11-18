@@ -1,0 +1,4 @@
+print("Max Quota: "+maxquota())
+print("Min Quota: "+minquota())
+print("Hard Quota: "+hardQuota())
+print("Soft Quota: "+softQuota())

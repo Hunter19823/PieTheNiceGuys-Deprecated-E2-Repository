@@ -1,0 +1,29 @@
+@name Decoration
+@persist A E:entity Rotate [ClonedColorArray,ColorArray]:array
+if(first()){
+    ColorArray=array(vec(255,0,0),vec(255,32,0),vec(255,64,0),vec(255,96,0),vec(255,128,0),vec(255,160,0),vec(255,192,0),vec(255,224,0),vec(255,255,0),vec(224,255,0),vec(192,255,0),vec(160,255,0),vec(128,255,0),vec(96,255,0),vec(64,255,0),vec(32,255,0),vec(0,255,0),vec(0,255,32),vec(0,255,64),vec(0,255,96),vec(0,255,128),vec(0,255,160),vec(0,255,192),vec(0,255,224),vec(0,255,255),vec(0,224,255),vec(0,192,255),vec(0,160,255),vec(0,128,255),vec(0,96,255),vec(0,64,255),vec(0,32,255),vec(0,0,255),vec(32,0,255),vec(64,0,255),vec(96,0,255),vec(128,0,255),vec(160,0,255),vec(192,0,255),vec(224,0,255),vec(255,0,255),vec(255,0,224),vec(255,0,192),vec(255,0,160),vec(255,0,124),vec(255,0,96),vec(255,0,64),vec(255,0,32))
+    ClonedColorArray=ColorArray:clone()
+    E=entity()
+    A = 25
+    holoCreate(1,E:pos(),vec(0.5),ang(),vec4(255,255,255,0))
+    for(I=3,A){
+        holoCreate(I,E:toWorld(vec(0,0,30+I*5)))
+        holoModel(I,"models/mechanics/solid_steel/type_b_2_6.mdl")
+        holoAng(I, E:toWorld(-ang(180,(-30/A*I)*20,90)))
+        holoMaterial(I, "models/shiny")
+        holoDisableShading(I,1)
+        holoParent(I,1)
+    }
+    interval(170)
+}elseif(clk()){
+    Color=ClonedColorArray:popVector()
+    for(I=1,A){
+        holoColor(I, Color)
+    }
+    if(ClonedColorArray:count()==0){
+        ClonedColorArray=ColorArray:clone()
+    }
+    Rotate+=-6
+    holoAng(1, E:toWorld(ang(0,Rotate,0)))
+    interval(170)
+}

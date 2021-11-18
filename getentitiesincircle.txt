@@ -1,0 +1,4 @@
+if(first()){
+    findInSphere(entity():pos(),10)
+    printTable(findToTable())
+}

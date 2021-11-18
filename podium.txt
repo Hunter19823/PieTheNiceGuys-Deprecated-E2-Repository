@@ -1,0 +1,15 @@
+if(first()){
+    
+    P1=propSpawn("models/hunter/blocks/cube025x025x025.mdl",ang(),1)
+    P1:setPos(entity():toWorld(vec(0,40,P1:height()/2)))
+    P3["Value",string]="FourthPlace"
+    P2=propSpawn("models/hunter/blocks/cube05x05x05.mdl",ang(),1)
+    P2:setPos(entity():toWorld(vec(0,22,P2:height()/2)))
+    P3["Value",string]="ThirdPlace"
+    P3=propSpawn("models/hunter/blocks/cube075x075x075.mdl",ang(),1)
+    P3:setPos(entity():toWorld(vec(0,-8,P3:height()/2)))
+    P3["Value",string]="SecondPlace"
+    P4=propSpawn("models/hunter/blocks/cube1x1x1.mdl",ang(),1)
+    P4:setPos(entity():toWorld(vec(0,-50,P4:height()/2)))
+    P4["Value",string]="FirstPlace"
+}

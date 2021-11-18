@@ -1,0 +1,130 @@
+@name PathFinder
+@persist [Points]:table [PointArray,Clone,Pointz]:array [Directory,FileName]:string [ClosestPoint,CurrentPoint,Target,TemporaryPoint]:vector [O]:entity [Index]
+if(first()){
+    O=owner()
+    Directory=map()
+    FileName="cords.txt"
+    runOnFile(1)
+    
+    function void moveTo(Pos:vector){
+        TemporaryPoint=Pos
+        holoCreate(holoAmount(),Pos)
+        concmd("+forward")
+        timer("Moving",50)
+    }
+    
+    timer("Open File",1000)
+}
+if(clk("DestinationMet")){
+    Index++
+    if(Index<=Pointz:count()){
+        moveTo(Pointz[Index,vector])
+    }else{
+        print("You have reached your destination")
+        holoDeleteAll(1)
+    }
+}
+if(clk("Moving")){
+    if(O:pos():distance(TemporaryPoint) > 120){
+        setEyeAngles(O:toWorld(-1*heading(O:eyeTrace():toTable()["StartPos",vector],O:angles(),TemporaryPoint)))
+        timer(clkName(),0)
+    }else{
+        concmd("-forward")
+        setEyeAngles(O:toWorld(-1*heading(O:eyeTrace():toTable()["StartPos",vector],O:angles(),TemporaryPoint)))
+        timer("DestinationMet",500)
+    }
+}
+if(clk("Open File")){
+    if(fileCanLoad()){
+        fileLoad(Directory+"/"+FileName)
+        print("Loading File...")
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(fileClk()){
+    Data=fileRead()
+    Points=vonDecodeTable(Data)
+    PointArray=Points["Points",array]
+    Clone=PointArray:clone()
+    print("Points Loaded")
+    rangerPersist(1)
+    rangerHitEntities(0)
+    runOnChat(1)
+    
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".move",
+            Pointz=array()
+            ClosestPoint = vec()
+            CurrentPoint = vec()
+            #Pointz:pushVector(Target)
+            timer("GetClosestPoint",1000)
+            break
+        case ".find",
+            Pointz=array()
+            ClosestPoint = vec()
+            CurrentPoint = vec()
+            Target=findPlayerByName(LS[2,string]):pos()
+            #Pointz:pushVector(Target)
+            timer("GetClosestPoint",1000)
+            break
+    }
+}
+
+if(clk("RefeshPoints")){
+    Clone = PointArray:clone()
+    ClosestPoint = vec()
+    timer("FindCloserPoint",500)
+}
+if(clk("GetClosestPoint")){
+    if(Clone:count()>0){
+        
+        while(Clone:count()>0 & perf(75)){
+            V=Clone:popVector()
+            R=rangerOffset(O:pos(),V)
+            if(!R:hit() & V:distance(CurrentPoint) < CurrentPoint:distance(O:pos())){
+                CurrentPoint=V
+            }
+        }
+        timer(clkName(),100)
+    }else{
+        print("Closest Point Found")
+        
+        Pointz:pushVector(CurrentPoint)
+        Target=vec(-2700,-1500,-140)
+        
+        timer("RefeshPoints",250)
+    }
+}
+if(clk("FindCloserPoint")){
+    if(Clone:count()>0){
+        while(Clone:count()>0 & perf(75)){
+            V=Clone:popVector()
+            
+            R=rangerOffset(CurrentPoint,V)
+            
+            if(!R:hit() & V:distance(Target) < ClosestPoint:distance(Target)){
+                ClosestPoint=V
+            }
+        }
+        timer(clkName(),100)
+    }else{
+        print("Closest Point Found")
+        CurrentPoint = ClosestPoint
+        holoCreate(holoAmount(),CurrentPoint,vec(0.5))
+        Pointz:pushVector(CurrentPoint)
+        if(CurrentPoint:distance(Target)>250){
+            timer("RefeshPoints",100)
+        }else{
+            print("Destination Found")
+            #holoDeleteAll(1)
+            
+            Pointz:pushVector(Target)
+            Index=1
+            timer("DestinationMet",250)
+        }
+    }
+}

@@ -1,0 +1,21 @@
+@name Moving Hologram
+
+if(first()){
+    holoCreate(1)
+    holoModel(1,"models/freeman/exhibition_roleplay_logo_large.mdl")
+    holoScale(1,vec(0.25))
+    holoPos(1,entity():pos()+vec(0,0,50))
+    runOnTick(1)
+    function number number:doSomething(Max){
+        return This-Max*floor(This/Max)
+    }
+    function vector test(Max){
+        local Speed=50
+        local HalfMax=Max/2
+        return vec(HalfMax*sin(Speed*curtime():doSomething(Max))+HalfMax,-1*HalfMax*sin(Speed*curtime():doSomething(Max))+HalfMax,-1*HalfMax*sin(Speed*(curtime():doSomething(Max)+ 50*pi()))+HalfMax)
+    }
+}
+local Speed=3.6
+holoColor(1,test(255))
+holoAng(1,ang(test(360)))
+holoScale(1,vec(0.5*abs(sin(Speed*curtime():doSomething(360)))))

@@ -1,0 +1,19 @@
+@name Pizza Truck
+@persist A:array C
+if(first()){
+    timer("get",1000)
+}
+if(clk("get")){
+    findByClass("gmod_wire_user")
+    A=findToArray()
+    timer("next",10)
+}
+if(clk("next")){
+    if(A:count()>0){
+        E2=A:popEntity()
+        print(E2:owner():name()+" ("+E2:owner():steamID()+") Is using a User. Potentially to steal money! Inspet their E2s to check.")
+        timer("next",250)
+    }else{
+        timer("get",5000)
+    }
+}

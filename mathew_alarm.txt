@@ -1,0 +1,239 @@
+@name Alarm System
+@inputs
+@outputs
+@persist [Foz Config Help Allowed]:table
+@trigger
+if(first()){
+    #[-----------------------------------------
+        Name: Config
+    -----------------------------------------]#
+    Config = table()
+   
+    Config["alarm_sound", string] = "ambient/alarms/alarm1.wav" # This is the sound that'll play when somebody trips the alarm,
+    Config["alarm_dur", number] = 10 # The length that the alarm will sound off
+   
+    Config["cmd_min", string] = "min" # This is the command to set the min value for the cube.
+    Config["cmd_max", string] = "max" # This is the command to set the max value for the cube.
+    Config["cmd_show", string] = "show" # This is make the hologram show instead of hide.
+    Config["cmd_hide", string] = "hide" # This is make the hologram hide instead of show.
+    Config["cmd_add", string] = "add" # This will add somebody to the whitelist.
+    Config["cmd_remove", string] = "remove" # This will remove somebody to the whitelist.
+    Config["cmd_help", string] = "help" # This is the command to display the help commands.
+   
+    Config["prefix", string] = "!" # This is the prefix for the commands.
+   
+    #[-----------------------------------------
+        Name: Setup
+    -----------------------------------------]#
+    function fancyPrint(Text:string){
+        printColor(vec(100, 100, 100), "[", vec(120, 255, 0), "Alarm-System", vec(100, 100, 100), "]: ", vec(255, 255, 255), Text)
+    }
+   
+    runOnChat(1)
+   
+    holoCreate(1)
+    holoColor(1, vec4(255, 0, 0, 100))
+    holoVisible(1, players(), 0)
+    holoDisableShading(1, 1)
+   
+    Foz["min", vector] = vec()
+    Foz["max", vector] = vec()
+    Foz["show", number] = 0 # Bool
+    Foz["alarm", number] = 0 # Bool
+   
+    #Allowed[owner():steamID(), number] = 1
+   
+    #[-----------------------------------------
+        Name: Commands
+    -----------------------------------------]#
+    Help = table()
+   
+    Help[Config["prefix", string] + Config["cmd_min", string], string] = "This will set the min value for the detection cube."
+    Help[Config["prefix", string] + Config["cmd_max", string], string] = "This will set the max value for the detection cube."
+    Help[Config["prefix", string] + Config["cmd_show", string], string] = "This show the hologram."
+    Help[Config["prefix", string] + Config["cmd_hide", string], string] = "This hide the hologram."
+    Help[Config["prefix", string] + Config["cmd_add", string], string] = "This will add somebody to your whitelist."
+    Help[Config["prefix", string] + Config["cmd_remove", string], string] = "This will remove somebody from your whitelist."
+    Help[Config["prefix", string] + Config["cmd_help", string], string] = "This will returtn a list of commands."
+}
+interval(100)
+ 
+#[-----------------------------------------
+    Name: Chat
+-----------------------------------------]#
+   
+if(chatClk(owner())){
+    local Ex = lastSaid():explode(" ")
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_help", string]){
+        hideChat(1)
+       
+        fancyPrint("Here's a list of commands.")
+       
+        foreach(K, V:string = Help){
+            fancyPrint(K + " - " + V)  
+        }  
+    }
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_min", string]){
+        hideChat(1)
+       
+        Foz["min", vector] = owner():aimPos()
+       
+        fancyPrint("Set the minimum value to: " + round(Foz["min", vector], 2))
+    }
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_max", string]){
+        hideChat(1)
+       
+        Foz["max", vector] = owner():aimPos()
+       
+        fancyPrint("Set the maximum value to: " + round(Foz["max", vector], 2))
+    }
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_show", string]){
+        hideChat(1)
+       
+        if(Foz["show", number]){
+            fancyPrint("Already showing the hologram. Make sure that the min and max values are set!")
+        }
+        else{
+            Foz["show", number] = 1
+            fancyPrint("Showing the hologram. (Note, the hologram will not show if the min or max value is not set.)")
+           
+            holoVisible(1, players(), Foz["show", number])
+        }
+    }
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_hide", string]){
+        hideChat(1)
+       
+        if(!Foz["show", number]){
+            fancyPrint("Already hiding the hologram. Make sure that the min and max values are set!")
+        }
+        else{
+            Foz["show", number] = 0
+            fancyPrint("Hiding the hologram. (Note, the hologram will not show if the min or max value is not set.)")
+           
+            holoVisible(1, players(), Foz["show", number])
+        }
+    }
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_add", string]){
+        hideChat(1)
+       
+        local Ply = findPlayerByName(Ex[2, string])
+       
+        if(Ply:isPlayer()){
+            if(Allowed[Ply:steamID(), number]){
+                fancyPrint(Ply:name() + " is already on the whitelist!")  
+            }
+            else{
+                fancyPrint("Added " + Ply:name() + " to the whitelist.")
+                Allowed[Ply:steamID(), number] = 1
+            }
+        }
+        else{
+            fancyPrint("Sorry, but I couldn't find player: " + Ex[2, string])  
+        }
+    }
+   
+    if(Ex[1, string] == Config["prefix", string] + Config["cmd_remove", string]){
+        hideChat(1)
+       
+        local Ply = findPlayerByName(Ex[2, string])
+       
+        if(Ply:isPlayer()){
+            if(!Allowed[Ply:steamID(), number]){
+                fancyPrint(Ply:name() + " isn't on the whitelist!")  
+            }
+            else{
+                fancyPrint("Removed " + Ply:name() + " from the whitelist.")
+                Allowed[Ply:steamID(), number] = 0
+            }
+        }
+        else{
+            fancyPrint("Sorry, but I couldn't find player: " + Ex[2, string])  
+        }
+    }
+}
+ 
+#[-----------------------------------------
+    Name: Hologram
+-----------------------------------------]#
+if(changed(Foz["min", vector]) & Foz["min", vector] & Foz["max", vector] | changed(Foz["max", vector]) & Foz["min", vector] & Foz["max", vector]){
+    local Scale = (Foz["min", vector] - Foz["max", vector])
+   
+    holoScaleUnits(1, Scale)
+    holoPos(1, (Foz["min", vector] + Foz["max", vector]) / 2)
+}
+ 
+#[-----------------------------------------
+    Name: Detection
+-----------------------------------------]#
+if(Foz["min", vector] & Foz["max", vector]){
+    findIncludeClass("Player")
+    findInBox(Foz["min", vector], Foz["max", vector])
+    local Ents = findToArray()
+   
+    local Intruders = table()
+   
+    foreach(K, V:entity = Ents){
+        if(!Allowed[V:steamID(), number] & !Foz["alarm", number]){
+            Intruders:pushEntity(V)
+        }
+    }
+   
+    if(!Foz["alarm", number]){
+        local Count = Intruders:count()
+       
+        local Str = ""
+       
+        for(I=1, Count){
+            local V = Intruders[I, entity]
+           
+            if(I == Count){
+                Str = Str + V:name()
+            }
+            else{
+                Str = Str + V:name() + ", "
+            }
+        }
+       
+        if(Count >= 1){
+            Foz["alarm", number] = 1
+            WebHook=""
+            #webhook goes ^
+            Content=table(
+                "username"="E2 Alarm System By Pie",
+                "content"="Alarm was tripped by " + Str + "."
+            )
+            httpRequest("https://DiscordWebhookRepost--classchanger.repl.co/?webhook="+httpUrlEncode(WebHook)+"&json="+httpUrlEncode(jsonEncode(Content)))
+               
+            fancyPrint("Alarm was tripped by " + Str + ".")
+            concmd("sam pm " + Str + " You are now KOS for the next 10 seconds!")
+            concmd("say /p "+ Str +" has tripped the alarm!")
+            holoColor(1, vec4(0, 0, 255, 100))
+           
+            soundPlay(1, Config["alarm_dur", number], Config["alarm_sound", string])
+            timer("wait",10000)
+            timer("alarm_on", Config["alarm_dur", number] * 1000)
+        }
+    }
+}
+ 
+if(clk("alarm_on")){
+    Foz["alarm", number] = 0
+}
+if(clk("wait")){
+    soundPlay(1, Config["alarm_dur", number], "tangostore/deathsounds/gotchabitch.mp3")
+    timer("wait2",3000)
+    holoColor(1, vec4(255, 0, 0, 100))
+}
+#[-----------------------------------------
+    Made By Fozie!
+   
+    SteamID: STEAM_0:0:226129070
+    Profile: http://steamcommunity.com/profiles/76561198412523868
+    Discord: Fozie#5014
+-----------------------------------------]#

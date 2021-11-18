@@ -1,0 +1,321 @@
+@name Pies Music Request E2
+@inputs EGP:wirelink
+@persist T:table
+
+if (first()){
+    runOnChat(1)
+    T=table(
+    "Request Price"=1000,
+    "Cost To Skip"=100000,
+    "Command Prefix"="-",
+    "Max Time in Minutes"=7.5,
+    "Music Channel"=10,
+    "Text Size"=20
+    )
+    function void wirelink:bracket(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        ##[
+        L=3
+        H=1
+        Pos=vec2(0,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=1
+        H=7
+        Pos=vec2(0,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(0,6)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        
+        ##]
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(6,6)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(6,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=1
+        H=7
+        Pos=vec2(8,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+    }
+    function void wirelink:drawP(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        #P
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(1,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=1
+        H=5
+        Pos=vec2(1,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(1,3)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=1
+        H=3
+        Pos=vec2(3,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+    }
+    function void wirelink:drawE(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        #E
+        Index+=1
+        L=1
+        H=5
+        Pos=vec2(5,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(5,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=2
+        H=1
+        Pos=vec2(5,3)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(5,5)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+    }
+    function void wirelink:drawI(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        
+        #I
+        Index+=1
+        L=1
+        H=1
+        Pos=vec2(4,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(125,0,0))
+        Index+=1
+        L=1
+        H=3
+        Pos=vec2(4,3)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(125,0,0))
+        This:egpOrder(Index,20)
+    }
+    function void wirelink:drawNext(Size,Index,Time){
+        switch(clkName()){
+            case "[]",
+                This:bracket(Size,Index)
+                timer("P",Time)
+                break
+            case "P",
+                This:drawP(Size,Index+6)
+                timer("E",Time)
+                break
+            case "E",
+                This:drawE(Size,Index+10)
+                timer("I",Time)
+                break
+            case "I",
+                This:drawI(Size,Index+14)
+                timer("Order",Time)
+                break
+            case "Order",
+                This:egpOrder(1,300)
+                This:egpOrder(2,300)
+                This:egpOrder(3,300)
+                timer("Color",Time)
+                break
+            case "Color",
+                This:egpColor(1,vec(0,255,0))
+                This:egpColor(2,vec(0,255,0))
+                This:egpColor(3,vec(0,255,0))
+                This:egpColor(4,vec(0,255,0))
+                This:egpColor(5,vec(0,255,0))
+                This:egpColor(6,vec(0,255,0))
+                break
+            case "Play Song",
+                findIncludePlayerProps(owner())
+                findByModel("models/maxofs2d/hover_rings.mdl")
+                findSortByDistance(entity():pos())
+                local Found=find()
+                local Ent=Found:isValid()? Found : holoEntity(1)
+                Ent:streamStart(T["Music Channel",number],T["Song Link",string],1)
+                timer("TurnOffSong",T["Song Duration",number]*1000)
+                break
+            default,
+                timer("Play Song",Time)
+                break
+        }
+    }
+    function void wirelink:setSong(Name:string, Duration:string, RequestBy:entity){
+        timer("Logo",2000)
+        local Size=This:egpSize()
+        This:egpClear()
+        This:egpBox(125,vec2(Size:x()/2),Size)
+        This:egpMaterial(125,"props_casino/wheel_of_luck/ringlight_flashy")
+        This:egpText(1,"Requested By: "+RequestBy:name(),vec2(Size:x()/2,Size:y()/4))
+        This:egpText(2,"Song: "+Name,vec2(Size:x()/2,Size:y()/4*2))
+        This:egpText(3,"Duration: "+Duration,vec2(Size:x()/2,Size:y()/4*3))
+        This:egpAlign(1,1,1)
+        This:egpAlign(2,1,1)
+        This:egpAlign(3,1,1)
+        This:egpSize(1,T["Text Size",number]+10)
+        This:egpSize(2,T["Text Size",number]-5)
+        This:egpSize(3,T["Text Size",number]+20)
+        T["Customer",entity]=RequestBy
+        timer("Command Info",1000)
+    }
+    function void wirelink:commandInfo(RequestBy:entity){
+        local Size=This:egpSize()
+        if(!RequestBy:isValid()){
+            This:egpText(4,"Request a Song For: $"+T["Request Price",number],vec2(Size:x()/2,25))
+            This:egpText(5,"Request with "+T["Command Prefix",string]+"request youtubeLink",vec2(Size:x()/2,50))
+            This:egpText(6,"Max Video Length: "+T["Max Time in Minutes",number]+" Minutes",vec2(Size:x()/2,75))
+            This:egpAlign(4,1,1)
+            This:egpAlign(5,1,1)
+            This:egpAlign(6,1,1)
+        }else{
+            This:egpRemove(4)
+            This:egpRemove(5)
+            This:egpRemove(6)
+        }
+    }
+    function void string:youtubeLinkToMP3(){
+        print("Requested: "+This)
+        T["HTTP URL",string]="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+This
+        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+This)
+    }
+    holoCreate(1,entity():pos()+vec(0,0,50),vec(1),ang(0),vec(255),"models/maxofs2d/hover_rings.mdl")
+    #timer("TurnOffSong",1000)
+    T["JsonArray",table]=table()
+    T["HTTP Requesting",number]=0
+}elseif (chatClk(lastSpoke())){
+    local LS=lastSaid():explode(" ")
+    local Pre=T["Command Prefix",string]
+    local ONE=LS[1,string]
+    local TWO=LS[2,string]
+    local Speaker=lastSpoke()
+    if (ONE:sub(0,Pre:length())==Pre){
+        switch(ONE:sub(Pre:length()+1)){
+            case "request",
+                if (!T["Song Playing",number] & TWO:find("http",0)>=1){
+                    T["HTTP Requesting",number]=1
+                    T["Requester",entity]=Speaker
+                    T["MoneyClk",string]="request"
+                    TWO:youtubeLinkToMP3()
+                    runOnHTTP(1)
+                }
+                break
+            case "skip",
+                if(T["Song Playing",number]){
+                    T["Skipper",entity]=Speaker
+                    T["MoneyClk",string]="skip"
+                    T["Song Title",string]="Skipped"
+                    T["Song Duration",number]=0
+                    T["Song Link",string]="https://www.dropbox.com/s/8kwqj9qh8d1jmgw/YOU%20NEED%20TO%20SHUT%20THE%20FUCK%20UP.mp3?dl=1"
+                    moneyRequest(T["Skipper",entity],T["Cost To Skip",number],"Skip for $"+T["Cost To Skip",number]+"?")
+                    T["HTTP Requesting",number]=0
+                    runOnHTTP(0)
+                }
+                break
+            case "stop",
+                if (Speaker==owner()||Speaker==T["Customer",entity]){
+                    streamStop(T["Music Channel",number])
+                }
+                break
+            case "volume",
+                if (Speaker==owner()||Speaker==T["Customer",entity]){
+                    streamVolume(T["Music Channel",number],LS[2,string]:toNumber())
+                }
+                break
+        }
+    }
+}elseif (clk("Command Info") & EGP:entity():isValid()){
+    if(!T["Song Playing",number]){
+        EGP:commandInfo(noentity())
+    }else{
+        EGP:commandInfo(T["Requester",entity])
+    }
+}elseif (clk("TurnOffSong") & EGP:entity():isValid()){
+    streamStop(T["Music Channel",number])
+    print("Off")
+    T["Song Playing",number]=0
+    T["HTTP Requesting",number]=0
+    EGP:setSong("No Current Song Playing","0",noentity())
+    reset()
+}elseif(httpClk() & httpRequestUrl()==T["HTTP URL",string]){
+    T["HTTP Requesting",number]=0
+    if(T["Song Playing",number]==0 & EGP:entity():isValid() & T["JsonArray",table]["error",number]!=1){
+        T["JsonArray",table]=jsonDecode(httpData())
+        T["Song Title",string]=T["JsonArray",table]["title",string]
+        T["Song Duration",number]=T["JsonArray",table]["duration",number]
+        T["Song Link",string]=T["JsonArray",table]["file",string]
+        if (T["Song Duration",number]<=T["Max Time in Minutes",number]*60){
+            moneyRequest(T["Requester",entity],T["Request Price",number],"Play Song For: $"+T["Request Price",number])
+        }
+    }
+}elseif(moneyClk()){
+    if (T["MoneyClk",string]!="request"){
+        streamStop(T["Music Channel",number])
+        T["Song Playing",number]=0
+        EGP:setSong("No Current Song Playing","0",noentity())
+    } else{
+        T["Song Playing",number]=1
+        EGP:setSong(T["Song Title",string],int(T["Song Duration",number]/60)+" Minutes",moneyClkPlayer())
+        timer("Play Song",3000)
+    }
+}elseif(moneyNoClk()){
+    T["HTTP Requesting",number]=0
+    print(moneyNoClkPlayer():name() + "Denied Payment")
+}else {
+    if(EGP:entity():isValid()){
+        local Size=56.8
+        local Time=1000
+        local Index=100
+        EGP:drawNext(Size,Index,Time)
+    }
+}

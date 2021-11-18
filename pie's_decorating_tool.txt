@@ -1,0 +1,61 @@
+@name Pie's Decorating Tool
+@persist [Settings,RunTime]:table
+if(first()){
+    Settings=table()
+    
+    RunTime=table()
+    runOnKey(1)
+    RunTime["Points",array]=array()
+    RunTime["Normals",array]=array()
+    RunTime["HologramData",table]=table()
+}
+if(clKeyPress(16)){
+    Subject=owner()
+    switch(RunTime["SelectMode",number]){
+        case 0,
+        case 1,
+        case 2,
+        case 3,
+            if(RunTime["SelectMode",number]==3){
+                RunTime["SelectMode",number]=0
+            }else{
+                RunTime["SelectMode",number]=RunTime["SelectMode",number]+1
+            }
+            Pos=Subject:aimPos()
+            holoCreate(RunTime["SelectMode",number],Pos,vec(0.1),ang(),vec(random()*128+127,random()*128+127,random()*128+127),"models/XQM/Rails/trackball_1.mdl")
+            RunTime["Points",array]:pushVector(Subject:aimPos())
+            RunTime["Normals",array]:pushVector(Subject:aimNormal())
+            if(RunTime["Points",array]:count()>=4){
+                Max=RunTime["Points",array]:popVector()
+                Min=Max
+                Normal=RunTime["Normals",array]:popVector()
+                for(I=1,3){
+                    local Vec=RunTime["Points",array]:popVector()
+                    Max=maxVec(Vec,Max)
+                    Min=minVec(Vec,Max)
+                    Normal+=RunTime["Normals",array]:popVector()
+                }
+                Normal/=4
+                holoDelete(0)
+                holoDelete(1)
+                holoDelete(2)
+                holoDelete(3)
+                RunTime["HologramIds",number]=RunTime["HologramIds",number]+1
+                local ID=RunTime["HologramIds",number]
+                local Color = vec(255)
+                local Model = ""
+                RunTime["HologramData",table]:pushTable(table(
+                    "id"=ID,
+                    "color"=Color,
+                    "model"=Model,
+                    "max"=Max,
+                    "min"=Min,
+                    "normal"=Normal
+                ))
+                holoCreate(ID,Max-(Max-Min)/2,vec(0),Normal:toAngle(),Color,Model)
+                holoScaleUnits(ID,(Max-Min))
+            }
+            break
+    }
+    
+}

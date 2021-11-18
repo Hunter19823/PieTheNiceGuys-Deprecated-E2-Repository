@@ -1,0 +1,176 @@
+@name Pie's 3D Waypoint System
+@inputs EGP:wirelink
+@persist [Settings,RunTime]:table
+if(first()){
+    E=entity()
+    Settings=table(
+        "Whitelist"=array(
+            "entity"
+        ),
+    
+        "Waypoints"=table(
+            "Corrupt Banker 1 NPC"=vec(-2387.5258789062,-58.394298553467,-123.96875),
+            "Police Department LOCATION"=vec(-1358.9373779297,102.43273925781,-123.96875),	
+            "Weed Buyer / MoonShine Buyer NPC"=vec(-508.5719909668,301.20254516602,-123.96875),
+            "Second Fountain LOCATION"=vec(3059.6936035156,857.1552734375,-123.96875),
+            "Main Fountain/Arenas NPC LOCATION"=vec(-1665.9163818359,-1568.4758300781,-123.96875),
+            "Hitman Phone ENTITY"=vec(54.706996917725,4132.4145507812,-123.96875),
+            "Weed Buyer NPC"=vec(3421.9431152344,-4267.9516601562,-123.96875),
+            "Ocean LOCATION"=vec(11615.224609375,-5462.1801757812,-66.697952270508),
+            "Moonshine / Lean Buyer NPC"=vec(2139.5490722656,3945.7629394531,-131.96875),	
+            "Meth Buyer NPC"=vec(4567.736328125,4155.0903320312,-123.96875),	
+            "Weed Buyer 2 NPC"=vec(3599.2019042969,3046.6501464844,-123.96875),
+            "Weed Buyer 3 NPC"=vec(471.16754150391,-4404.4599609375,-123.96875),
+            "Metal Buyer NPC"=vec(1351.3431396484,-6025.04296875,-131.96875),	
+            "Fuel Buyer NPC"=vec(1344.1680908203,-6544.5966796875,-131.96875),	
+            "Mining System LOCATION"=vec(1526.2690429688,-4989.107421875,-131.96875),	
+            "Oil System LOCATION"=vec(2803.9348144531,-6373.8876953125,-131.96875),	
+            "Lean Buyer NPC"=vec(-794.96887207031,-7453.330078125,-123.96875),	
+            "Meth Buyer 2 NPC"=vec(-2946.5676269531,-7214.6474609375,-123.96875),	
+            "Residential LOCATION"=vec(-1321.5970458984,-7088.30078125,-131.96875),	
+            "Corrupt Banker 2 NPC"=vec(-2856.9790039062,-2358.8037109375,-131.96875),	
+            "Meth Buyer 3 NPC"=vec(-2521.052734375,1557.4729003906,-123.96875),	
+            "Industrial LOCATION"=vec(-3645.9191894531,2822.9743652344,-131.96875),	
+            "Moonshine Buyer / Weed Buyer NPC"=vec(-3627.595703125,4020.2194824219,-131.96875),	
+            "Trash Buyers NPC"=vec(-4394.8051757812,1568.9516601562,-123.96875),	
+            "Ghetto LOCATION"=vec(1229.1688232422,7316.7358398438,-131.96875),	
+            "Secret Sewer Entrance LOCATION"=vec(-398.40173339844,182.65077209473,-123.96875),	
+            "Sewer Systems LOCATION"=vec(-156.7477722168,3610.5246582031,-631.96875),	
+            "Secret Waterfall Base LOCATION"=vec(-173.81202697754,5397.8051757812,-591.96875),	
+            "Unarrest NPC"=vec(-1449.3618164062,1045.3734130859,-696.16375732422),	
+            "Prison Vent Entrance LOCATION"=vec(-1465.4573974609,1179.9968261719,-612.15057373047),	
+            "Mayor's Office LOCATION"=vec(-1679.6048583984,1013.5151367188,84.03125),	
+            "PD Vault LOCATION"=vec(-2131.3435058594,1021.5037231445,92.03125),	
+            "PD Vault Door Button LOCATION"=vec(-1933.7465820312,1091.96875,84.03125),	
+            "Weed Buyer 4 NPC"=vec(-2898.1892089844,-6199.9926757812,-123.96875),	
+            "Hitman Phone Booth 2 ENTITY"=vec(-1127.1082763672,-1496.453125,-123.96875),	
+            "Genetic Engineer NPC"=vec(-1388.7697753906,-741.16052246094,-123.96875),	
+            "PD Jail LOCATION"=vec(-2261.4165039062,763.57934570312,-87.968734741211),
+            "Spawn LOCATION"=vec(70.521095275879,-875.78228759766,-131.96875),	
+            "Bank Vaults LOCATION"=vec(-4225.2680664062,-1805.6832275391,-115.96875),	
+            "Abandoned Mines LOCATION"=vec(3786.5144042969,1221.1793212891,-454.96875),	
+            "Meth Buyer 4 NPC"=vec(150.3699798584,1304.9521484375,-583.96875),	
+            "Meth Buyer 5 NPC"=vec(3038.6005859375,-4281.4975585938,-123.96875),	
+            "Sit Room LOCATION"=vec(-2422.73046875,-2663.3911132812,264.03125),	
+            "ATM"=vec(-2864.0969238281,-1212.6567382812,-123.96875),	
+            "Hidden Room Entrance(Crouch) LOCATION"=vec(-2023.1590576172,-3273.1530761719,-159.96875),	
+            "Trashcans 1 ENTITY"=vec(-5475.3510742188,3128.3669433594,-131.96875),	
+            "Trashcans 2 ENTITY"=vec(-5101.1098632812,4100.9223632812,-131.96875),	
+            "Trashcan 3 ENTITY"=vec(-2171.9802246094,-56.671592712402,-131.96875),	
+            "Trashcan 4 ENTITY"=vec(-1961.1002197266,-326.10321044922,-124.96875),	
+            "Trashcan 5 ENTITY"=vec(-953.76452636719,2065.3837890625,-123.96875),	
+            "Trashcans 6 ENTITY"=vec(3381.6047363281,6519.716796875,-123.96875),	
+            "Trashcans 7 ENTITY"=vec(-162.45796203613,2667.4870605469,-365.96875),	
+            "Trashcans 8 ENTITY"=vec(1117.3347167969,1983.6075439453,-365.96875),	
+            "Trashcans 9 ENTITY"=vec(-2559.3083496094,-5845.6708984375,-131.96875),	
+            "Trashcan 10 ENTITY"=vec(990.53228759766,-6678.2778320312,-123.96875),	
+            "Trash Leaf Piles 1 ENTITY"=vec(4870.2705078125,1916.0487060547,-135.04570007324),	
+            "Trash Leaf Pile 2 ENTITY"=vec(-1520.5971679688,-5172.2231445312,-127.96875),	
+            "Mayor Elections NPC"=vec(-1356.6770019531,173.90348815918,-123.96875),	
+            "Strip Club LOCATION"=vec(2929.2290039062,7166.1362304688,-115.96875),	
+            "Free Diseases LOCATION"=vec(-387.17053222656,1394.1486816406,-583.95599365234),	
+            "Lean Buyer 2 NPC"=vec(3587.03125,1903.9736328125,-123.96875),	
+            "Lean Buyer 3 NPC"=vec(-3219.6625976562,1103.0288085938,-123.96875),	
+            "Basketball / Lean Buyer / Meth Buyer NPC LOCATION"=vec(1305.8349609375,5797.9995117188,-121.96875),	
+            "Bank LOCATION ENTITY"=vec(-2700,-1700,-90)
+            
+        )
+    )
+    RunTime=table(
+        
+    )
+    
+    
+    Weld=E:isWeldedTo()
+    #if(Weld:type()=="gmod_wire_egp_hud")
+    if(!->EGP){
+        E:createWire(Weld,"EGP","wirelink")
+    }
+    if(->EGP){
+        print("EGP Hud Wired.")
+        EGP:egpClear()
+        timer("SetupWaypoints",100)
+    }else{
+        print("Error Trying to auto-Wire. Try placing on an EGPv3 screen!")
+    }
+    function entity getPlayer(Info:string){
+        P=findPlayerBySteamID(Info)
+        if(!P:isPlayer()){
+            P=findPlayerByName(Info)
+            if(!P:isPlayer()){
+                P=findPlayerBySteamID64(Info)
+            }
+        }
+        
+        return P
+    }
+    runOnChat(1)
+}
+if(clk("SetupWaypoints")){
+    RunTime["Keys",array]=Settings["Waypoints",table]:keys()
+    EGP:egpClear()
+    timer("DrawWaypoints",0)
+}
+if(clk("DrawWaypoints")){
+    if(RunTime["Keys",array]:count()>0){
+        while(RunTime["Keys",array]:count()>0 & perf(90)){
+            Index=RunTime["Keys",array]:count()
+            Key=RunTime["Keys",array]:popString()
+            LKey=Key:lower()
+            
+            foreach(I, WhiteListed:string = Settings["Whitelist",array]){
+                if(LKey:find(WhiteListed:lower()) == 0 & LKey:index(1)!=WhiteListed:index(1)){
+                    continue
+                }
+                Pos=Settings["Waypoints",table][Key,vector]
+                
+                
+                #EGP:egpBox(Index,vec2(50),vec2(50))
+                EGP:egp3DTracker(Index+150,Pos)
+                
+                EGP:egpText(Index,Key:replace("LOCATION",""):replace("NPC",""):replace("ENTITY",""):replace("BASE",""),vec2())
+                EGP:egpParent(Index,Index+150)
+                EGP:egpColor(Index,vec(128*random()+100,128*random()+100,128*random()+100))
+                break
+            }
+
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished Updated Waypoints")
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    Param=lastSaid():sub(LS[1,string]:length()+2)
+    switch(LS[1,string]:lower()){
+        case ".add",
+            Pos=lastSpoke():pos()+vec(0,0,lastSpoke():height())
+            Settings["Waypoints",table][Param,vector]=Pos
+            Settings["Whitelist",array]:pushString(Param)
+            print("\""+Param+"\"=vec("+Pos:x()+","+Pos:y()+","+Pos:z()+"),")
+            timer("SetupWaypoints",0)
+            break
+        case ".tag",
+            Settings["Whitelist",array]=Param:explode(",")
+            EGP:egpClear()
+            timer("SetupWaypoints",100)
+            break
+        case ".setup",
+            Weld=lastSpoke():aimEntity()
+            Settings["Whitelist",array]=Param:explode(",")
+            if(Weld:type()=="gmod_wire_egp_hud"){
+                entity():createWire(Weld,"EGP","wirelink")
+                if(->EGP){
+                    print("EGP Hud Wired.")
+                    EGP:egpClear()
+                    timer("SetupWaypoints",100)
+                }else{
+                    print("Error Trying to auto-Wire. Try placing on an EGP Hud!")
+                }
+            }else{
+                print("Error: you are not looking at any EGP huds.")
+            }
+            break
+    }
+}

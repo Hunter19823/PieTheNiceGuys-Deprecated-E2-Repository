@@ -1,0 +1,245 @@
+@name Pie's Legal Teleport Station
+@persist [E]:entity [Settings,RunTime]:table
+if(first()){
+    E=entity()
+    #15 second warmup
+    #Needs Animation
+    Settings=table(
+        "PlatformModel"="models/hunter/tubes/circle2x2.mdl",
+        "ChairModel"="models/props_combine/breenchair.mdl",
+        "PlatformMaterial"="z_easyskins/camo/blackhole.vmt_unlitgeneric",
+        "ChairMaterial"="z_easyskins/camo/dark_pulse.vmt_unlitgeneric",
+        "TeleportDelay"=15000,
+        "TeleportToll"=1,
+        "Color"=vec(255,0,255),
+        #"ASpawnPosition"=vec(-1440,-2050,-196),
+        #"BSpawnPosition"=vec(7735,7696,12193),
+        "ASpawnPosition"=vec(),
+        "BSpawnPosition"=vec(),
+        "ASpawnOrientation"=ang(0,-45,0),
+        "BSpawnOrientation"=ang()
+    )
+    RunTime=table()
+    
+    function number entity:hasPassenger(){
+        return This:children():count()>0
+    }
+    
+    function entity entity:getPassenger(){
+        return This:children()[1,entity]:driver()
+    }
+    
+    
+    streamDisable3D(1)
+    timer("SpawnPlatformA",1000)
+    timer("SpawnPlatformB",2000)
+    timer("SpawnChairA",3000)
+    timer("SpawnChairB",4000)
+    timer("RoutineCheck",5000)
+}
+if(clk("SpawnPlatformA")){
+    if(!RunTime["PlatformA",entity] & propCanCreate()){
+        if(Settings["ASpawnPosition",vector]){
+            Pos=Settings["ASpawnPosition",vector]
+        }else{
+            Pos=E:toWorld(vec(0,100,0))
+        }
+        RunTime["PlatformA",entity]=propSpawn(Settings["PlatformModel",string],Pos,Settings["ASpawnOrientation",angle],1)
+        RunTime["PlatformA",entity]:setMaterial(Settings["PlatformMaterial",string])
+        RunTime["PlatformA",entity]:setColor(Settings["Color",vector])
+        holoCreate(10,RunTime["PlatformA",entity]:toWorld(vec(0,0,100)),vec(1),RunTime["PlatformA",entity]:angles(),vec(255),"models/maxofs2d/hover_rings.mdl")
+        holoMaterial(10,"z_easyskins/camo/blue_wave.vmt_unlitgeneric")
+        holoParent(10,RunTime["PlatformA",entity])
+        holoBoneScale(10,1,vec(4))
+        holoBoneScale(10,2,vec(5))
+        holoBoneScale(10,3,vec(5))
+        holoBoneScale(10,4,vec(5))
+        holoBoneScale(10,5,vec(5))
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("SpawnPlatformB")){
+    if(!RunTime["PlatformB",entity] & propCanCreate()){
+        if(Settings["BSpawnPosition",vector]){
+            Pos=Settings["BSpawnPosition",vector]
+        }else{
+            Pos=E:toWorld(vec(0,-100,0))
+        }
+        RunTime["PlatformB",entity]=propSpawn(Settings["PlatformModel",string],Pos,Settings["BSpawnOrientation",angle],1)
+        RunTime["PlatformB",entity]:setMaterial(Settings["PlatformMaterial",string])
+        RunTime["PlatformB",entity]:setColor(Settings["Color",vector])
+        holoCreate(11,RunTime["PlatformB",entity]:toWorld(vec(0,0,100)),vec(1),RunTime["PlatformB",entity]:angles(),vec(255),"models/maxofs2d/hover_rings.mdl")
+        holoMaterial(11,"z_easyskins/camo/blue_wave.vmt_unlitgeneric")
+        holoParent(11,RunTime["PlatformB",entity])
+        holoBoneScale(11,1,vec(4))
+        holoBoneScale(11,2,vec(5))
+        holoBoneScale(11,3,vec(5))
+        holoBoneScale(11,4,vec(5))
+        holoBoneScale(11,5,vec(5))
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("SpawnChairA")){
+    if(!RunTime["ChairA",entity] & propCanCreate() & RunTime["PlatformA",entity]){
+        RunTime["ChairA",entity]=propSpawn(Settings["ChairModel",string],RunTime["PlatformA",entity]:toWorld(vec(0,0,5)),RunTime["PlatformA",entity]:angles(),1)
+        RunTime["ChairA",entity]:parentTo(RunTime["PlatformA",entity])
+        RunTime["ChairA",entity]:setMaterial(Settings["ChairMaterial",string])
+        RunTime["ChairA",entity]:setColor(Settings["Color",vector])
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("SpawnChairB")){
+    if(!RunTime["ChairB",entity] & propCanCreate() & RunTime["PlatformB",entity]){
+        RunTime["ChairB",entity]=propSpawn(Settings["ChairModel",string],RunTime["PlatformB",entity]:toWorld(vec(0,0,5)),RunTime["PlatformB",entity]:angles(),1)
+        RunTime["ChairB",entity]:parentTo(RunTime["PlatformB",entity])
+        RunTime["ChairB",entity]:setMaterial(Settings["ChairMaterial",string])
+        RunTime["ChairB",entity]:setColor(Settings["Color",vector])
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("RoutineCheck")){
+    if(RunTime["ChairA",entity]){
+        if(RunTime["ChairA",entity]:hasPassenger()){
+            if(!RunTime["ChairAInUse",number]){
+                Player=RunTime["ChairA",entity]:getPassenger()
+                RunTime["ChairAInUse",number]=1
+                moneyRequest(Player,Settings["TeleportToll",number],"Would you like to buy transportation?")
+            }
+        }else{
+            RunTime["ChairAInUse",number]=0
+        }
+    }else{
+        timer("SpawnChairA",0)
+    }
+    if(RunTime["ChairB",entity]){
+        if(RunTime["ChairB",entity]:hasPassenger()){
+            if(!RunTime["ChairBInUse",number]){
+                Player=RunTime["ChairB",entity]:getPassenger()
+                RunTime["ChairBInUse",number]=1
+                moneyRequest(Player,Settings["TeleportToll",number],"Would you like to buy transportation?")
+            }
+        }else{
+            RunTime["ChairBInUse",number]=0
+        }
+    }else{
+        timer("SpawnChairB",0)
+    }
+    timer(clkName(),1000)
+}
+if(moneyClk()){
+    Chair=moneyClkPlayer():parent():parent()
+    if(Chair==RunTime["ChairA",entity]){
+        timer("StartTeleportChairA",0)
+        timer("TeleportChairA",Settings["TeleportDelay",number])
+        print("Chair A")
+    }
+    elseif(Chair==RunTime["ChairB",entity]){
+        timer("StartTeleportChairB",0)
+        timer("TeleportChairB",Settings["TeleportDelay",number])
+        print("Chair B")
+    }else{
+        print("Error: This person is not sitting in one of your chairs...")
+        moneyGive(moneyClkPlayer(),moneyClkAmount())
+    }
+}
+if(clk("StartTeleportChairA")){
+    holoCreate(1,RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),vec(1),RunTime["PlatformA",entity]:angles(),vec(255),"models/hunter/tubes/tube2x2x2.mdl")
+    holoMaterial(1,"z_easyskins/camo/dark_matter.vmt_unlitgeneric")
+    holoAlpha(1,50)
+    holoParent(1,RunTime["PlatformA",entity])
+    timer("AStage1",5000)
+    timer("AStage2",10000)
+    RunTime["ChairA",entity]:streamStart(100,"https://www.dropbox.com/s/ufh8gi9uboikp8c/wowimbeingteleportedwithsoundeffects.mp3?dl=1",1)
+}
+if(clk("AStage1")){
+    holoCreate(2,RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),vec(1),RunTime["PlatformA",entity]:angles(),vec(255),"models/hunter/tubes/tube2x2x2.mdl")
+    holoMaterial(2,"sprites/heatwave")
+    holoParent(2,RunTime["PlatformA",entity])
+    holoAlpha(1,75)
+    #ifdef effectSpawn(...)
+    effectSpawn("cball_explode",RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),1)
+    #endif
+}
+if(clk("AStage2")){
+    holoCreate(3,RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),vec(1),RunTime["PlatformA",entity]:angles(),vec(0,255,255),"models/hunter/tubes/tube2x2x2.mdl")
+    holoMaterial(3,"models/weapons/v_models/cf_m4a1_beast/smokes")
+    holoParent(3,RunTime["PlatformA",entity])
+    holoAlpha(1,125)
+    #ifdef effectSpawn(...)
+    effectSpawn("cball_explode",RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),1)
+    effectSpawn("cball_explode",RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),1)
+    effectSpawn("cball_explode",RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),1)
+    #endif
+}
+if(clk("StartTeleportChairB")){
+    holoCreate(4,RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),vec(1),RunTime["PlatformB",entity]:angles(),vec(255),"models/hunter/tubes/tube2x2x2.mdl")
+    holoMaterial(4,"z_easyskins/camo/dark_matter.vmt_unlitgeneric")
+    holoAlpha(4,50)
+    holoParent(4,RunTime["PlatformB",entity])
+    timer("BStage1",5000)
+    timer("BStage2",10000)
+    RunTime["ChairB",entity]:streamStart(99,"https://www.dropbox.com/s/ufh8gi9uboikp8c/wowimbeingteleportedwithsoundeffects.mp3?dl=1",1)
+}
+if(clk("BStage1")){
+    holoCreate(5,RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),vec(1),RunTime["PlatformB",entity]:angles(),vec(255),"models/hunter/tubes/tube2x2x2.mdl")
+    holoMaterial(5,"sprites/heatwave")
+    holoParent(5,RunTime["PlatformB",entity])
+    holoAlpha(4,75)
+    #ifdef effectSpawn(...)
+    effectSpawn("cball_explode",RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),1)
+    #endif
+}
+if(clk("BStage2")){
+    holoCreate(6,RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),vec(1),RunTime["PlatformB",entity]:angles(),vec(0,255,255),"models/hunter/tubes/tube2x2x2.mdl")
+    holoMaterial(6,"models/weapons/v_models/cf_m4a1_beast/smokes")
+    holoParent(6,RunTime["PlatformB",entity])
+    holoAlpha(4,125)
+    
+    #ifdef effectSpawn(...)
+    effectSpawn("cball_explode",RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),1)
+    effectSpawn("cball_explode",RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),1)
+    effectSpawn("cball_explode",RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),1)
+    #endif
+}
+if(clk("TeleportChairA")){
+    
+    #ifdef effectSpawn(...)
+    effectSpawn("Explosion",RunTime["PlatformA",entity]:toWorld(vec(0,0,50)),1)
+    #endif
+    RunTime["ChairA",entity]:deparent()
+    RunTime["ChairA",entity]:propManipulate(RunTime["PlatformB",entity]:pos(),RunTime["PlatformB",entity]:angles(),1,0,0)
+    #ifdef entity:remove(number)
+    RunTime["ChairA",entity]:remove(1)
+    #else
+    timer("FuckRemoveChair;;;"+RunTime["ChairA",entity]:id(),1000)
+    #endif
+    
+    holoDelete(1)
+    holoDelete(2)
+    holoDelete(3)
+    #SpawnSparks
+}
+if(clk("TeleportChairB")){
+    #ifdef effectSpawn(...)
+    effectSpawn("Explosion",RunTime["PlatformB",entity]:toWorld(vec(0,0,50)),1)
+    #endif
+    RunTime["ChairB",entity]:deparent()
+    RunTime["ChairB",entity]:propManipulate(RunTime["PlatformA",entity]:pos(),RunTime["PlatformA",entity]:angles(),1,0,0)
+    #ifdef entity:remove(number)
+    RunTime["ChairB",entity]:remove(1)
+    #else
+    timer("FuckRemoveChair;;;"+RunTime["ChairB",entity]:id(),1000)
+    #endif
+    holoDelete(4)
+    holoDelete(5)
+    holoDelete(6)
+    #SpawnSparks
+}
+elseif(clkName():find("RemoveChair")){
+    Param=clkName():explode(";;;")
+    entity(Param[2,string]:toNumber()):propBreak()
+}

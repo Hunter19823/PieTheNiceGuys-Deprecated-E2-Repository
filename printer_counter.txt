@@ -1,0 +1,24 @@
+@name Printer Counter
+@persist [Printers]:array [Players]:table
+if(first()){
+    Players=table()
+    
+    findIncludeClass("sent_elegant_printer")
+    findByClass("sent_elegant_printer")
+    Printers = findToArray()
+    timer("Associate",1000)
+}
+if(clk("Associate")){
+    if(Printers:count()>0){
+        while(perf(65) & Printers:count()>0){
+            Printer=Printers:popEntity()
+            Player=Printer:printerOwner()
+            Players[Player:toString(),number]=Players[Player:toString(),number]+1
+        }
+        timer(clkName(),100)
+    }else{
+        print("How many printers do people have: ")
+        printTable(Players)
+    }
+}
+

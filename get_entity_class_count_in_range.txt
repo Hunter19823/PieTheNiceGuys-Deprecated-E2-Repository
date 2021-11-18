@@ -1,0 +1,29 @@
+@name Get entity Class Count in range
+@persist [Entities]:array [Types]:table
+if(first()){
+    Types=table()
+    Range=250
+    findInSphere(entity():pos(),Range)
+    Entities=findToArray()
+    print("Entities Found: "+Entities:count())
+    timer("Remove",100)
+}
+if(clk("Remove")){
+    if(Entities:count()>0){
+        while(Entities:count()>0 & perf(65) & holoCanCreate()){
+            E=Entities:popEntity()
+            Type=E:type()
+            Owner=E:owner()
+            SID=Owner:steamID()
+            if(!Types:exists(SID)){
+                Types[SID,table]=table("Name"=Owner:name())
+            }
+            Types[SID,table][Type,number]=Types[SID,table][Type,number]+1
+            #holoCreate(Entities:count(),E:pos(),vec(0.25),E:angles(),vec(random()*255))
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished")
+        printTable(Types)
+    }
+}

@@ -1,0 +1,33 @@
+@persist [Entrance1,Entrance2,Chair1,Chair2]:entity
+if(first()){
+    Entrance1 = propSpawn("models/hunter/misc/lift2x2.mdl",entity():toWorld(vec(0,50,0)),entity():angles(),1)
+    Entrance2 = propSpawn("models/hunter/misc/lift2x2.mdl",entity():toWorld(vec(0,-50,0)),entity():angles(),1)
+    Chair1 = propSpawn("models/props_combine/breenchair.mdl",Entrance1:toWorld(vec(0,0,0)),Entrance1:angles(),1)
+    Chair2 = propSpawn("models/props_combine/breenchair.mdl",Entrance2:toWorld(vec(0,0,0)),Entrance2:angles(),1)
+    Chair1:parentTo(Entrance1)
+    Chair2:parentTo(Entrance2)
+}
+timer("Find",1500)
+if(clk("Find")){
+    findIncludeClass("player")
+    findInBox(Entrance1:aabbWorldMin(),Entrance1:aabbWorldMax())
+    P=find()
+    if(P:inVehicle()){
+        Chair1:deparent()
+        Chair1:propManipulate(Entrance2:toWorld(vec(0,0,25)),Entrance2:angles(),1,gravity(),0)
+        Chair1:remove(0.5)
+        Chair1 = propSpawn("models/props_combine/breenchair.mdl",Entrance1:toWorld(vec(0,0,0)),Entrance1:angles(),1)
+        Chair1:parentTo(Entrance1)
+    }else{
+        findIncludeClass("player")
+        findInBox(Entrance2:aabbWorldMin(),Entrance2:aabbWorldMax())
+        P=find()
+        if(P:inVehicle()){
+            Chair2:deparent()
+            Chair2:propManipulate(Entrance1:toWorld(vec(0,0,25)),Entrance1:angles(),1,gravity(),0)
+            Chair2:remove(0.5)
+            Chair2 = propSpawn("models/props_combine/breenchair.mdl",Entrance2:toWorld(vec(0,0,0)),Entrance2:angles(),1)
+            Chair2:parentTo(Entrance2)
+        }
+    }
+}

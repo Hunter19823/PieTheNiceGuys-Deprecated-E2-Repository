@@ -1,0 +1,211 @@
+@name Pie's Gun Gambling Wheel (Say spin in chat)
+@model models/freeman/duffel_bag.mdl
+@persist [Settings,RunTime]:table
+if(first()){
+    Settings=table(
+        "FilePath"="gunshop/"+owner():team():teamName()+"/data.txt",
+        "Radius"=100,
+        "Scale"=vec(1),
+        "Profit"=1.75,
+        "ChatCommand"="spin"
+    )
+    
+    RunTime=table()
+    
+    GT=gTable(owner():steamID()+"'s GunshopData",1)
+    if(!GT["HasLoaded",number]){
+        timer("LoadData",0)
+    }else{
+        RunTime["GunData",table]=GT["GunData",table]
+        RunTime["GunDataKeys",array]=RunTime["GunData",table]:keys()
+        timer("FileLoaded",100)
+    }
+    
+    function number spin(Player:entity){
+        if(RunTime["Wheel",entity] & RunTime["Ready",number]==1){
+            if(round(RunTime["SpinCount",number])<=0){
+                RunTime["SpinCount",number]=round(random()*RunTime["KeyCount",number]+100)
+                RunTime["Ready",number]=0
+                RunTime["CurrentPlayer",entity]=Player
+                timer("Spin",1000)
+                return 1
+            }
+        }
+        return 0
+    }
+    
+    function void requestSpin(Player:entity){
+        if(RunTime["Wheel",entity]){
+            if(Player:money()<RunTime["AverageCost",number]){
+                concmd("say /pm "+Player:steamID()+" I'm sorry, but you do not have enough $ to operate this machine. (Current Price: $"+RunTime["AverageCost",number]+")")
+            }else{
+                moneyRequest(Player,RunTime["AverageCost",number],"Would you like to spin the wheel for a random gun?",5)
+            }
+        }else{
+            concmd("say /pm "+Player:steamID()+" This wheel is out of order, Our apologizes.")
+            setName("Out Of Order. Please Contact "+owner():name()+" for Maintainance.")
+            error("You have accidentally removed the prop that was required for this e2 to function.")
+        }
+    }
+}
+if(moneyClk()){
+    if(!spin(moneyClkPlayer())){
+        concmd("say /pm "+moneyClkPlayer():steamID()+" Apologies, but someone is already spinning the wheel. Heres' a refund.")
+        moneyGive(moneyClkPlayer(),moneyClkAmount())
+    }
+}
+if(clk("FileLoaded")){
+    print("File Data Has Been Loaded")
+    #printTable(RunTime["GunDataKeys",array])
+    RunTime["KeyCount",number] = RunTime["GunDataKeys",array]:count()
+    RunTime["KeyClones",array] = RunTime["GunDataKeys",array]:clone()
+    RunTime["Wheel",entity] = propSpawn("models/hunter/blocks/cube025x025x025.mdl",entity():toWorld(vec(0,0,Settings["Radius",number]+50)),entity():angles(),1)
+    #entity():parentTo(RunTime["Wheel",entity])
+    RunTime["AngleDifference",number]=360/RunTime["KeyCount",number]
+    timer("CreateWheel",100)
+}
+if(chatClk()){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case Settings["ChatCommand",string],
+        case "/"+Settings["ChatCommand",string],
+        case "."+Settings["ChatCommand",string],
+        case "!"+Settings["ChatCommand",string],
+            Player=lastSpoke()
+            requestSpin(Player)
+            break
+    }
+}
+if(clk("Spin")){
+    if(RunTime["Wheel",entity]){
+        if(round(RunTime["SpinCount",number])>0){
+            if(round(RunTime["SpinCount",number])>0 & perf(50)){
+                RunTime["SpinCount",number]=RunTime["SpinCount",number]*0.90
+                RunTime["Wheel",entity]:setAng(RunTime["Wheel",entity]:toWorld(ang(0,0,RunTime["AngleDifference",number]*RunTime["SpinCount",number])))
+            }
+            if(!round(RunTime["SpinCount",number])>0){
+                RunTime["SpinCount",number]=RunTime["SpinCount",number]*0.90
+                RunTime["Wheel",entity]:setAng(RunTime["Wheel",entity]:toWorld(ang(0,0,RunTime["AngleDifference",number]*RunTime["SpinCount",number])))
+            }
+            timer(clkName(),0)
+        }else{
+            Roll=entity():toLocal(RunTime["Wheel",entity]:angles()):roll()
+            
+            if(Roll<0){
+                Roll+=360
+            }
+            GunKey=Roll/RunTime["AngleDifference",number]
+            GunKey=RunTime["KeyCount",number]-round(GunKey)+1
+            Key=RunTime["GunDataKeys",array][GunKey,string]
+            if(RunTime["GunData",table][Key,table]){
+                print(RunTime["CurrentPlayer",entity]:name()+" Spun a: "+RunTime["GunData",table][Key,table]["Name",string],5)
+                timer(RunTime["CurrentPlayer",entity]:steamID()+";"+Key+";Send;"+random(),500)
+            }else{
+                print(GunKey," ",RunTime["KeyCount",number]-round(GunKey)+1," ",round(GunKey))
+                setName("Out Of Order. Please Contact "+owner():name()+" for Maintainance.")
+                error("Error, No gun Found. Save the last few lines of chat and dm Pie The Nice Guy.")
+            }
+            RunTime["Ready",number]=1
+        }
+    }else{
+        setName("Out Of Order. Please Contact "+owner():name()+" for Maintainance.")
+        error("Wheel does not exist.")
+    }
+}
+if(clk("CreateWheel")){
+    if(RunTime["KeyClones",array]:count()>0){
+        Radius=Settings["Radius",number]
+        while(RunTime["KeyClones",array]:count()>0 & perf(50) & holoCanCreate()){
+            Key=RunTime["KeyClones",array]:popString()
+            CloneCount=RunTime["KeyClones",array]:count()
+            ID=RunTime["KeyCount",number]-CloneCount+1
+            Gun=RunTime["GunData",table][Key,table]
+            
+            
+            Ang=RunTime["AngleDifference",number] * CloneCount
+            LocalPos=vec(0,cos(Ang-90)*Radius,sin(Ang-90)*Radius)
+            holoCreate(ID,RunTime["Wheel",entity]:toWorld(LocalPos),Settings["Scale",vector],RunTime["Wheel",entity]:angles(),vec(255),Gun["Model",string])
+            #print("Gun: "+Gun["Model",string])
+            holoParent(ID,RunTime["Wheel",entity])
+            
+            RunTime["TotalCost",number]=RunTime["TotalCost",number]+Gun["Price",number]
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished Creating Wheel.")
+        RunTime["AverageCost",number]=RunTime["TotalCost",number]/RunTime["KeyCount",number]
+        hint("Average Price is: $"+RunTime["AverageCost",number],10)
+        RunTime["AverageCost",number]=round(RunTime["AverageCost",number] * Settings["Profit",number])
+        hint("Gun price after profit multiplier: $"+RunTime["AverageCost",number],10)
+        runOnChat(1)
+        RunTime["Ready",number]=1
+    }
+}
+if(clk("LoadData")){
+    if(fileCanLoad()){
+        runOnFile(1)
+        fileLoad(Settings["FilePath",string])
+        hint("File Data has begun loading...",2)
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(fileClk()){
+    switch(fileStatus()){
+        case _FILE_OK,
+            GT=gTable(owner():steamID()+"'s GunshopData",1)
+            GT["HasLoaded",number]=1
+            RunTime["GunData",table]=vonDecodeTable(fileRead())
+            GT["GunData",table]=RunTime["GunData",table]
+            RunTime["GunDataKeys",array]=RunTime["GunData",table]:keys()
+            hint("File Data has finished loading successfully.",2)
+            timer("FileLoaded",0)
+            break
+        case _FILE_404,
+            error("File returned a 404. Please contact Pie to get the proper data for this e2.")
+            #print("File Data has finished loading successfully.")
+            
+            break
+        case _FILE_UNKNOWN,
+            print("You definitely fucked up somewhere.")
+            error("Error Bad Formatting: You definitely put this segment of code in the wrong place. Probably because you removed the if(fileClk())")
+            break
+        case _FILE_TIMEOUT,
+            print("File timed out while loading. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+        case _FILE_TRANSFER_ERROR,
+            print("File Transfer Error. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+    }
+}
+#timer(Player:steamID()+";"+GunId+";Send;"+random(),500)
+if(clkName():find("Send")){
+    Data=clkName():explode(";")
+    Player=findPlayerBySteamID(Data[1,string])
+    if(findCanQuery() & perf(50)){
+        GunData = RunTime["GunData",table][Data[2,string],table]
+        findIncludePlayerProps(owner())
+        findByClass("spawned_shipment")
+        HasFound=0
+        foreach(Index, Shipment:entity = findToArray()){
+            if(Shipment:shipmentName() == GunData["Name",string] & GunData["Size",number] == Shipment:shipmentAmount() & !Shipment["BeenBought",number]){
+                HasFound=1
+                Shipment:propManipulate(Player:toWorld(vec(10,0,50)),ang(),0,gravity(),0)
+                Shipment["BeenBought",number]=1
+                findExcludeEntity(Shipment)
+                hint("Shipment "+Shipment:shipmentAmount()+"x "+Shipment:shipmentName()+" Sent to "+Player:name(),5)
+                break
+            }
+        }
+        if(!HasFound){
+            concmd("say "+GunData["BuyCommand",string])
+            hint("Didn't Find the Shipment in Stock, Now Purchasing a new one.",1)
+            timer(clkName(),650)
+        }
+    }else{
+        hint("Could not preform search, Retrying...",3)
+        timer(clkName(),100)
+    }
+}

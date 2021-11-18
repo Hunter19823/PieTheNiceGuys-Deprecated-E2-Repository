@@ -1,0 +1,31 @@
+
+@name learn boi
+@inputs E:wirelink U:entity
+@outputs 
+
+if(first()&->E&->U){
+    
+    E:egpBox(1,vec2(50,50),vec2(25,25)) 
+    E:egpParentToCursor(1)
+    E:egpMaterial(1, "3dstreamradio/cursor.png")
+
+    #Background
+    E:egpBox(2,vec2(256,256),vec2(512,512))
+    E:egpColor(2,vec(50,50,50))
+
+    #HomeButton
+    E:egpCircle(3,vec2(256,256),vec2(100,100))
+    E:egpColor(3,vec(256,256,256))
+
+    E:egpCircle(4,vec2(256,256),vec2(90,90))
+    E:egpColor(4,vec(50,50,50))
+
+    E:egpBox(5,vec2(256,256),vec2(150,150))
+    E:egpMaterial(5, "bu3/money.png")
+    E:egpColor(5,vec(127,95,0))
+    
+    
+}
+print("E2 has been executed")
+#Cursor
+    

@@ -1,0 +1,148 @@
+@name Pie Better Dance Floor
+@persist State Spacing Limit Original:vector Colors:array
+if (first() | duped()) {
+    Colors=array(
+    vec(255,0,0),
+    vec(255,128,0),
+    vec(255,255,0),
+    vec(128,255,0),
+    vec(0,255,0),
+    vec(0,255,128),
+    vec(0,255,255),
+    vec(0,128,255),
+    vec(0,0,255)
+    )
+    function vector randomColor(){
+        R=round(random(2))
+        G=round(random(2))
+        B=round(random(2))
+        if(R==0 & G==0 & B==0){
+            return vec(255,255,255)
+        }elseif(R+G+B==1){
+            return vec(R*255,G*255,B*255)
+        }elseif(R+G+B==2 & (R!=2) & (G!=2) & (B!=2)){
+            return vec(R*255,G*255,B*255)
+        }elseif(R+G+B==3 & (R!=2) & (G!=2) & (B!=2)){
+            return vec(R*255,G*255,B*255)
+        }else{
+            return vec(R*128 -1,G*128 -1,B*128 -1)
+        }
+    }
+    function vector vector:nextColor(){
+        #[
+        R=This:x()+28+(1/3)
+        G=This:y()-(28+(1/3))
+        B=This:z()+(28+(1/3))
+        ]#
+        R=This:x()+((255-Original:x())/18)
+        G=This:y()+((255-Original:y())/18)
+        B=This:z()+((255-Original:z())/18)
+        
+        return vec(R,G,B)
+    }
+    State=100
+    Spacing=112.5
+}
+Speed=1000
+interval(Speed)
+if(clk()){
+    switch(State){
+        #mid,left,down,right,up,bl,tr,tl,br
+        case 100,
+            entity():setfLight(entity():pos()+vec(0,0,100),randomColor(),entity():angles()+ang(90,0,0),"cs_havana/white",120,1000,1)
+            holoCreate(1,entity():pos()+vec(0,0,0),vec(0),entity():angles()+ang(90,0,0),vec(255),"models/props_phx/games/chess/board.mdl")
+            holoScaleUnits(1,vec(0,Spacing*3,Spacing*3))
+            holoParent(1,entity())
+            holoMaterial(1,"effects/flicker_256")
+            State++
+            break
+        case 101,
+            holoCreate(State,entity():pos()+vec(Spacing,(Spacing)*-1,0),vec(1),ang(0),Colors:popVector())
+            #tl
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 102,
+            holoCreate(State,entity():pos()+vec(0,(Spacing)*-1,0),vec(1),ang(0),Colors:popVector())
+            #up
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 103,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,(Spacing)*-1,0),vec(1),ang(0),Colors:popVector())
+            #tr
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 104,
+            holoCreate(State,entity():pos()+vec(Spacing,0,0),vec(1),ang(0),Colors:popVector())
+            #Left
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 105,
+            holoCreate(State,entity():pos()+vec(0,0,0),vec(1),ang(0),Colors:popVector())
+            #Mid
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 106,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,0,0),vec(1),ang(0),Colors:popVector())
+            #right
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 107,
+            holoCreate(State,entity():pos()+vec((Spacing),(Spacing),0),vec(1),ang(0),Colors:popVector())
+            #br
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 108,
+            holoCreate(State,entity():pos()+vec(0,Spacing,0),vec(1),ang(0),Colors:popVector())
+            #Down
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 109,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,Spacing,0),vec(1),ang(0),Colors:popVector())
+            #bl
+            holoMaterial(State,"effects/flicker_256")
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 110,
+            Count=100
+            Color=randomColor()
+            StartColor=holoEntity(1):getColor()
+            if(Color==StartColor){
+                Color=randomColor()
+            }
+            if(Color==StartColor){
+                Color=randomColor()
+            }
+            if(Color==StartColor){
+                Color=randomColor()
+            }
+            holoColor(1,Color)
+            entity():fLightColor(randomColor())
+            break
+    }
+}

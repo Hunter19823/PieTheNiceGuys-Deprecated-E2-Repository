@@ -1,0 +1,28 @@
+@name Hypocycloid
+@persist [A,B,ADivB,I,Spacing,Time,Add] P:entity
+if(first()){
+    #P=propSpawn("models/hunter/blocks/cube025x025x025.mdl",1)
+    Add=10
+    Spacing=1
+    Equals=root(2,2)
+    A=100
+    B=A/Equals
+    
+    interval(100)
+}
+if(clk()){
+    Time+=Add
+    X=((A - B)*cos(Time)) + (B*cos(((A/B) - 1)*Time))
+    Y=((A - B)*sin(Time)) - (B*sin(((A/B) - 1)*Time))
+    #X=(A/ADivB)*((ADivB-1)*cos(Ang)-cos((ADivB-1)*Ang))
+    #Y=(A/ADivB)*((ADivB-1)*sin(Ang)-sin((ADivB-1)*Ang))
+    if(I<holoMaxAmount()){
+        holoCreate(I,entity():toWorld(vec(X*Spacing,Y*Spacing,0)),vec(0.1),ang(),vec(255),"models/props_phx/construct/plastic/plastic_angle_360.mdl")
+        holoParent(I,entity())
+    }else{
+        I=0
+    }
+    I++
+    #P:setPos(entity():toWorld(vec(X,Y,0)))
+    interval(100)
+}

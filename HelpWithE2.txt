@@ -1,0 +1,33 @@
+@name Fuel Refiner Barrel Stacker Array
+@inputs Prop:entity But
+@persist R1:ranger Barrels:array Last:entity
+@trigger 
+
+if(first()){
+    holoCreate(1)
+    holoCreate(2)
+    interval(50)
+}
+if(changed(But) & But){
+    print("Button pressed. Attempting to teleport. Total array Count: "+Barrels:count())
+    Last = Barrels:popEntity()
+    Last:propManipulate(Prop:toWorld(vec(100,0,15)),ang(),0,gravity(),0)
+}elseif(clk()){
+    rangerFilter(entity())
+    rangerFilter(Barrels)
+    R1=rangerOffset(50,entity():pos(),vec(0,0,1))
+
+    holoPos(1, R1:pos())
+    holoPos(2, Prop:toWorld(vec(100,0,15)))
+    if(R1:entity():type()=="zrush_barrel" & R1:entity():owner()==owner()){
+        Barrels:pushEntity(R1:entity())
+        print("New Barrel Added")
+    }
+    
+    for(I=1,Barrels:count()){
+        Barrel = Barrels[I,entity]
+        Barrel:propManipulate(Prop:toWorld(vec(0,0,-45+I*52)),ang(),1,0,0)
+    }
+    
+    interval(250)
+}

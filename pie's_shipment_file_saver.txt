@@ -1,0 +1,76 @@
+@name Pie's Shipment File Saver
+@persist [GunShopData]:table [File]:string [ShipmentList]:array
+if(first()){
+    File="gunshop/"+owner():team():teamName()+"/data.txt"
+    runOnFile(1)
+    timer("LoadFile",100)
+}
+elseif(clk("LoadFile")){
+    if(fileCanLoad()){
+        fileLoad(File)
+    }else{
+        timer(clkName(),100)
+    }
+}
+elseif(clk("SaveData")){
+    if(fileCanWrite()){
+        print("Finished Saving Data")
+        fileWrite(File,vonEncode(GunShopData))
+    }else{
+        timer(clkName(),100)
+    }
+}
+elseif(fileClk()){
+    switch(fileStatus()){
+        case _FILE_404,
+            fileWrite(File,vonEncode(GunShopData))
+            print("404")
+            timer("LoadFile",1000)
+            break
+        case _FILE_OK,
+            GunShopData=vonDecodeTable(fileRead())
+            print("File Loaded Successfully")
+            timer("SaveShipments",100)
+            break
+        case _FILE_TIMEOUT,
+            timer("LoadFile",1000)
+            print("Error: File Timeout. Retrying...")
+            break
+        case _FILE_TRANSFER_ERROR,
+            error("File Transfer Error")
+            break
+        case _FILE_UNKNOWN,
+            error("Unknown File Error")
+            break
+    }
+}
+elseif(clk("SaveShipments")){
+    findIncludePlayerProps(owner())
+    findByClass("spawned_shipment")
+    ShipmentList=findToArray()
+    timer("Tableize Shipments",1000)
+}
+elseif(clk("Tableize Shipments")){
+    if(ShipmentList:count()>0){
+        while(ShipmentList:count()>0 & perf(75)){
+            Ship=ShipmentList:popEntity()
+            if(!(GunShopData:exists(Ship:shipmentName()))){
+                GunShopData[Ship:shipmentName(),table]=table(
+                    "Name"      =Ship:shipmentName(),
+                    "Type"      =Ship:shipmentType(),
+                    #"Class"     =Ship:shipmentClass(),
+                    "Price"     =Ship:shipmentPrice(),
+                    "Size"      =Ship:shipmentAmount(),
+                    "Model"     =Ship:shipmentModel(),
+                    "PricePer"  =Ship:shipmentPrice()/Ship:shipmentAmount(),
+                    "BuyCommand"="/buyshipment "+Ship:shipmentName()
+                )
+            }
+            Ship:propManipulate(Ship:pos(),ang(),1,gravity(),1)
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished")
+        timer("SaveData",1000)
+    }
+}

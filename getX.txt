@@ -1,0 +1,65 @@
+@name Get Nearest Player
+@persist NearestPlayer:entity Car:entity
+if(first())
+{
+    runOnChat(1)
+    interval(1000)
+}
+if(clk())
+{
+    findExcludeEntity(owner())
+    findByClass("player")
+    findSortByDistance(owner():pos())
+    NearestPlayer=find()
+    interval(5000)
+}
+elseif (chatClk(owner())){
+    local LS = owner():lastSaid():explode(" ")
+    if (LS[1,string]=="?")
+    {
+        print(
+        "Name: " + NearestPlayer:name() +
+        "\nUUID: " + NearestPlayer:playerUniqueId() +
+        "\nEntity ID: " + NearestPlayer:id() +
+        "\nHealth: " + NearestPlayer:health() +
+        "\nArmor: " + NearestPlayer:armor() +
+        "\nMoney: " + NearestPlayer:money() +
+        "\nDeaths: " + NearestPlayer:deaths() +
+        "\nKills: " + NearestPlayer:frags() +
+        "\nPing: " + NearestPlayer:ping() +
+        "\nTeam: " + NearestPlayer:team() +
+        "\nUser Group: " + NearestPlayer:getUserGroup())
+        print(
+        "Type: " + NearestPlayer:type() +
+        "\nTool: " + NearestPlayer:tool() +
+        "\nWeapon: " + NearestPlayer:weapon():getName() +
+        "\nAmmo: " + NearestPlayer:weapon():primaryAmmoType() +
+        "\nModel: " + NearestPlayer:model() +
+        "\nAnimation: " + NearestPlayer:getAnimation() +
+        "\nMaterial: " + NearestPlayer:getMaterial() +
+        "\nSkin: " + NearestPlayer:getSkin() +
+        "\nSkins: " + NearestPlayer:getSkinCount() +
+        "\nHeight: " + NearestPlayer:height() +
+        "\nRadius: " + NearestPlayer:radius() +
+        "\nMass: " + NearestPlayer:mass() +
+        "\nVolume: " + NearestPlayer:volume() +
+        "\nTime Connected: " + NearestPlayer:timeConnected())
+    }
+    elseif(LS[1,string]=="car")
+    {
+        Car=owner():aimEntity()
+    }
+    elseif(LS[1,string]=="out")
+    {
+        Car:ejectPod()
+        Car:lockPod(LS[2,string]:toNumber())
+    }
+    elseif(LS[1,string]=="tome")
+    {
+        Car:setPos(owner():pos() + vec(0,0,100))
+    }
+    elseif(LS[1,string]=="kys")
+    {
+        Car:killPod()
+    }
+}

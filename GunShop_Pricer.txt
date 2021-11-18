@@ -1,0 +1,31 @@
+@name GunShop Pricer
+@persist [Range,RetryTimer,Profit]
+if(first()){
+    holoCreate(1,entity():toWorld(vec(0,0,10)),vec(1),entity():angles(),vec(255))
+    Range=10
+    Profit=1.5
+    RetryTimer=1000
+    local HoloEnt=holoEntity(1)
+    holoCreate(2,HoloEnt:pos()-vec(0,0,HoloEnt:height()),vec(1),HoloEnt:angles(),vec(255),"models/hunter/tubes/circle4x4.mdl")
+    holoScaleUnits(2,vec(Range*2,Range*2,5))
+    holoParent(2,1)
+    holoParent(1,entity())
+    timer("Search",0)
+}
+if(clk("Search")){
+    holoModel(1,"models/items/item_item_crate.mdl")
+    findIncludeClass("spawned_shipment")
+    findInSphere(holoEntity(1):pos(),Range)
+    findSortByDistance(holoEntity(1):pos())
+    if(findToArray():count()>0){
+        timer("UpdateModel",0)
+    }else{
+        timer("Search",RetryTimer)
+    }
+}
+if(clk("UpdateModel")){
+    holoModel(1,find():shipmentModel())
+    local Text="Shipment Found: This is a shipment of "+find():shipmentType()+" it is being sold for $"+find():shipmentPrice()*Profit+" ."
+    holoEntity(1):streamStart(6969,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+    timer("Search",10000)
+}

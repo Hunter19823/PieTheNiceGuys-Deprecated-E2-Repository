@@ -1,0 +1,15 @@
+@name Player Parenting
+
+if(first())
+{
+    runOnKeys(owner(),1)
+}
+if (keyClk() & keyClkPressed() == "e")
+{
+    print(keyClkPressed())
+    Player=owner():aimEntity()
+    if (Player:isValid())
+    {
+        Player:parentTo(owner())
+    }
+}

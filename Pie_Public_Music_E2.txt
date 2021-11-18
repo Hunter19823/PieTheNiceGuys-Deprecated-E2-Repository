@@ -1,0 +1,303 @@
+#Song Numbers And Names:
+# 1.m.a.a.d. city
+# 2.Magnolia
+# 3.24k
+# 4.Look at me
+# 5.XO life
+# 6.Wasting tiiiime
+# 7.Beibs in the trap
+# 8.X
+# 9.HipHopper
+# 10.A.D.H.D
+# 11.King Kunta
+# 12.4 am
+# 13.Tokoyo drift
+# 14.Hunter Fm
+# 15.housefm
+# 16.attom
+# 17.light
+# 18.eden
+# 19.we rise
+# 20.All star remix
+# 21.tight pants
+# 22.Masked heros
+# 23.Shadilay
+# 24.rock with us
+# 25.Fuck the police
+# 26.Look Like
+# 27.when i was yung
+# 28.Everyday bro
+# 29.rick roll
+# 30.my mine
+# 31.Best dicksucker
+# 32.icarly
+# 33.Im Gay(Im blue remix)
+# 34.Astronauts
+# 35.Driftless Spirits
+# 36.Under Pressure Remix
+# 37.casin
+# 38.Altitude
+# 39.Seven Lions
+# 40.Midnight
+# 41.Good nights
+# 42.Hey
+# 43.La Madrague
+# 44.Wii music
+# 45.Wii music remix
+# 46.Kero Kero Bonito
+# 47.yodeling walmart kid remix
+# 48.the ghost of beverly drive
+# 49.To Describe You
+# 50.The End
+# 51.Hot & Cold
+# 52.The Glitch Mob
+# 53.Take Me Home
+# 54.Danger
+# 55.Radio On
+# 56.Hold Back The River
+# 57.Coming Over
+# 58.Powerless
+# 59.Home Cooked
+# 60.Amour
+# 61.Last Ship
+# 62.Take My Hand
+# 63.Eastside
+# 64.Cut To Black
+# 65.Hold So Deep
+# 66.Hood Gone Love It(kinda sounds like king kunta) 
+# 67.Summer
+# 68.Lazy
+# 69.Freshmen Year
+# 70.1-800-273-8255
+# 71.Neverland
+# 72.XXXTENTACION
+# 73.Gods Plan
+# 74.Let You Down
+# 75.Alien Boy
+# 76.This Is Home
+# 77.Resonance
+# 78.You
+# 79.Playground
+# 80.Slow Down
+# 81.Night Out
+# 82.Across the Room
+# 83.Hollow
+# 84.Limit
+# 85.Malabar
+# 86.Minecraft remix
+# 87.Peppermint
+# 88.Lonely
+# 89.Waiting for Love
+# 90.The Nights
+# 91.Counting Stars
+# 92.Say It
+# 93.Feel Good
+# 94.Nothing To Lose
+# 95.Uptown Funk
+# 96.Lost
+# 97.Colors
+# 98.Lilypads
+# 99.IPlayYouListen
+# 100.Going Home
+# 101.Shelter
+# 102.Rolley
+# 103.Home Cooked
+# 104.Dancin
+# 105.Shy Girl
+# 106.One Night in Bangkok
+# 107.Better Not
+# 108.Cha Cha Slide
+# 109.Its Time
+# 110.Cool
+# 111.Senpai(Fucking hazer recommended this weeb shit)
+# 112.Dancer
+# 113.Tinder
+# 114.Valentine
+# 115.The Ocean
+# 116.Waves
+# 117.Another Love
+# 118.Sunset Jesus
+# 119.Help Me Lose My Mind
+# 120.You & Me
+# 121.I See Fire
+# 122.Harder, Better, Faster, Stronger
+# 123.Here
+# 124.TRNDSTTR
+# 125.LightHearted
+# 126.Respect
+# 127.Person On My Mind(this ones for thrill)
+# 128.100 Miles
+# 129.Deadlocked
+# 130.Doin your MOM
+# 131.OmegaWave1986
+# 132.Yoshis Island
+# 133.Adventure Timewave
+# 134.Lofi Song Mix
+# 135.In My Feelings
+# 136.Stranger Things
+# 137.Bonjour Madame
+# 138.Gone
+# 139.XXXTENTACION Sad!
+# 140.Ride
+# 141.White And Nerdy
+# 142.IMDABES
+# 143.Natural
+# 144.Castle On The Hill
+# 145.Infinity
+# 146.Idfc
+# 147.Vicodin
+# 148.Car Music Mix
+# 149.Oblivion
+# 150.Without You
+# 151.Invincible
+# 152.Nightcore Remix
+# 153.Undertale Megalovania
+# 154.JPB - Defeat The Night
+# 155.TheFatRat - No No No
+# 156.Daft Punk - One More Time
+# 157.ACDC ThunderStruck
+# 158.Renegades
+# 159.I Need A Dollar
+# 160.Monstercat Stonebank
+# 161.Watsky- Whoa Whoa Whoa
+# 162.Madeon - Cut The Kid
+# 163.Pretty Rave Girl 2010
+# 164.HandClap
+# 165.Mr Blue Sky
+# 166.RedFoo - Lets Get Ridiculous
+# 167.Tripaloski
+# 168.Armin van Buuren - Blah Blah Blah
+# 169.Nightcore - Everytime We Touch
+# 170.Hero
+# 171.Electro - Swing Delight
+# 172.She Want me dead
+# 173.Youre Gonna Go Far Kid
+# 174.Rasputin
+# 175.Deja Vu
+# 176.Sneaky Snitch
+# 177.Alia-a intro
+@name Pie Public Music E2
+@outputs Prefix:string
+@persist [LS,SI]:array [P,Host]:entity S GT:gtable SL:table
+@model models/maxofs2d/hover_rings.mdl
+if (first() | duped())
+{
+    timer("readChat",2500)
+    GT=gTable("Public Music",1)
+    SL=GT["Pie's Music",table]
+    SI=GT["Pie's Music Index",array]
+    S=1
+    Prefix="e"
+    Host=owner()
+    LS=owner():lastSaid():explode(" ")
+    hideChat(1)
+}
+switch(clkName())
+{
+case ("readChat"),
+    timer("readChat",2500)
+    local CH = Host:lastSaid():explode(" "),
+    if (LS[1,string]==CH[1,string] & LS[2,string]==CH[2,string]){
+        exit()
+    }elseif (CH[1,string]:sub(0,Prefix:length())==Prefix)
+    {
+        switch(CH[1,string])
+        {
+        case (Prefix+"play"),
+            printColor(vec(0,255,0),"Now Playing: " +SI[CH[2,string]:toNumber(),string])
+            streamStop(S)
+            setName("Now Playing "+CH[2,string]:toNumber()+": " +SI[CH[2,string]:toNumber(),string])
+            entity():streamStart(S,SL[CH[2,string]:toNumber(),string],1)
+            break
+        case (Prefix+"playowner"), # play on owner
+            Host:streamStart(S,SL[CH[2,string]:toNumber(),string],1)
+            setName("Now Playing on "+owner():name()+":"+SI[CH[2,string]:toNumber(),string])
+            printColor(vec(255,0,69),"Now Playing on You: " +SI[CH[2,string]:toNumber(),string]) 
+            break
+        case (Prefix+"volume"),
+            streamVolume(S,CH[2,string]:toNumber())
+            printColor(vec(120,255,120),"Volume: "+CH[2,string]:toNumber():toString()+". Remember 1 Is The Max, So Use Numbers Between 0 and 1")
+            break
+        case (Prefix+"stop"),
+            streamStop(S)
+            printColor(vec(255,0,0),"All Music Has Been Stopped!")
+            break
+        case (Prefix+"stream"),
+            # 181 Radio Stations- http://www.181.fm/mp3links
+            local Service=CH[2,string]:explode("http://")[2,string]
+            setName("Now Streaming: " + Service)
+            entity():streamStart(S,CH[2,string],1)
+            print("Now Streaming: " + Service)
+            break
+        case (Prefix+"stand"),
+            entity():setPos(entity():pos() + vec(0,0,75))
+            P = seatSpawn("models/props/de_inferno/fountain.mdl",entity():pos() - vec(0,0,75),ang(),1)
+            P:parentTo(entity())
+            propSpawnUndo(0)
+            entity():parentTo(P)
+            break
+        case(Prefix+"nostand"),
+            P:unParent()
+            P:propDelete()
+            break
+        case(Prefix+"host"),
+            LE=Host:aimEntity()
+            if (LE:isValid()){
+                if (LE:isPlayer()){
+                    Host=LE
+                }
+            }
+            print("Host Has been Transferred")
+            break
+        case(Prefix+"xmas"),
+            timer("xmas",0)
+            P:setColor(vec(255,0,0))
+            P:setMaterial("cs_havana/lightbareon01")
+            break
+        case(Prefix+"car"),
+            LE=Host:aimEntity()
+            if (LE:isValid()){
+                if (LE:isVehicle()){
+                    if (CH[2,string]=="1"){
+                        print("Parenting...")
+                        entity():parentTo(LE)
+                    } else{
+                        LE:unParent()
+                    }
+                }
+            }
+            break
+        case(Prefix+"nocar"),
+            entity():unParent()
+            break
+        default,
+            break
+        }
+    }
+    LS=CH
+    exit()
+case ("xmas"),
+    if (P:isValid())
+    {
+        timer("xmas",2500)
+    }
+    switch(P:getColor())
+    {
+    case (vec(0,0,255)),
+        P:setColor(vec(255,0,0))
+        exit()
+        break
+    case (vec(0,255,0)),
+        P:setColor(vec(0,0,255))
+        exit()
+        break
+    case (vec(255,0,0)),
+        P:setColor(vec(0,255,0))
+        exit()
+        break
+    }
+    exit()
+    break
+default,
+    break
+}

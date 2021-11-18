@@ -1,0 +1,2 @@
+owner():noCollideAll(1)
+selfDestruct()

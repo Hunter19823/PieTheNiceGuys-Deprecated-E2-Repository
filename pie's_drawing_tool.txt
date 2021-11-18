@@ -1,0 +1,144 @@
+@name Pie's Drawing Tool
+@persist [Settings,RunTime]:table 
+if(first()){
+    Settings=table(
+        "DefaultWhitelist"=array(
+            owner()
+        ),
+        "DrawKey"="g",
+        "UndoKey"="backspace",
+        "RedoKey"="enter"
+    )
+    
+    RunTime=table()
+    
+    function void createLine(SteamID:string,EndPos:vector){
+        RunTime["HologramIndex",number]=RunTime["HologramIndex",number]+1
+        UserData=RunTime[SteamID,table]
+        local ID=RunTime["HologramIndex",number]
+        local StartPos = UserData["StartPos",vector]
+        local Color = UserData["Color",vector]
+        local Model = UserData["Model",string]
+        local Material = UserData["Material",string]
+        local Middle = EndPos-((EndPos-StartPos)/2)
+        local Distance = StartPos:distance(EndPos)
+        local Scale = shiftR(vec(UserData["Gurth",vector2],Distance))
+        local Angle = -1*heading(Middle,ang(),EndPos)
+        holoCreate(ID,Middle,vec(),Angle,Color,Model)
+        holoScaleUnits(ID,Scale)
+        holoMaterial(ID,Material)
+        UserData["Undo",table][UserData["Undo",table]:count()+1,table]=table(
+            "ID"=ID,
+            "Pos"=Middle,
+            "ScaleUnits"=Scale,
+            "Angle"=Angle,
+            "Color"=Color,
+            "Model"=Model,
+            "Material"=Material
+        )
+        holoPos(UserData["TempHoloId",number],vec())
+        #holoDelete(UserData["TempHoloId",number])
+    }
+    
+    
+    
+    runOnKeys(Settings["DefaultWhitelist",array],1)
+}
+if(keyClk() & !keyClk():isTyping() & perf(50)){
+    Player=keyClk()
+    SteamID=Player:steamID()
+    switch(keyClk(Player)){
+        #Pressed
+        case 1,
+            switch(keyClkPressed()){
+                case Settings["DrawKey",string],
+                    if(holoCanCreate()){
+                        if(!RunTime[SteamID,table]){
+                            RunTime[SteamID,table]=table(
+                                "Color"=vec(255),
+                                "Material"="",
+                                "Model"="models/hunter/plates/plate8x8.mdl",
+                                "Gurth"=vec2(1),
+                                "Undo"=table(),
+                                "Redo"=table(),
+                                "TempHoloId"=Player:id()
+                            )
+                            holoCreate(UserData["TempHoloId",number],Player:aimPos(),vec(0.1),ang(),vec(255),"models/XQM/Rails/trackball_1.mdl")
+                        }
+                        UserData=RunTime[SteamID,table]
+                        UserData["IsDrawing",number]=1
+                        UserData["StartPos",vector]=Player:aimPos()
+                    }
+                    break
+                case Settings["UndoKey",string],
+                    if(RunTime[SteamID,table]){
+                        UserData=RunTime[SteamID,table]
+                        if(UserData["Undo",table]:count()){
+                            Index=UserData["Undo",table]:count()
+                            UserData["Redo",table][UserData["Redo",table]:count()+1,table]=UserData["Undo",table][Index,table]:clone()
+                            holoDelete(UserData["Undo",table][Index,table]["ID",number])
+                            UserData["Undo",table]:removeTable(Index)
+                        }
+                    }
+                    break
+                case Settings["RedoKey",string],
+                    if(RunTime[SteamID,table] & holoCanCreate()){
+                        UserData=RunTime[SteamID,table]
+                        if(UserData["Redo",table]:count()){
+                            Index=UserData["Redo",table]:count()
+                            UserData["Undo",table][UserData["Undo",table]:count()+1,table]=UserData["Redo",table][Index,table]:clone()
+                            local HoloData = UserData["Redo",table][Index,table]
+                            holoCreate(HoloData["ID",number],HoloData["Pos",vector],vec(),HoloData["Angle",angle],HoloData["Color",vector],HoloData["Model",string])
+                            holoScaleUnits(HoloData["ID",number],HoloData["ScaleUnits",vector])
+                            holoMaterial(HoloData["ID",number],HoloData["Material",string])
+                            UserData["Redo",table]:removeTable(Index)
+                        }
+                    }
+                    break
+                case Settings["ColorKey",string],
+                    if(RunTime[SteamID,table] & holoCanCreate()){
+                        UserData=RunTime[SteamID,table]
+                        Ent=Player:aimEntity()
+                        if(Ent){
+                            UserData["Color",vector]=Ent:getColor()
+                        }
+                    }
+                    break
+                case Settings["ModelKey",string],
+                    if(RunTime[SteamID,table] & holoCanCreate()){
+                        UserData=RunTime[SteamID,table]
+                        Ent=Player:aimEntity()
+                        if(Ent){
+                            UserData["Model",string]=Ent:model()
+                        }
+                    }
+                    break
+                case Settings["MaterialKey",string],
+                    if(RunTime[SteamID,table] & holoCanCreate()){
+                        UserData=RunTime[SteamID,table]
+                        Ent=Player:aimEntity()
+                        if(Ent){
+                            UserData["Material",string]=Ent:getMaterial()
+                        }
+                    }
+                    break
+            }
+            break
+        #Release
+        case -1,
+            switch(keyClkPressed()){
+                case Settings["DrawKey",string],
+                    if(RunTime[SteamID,table]){
+                        if(RunTime[SteamID,table]["IsDrawing",number]){
+                            RunTime[SteamID,table]["IsDrawing",number]=0
+                            createLine(SteamID,Player:aimPos())
+                        }
+                    }
+                    break
+                case Settings["UndoKey",string],
+                    
+                    break
+            }
+            break
+    }
+}

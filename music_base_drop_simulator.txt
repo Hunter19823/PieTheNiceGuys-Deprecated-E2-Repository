@@ -1,0 +1,20 @@
+@name Music Base Drop Simulator
+@persist [Stage1 Stage1Setup Timer] Stage1Ent:entity
+if(first()){
+    Stage1=1
+    Timer=350
+    entity():noDraw(1)
+}
+if(Stage1){
+    if(!Stage1Setup){
+        Stage1Ent=propSpawn("models/hunter/blocks/cube4x4x4.mdl",entity():toWorld(vec(0,0,500)),1)
+        Stage1Ent:noCollideAll(1)
+        Stage1Ent:noDraw(1)
+        Stage1Setup=1
+        interval(Timer)
+    }else{
+        Stage1Ent:propManipulate(entity():toWorld(vec(0,0,100)),ang(),0,Stage1Ent:gravity(),0)
+        Stage1Ent:propSetVelocityInstant(vec(0,0,-1000))
+        interval(Timer)
+    }
+}

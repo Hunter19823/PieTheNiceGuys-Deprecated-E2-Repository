@@ -1,0 +1,53 @@
+@name Pie's Snake
+@model models/props/cs_office/snowman_face.mdl
+@persist [Holos I] [Model]:string [Offset]:vector
+if(first()){
+    Holos=50
+    Model=entity():model()
+    I=0
+    Offset=vec(-20,0,0)
+    timer("Grow",1000)
+}
+if(clk("Grow")){
+    if(I<Holos){
+        while(I<Holos & holoCanCreate() & perf(65)){
+            I++
+            if(I==1){
+                Parent=entity()
+            }else{
+                Parent=holoEntity(I-1)
+            }
+            holoCreate(I,Parent:toWorld(Offset),vec(1),Parent:angles(),vec(255),Model)
+            holoBodygroup(I,1,1)
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished")
+        #holoParent(1,entity())
+        I=0
+        timer("Control",1000)
+    }
+}
+if(clk("Control")){
+    if(I<Holos){
+        while(I<Holos & perf(65)){
+            I++
+            if(I==1){
+                Parent=entity()
+                LPos=holoEntity(I):toLocal(Parent:toWorld(Offset))/2 #+ vec(0,0,25)
+            }else{
+                Parent=holoEntity(I-1)
+                LPos=holoEntity(I):toLocal(Parent:toWorld(Offset))/8*7
+            }
+            
+            
+            #print(Parent:pos(),I-1)
+            holoPos(I,holoEntity(I):toWorld(LPos))
+            holoAng(I,holoEntity(I):toWorld(holoEntity(I):toLocal(Parent:angles())/2))
+        }
+        timer("Control",0)
+    }else{
+        I=0
+        timer("Control",100)
+    }
+}

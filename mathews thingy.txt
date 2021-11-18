@@ -1,0 +1,258 @@
+@name Toast's Simple GunShop
+@inputs EGP:wirelink User:entity
+@persist [Status CurrentRow X Y Z]:number
+@persist [Gun1_name Gun2_name Gun3_name Gun4_name Gun5_name Type]:string
+@persist [Guns]:array
+@persist [Cursor]:vector2 [Pos]:vector
+@persist Background Profit Inlist PosToggled
+@persist [Gun1 Gun2 Gun3 Gun4 Gun5]:entity
+
+interval(100)
+
+if(first()){
+    runOnUse(1)
+    runOnChat(1)
+    #values
+    
+       Type = " Shipment"
+       CurrentRow = 1    
+       Status = 1
+       PosToggled = 0
+       Profit = 15000
+    
+    
+    #values
+    if(Gun1:isShipment()){
+        Gun1_name = Gun1:shipmentName() + Type
+    }else{ 
+        Gun1_name = "Out of stock"
+    }
+    if(Gun2:isShipment()){
+        Gun2_name = Gun2:shipmentName() + Type
+    }else{
+        Gun2_name = "Out of stock"
+    }
+    if(Gun3:isShipment()){
+        Gun2_name = Gun3:shipmentName() + Type
+    }else{
+        Gun3_name = "Out of stock"
+    }
+    if(Gun4:isShipment()){
+        Gun4_name = Gun4:shipmentName() + Type
+    }else{
+        Gun4_name = "Out of stock"
+    }
+    if(Gun5:isShipment()){
+        Gun5_name = Gun5:shipmentName() + Type
+    }else{
+        Gun5_name = "Out of stock"
+    }
+    
+    function number clickButton(E) {
+        local Pos1 = EGP:egpPos(E) - EGP:egpSize(E) / 2
+        local Pos2 = EGP:egpPos(E) + EGP:egpSize(E) / 2
+        return inrange(Cursor, Pos1, Pos2)
+    }
+
+    function update() {
+        if(Gun1:isShipment()){
+            Gun1_name = Gun1:shipmentName() + Type
+        }else{ 
+            Gun1_name = "Out of stock"
+        }
+        if(Gun2:isShipment()){
+            Gun2_name = Gun2:shipmentName() + Type
+        }else{
+            Gun2_name = "Out of stock"
+        }
+        if(Gun3:isShipment()){
+            Gun2_name = Gun3:shipmentName() + Type
+        }else{
+            Gun3_name = "Out of stock"
+        }
+        if(Gun4:isShipment()){
+            Gun4_name = Gun4:shipmentName() + Type
+        }else{
+            Gun4_name = "Out of stock"
+        }
+        if(Gun5:isShipment()){
+            Gun5_name = Gun5:shipmentName() + Type
+        }else{
+            Gun5_name = "Out of stock"
+        }
+    
+        # Updating text on shipment name
+    }
+
+    EGP:egpText(7,Gun1_name ,vec2(90,138))
+    EGP:egpText(9,Gun2_name,vec2(90,208))
+    EGP:egpText(11,Gun3_name,vec2(90,278))  
+    EGP:egpText(13,Gun4_name,vec2(90,348))
+    EGP:egpText(15,Gun5_name,vec2(90,418))  
+    
+    #EGP formatting
+    
+    EGP:egpBox(1,vec2(256,256),vec2(512,512))
+    EGP:egpRoundedBox(2,vec2(256,90),vec2(400,50))
+    EGP:egpColor(2,vec(62,62,62))
+    EGP:egpText(3,"Simple Gunshop",vec2(90,64))
+    EGP:egpSize(3,50)
+    EGP:egpRoundedBox(5,vec2(256,300),vec2(350,350))
+    EGP:egpColor(5,vec(62,62,62))
+    
+    #[Gun Slot 1]#EGP:egpRoundedBox(6,vec2(256,164),vec2(400,50))
+    EGP:egpSize(7,50)
+    EGP:egpText(7,Gun1_name ,vec2(90,138))
+    EGP:egpColor(6,vec(88,92,88))
+    
+    #[Gun Slot 2]#EGP:egpRoundedBox(8,vec2(256,234),vec2(400,50))
+    EGP:egpSize(9,50)
+    EGP:egpText(9,Gun2_name,vec2(90,208))
+    EGP:egpColor(8,vec(88,92,88))
+    
+    #[Gun Slot 3]#EGP:egpRoundedBox(10,vec2(256,304),vec2(400,50))
+    EGP:egpSize(11,50)
+    EGP:egpText(11,Gun3_name,vec2(90,278))
+    EGP:egpColor(10,vec(88,92,88))
+    
+    #[Gun Slot 4]#EGP:egpRoundedBox(12,vec2(256,374),vec2(400,50))
+    EGP:egpSize(13,50)
+    EGP:egpText(13,Gun4_name,vec2(90,348))
+    EGP:egpColor(12,vec(88,92,88))
+    
+    #[Gun Slot 5]#EGP:egpRoundedBox(14,vec2(256,444),vec2(400,50))
+    EGP:egpSize(15,50)
+    EGP:egpText(15,Gun5_name,vec2(90,418))
+    EGP:egpColor(14,vec(88,92,88))
+    EGP:egpRoundedBox(20,vec2(-386,-386),vec2(2,2))
+    EGP:egpParentToCursor(20)
+}
+
+Gun1 = Guns[1,entity]
+Gun2 = Guns[2,entity]
+Gun3 = Guns[3,entity]
+Gun4 = Guns[4,entity]
+Gun5 = Guns[5,entity]
+if(clk()){
+    if(owner():keyPressed("p")){
+        if(!X & !Y & !Z){
+            printColor(vec(255,0,255),"ERROR: Set a position first with .pos / .where!")
+        }else{
+            LookEntity = owner():aimEntity()
+            if(LookEntity:isShipment()){
+                Inlist = 0
+                for(I = 1,Guns:count(),1){
+                    if(Guns[I,entity]:isShipment()){
+                        if(Guns[I,entity] == LookEntity){
+                            printColor(vec(255,0,0),"In the list")
+                            Inlist = 1  
+                        }
+                    }else{
+                        Guns:remove(I)
+                    }
+                }
+                if(Inlist == 0){
+                    Guns:insertEntity(Guns:count() + 1,LookEntity) 
+                    LookEntity:setPos(vec(X,Y,Z) + vec(Status * -50,0,0))
+                    Status = Status + 1
+                    if(Status == 7){
+                        Y = Y + 50
+                        CurrentRow = CurrentRow + 1
+                        Status = 1
+                    }
+                    if(CurrentRow == 5){
+                        CurrentRow = 1
+                    }
+                }
+            }
+            print("Total guns in stock: "+Guns:count())
+            print(Guns)
+        }
+    }
+    update()
+}
+if(useEntClk():inUse()){
+    EGP:egpColor(1,hsv2rgb((curtime()*5)%360,1,1))
+    Cursor = EGP:egpCursor(User)
+    switch(1){
+        case clickButton(6),
+            if(Gun1:isShipment()){
+                moneyRequest(User,Gun1:shipmentPrice() + Profit,10,"gun1")    
+            }
+            break
+        case clickButton(8),
+            if(Gun2:isShipment()){
+                moneyRequest(User,Gun2:shipmentPrice() + Profit,10,"gun2")    
+            }
+            break
+        case clickButton(10),
+            if(Gun3:isShipment()){
+                moneyRequest(User,Gun3:shipmentPrice() + Profit,10,"gun3")    
+            }
+            break
+        case clickButton(12),
+            if(Gun4:isShipment()){
+                moneyRequest(User,Gun4:shipmentPrice() + Profit,10,"gun4")    
+            }
+            break
+        case clickButton(14),
+            if(Gun5:isShipment()){
+                moneyRequest(User,Gun5:shipmentPrice() + Profit,10,"gun5")    
+            }
+            break
+    }
+}
+if(moneyClk()){
+    Pos=entity():pos()
+    switch(moneyClkTitle()){
+        case "gun1",
+            Gun1:setPos(Pos)
+            Guns:remove(1)
+            break
+        case "gun2",
+            Gun2:setPos(Pos)
+            Guns:remove(2)
+            break
+        case "gun3",
+            Gun3:setPos(Pos)
+            Guns:remove(3)
+            break
+        case "gun4",
+            Gun4:setPos(Pos)
+            Guns:remove(4)
+            break
+        case "gun5",
+            Gun5:setPos(Pos)
+            Guns:remove(5)
+            break
+    }
+}
+
+if(chatClk(owner())){
+    Said = owner():lastSaid():explode(" ")
+    switch(Said[1,string]:lower()){
+        case ".pos",
+            if(PosToggled){
+                PosToggled = 0
+            }else{
+                PosToggled = 1
+                printColor(vec(0,0,255),"Position set")
+                Pos=owner():aimPos()
+                X=Pos:x()
+                Y=Pos:y()
+                Z=Pos:z()
+            }
+            break
+        case ".where",
+            if(!X & !Y & !Z){
+                printColor(vec(255,0,0),"ERROR: ",vec(255,255,255),"Did not specify a location!")
+                printColor(vec(255,0,0),"ERROR: ",vec(255,255,255),"Did not specify a location!")
+                printColor(vec(255,0,0),"ERROR: ",vec(255,255,255),"Did not specify a location!")
+            }else{
+                printColor(vec(255,0,255),"Location: ",vec(255,255,255),X+" "+Y+" "+Z)
+            }
+            break
+    }
+}
+
+

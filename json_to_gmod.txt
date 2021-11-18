@@ -1,0 +1,96 @@
+@name JSON To GMOD
+@persist [PropData]:table [Mode,CreationDelay,RetryDelay,Scale] [Directory,FileName,RawData]:string [List]:array [Parent]:entity
+if(first()){
+    Parent=entity()
+    Scale=0.1
+    
+    Mode=1
+    Directory="base_dupes"
+    CreationDelay=250
+    RetryDelay=1000
+    runOnFile(1)
+    
+    function vector table:toVector(){
+        return vec(This[1,number],This[2,number],This[3,number])
+    }
+    function angle table:toAng(){
+        return ang(This[1,number],This[2,number],This[3,number])
+    }
+    timer("GetList",1000)
+}
+if(clk("GetList")){
+    if(fileCanList()){
+        fileList(Directory+"/")
+    }else{
+        timer(clkName(),RetryDelay)
+    }
+}
+if(fileListClk()){
+    if(fileLoadedList()){
+        List=fileReadList()
+        print("Finished loading files: ")
+        printTable(invert(List))
+        
+        runOnChat(1)
+    }else{
+        print("File List was not properly loaded")
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".holo",
+            Index=LS[2,string]:toNumber()
+            if(List:exists(Index)){
+                FileName=List[Index,string]
+                Mode=1
+                timer("GetFile",CreationDelay)
+            }else{
+                print("Error: "+Index+" does not represent any files. Please choose from the following: ")
+                printTable(invert(List))
+            }
+            break
+        case ".scale",
+            Scale=LS[2,string]:toNumber()
+            break
+    }
+}
+if(clk("GetFile")){
+    if(fileCanLoad()){
+        print("Loading file data...")
+        fileLoad(Directory+"/"+FileName)
+    }else{
+        timer(clkName(),RetryDelay)
+    }
+}
+if(fileClk()){
+    if(fileLoaded()){
+        print("File data has been loaded")
+        RawData = fileRead()
+        PropData = jsonDecode(RawData)
+        timer("ReCreate",CreationDelay)
+    }else{
+        print("File was not properly loaded")
+    }
+}
+if(clk("ReCreate")){
+    if(PropData:count()>0){
+        while(PropData:count()>0 & perf(75) & propCanCreate() & holoCanCreate()){
+            Data=PropData:popTable()
+            switch(Mode){
+                case 1,
+                    HoloIndex=holoMaxAmount() - holoRemainingSpawns()
+                    holoCreate(HoloIndex,Parent:toWorld(Data["localpos",table]:toVector()*Scale),vec(Scale),Parent:toWorld(Data["localang",table]:toAng()),Data["color",table]:toVector(),Data["model",string])
+                    holoMaterial(HoloIndex,Data["material",string])
+                    holoAlpha(HoloIndex,Data["alpha",number])
+                    holoSkin(HoloIndex,Data["skin",number])
+                    holoEntity(HoloIndex):animate(Data["animation",number])
+                    holoParent(HoloIndex,Parent)
+                    break
+            }
+        }
+    }
+    
+    
+}
+

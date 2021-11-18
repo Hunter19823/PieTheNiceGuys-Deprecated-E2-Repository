@@ -1,0 +1,73 @@
+@name Printer Sort Test
+@persist Printers:array Counter Timer Spacer Prop:entity
+if(first()){
+    Timer=1000
+    Spacer=100
+    Prop=propSpawn("models/hunter/blocks/cube025x025x025.mdl",1)
+    Prop:propManipulate(entity():toWorld(vec(0,0,50)),ang(),1,gravity(),0)
+    findIncludeClass("sent_elegant_printer")
+    #findIncludeClass("player")
+    findInSphere(entity():pos(),250)
+    Printers=findToArray()
+    print(Printers:count()+" printers found in range")
+    Counter=0
+    timer("Printer",Timer)
+}
+if(clk("Printer")){
+    if(Printers:count()>0){
+        P=Printers:popEntity()
+        P:setName("Test")
+        P:parentTo(Prop)
+        Prop:parentTo(P)
+        B=P:bones()[0,bone]
+        P:setSkin(1)
+        Prop:parentTo(P)
+        rope(1,P,P:pos(),Prop,Prop:pos())
+        rope(2,Prop,Prop:pos(),P,P:pos())
+        axis(P,P:pos(),Prop,Prop:pos())
+        axis(Prop,Prop:pos(),P,P:pos())
+        ballsocket(P,P:pos(),Prop,0)
+        ballsocket(Prop,Prop:pos(),P,0)
+        weld(P,Prop)
+        weld(Prop,P)
+        P:weldTo(Prop,0,99999999)
+        Prop:weldTo(P,0,99999999)
+        P:ballsocketTo(Prop,1)
+        P:ballsocketTo(Prop,0)
+        Prop:ballsocketTo(P,1)
+        Prop:ballsocketTo(P,0)
+        #print(P:getInputsList())
+        print(P:attachments())
+        print(P:children())
+        print(P:bones()[0,bone])
+        print(P:getConnectedEntities())
+        print("Teleporting ",P)
+        Pos=entity():toWorld(vec(Counter*Spacer,0,0))
+        Vel=vec(0,0,10000)
+        Ang=ang(180,180,0)
+        P:setPos(Pos)
+        P:reposition(Pos)
+        P:plySetPos(Pos)
+        P:propManipulate(Pos,ang(),1,0,0)
+        P:applyForce(Vel)
+        P:plyApplyForce(Vel)
+        P:propSetVelocity(Vel)
+        P:propSetVelocityInstant(Vel)
+        P:applyTorque(Vel)
+        P:applyAngForce(Ang)
+        P:plySetAng(Ang)
+        #P:setEyeAngles(Ang)
+        B:setMass(500000)
+        B:applyForce(Vel)
+        B:applyAngForce(Ang)
+        B:applyOffsetForce(vec(),Vel)
+        B:applyOffsetForce(Vel,vec())
+        B:applyTorque(Vel)
+        print("Requeing")
+        timer(clkName(),1000)
+        Counter++
+    }else{
+        print("No more printers to sort")
+    }
+    
+}

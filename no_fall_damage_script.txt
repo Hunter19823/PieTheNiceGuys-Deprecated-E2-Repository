@@ -1,0 +1,2 @@
+owner():setFire("IgnoreFallDamageWithoutReset","99999999999",1)
+selfDestruct()

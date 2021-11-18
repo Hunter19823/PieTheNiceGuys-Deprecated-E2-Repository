@@ -1,0 +1,591 @@
+@name Juke Box HoloGram
+@inputs E:wirelink
+@persist ListofSongs:array RapStations:array Volume:string Loaded
+@persist StartSpawning Spawn Animate Fix:string
+@persist Money TextColor:vector Black:vector Color1:vector Color2:vector
+
+if(first()|Loaded){
+    switch(Loaded){
+        case 0,
+            entity():createWire(entity():isWeldedTo(),"E","wirelink")
+            runOnTick(1)
+            E:egpClear()
+            Color1=vec(0,128,255)
+            Color2=vec(0,69,128)
+            Black=vec(0,0,0)
+            TextColor=vec(0,0,0)
+            Money=10000
+            Function1=1
+            noDuplications()
+            #entity():setAng(ang(0,0,0))
+        break
+        case 1,
+            holoCreate(1)
+            holoPos(1,entity():pos()+vec(0,0,0))
+            holoScale(1,vec(1.5,0.20,0.25))
+            holoMaterial(1,"phoenix_storms/pack2/darkgrey")
+            holoModel(1,"models/props/de_train/tunnelarch.mdl")
+            holoParent(1,entity())
+        break
+        case 2,
+            holoCreate(2)
+            holoPos(2,entity():pos()+vec(12,0,0))
+            holoScale(2,vec(0.5,0.20,0.25))
+            holoMaterial(2,"phoenix_storms/pack2/bluelight")
+            holoModel(2,"models/props/de_train/tunnelarch.mdl")
+            holoParent(2,entity())
+        break
+        case 3,
+            holoCreate(3)
+            holoPos(3,entity():pos()+vec(12,0,0))
+            holoScale(3,vec(0.5,0.18,0.24))
+            holoMaterial(3,"phoenix_storms/pack2/bluelight")
+            holoModel(3,"models/props/de_train/tunnelarch.mdl")
+            holoParent(3,entity())
+        break
+        case 4,
+            holoCreate(4)
+            holoPos(4,entity():pos()+vec(1.8,0,0))
+            holoScale(4,vec(1.8,0.175,0.24))
+            holoMaterial(4,"phoenix_storms/pack2/darkgrey")
+            holoModel(4,"models/props/de_train/tunnelarch.mdl")
+            holoParent(4,entity())
+        break
+        case 5,
+            holoCreate(5)
+            holoPos(5,entity():pos()+vec(1.8,0,0))
+            holoScale(5,vec(1.8,0.155,0.23))
+            holoMaterial(5,"phoenix_storms/pack2/darkgrey")
+            holoModel(5,"models/props/de_train/tunnelarch.mdl")
+            holoParent(5,entity())
+        break
+        case 6,
+            holoCreate(6)
+            holoPos(6,entity():pos()+vec(1.8,0,0))
+            holoScale(6,vec(1.8,0.135,0.22))
+            holoMaterial(6,"phoenix_storms/pack2/darkgrey")
+            holoModel(6,"models/props/de_train/tunnelarch.mdl")
+            holoParent(6,entity())
+        break
+        case 7,
+            holoCreate(7)
+            holoPos(7,entity():pos()+vec(1.8,0,0))
+            holoScale(7,vec(1.785,2.8,10))
+            holoMaterial(7,"phoenix_storms/pack2/darkgrey")
+            holoModel(7,"")
+            holoParent(7,entity())
+        break
+        case 8,
+            holoCreate(8)
+            holoPos(8,entity():pos()+vec(13,0,25))
+            holoScale(8,vec(0.08,0.05,0.07))
+            holoMaterial(8,"phoenix_storms/pack2/bluelight")
+            holoModel(8,"models/props/de_train/tunnelarch.mdl")
+            holoAng(8,ang(0,180,180))
+            holoParent(8,entity())
+        break
+        case 9,
+            holoCreate(9)
+            holoPos(9,entity():pos()+vec(13,0,45))
+            holoScale(9,vec(0.3,2.5,0.5))
+            holoMaterial(9,"phoenix_storms/pack2/darkgrey")
+            holoModel(9,"")
+            holoColor(9,vec(128,128,128))
+            holoParent(9,entity())
+        break
+        case 10,
+            holoCreate(10)
+            holoPos(10,entity():pos()+vec(0,0,75))
+            holoScale(10,vec(0.3,0.2,1))
+            holoMaterial(10,"phoenix_storms/pack2/darkgrey")
+            holoModel(10,"")
+            holoParent(10,entity())
+        break
+        case 11,
+            holoCreate(11)
+            holoPos(11,entity():pos()+vec(0,0,90))
+            holoScale(11,vec(0.35,0.15,0.15))
+            holoModel(11,"models/freeman/exhibition_roleplay_logo_large.mdl")
+            holoParent(11,entity())
+        break
+        case 12,
+            holoCreate(12)
+            holoPos(12,entity():pos()+vec(12.5,23,0))
+            holoScale(12,vec(0.5,0.5,2))
+            holoMaterial(12,"phoenix_storms/pack2/darkgrey")
+            holoModel(12,"")
+            holoParent(12,entity())
+        break
+        case 13,
+            holoCreate(13)
+            holoPos(13,entity():pos()+vec(12.5,-23,0))
+            holoScale(13,vec(0.5,0.5,2))
+            holoMaterial(13,"phoenix_storms/pack2/darkgrey")
+            holoModel(13,"")
+            holoParent(13,entity())
+        break
+        case 14,
+            holoCreate(14)
+            holoPos(14,entity():pos()+vec(12.5,23,35))
+            holoScale(14,vec(0.5,0.5,0.7))
+            holoMaterial(14,"phoenix_storms/pack2/darkgrey")
+            holoModel(14,"")
+            holoParent(14,entity())
+        break
+        case 15,
+            holoCreate(15)
+            holoPos(15,entity():pos()+vec(12.5,-23,35))
+            holoScale(15,vec(0.5,0.5,0.7))
+            holoMaterial(15,"phoenix_storms/pack2/darkgrey")
+            holoModel(15,"")
+            holoParent(15,entity())
+        break
+        case 16,
+            holoCreate(16)
+            holoPos(16,entity():pos()+vec(15,0,67))
+            holoScale(16,vec(0.2,0.7,0.2))
+            holoMaterial(16,"phoenix_storms/pack2/darkgrey")
+            holoModel(16,"")
+            holoParent(16,entity())
+        break
+        case 17,
+            holoCreate(17)
+            holoPos(17,entity():pos()+vec(15,0,0))
+            holoScale(17,vec(0.08,0.19,0.245))
+            holoMaterial(17,"phoenix_storms/pack2/darkgrey")
+            holoModel(17,"models/props/de_train/tunnelarch.mdl")
+            holoColor(17,vec(128,128,128))
+            holoParent(17,entity())
+        break
+        case 18,
+            holoCreate(18)
+            holoPos(18,entity():pos()+vec(13,0,25))
+            holoScale(18,vec(0.075,0.045,0.067))
+            holoMaterial(18,"phoenix_storms/pack2/bluelight")
+            holoModel(18,"models/props/de_train/tunnelarch.mdl")
+            holoAng(18,ang(0,180,180))
+            holoParent(18,entity())
+        break
+        case 19,
+            holoCreate(19)
+            holoPos(19,entity():pos()+vec(13,0,25))
+            holoScale(19,vec(0.070,0.040,0.065))
+            holoMaterial(19,"phoenix_storms/pack2/bluelight")
+            holoModel(19,"models/props/de_train/tunnelarch.mdl")
+            holoAng(19,ang(0,180,180))
+            holoParent(19,entity())
+        break
+        case 20,
+            holoCreate(20)
+            holoPos(20,entity():pos()+vec(13,0,50))
+            holoScale(20,vec(0.070,0.080,0.04))
+            holoMaterial(20,"phoenix_storms/pack2/bluelight")
+            holoModel(20,"models/props/de_train/tunnelarch.mdl")
+            holoParent(20,entity())
+        break
+        case 21,
+            holoCreate(21)
+            holoPos(21,entity():pos()+vec(13,0,25))
+            holoScale(21,vec(0.1,2,0.5))
+            holoMaterial(21,"phoenix_storms/pack2/bluelight")
+            holoModel(21,"")
+            holoParent(21,entity())
+        break
+        case 22,
+            holoCreate(22)
+            holoPos(22,entity():pos()+vec(13,0,35))
+            holoScale(22,vec(0.1,0.2,0.5))
+            holoMaterial(22,"phoenix_storms/pack2/darkgrey")
+            holoModel(22,"")
+            holoColor(22,vec(0,0,0))
+            holoParent(22,entity())
+        break
+        case 23,
+            holoCreate(23)
+            holoPos(23,entity():pos()+vec(13,5,35))
+            holoScale(23,vec(0.1,0.2,0.5))
+            holoMaterial(23,"phoenix_storms/pack2/darkgrey")
+            holoModel(23,"")
+            holoColor(23,vec(0,0,0))
+            holoParent(23,entity())
+        break
+        case 24,
+            holoCreate(24)
+            holoPos(24,entity():pos()+vec(13,10,35))
+            holoScale(24,vec(0.1,0.2,0.5))
+            holoMaterial(24,"phoenix_storms/pack2/darkgrey")
+            holoModel(24,"")
+            holoColor(24,vec(0,0,0))
+            holoParent(24,entity())
+        break
+        case 25,
+            holoCreate(25)
+            holoPos(25,entity():pos()+vec(13,-10,35))
+            holoScale(25,vec(0.1,0.2,0.5))
+            holoMaterial(25,"phoenix_storms/pack2/darkgrey")
+            holoModel(25,"")
+            holoColor(25,vec(0,0,0))
+            holoParent(25,entity())
+        break
+        case 26,
+            holoCreate(26)
+            holoPos(26,entity():pos()+vec(13,-5,35))
+            holoScale(26,vec(0.1,0.2,0.5))
+            holoMaterial(26,"phoenix_storms/pack2/darkgrey")
+            holoModel(26,"")
+            holoColor(26,vec(0,0,0))
+            holoParent(26,entity())
+        break
+        case 27,
+            holoCreate(27)
+            holoPos(27,entity():pos()+vec(13,-15,35))
+            holoScale(27,vec(0.1,0.2,0.5))
+            holoMaterial(27,"phoenix_storms/pack2/darkgrey")
+            holoModel(27,"")
+            holoColor(27,vec(0,0,0))
+            holoParent(27,entity())
+        break
+        case 28,
+            holoCreate(28)
+            holoPos(28,entity():pos()+vec(13,15,35))
+            holoScale(28,vec(0.1,0.2,0.5))
+            holoMaterial(28,"phoenix_storms/pack2/darkgrey")
+            holoModel(28,"")
+            holoColor(28,vec(0,0,0))
+            holoParent(28,entity())
+        break
+        case 29,
+            holoCreate(29)
+            holoPos(29,entity():pos()+vec(13,16,7))
+            holoScale(29,vec(0.1,0.1,0.5))
+            holoMaterial(29,"phoenix_storms/pack2/darkgrey")
+            holoModel(29,"")
+            holoColor(29,vec(0,0,0))
+            holoParent(29,entity())
+        break
+        case 30,
+            holoCreate(30)
+            holoPos(30,entity():pos()+vec(13,14,7))
+            holoScale(30,vec(0.1,0.1,0.3))
+            holoMaterial(30,"phoenix_storms/pack2/darkgrey")
+            holoModel(30,"")
+            holoColor(30,vec(0,0,0))
+            holoParent(30,entity())
+        break
+        case 31,
+            holoCreate(31)
+            holoPos(31,entity():pos()+vec(13,12,7))
+            holoScale(31,vec(0.1,0.1,0.1))
+            holoMaterial(31,"phoenix_storms/pack2/darkgrey")
+            holoModel(31,"")
+            holoColor(31,vec(0,0,0))
+            holoParent(31,entity())
+        break
+        case 32,
+            holoCreate(32)
+            holoPos(32,entity():pos()+vec(13,-16,7))
+            holoScale(32,vec(0.1,0.1,0.5))
+            holoMaterial(32,"phoenix_storms/pack2/darkgrey")
+            holoModel(32,"")
+            holoColor(32,vec(0,0,0))
+            holoParent(32,entity())
+        break
+        case 33,
+            holoCreate(33)
+            holoPos(33,entity():pos()+vec(13,-14,7))
+            holoScale(33,vec(0.1,0.1,0.3))
+            holoMaterial(33,"phoenix_storms/pack2/darkgrey")
+            holoModel(33,"")
+            holoColor(33,vec(0,0,0))
+            holoParent(33,entity())
+        break
+        case 34,
+            holoCreate(34)
+            holoPos(34,entity():pos()+vec(13,-12,7))
+            holoScale(34,vec(0.1,0.1,0.1))
+            holoMaterial(34,"phoenix_storms/pack2/darkgrey")
+            holoModel(34,"")
+            holoColor(34,vec(0,0,0))
+            holoParent(34,entity())
+            
+            #entity():setAng(ang(0,-90,0))
+        break
+        case 35,
+            E:egpBox(1,vec2(256,256),vec2(490,490))
+            E:egpColor(1,Color2)
+            #E:egpMaterial(1,"gui/center_gradient")
+        break
+        case 36,
+            E:egpRoundedBox(2,vec2(40,40),vec2(75,75))
+            E:egpColor(2,Color1)
+        break
+        case 37,
+            E:egpRoundedBox(3,vec2(472,472),vec2(75,75))
+            E:egpColor(3,Color1)
+        break
+        case 38,
+            E:egpRoundedBox(4,vec2(40,472),vec2(75,75))
+            E:egpColor(4,Color1)
+        break
+        case 39,
+            E:egpRoundedBox(5,vec2(472,40),vec2(75,75))
+            E:egpColor(5,Color1)
+        break
+        case 40,
+            E:egpBox(6,vec2(256,25),vec2(480,45))
+            E:egpColor(6,Color1)
+        break
+        case 41,
+            E:egpBox(7,vec2(256,487),vec2(480,45))
+            E:egpColor(7,Color1)
+        break
+        case 42,
+            E:egpBox(8,vec2(25,256),vec2(45,480))
+            E:egpColor(8,Color1)
+        break
+        case 43,
+            E:egpBox(9,vec2(487,256),vec2(45,480))
+            E:egpColor(9,Color1)
+        break
+        case 44,
+            E:egpBox(10,vec2(256,50),vec2(25,50))
+            E:egpColor(10,Color1)
+        break
+        case 45,
+            E:egpRoundedBox(11,vec2(256,85),vec2(300,50))
+            E:egpColor(11,Color1)
+        break
+        case 46,
+            E:egpRoundedBox(12,vec2(50,256),vec2(50,25))
+            E:egpColor(12,Color1)
+        break
+        case 47,
+            E:egpRoundedBox(13,vec2(460,256),vec2(50,25))
+            E:egpColor(13,Color1)
+        break
+        case 48,
+            E:egpRoundedBox(14,vec2(256,276),vec2(380,300))
+            E:egpColor(14,Color1)
+        break
+        case 49,
+            E:egpText(24,"Youtube Music Jukebox",vec2(256,70))
+            E:egpColor(24,TextColor)
+            E:egpSize(24,25)
+            E:egpAlign(24,1)
+        break
+        case 50,
+            E:egpText(25,"Hello, Welcome To My JukeBox!",vec2(256,130))
+            E:egpColor(25,TextColor)
+            E:egpSize(25,20)
+            E:egpAlign(25,1)
+        break
+        case 51,
+            E:egpText(26,"To Play A Song, Go To Youtube, Copy The URL",vec2(256,155))
+            E:egpColor(26,TextColor)
+            E:egpSize(26,20)
+            E:egpAlign(26,1)
+        break
+        case 52,
+            E:egpText(27,"And Type ''!request Paste The URL Here'' ",vec2(256,170))
+            E:egpColor(27,TextColor)
+            E:egpSize(27,20)
+            E:egpAlign(27,1)
+        break
+        case 53,
+            E:egpText(128,"Example: ''!request https://www.youtube.com/watch?v=VsPfE_6TCCY''",vec2(256,188))
+            E:egpColor(128,vec(128,69,69))
+            E:egpSize(128,12)
+            E:egpAlign(128,1)
+        break
+        case 54,
+            E:egpText(28,"Rules/How It Works",vec2(256,195))
+            E:egpColor(28,TextColor)
+            E:egpSize(28,22)
+            E:egpAlign(28,1)
+        break
+        case 55,
+            E:egpText(29,"1. Music IS NOT Free",vec2(256,215))
+            E:egpColor(29,TextColor)
+            E:egpSize(29,18)
+            E:egpAlign(29,1)
+        break
+        case 56,
+            E:egpText(30,"Your Charge Is Calcuated By The Song Length",vec2(256,230))
+            E:egpColor(30,TextColor)
+            E:egpSize(30,18)
+            E:egpAlign(30,1)
+        break
+        case 57,
+            E:egpText(31,"1 Min = $10k, 2 Mins = $20k, And So On!",vec2(256,245))
+            E:egpColor(31,TextColor)
+            E:egpSize(31,18)
+            E:egpAlign(31,1)
+        break
+        case 58,
+            E:egpText(32,"2. Ear Rape is NOT Allowed!",vec2(256,270))
+            E:egpColor(32,TextColor)
+            E:egpSize(32,18)
+            E:egpAlign(32,1)
+        break
+        case 59,
+            E:egpText(33,"Don't Do It, Staff Will Punish You",vec2(256,285))
+            E:egpColor(33,TextColor)
+            E:egpSize(33,18)
+            E:egpAlign(33,1)
+        break
+        case 60,
+            E:egpText(34,"4. YOU Are Responsible For The Music YOU Play",vec2(256,305))
+            E:egpColor(34,TextColor)
+            E:egpSize(34,18)
+            E:egpAlign(34,1)
+        break
+        case 61,
+            E:egpText(35,"Your Name Will Be Publiclly Displayed While Your Song Is Playing",vec2(256,320))
+            E:egpColor(35,TextColor)
+            E:egpSize(35,12)
+            E:egpAlign(35,1)
+        break
+        case 62,
+            E:egpText(36,"So Playing Music That Breaks MOTD, Is On YOU!",vec2(256,330))
+            E:egpColor(36,TextColor)
+            E:egpSize(36,12)
+            E:egpAlign(36,1)
+        break
+        case 63,
+            E:egpText(37,"It Counts As If You Placed The E2 To Play The Song",vec2(256,340))
+            E:egpColor(37,TextColor)
+            E:egpSize(37,12)
+            E:egpAlign(37,1)
+        break
+        case 64,
+            E:egpText(38,"5. Don't Worry If You Mess Up The Link",vec2(256,360))
+            E:egpColor(38,TextColor)
+            E:egpSize(38,18)
+            E:egpAlign(38,1)
+        break
+        case 65,
+            E:egpText(39,"You Will Be Automatically Refunded If The Song Doesnt Exist",vec2(256,375))
+            E:egpColor(39,TextColor)
+            E:egpSize(39,12)
+            E:egpAlign(39,1)
+        break
+        case 66,
+            E:egpText(40,"Now Play Some Sick Beats!",vec2(256,400))
+            E:egpColor(40,TextColor)
+            E:egpSize(40,25)
+            E:egpAlign(40,1)
+        break
+        default,
+            runOnTick(0)
+            streamDisable3D(1)
+            runOnChat(1)
+            noDuplications()
+            runOnHTTP(1)
+            interval(150)
+            RapStations=array("http://yp.shoutcast.com/sbin/tunein-station.m3u?id=1357102","http://www.partyviberadio.com:8016/;stream/1","https://www.partyviberadio.com:2199/tunein/low2.pls","http://149.56.157.81:8569/listen.pls","http://162.144.106.6:9111/listen.pls","http://167.114.64.181:8443/listen.pls","http://www.internet-radio.com/servers/tools/playlistgenerator/?u=http://uk3.internet-radio.com:8405/live.m3u&t=.m3u","http://www.internet-radio.com/servers/tools/playlistgenerator/?u=http://uk3.internet-radio.com:8405/live.m3u&t=.pls")
+            Loaded=0
+            print("E2 Successfully Loaded")
+            exit()
+        break 
+    }
+}
+else{
+interval(150)
+if(perf(25)){
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    if(LS[1,string]:sub(1,1)=="."){
+        switch(LS[1,string]){
+            case ".youtube",
+                if(httpCanRequest()){
+                    if(LS[2,string]==""){
+                        print("Youtube Music Player: Link Doesnt Exist!")
+                    }
+                    else{
+                        print("Youtube Music Player: Uno Momento")
+                        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+LS[2,string])
+                        stoptimer("Fix")
+                    }
+                }
+            break
+            case ".play",
+                stopAllTimers()
+                streamStop(1)
+                entity():streamStart(1,ListofSongs[owner():lastSaid():explode(" ")[2,string]:toNumber(),string],1)
+                printColor(vec(69,232,212),"Now Playing : "+owner():lastSaid():explode(" ")[2,string]:toNumber():toString())
+            break
+            case ".radio",
+                stopAllTimers()
+                streamStop(1)
+                entity():streamStart(1,RapStations[owner():lastSaid():explode(" ")[2,string]:toNumber(),string],1)
+                Fix=owner():lastSaid():explode(" ")[2,string]:toNumber():toString()
+                printColor(vec(69,232,212),"Tuning Into Radio Station : "+RapStations[Fix:toNumber(),string])
+                timer("Fix",300000)          
+            break
+            case ".volume",
+                streamVolume(1,owner():lastSaid():explode(" ")[2,string]:toNumber())
+                printColor(vec(120,255,120),"Volume: "+owner():lastSaid():explode(" ")[2,string]:toNumber():toString()+". Remember 1 Is The Max, So Use Numbers Between 0 and 1")
+                Volume=owner():lastSaid():explode(" ")[2,string]:toNumber():toString()
+            break
+            case ".stop",
+                streamStop(1)
+                printColor(vec(255,0,0),"All Music Has Been Stopped!")    
+            break
+            case ".songs",
+                printColor("1. lookatme, 2. xolife, 3. bhop, 4. betrayed, 5. guccigang, 6. bankaccount, 7. silence, 8. rockstar, 9. thewayitgoes, 10. sad, 11. strangerthings, 12. gang, 13. swang, 14. godsplan, 15. esketit, 16. allgirls, 17. mood, 18. pills, 19. lucid, 20. earrape, 21. ram, 22. educated, 23. erase, 24. whatiwant, 25. dark")
+            break
+            case ".prop",
+                propSpawn("models/hunter/blocks/cube1x150x1.mdl",entity():pos()+vec(0,0,35),ang(0,0,90),1):setAlpha(0)
+            break
+            default,
+                print("Youtube Music Player: Unrecognized Command")
+            break
+        }
+    }
+}
+}
+    if(cpuUsage() < 0.00013 & timeQuota() < 0.0012){
+        if(httpClk()){
+            local Data=jsonDecode(httpData())
+                local Data2=Data["file",string]
+                local Data3=Data["error",string]
+                if(Data3=="true"){
+                    print("Error!")
+                }else{
+                    stoptimer("fix")
+                    streamStop(1)
+                    entity():streamStart(1,Data2)
+                }
+        }
+        elseif(clk("Fix")){
+            entity():streamStart(1,RapStations[Fix:toNumber(),string],1)
+            streamVolume(1,Volume:toNumber())
+            printColor(vec(0,255,255),"Tuning Into Radio Station : "+RapStations[Fix:toNumber(),string])
+            printColor(vec(0,255,255),"Resetting the volume to : "+Volume:toNumber())
+            stopAllTimers()
+            timer("Fix",300000)
+        }
+        if(cpuUsage() > 0.001){
+            reset()
+        }
+        elseif(timeQuota() > 0.00099993){
+            reset()   
+        }
+        holoAng(11,ang(0,curtime()*5,0)*25)
+        holoColor(2,hsv2rgb(abs(sin(curtime()*45)*50),1,1))
+        holoColor(3,hsv2rgb(abs(sin(curtime()*45)*50),1,1))
+        holoColor(8,hsv2rgb(abs(sin(curtime()*45)*50),1,1))
+        holoColor(18,hsv2rgb(abs(sin(curtime()*45)*50),1,1))
+        holoColor(19,hsv2rgb(abs(sin(curtime()*45)*50),1,1))
+        holoColor(21,hsv2rgb(abs(sin(curtime()*45)*50),1,1))
+        
+        if(cpuUsage() > 0.0015){
+            print("Reset Due To CPU Usage")
+            reset()
+        }
+        elseif(timeQuota() > 0.001){
+            print("Reset Due To Time Quota")
+            reset()
+        }
+    }
+}

@@ -1,0 +1,47 @@
+@name Pie's Auto Gravel Collector
+@persist Crate:entity DropOffs:array Bits:array
+if(first()){
+    timer("Crate",100)
+}
+if(clk("FindBits")){
+    findClearWhiteList()
+    findClearBlackList()
+    findByClass("zrms_resource")
+    Bits=findToArray()
+    timer("Collect",100)
+}
+if(clk("Collect")){
+    if(Bits:count()>0){
+        Bit=Bits:popEntity()
+        Crate:propManipulate(Bit:pos()+vec(0,0,10),ang(),0,gravity(),0)
+        timer("DropOff",500)
+    }else{
+        timer("FindBits",1000)
+    }
+}
+if(clk("DropOff")){
+    DropOff=DropOffs[ceil(DropOffs:count()*random()),entity]
+    Crate:propManipulate(DropOff:pos()+vec(0,0,100),ang(),0,gravity(),0)
+    timer("Collect",500)
+}
+if(clk("Crate")){
+    if(findCanQuery()){
+        findIncludePlayerProps(owner())
+        findByClass("zrms_gravelcrate")
+        Crate=find()
+        Crate:noCollideAll(0)
+        timer("Crusher",100)
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("Crusher")){
+    if(findCanQuery()){
+        findIncludePlayerProps(owner())
+        findByClass("zrms_crusher")
+        DropOffs=findToArray()
+        timer("FindBits",100)
+    }else{
+        timer(clkName(),500)
+    }
+}

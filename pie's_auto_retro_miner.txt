@@ -1,0 +1,81 @@
+@name Pie's Auto Retro Miner
+@persist [Settings,RunTime]:table
+if(first()){
+    Settings=table(
+        "CrateType"="zrms_basket"
+    )
+    
+    RunTime=table()
+    timer("FindMelters",100)
+}
+if(clk("FindMelters")){
+    if(findCanQuery()){
+        findClearWhiteList()
+        findClearBlackList()
+        findByClass("zrms_melter")
+        RunTime["Melters",array]=findToArray()  
+        timer("FindBaskets",1000)
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("FindBaskets")){
+    if(findCanQuery()){
+        findIncludePlayerProps(owner())
+        findByClass(Settings["CrateType",string])
+        RunTime["Crates",array]=findToArray()
+        RunTime["CrateClones",array]=RunTime["Crates",array]:clone()
+        timer("Deparent",100)
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("Deparent")){
+    if(RunTime["CrateClones",array]:count()>0){
+        while(RunTime["CrateClones",array]:count()>0 & perf(50)){
+            Crate = RunTime["CrateClones",array]:popEntity()
+            Crate:deparent()
+            Crate:propFreeze(0)
+            print(Crate:getSkin())
+        }
+        timer(clkName(),100)
+    }else{
+        #print("Finished")
+        timer("PrepareFill",100)
+    }
+}
+if(clk("PrepareFill")){
+    RunTime["CrateClones",array]=RunTime["Crates",array]:clone()
+    RunTime["CurrentSmelter",entity]=RunTime["Melters",array][ceil(RunTime["Melters",array]:count()*random()),entity]
+    
+    timer("Fill",100)
+}
+if(clk("Fill")){
+    if(RunTime["CrateClones",array]:count()>0){
+        while(RunTime["CrateClones",array]:count()>0 & perf(50)){
+            local Count = RunTime["CrateClones",array]:count()
+            local Crate = RunTime["CrateClones",array]:popEntity()
+            switch(Crate:getSkin()){
+                case 5,
+                    Crate:propManipulate(RunTime["CurrentSmelter",entity]:toWorld(vec(67.5,0,35)),ang(),0,gravity(),0)
+                    break
+                case 1,
+                case 2,
+                #break
+                case 3,
+                case 4,
+                    Crate:propManipulate(RunTime["CurrentSmelter",entity]:toWorld(vec(50,0,100+25*Count)),ang(),0,gravity(),0)
+                    break
+                case 0,
+                    #Crate:propManipulate(entity():toWorld(vec(0,0,100+25*Count)),ang(),0,gravity(),0)
+                    break    
+                
+                
+            }
+        }
+        timer(clkName(),1000)
+    }else{
+        #print("Finished")
+        timer("PrepareFill",1000)
+    }
+}

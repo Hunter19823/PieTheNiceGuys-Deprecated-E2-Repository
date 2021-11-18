@@ -1,0 +1,285 @@
+@name Pie's Epic Automated Gunshop
+@model models/props/de_piranesi/pi_orrery.mdl
+@persist [File]:string [GunList,KeyWords,RunTime]:table [I,Profit] [GunKeys]:array
+entity():setColor(vec(255))
+if(first()){
+    #File="gunshop/"+owner():team():teamName()+"/data.txt"
+    File="gunshop/data.txt"
+    Profit=1.05
+    KeyWords=table()
+    RunTime=table()
+    runOnFile(1)
+    function void gunRequest(Player:entity, GunData:table, GunKey:string){
+        Player["LastGunRequested",string]=GunKey
+        moneyRequest(Player, GunData["Price",number]*Profit , "Would you like to buy "+GunData["Size",number]+"x "+GunData["Name",string]+"?")
+    }
+    function entity getPlayer(Info:string){
+        P=findPlayerBySteamID(Info)
+        if(!P:isPlayer()){
+            P=findPlayerByName(Info)
+            if(!P:isPlayer()){
+                P=findPlayerBySteamID64(Info)
+            }
+        }
+        
+        return P
+    }
+    entity():setMaterial("bluesatm/color_strip")
+    
+    timer("LoadGuns",100)
+}
+if(clk("LoadGuns")){
+    if(fileCanLoad()){
+        fileLoad(File)
+    }else{
+        timer(clkName(),100)
+    }
+}
+if(fileClk()){
+    if(fileStatus() == _FILE_OK){
+        GunList=vonDecodeTable(fileRead())
+        GunKeys=GunList:keys()
+        RunTime["GunNames",array]=array()
+        RunTime["SingleGunNames",array]=array()
+        RunTime["GunIndex",table]=table()
+        printTable(GunList)
+        I=0
+        timer("AssignKeyWords",100)
+    }else{
+        print(fileStatus(),_FILE_404,_FILE_UNKNOWN)
+
+        error("File did not load properly")
+    }
+}
+if(clk("AssignKeyWords")){
+    if(I<GunKeys:count()){
+        while(I<GunKeys:count() & perf(75)){
+            I++
+            local Gun=GunList[GunKeys[I,string],table]
+            
+            local RenamedGun=Gun["Name",string]:lower()
+            RenamedGun=RenamedGun:replace(" ", "")
+            RenamedGun=RenamedGun:replace("_", "")
+            RenamedGun=RenamedGun:replace("-", "")
+            if(!(RenamedGun:find("single"))){
+                RunTime["GunNames",array]:pushString(RenamedGun)
+            }else{
+                RunTime["SingleGunNames",array]:pushString(RenamedGun)
+            }
+            RunTime["GunIndex",table][RenamedGun,table]=Gun
+        }
+        timer(clkName(),100)
+    }else{
+        
+        print("Finished. Total Guns: "+RunTime["GunNames",array]:count() +" with "+RunTime["SingleGunNames",array]:count()+ " singles")
+        RunTime["SearchString",string]=RunTime["GunNames",array]:concat(";")
+        RunTime["SingleSearchString",string]=RunTime["SingleGunNames",array]:concat(";")
+        #print(RunTime["SearchString",string])
+        runOnChat(1)
+    }
+}
+if(chatClk()){
+    LS=lastSaid():explode(" ")
+    Parameters=lastSaid():sub(LS[1,string]:length()+2)
+    Player = lastSpoke()
+    switch(LS[1,string]:lower()){
+        case "/gun",
+        case "/gun",
+        case ".gun",
+        case "!gun",
+        case "/gun",
+            RenamedGun=Parameters:lower()
+            RenamedGun=RenamedGun:replace(" ", "")
+            RenamedGun=RenamedGun:replace("_", "")
+            RenamedGun=RenamedGun:replace("-", "")
+            
+            
+            
+            P1 = RunTime["SearchString",string]:find(RenamedGun)
+            if(P1 & Parameters){
+                P2=RunTime["SearchString",string]:find(";",P1)
+                GunName=RunTime["SearchString",string]:sub(P1,P2-1)
+                
+                gunRequest(Player,RunTime["GunIndex",table][GunName,table],GunName)
+            }else{
+                concmd("say /pm "+Player:steamID()+" Invalid Gun Name")
+            }
+            break
+        case "single",
+        case ".single",
+        case "!single",
+        case "/single",
+            RenamedGun=Parameters:lower()
+            RenamedGun=RenamedGun:replace(" ", "")
+            RenamedGun=RenamedGun:replace("_", "")
+            RenamedGun=RenamedGun:replace("-", "")
+            
+            
+            
+            P1=RunTime["SingleSearchString",string]:find(RenamedGun)
+            if(P1 & Parameters){
+                P2=RunTime["SingleSearchString",string]:find(";",P1)
+                GunName=RunTime["SingleSearchString",string]:sub(P1,P2-1)
+                
+                gunRequest(Player,RunTime["GunIndex",table][GunName,table],GunName)
+            }else{
+                concmd("say /pm "+Player:steamID()+" Invalid Gun Name")
+            }
+            break
+        case "help",
+        case "!help",
+        case ".help",
+        case "/help",
+            concmd("say /pm "+Player:steamID()+" \"/gun {name}\" for shipment \"/single {name}\" for single.Guns: gyazo.com/77d19359110898a70bdb7e2f8b338d8f")
+            break
+        case "/sendshipment",
+            if(owner()==lastSpoke()){
+                Data=Parameters:explode(",")
+                P=getPlayer(Data[1,string])
+                #print(Data[1,string])
+                if(P:isPlayer()){
+                    RenamedGun=Data[2,string]:lower()
+                    RenamedGun=RenamedGun:replace(" ", "")
+                    RenamedGun=RenamedGun:replace("_", "")
+                    RenamedGun=RenamedGun:replace("-", "")
+                    
+                    
+                    
+                    P1 = RunTime["SearchString",string]:find(RenamedGun)
+                    if(P1 & Parameters){
+                        P2=RunTime["SearchString",string]:find(";",P1)
+                        GunName=RunTime["SearchString",string]:sub(P1,P2-1)
+                        
+                        gunRequest(P,RunTime["GunIndex",table][GunName,table],GunName)
+                    }else{
+                        print("say /pm "+P:steamID()+" Invalid Gun Name: "+GunName)
+                    }
+                }else{
+                    print("Error, Invalid Player")
+                }
+            }
+            break
+        case "/sendsingle",
+            if(owner()==lastSpoke()){
+                Data=Parameters:explode(",")
+                P=getPlayer(Data[1,string])
+                #print(Data[1,string])
+                if(P:isPlayer()){
+                    RenamedGun=Data[2,string]:lower()
+                    RenamedGun=RenamedGun:replace(" ", "")
+                    RenamedGun=RenamedGun:replace("_", "")
+                    RenamedGun=RenamedGun:replace("-", "")
+                    
+                    
+                    
+                    P1=RunTime["SingleSearchString",string]:find(RenamedGun)
+                    if(P1 & Parameters){
+                        P2=RunTime["SingleSearchString",string]:find(";",P1)
+                        GunName=RunTime["SingleSearchString",string]:sub(P1,P2-1)
+                        
+                        gunRequest(P,RunTime["GunIndex",table][GunName,table],GunName)
+                    }else{
+                        print("say /pm "+P:steamID()+" Invalid Gun Name: "+GunName)
+                    }
+                }else{
+                    print("Error, Invalid Player")
+                }
+            }
+            break
+        case "/freeshipment",
+            if(owner()==lastSpoke()){
+                Data=Parameters:explode(",")
+                P=getPlayer(Data[1,string])
+                #print(Data[1,string])
+                if(P:isPlayer()){
+                    RenamedGun=Data[2,string]:lower()
+                    RenamedGun=RenamedGun:replace(" ", "")
+                    RenamedGun=RenamedGun:replace("_", "")
+                    RenamedGun=RenamedGun:replace("-", "")
+                    
+                    
+                    
+                    P1 = RunTime["SearchString",string]:find(RenamedGun)
+                    if(P1 & Parameters){
+                        P2=RunTime["SearchString",string]:find(";",P1)
+                        GunName=RunTime["SearchString",string]:sub(P1,P2-1)
+                        
+                        timer(P:steamID()+";"+GunName+";Send;"+random(),500)
+                    }else{
+                        print("say /pm "+P:steamID()+" Invalid Gun Name: "+GunName)
+                    }
+                }else{
+                    print("Error, Invalid Player")
+                }
+            }
+            break
+        case "/freesingle",
+            if(owner()==lastSpoke()){
+                Data=Parameters:explode(",")
+                P=getPlayer(Data[1,string])
+                #print(Data[1,string])
+                if(P:isPlayer()){
+                    RenamedGun=Data[2,string]:lower()
+                    RenamedGun=RenamedGun:replace(" ", "")
+                    RenamedGun=RenamedGun:replace("_", "")
+                    RenamedGun=RenamedGun:replace("-", "")
+                    
+                    
+                    
+                    P1=RunTime["SingleSearchString",string]:find(RenamedGun)
+                    if(P1 & Parameters){
+                        P2=RunTime["SingleSearchString",string]:find(";",P1)
+                        GunName=RunTime["SingleSearchString",string]:sub(P1,P2-1)
+                        
+                        timer(P:steamID()+";"+GunName+";Send;"+random(),500)
+                    }else{
+                        print("say /pm "+P:steamID()+" Invalid Gun Name: "+GunName)
+                    }
+                }else{
+                    print("Error, Invalid Player")
+                }
+            }
+            break
+    }
+}
+if(moneyClk()){
+    Player=moneyClkPlayer()
+    print(Player["LastGunRequested",string])
+    if(Player["LastGunRequested",string]){
+        GunId=Player["LastGunRequested",string]
+        GunData = RunTime["GunIndex",table][GunId,table]
+        #printTable(GunData)
+        timer(Player:steamID()+";"+GunId+";Send;"+random(),500)
+    }else{
+        print("Refund Activated")
+        moneyGive(Player,moneyClkAmount())
+    }
+}
+if(clkName():find("Send")){
+    Data=clkName():explode(";")
+    Player=findPlayerBySteamID(Data[1,string])
+    if(findCanQuery() & perf(50)){
+        GunData = RunTime["GunIndex",table][Data[2,string],table]
+        findIncludePlayerProps(owner())
+        findByClass("spawned_shipment")
+        HasFound=0
+        foreach(Index, Shipment:entity = findToArray()){
+            if(Shipment:shipmentName() == GunData["Name",string] & GunData["Size",number] == Shipment:shipmentAmount() & !Shipment["BeenBought",number]){
+                HasFound=1
+                Shipment:propManipulate(Player:toWorld(vec(10,0,50)),ang(),0,gravity(),0)
+                Shipment["BeenBought",number]=1
+                findExcludeEntity(Shipment)
+                print("Shipment "+Shipment:shipmentAmount()+"x "+Shipment:shipmentName()+" Sent to "+Player:name())
+                break
+            }
+        }
+        if(!HasFound){
+            concmd("say "+GunData["BuyCommand",string])
+            hint("Didn't Find the Shipment in Stock, Now Purchasing a new one.",1)
+            timer(clkName(),650)
+        }
+    }else{
+        hint("Could not preform search, Retrying...",3)
+        timer(clkName(),100)
+    }
+}

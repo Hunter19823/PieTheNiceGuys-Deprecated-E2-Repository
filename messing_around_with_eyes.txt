@@ -1,0 +1,60 @@
+@name Messing around with Eyes
+@persist [Target,O]:entity [ContinueIgnoring,ContinueStaring]
+if(first()){
+    O=owner()
+    function entity searchForPlayer(Person:string){
+        local P=findPlayerBySteamID64(Person)
+        if (!P:isPlayer()){
+            P=findPlayerBySteamID(Person)
+            if (!P:isPlayer()){
+                P=findPlayerByName(Person)
+                if (!P:isPlayer()){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    runOnChat(1)
+}
+if(chatClk(O)){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".ignore",
+            P=searchForPlayer(LS[2,string])
+            if(P){
+                Target=P
+                ContinueIgnoring=1
+                timer("Ignore",500)
+            }
+            break
+        case ".stare",
+            P=searchForPlayer(LS[2,string])
+            if(P){
+                Target=P
+                ContinueStaring=1
+                timer("Stare",500)
+            }
+            break
+        case ".stop",
+            ContinueIgnoring=0
+            ContinueStaring=0
+            break
+    }
+}
+if(clk("Ignore")){
+    EP=O:eyeTrace():toTable()["StartPos",vector]
+    TP=Target:eyeTrace():toTable()["StartPos",vector] + Target:vel()/20
+    setEyeAngles(O:toWorld(ang(0,180,0)+-1*heading(EP,O:angles(),TP)))
+    if(ContinueIgnoring #[& EP:distance(TP)<1000]#){
+        timer(clkName(),50)
+    }
+}
+if(clk("Stare")){
+    EP=O:eyeTrace():toTable()["StartPos",vector]
+    TP=Target:eyeTrace():toTable()["StartPos",vector] + Target:vel()/20
+    setEyeAngles(O:toWorld(ang(0,0,0)+-1*heading(EP,O:angles(),TP)))
+    if(ContinueStaring #[& EP:distance(TP)<1000]#){
+        timer(clkName(),50)
+    }
+}

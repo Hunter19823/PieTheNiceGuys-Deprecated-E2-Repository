@@ -1,0 +1,6 @@
+@persist T:table
+if(first()){
+    T=table(
+    "run"=0
+    )
+}

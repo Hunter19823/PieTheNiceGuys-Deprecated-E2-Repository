@@ -1,0 +1,128 @@
+@name Pie's Youtube To HTTP
+@persist Settings:table PlayList:gtable
+if(first()){
+    noDuplications()
+    Settings=table(
+    "CurrentSong"=67,
+    "Volume"=0.25,
+    "Disable 3D?"=1,
+    "Model"="models/maxofs2d/hover_rings.mdl",
+    "PlayList"="Pie's Youtube Playlist",
+    "Streaming Channel"=5
+    )
+    PlayList=gTable("Pie's Youtube Playlist",1)
+    function void string:youtubeToMP3() {
+        setName("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+This)
+        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+This)
+        reset()
+    }
+    function void number:stopMusic(){
+        if(This){
+            streamStop(Settings["Volume",number])
+        }
+    }
+    function void number:printData(){
+        if(This){
+            printTable(jsonDecode(httpData()))
+        }
+    }
+    function number table:isValidData(){
+        if(!This["error",number]){
+            return 1
+        } else{
+            return 0
+        }
+    }
+    function number streamData(Data:table,Target:entity){
+        if(Data){
+            1:stopMusic()
+            local E=Target:isValid()? Target : entity()
+            if(streamCanStart() & Data:isValidData()){
+                E:streamStart(Settings["Streaming Channel",number],Data["file",string],Settings["Volume",number])
+                timer("Next Song",Data["duration",number]*1000-owner():ping()*10)
+                setName("Currently Playing: "+Data["title",string])
+                return 1
+            } else{
+                setName("Stream Could Not Start: " + opcounter():toString())
+                return 0
+            }
+        }
+    }
+    function number number:httpToData(Target:entity){
+        if(This){
+            local Table=jsonDecode(httpData())
+            return streamData(Table,Target)
+        } else{
+            return 0
+        }
+    }
+    function number entity:isWhiteListed(){
+        return This==owner()
+    }
+    function void number:nextSong(){
+        local NextSong=Settings["CurrentSong",number]+1
+        local PlayListName=Settings["PlayList",string]
+        local SongList=PlayList[PlayListName,array]
+        Settings["CurrentSong",number]=NextSong
+        local Song=SongList:exists(NextSong) ? SongList[NextSong,string] : SongList[1,string]
+        if (SongList[NextSong,string]!=""){
+            SongList[NextSong,string]:youtubeToMP3()
+        } else{
+            print("Song not in Playlist")
+        }
+    }
+    function void number:chatCommand(){
+        if(This & lastSpoke():isWhiteListed()){
+            local LS = lastSaid():explode(" ")
+            switch(LS[1,string]){
+                case "youtube",
+                    LS[2,string]:youtubeToMP3()
+                    break
+                case "start",
+                    Settings["CurrentSong",number]=LS[2,string]:toNumber()-1
+                    1:nextSong()
+                    break
+                case "volume",
+                    Settings["Volume",number]=LS[2,string]:toNumber()
+                    break
+                case "target",
+                    local Target=lastSpoke():aimEntity()
+                    if(Target:isValid()){
+                        Settings["Streaming Entity",entity]=Target
+                        print("Music Attached To: "+Target:name()+" at " + Target:pos())
+                    }
+                    break
+                case "songs",
+                    printTable(PlayList:toTable())
+                    break
+                case "settings",
+                    printTable(Settings)
+                    break
+                case "timers",
+                    printTable(invert(getTimers()))
+                    break
+                default,
+                    break
+            }
+        }
+    }
+    streamDisable3D(Settings["Disable 3D?",number])
+    runOnChat(1)
+    runOnHTTP(1)
+    findAllowPlayerProps(owner())
+    findIncludeModel(Settings["Model",string])
+    findInBox(entity():pos()-vec(100),entity():pos()+vec(100))
+    findSortByDistance(entity():pos())
+    Settings["Streaming Entity",entity]=find()
+    Settings["Streaming Entity",entity]:setTrails(5,0,3,"trails/smoke",vec(125,0,255),255)
+}
+if(httpClk() & httpRequestUrl()==entity():getName()){
+    local Link=entity():getName():explode(".php?youtubelink=")[2,string]
+    Settings["CurrentSong",number]=invert(PlayList[Settings["PlayList",string],array])[Link,number]
+    print(httpClk():httpToData(Settings["Streaming Entity",entity]))
+}
+chatClk():chatCommand()
+if(clkName()=="Next Song"){
+    print("Next Song Loading")
+    1:nextSong()
+}

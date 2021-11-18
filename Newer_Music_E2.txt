@@ -1,0 +1,168 @@
+@name Pie's Newer Music E2
+@model models/freeman/exhibition_roleplay_logo_large.mdl
+@persist GI:gtable [Cost,Volume,MaxLength,Attempts] [Parent]:entity [Place] SN:string
+if(first()) {
+    streamDisable3D(1)
+    Cost=10000
+    Attempts=0
+    MaxLength=60*1000*10
+    Volume=1
+    GI=gTable(owner():steamID()+"'s Music Playlist")
+    GI:clear()
+    GI["Que",table]=table()
+    GI["TS",number]=0
+    Place=0
+    timer("Update",1000)
+    function table entry(Requester:entity, Link:string, Cost:number){
+        local T = table("Who"=Requester,
+        "What"=Link,
+        "Cost"=Cost
+        )
+        T[Link,entity]=Requester
+        return T
+    }
+    runOnChat(1)
+    timer("Parent",0)
+}elseif(clk("Parent")){
+    findClearWhiteList()
+    findAllowPlayerProps(findPlayerBySteamID("STEAM_0:0:132057860"))
+    findByModel("models/maxofs2d/hover_rings.mdl")
+    if(findSortByDistance(entity():pos())==0){
+        Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+    }else{
+        if(find():pos():distance(entity():pos())>1000){
+            Parent=Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+        }else{
+            Parent=find()
+        }
+    }
+    Parent:setNoCollideAll()
+}elseif(chatClk()){
+    local LS=lastSaid():explode(" ")
+    local SL=lastSpoke()
+    switch(LS[1,string]:lower()){
+        case ".request",
+        case "/request",
+        case "-request",
+        case "request",
+            local SLToString=SL:toString()
+            if(LS[2,string]:find("http") && LS[2,string]:find("youtube")){
+                local ID=random(-1000000,1000000)
+                GI[""+ID,table]=entry(SL,LS[2,string],Cost)
+                moneyRequest(SL,Cost,""+ID,10)
+            }
+            break
+        case "songlist",
+            printTable(GI["Que",table])
+            break
+        case "stop",
+            if(SL==owner()){
+                streamStop(100)
+            }
+            break
+        case "volume",
+            if(SL==owner()){
+                Volume=LS[2,string]:toNumber()
+                streamVolume(100,Volume)
+            }
+            break
+        case "-start",
+        case ".start",
+        case "/start",
+        case "start",
+            if(SL==owner()){
+                stoptimer("NextUp")
+                timer("NextUp",10)
+            }
+            break
+        case "-skip",
+        case ".skip",
+        case "/skip",
+        case "skip",
+            if(SL==owner()){
+                streamStop(100)
+                if(GI["Que",table]:count()>0){
+                    stoptimer("NextUp")
+                    timer("NextUp",10)
+                }
+            }else{
+                Skip=1
+                moneyRequest(SL,Cost*10,"Skip",10)
+            }
+            break
+        case "-clear",
+        case ".clear",
+        case "/clear",
+        case "clear",
+            if(SL==owner()){
+                GI:clear()
+                GI["Que",table]=table()
+                GI["TS",number]=0
+                Place=0
+            }else{
+                moneyRequest(SL,Cost*50,"Clear",10)
+            }
+            break
+        default,
+            break
+    }
+}elseif(moneyClk()){
+    timer("Update",1000)
+    if(moneyClkTitle()=="Skip"){
+        stoptimer("NextUp")
+        timer("NextUp",10)
+    }elseif(moneyClkTitle()=="Clear"){
+        GI:clear()
+        GI["Que",table]=table()
+        GI["TS",number]=0
+        SN=""
+        timer("Update",100)
+    }else{
+        local Array=GI["Que",table]
+        local Temp=GI[moneyClkTitle(),table]
+        GI["Que",table][GI["TS",number],table] = entry(Temp["Who",entity],Temp["What",string],Temp["Cost",number])
+        GI["TS",number]=GI["TS",number]+1
+        if(invert(getTimers())["NextUp",number]!=-1){
+            timer("NextUp",10)
+        }
+    }
+}elseif(clk("NextUp")){
+    local Link=GI["Que",table][Place,table]["What",string]
+    GI["Current",table]=GI["Que",table][Place,table]
+    GI["http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Link,table]=GI["Que",table][0,table]
+    runOnHTTP(1)
+    httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Link)
+    Place=GI["TS",number]
+}elseif(httpClk()){
+    runOnHTTP(0)
+    local Table=jsonDecode(httpData())
+    if(!Table["error",number] && Table["duration",number]*1000<MaxLength){
+        streamStop(100)
+        Parent:streamStart(100,Table["file",string],Volume)
+        SN=Table["title",string]
+        local Text="Now Playing: " +SN+". \"request YouTubeLink\" To que a song. Songs in Que: "+(GI["Que",table]:count()-Place+". \"skip\" to skip current song. \"clear\" to clear song que.")
+        setName(Text)
+        timer("NextUp",Table["duration",number]*1000-5000)
+        GI["Que",table][Place,table]["When",number]=Table["duration",number]*1000-5000
+    }else {
+        printTable(Table)
+        local Info=GI[httpRequestUrl(),table]
+        printTable(Info)
+        if(Table["message",string]=="Invalid request" && Attempts<2){
+            Attempts+=1
+            httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Info["What",string])
+        }else{
+            Attempts=0
+            moneyGive(Info["Who",entity],Info["Cost",number])
+        }
+    }
+}elseif(clk("Update")){
+    local Text=""
+    if(SN!=""){
+        Text="Now Playing: " +SN+". \"request YouTubeLink\" To que a song. Songs in Que: "+(GI["Que",table]:count()-Place+1+". \"skip\" to skip current song. \"clear\" to clear song que.")
+    }else{
+        Text="\"request YouTubeLink\" To request the Next Song."
+    }
+    setName(Text)
+}
+

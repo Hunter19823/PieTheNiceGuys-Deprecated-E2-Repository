@@ -1,0 +1,12 @@
+@persist Counter
+if(first()){
+    runOnKeys(owner(),1)
+}
+if(keyClk(keyClk())==1){
+    if(keyClkPressed()=="g"){
+        local P=round(keyClk():aimPos())
+        Counter++
+        print("#["+Counter+"]#vec("+P:x()+","+P:y()+","+P:z()+"),")
+    }
+    
+}

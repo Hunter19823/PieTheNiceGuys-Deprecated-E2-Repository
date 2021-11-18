@@ -1,0 +1,41 @@
+if(first()){
+    function vector intersection(Player:entity,PlanePos:vector,Normal:vector){
+        local LineP1 = Player:shootPos()
+        local LineP2 = LineP1 + Player:eye()
+    
+        local X = Normal:dot(PlanePos - LineP1) / Normal:dot(LineP2 - LineP1)
+        Intersection=(LineP1 + X*(LineP2 - LineP1))
+        return Intersection
+    }
+    #holoCreate(1,owner():pos(),vec(0))
+    #holoParent(1,owner())
+    runOnChat(1)
+    runOnMouseKey(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "forward",
+            Intersection=intersection(lastSpoke(),entity():pos(),entity():forward())
+            
+            Index=holoAmount()
+            holoCreate(Index,Intersection,vec(1),ang(),vec(255),"models/shells/shell_9mm.mdl")
+            holoParent(Index,entity())
+            LocalIntersect=entity():toLocal(Intersection)
+            print(LocalIntersect)
+            break
+        case "test",
+            Index=holoAmount()
+            holoCreate(Index,intersection(lastSpoke(),lastSpoke():toWorld(vec(50,0,0)),lastSpoke():forward()),vec(0.1))
+            break
+    }
+}
+if(clMouseKeyPress("left")){
+    if(holoCanCreate()){
+        if(owner():weapon():clip1()>0){
+            Index=holoAmount()
+            holoCreate(Index,intersection(owner(),entity():toWorld(vec(0,0,0)),entity():forward()),vec(1),owner():eyeAngles(),vec(255),"models/weapons/rifleshell.mdl")
+        }
+        #holoParent(Index,1)
+    }
+}

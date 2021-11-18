@@ -1,0 +1,30 @@
+@name Party Damage Logs
+@persist [PartyMemberLookUp]:table
+if(first()){
+    function entity searchForPlayer(Person:string){ local P= findPlayerBySteamID64(Person) if (!(P:isPlayer())){ P=findPlayerBySteamID(Person) if (!(P:isPlayer())){ P=findPlayerByName(Person) if (!(P:isPlayer())){ print("Invalid Player")}}} return P}
+    PartyMembers=array(
+        findPlayerBySteamID(owner():steamID()),
+        findPlayerByName("Mr Happy"),
+        findPlayerByName("Cloudy"),
+        findPlayerByName("DiamondCubers"),
+        findPlayerByName("Nikolas"),
+        findPlayerByName("[SoS]"),
+        findPlayerByName("LORD GREY"),
+        findPlayerByName("NICO"),
+        findPlayerByName("Pie The Nice Guy")
+        
+    )
+    PartyMemberLookUp=invert(PartyMembers)
+    #hideChat(1)
+    foreach(I, Player:entity = PartyMembers){
+        runOnDmg(1,Player)
+    }
+}
+if(dmgClk()){
+    Victim=dmgVictim()
+    Attacker=dmgAttacker()
+    if(PartyMemberLookUp[Attacker:toString(),number]==0){
+        Timer=time("hour")+":"+time("min")+":"+time("sec")
+        print("["+Timer+"]Player \""+Attacker:name()+"\" attacked \""+Victim:name()+"\" for "+dmgDamage()+" health")
+    }
+}

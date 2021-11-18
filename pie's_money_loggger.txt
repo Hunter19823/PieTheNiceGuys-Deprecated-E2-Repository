@@ -1,0 +1,52 @@
+@name Pie's Money Loggger
+@persist [Settings,RunTime]:table
+if(first()){
+    Settings=table(
+        "FilePath"="logger/money/"+serverUUID(),
+        "RefreshRate"=5000,
+        "Retry"=250
+    )
+    
+    RunTime=table()
+    timer("StartLog",Settings["Retry",number])
+}
+if(clk("StartLog")){
+    RunTime["Data",table]=table()
+    RunTime["Players",array]=players()
+    timer("Process",Settings["Retry",number])
+}
+if(clk("Process")){
+    if(RunTime["Players",array]:count()>0){
+        while(RunTime["Players",array]:count()>0 & perf(90)){
+            Data=RunTime["Players",array]:popEntity()
+            local SteamID=Data:steamID()
+            local Money=Data:money()
+            local Date=table(
+                "year"=time("year"),
+                "month"=time("month"),
+                "day"=time("day"),
+                "hour"=time("hour"),
+                "minute"=time("min"),
+                "second"=time("sec")
+            )
+            RunTime["Data",table][SteamID,table]=table(
+                "Time"=Date,
+                "Money"=Money
+            )
+        }
+        timer(clkName(),Settings["Retry",number])
+    }else{
+        hint("Finished Processing",1)
+        #printTable(RunTime["Data",table])
+        timer("Save",100)
+    }
+}
+if(clk("Save")){
+    if(fileCanWrite()){
+        Date=time("year")+"/"+time("month")+"/"+time("day")+"/"+time("hour")+"/"+time("min")+"/"+time("sec")
+        fileWrite(Settings["FilePath",string]+"/"+Date+".txt",jsonEncode(RunTime["Data",table]))
+        timer("StartLog",Settings["RefreshRate",number])
+    }else{
+        timer(clkName(),Settings["Retry",number])
+    }
+}

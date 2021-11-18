@@ -1,0 +1,74 @@
+@name Brask
+@inputs 
+@outputs 
+@persist A:array Set:entity Buff:string
+@trigger 
+
+if(first()){
+    Buff = ""
+    Set = entity()
+    runOnChat(1)
+    runOnHTTP(1)
+    streamDisable3D(1)
+}
+
+interval(500)
+if(chatClk(owner())){
+    A=lastSaid():explode(" ")
+    if(A[1,string]:sub(1,1)=="."){
+        switch(A[1,string]){
+            
+            case ".yt",
+                if(httpCanRequest()){
+                    if(A[2,string]==""){
+                        hint("YT Player: Please input a link",5)
+                    }
+                    else{
+                        hint("YT Player: Please Wait",5)
+                        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+A[2,string])
+                        Buff = A[2,string]
+                    }
+                }
+                
+            break
+            
+            case ".volume",
+                if(A[2,string]!="0"&A[2,string]:toNumber()<=1){
+                    streamVolume(1,A[2,string]:toNumber())
+                    hint("YT Player: Volume has been set to "+A[2,string],5)
+                    }else{
+                    streamVolume(1,0)
+                    hint("YT Player: Volume has been set to 0",5)
+                    }
+            break
+            
+            case ".stop",
+            streamStop(1)
+            hint("YT Player: Stream Stopped",5)
+            break
+            
+            case ".set",
+                if(A[2,string]=="0"){
+                    hint("YT Player: Output has been set to E2",5)
+                    Set = entity()
+                    }else{
+                    hint("YT Player: Output has been set to Owner",5)
+                    Set = owner()
+                    }
+            break
+        }
+    }
+}
+
+if(httpClk()){
+    local Data=jsonDecode(httpData())
+    local Data2=Data["file",string]
+        if(Data["error",number]==0){
+            hint("YT Player: This link does not work",5)
+        }else{
+            hint("YT Player: Playing "+Data["title",string],5)
+            streamStop(1)
+            Set:streamStart(1,Data2)
+        }
+    }
+

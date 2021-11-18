@@ -1,0 +1,63 @@
+@name Pie's Advert Hud
+@persist [Settings, RunTime]:table [Hud]:wirelink
+if(first()){
+    Settings=table(
+        "Offset"=vec2(100,200),
+        "Size"=vec2(500,100),
+        "Padding"=vec2(0,0)
+    )
+    
+    RunTime=table(
+        "Line1"="Placeholder 1",
+        "Line2"="Placeholder 2",
+        "Line3"="Placeholder 3",
+        "Line4"="Placeholder 4",
+        "Line5"="Placeholder 5",
+        "Line1Color"=vec(255),
+        "Line2Color"=vec(255),
+        "Line3Color"=vec(255),
+        "Line4Color"=vec(255),
+        "Line5Color"=vec(255)
+    )
+    Weld=entity():isWeldedTo()
+    if(Weld:type()=="gmod_wire_egp_hud"){
+        Hud=Weld:wirelink()
+        timer("Draw",100)
+    }else{
+        print("Error Trying to auto-Wire. Try placing on an EGPv3 hud!")
+    }
+    runOnChat(1)
+}
+if(clk("Draw")){
+    
+    Offset=vec2(0,Settings["Size",vector2]:y()/2)
+    Max=vec2()
+    for(I=1,5){
+        Hud:egpTextLayout(I+1,RunTime["Line"+I,string],Settings["Offset",vector2]+Offset*(I-1)+Settings["Padding",vector2],Settings["Size",vector2])
+        if(Max){
+            Max=maxVec(Hud:egpSize(I+1),Max)
+        }else{
+            Max=Hud:egpSize(I+1)
+        }
+        Hud:egpColor(I+1,RunTime["Line"+I+"Color",vector])
+    }
+    #Hud:egpBox(1,Settings["Offset",vector2],Max)
+    
+}
+if(chatClk()){
+    LS=lastSaid():explode(" ")
+    if(LS[1,string]:lower()=="/advert"){
+        RunTime["Line5",string]=RunTime["Line4",string]
+        RunTime["Line4",string]=RunTime["Line3",string]
+        RunTime["Line3",string]=RunTime["Line2",string]
+        RunTime["Line2",string]=RunTime["Line1",string]
+        RunTime["Line1",string]=lastSpoke():name()+": \""+lastSaid()+"\""
+        RunTime["Line5Color",vector]=RunTime["Line4Color",vector]
+        RunTime["Line4Color",vector]=RunTime["Line3Color",vector]
+        RunTime["Line3Color",vector]=RunTime["Line2Color",vector]
+        RunTime["Line2Color",vector]=RunTime["Line1Color",vector]
+        #RunTime["Line1Color",vector]=vec(random()*128+127,random()*128+127,random()*128+127)
+        RunTime["Line1Color",vector]=teamColor(lastSpoke():team())
+        timer("Draw",0)
+    }
+}

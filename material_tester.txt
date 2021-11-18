@@ -1,0 +1,57 @@
+@name Material Tester
+@persist [Cycle,Spacing,Timer] [Materials]:array [ExampleProp]:string [Scale]:vector
+if(first()){
+    Spacing=0
+    Timer=1000
+    ExampleProp="models/hunter/blocks/cube1x1x1.mdl"
+    Scale=vec(50)
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    if(lastSaid():sub(1,1)=="."){
+        Cycle=0
+        holoCreate(0,entity():toWorld(vec(0,0,50)),vec(0.5),ang(),vec(255),owner():lastSaid():sub(2))
+        holoScaleUnits(0,Scale)
+        holoParent(0,entity())
+        #holoBodygroup(0,1,16)
+        T=holoEntity(0)
+        
+        Materials=T:getMaterials()
+        printTable(table("Materials"=Materials))
+        Cycle=0
+        timer("Display",Timer)
+    }
+    print(lastSaid():sub(1))
+    
+    if(lastSaid():sub(1,1)=="!"){
+        Cycle=0
+        holoCreate(0,entity():toWorld(vec(0,0,50)),vec(0.5),ang(),vec(255),owner():lastSaid():sub(2))
+        holoScaleUnits(0,Scale)
+        holoParent(0,entity())
+        #holoBodygroup(0,1,16)
+        T=holoEntity(0)
+        
+        Materials=array(lastSaid():sub(2))
+        printTable(table("Materials"=Materials))
+        Cycle=0
+        timer("Display",Timer)
+    }
+}
+if(clk("Display")){
+    if(Cycle<Materials:count()){
+        while(holoCanCreate() & perf(90) & Cycle<Materials:count()){
+            Cycle++
+            holoCreate(Cycle,entity():toWorld(Cycle*Scale:setZ(0):setY(0))+vec(0,0,70),vec(0),ang(),vec(255),ExampleProp)
+            holoMaterial(Cycle,Materials[Cycle,string])
+            holoScaleUnits(Cycle,Scale)
+            holoParent(Cycle,entity())
+            holoCreate(Cycle*-1,entity():toWorld(Cycle*Scale:setZ(0):setY(0)-vec(0,0,Scale:z()))+vec(0,0,70),vec(0),ang(),vec(255),ExampleProp)
+            holoMaterial(Cycle*-1,Materials[Cycle,string])
+            holoScaleUnits(Cycle*-1,Scale*-1)
+            holoParent(Cycle*-1,entity())
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished")
+    }
+}

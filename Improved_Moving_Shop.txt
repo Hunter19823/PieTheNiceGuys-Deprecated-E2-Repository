@@ -1,0 +1,63 @@
+@name Pie's Moving Shop
+@persist [S,SP]:entity [P] Ped:vector
+if (first()){
+    runOnChat(1)
+}
+if (chatClk(owner())){
+    LS=owner():lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "!s",
+            E=owner():aimEntity()
+            if(E:isShipment()){
+                S=E
+                P=S:shipmentPrice()/10*S:shipmentAmount()*LS[2,string]:toNumber()
+                print("Save Successfull")
+                print("Name: "+ S:shipmentName())
+                print("Amount: "+S:shipmentAmount())
+                print("Price: "+P)
+                local Pos=S:pos()+vec(0,0,50)
+                S:setPos(entity():pos()+vec(0,0,10))
+                SP=propSpawn(S:shipmentModel(),Pos,1)
+                runOnUse(1,SP)
+            } else {
+                print("Error: Invalid Shipment")
+            }
+            break
+        case "!sell",
+            SP:setPos(Ped+vec(0,0,10))
+            break
+        case "!get",
+            S:setPos(owner():aimPos())
+            break
+        case "!set",
+            Ped=owner():aimPos()
+            break
+        default,
+            break
+    }
+} else {
+    if(moneyClk()){
+        Pos=SP:pos()
+        SP:propDelete()
+        S:setPos(Pos)
+    } elseif(moneyNoClk()){
+        print(moneyNoClkPlayer():name()+"Rejected Payment")
+    } elseif(SP:inUse()){
+        E=SP:inUseBy()
+        print(E:name())
+        if(E:isPlayer()){
+            if(S:isValid()){
+                if(E:money()>=P){
+                    moneyRequest(E,P,S:shipmentAmount()+S:shipmentName()+"s for: $" + P)
+                    print("Requesting $" + P + " from "+E:name()+".")
+                }else{
+                    print(E:name() + " is too poor.")
+                }
+            } else{
+                print("Shipment Not Found")
+            }
+        } else{
+            print("Player Not Found")
+        }
+    }
+}

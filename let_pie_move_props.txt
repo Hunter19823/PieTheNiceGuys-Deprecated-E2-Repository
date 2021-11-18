@@ -1,0 +1,23 @@
+@name Let Pie Move Props
+@persist [Partner,Prop]:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    noDuplications()
+    #timer("Entrace",1000)
+    Partner=findPlayerBySteamID("STEAM_0:0:191182826")
+    runOnKeys(Partner,1)
+}
+if(keyClk(keyClk())==1){
+switch(keyClkPressed()){
+    case "r",
+        Prop=keyClk():aimEntity()
+        break
+    case "f",
+        if(Prop:isValidPhysics()){
+            Prop:setPos(keyClk():aimPos())
+        }
+        break
+    default,
+        break
+}
+}

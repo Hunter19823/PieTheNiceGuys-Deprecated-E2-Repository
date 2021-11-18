@@ -1,0 +1,35 @@
+@name Thing
+@persist Speed LastT:array AlreadyUsed:table Counter
+if(first()){
+    Speed=1000
+    Counter=0
+    function void checkChanges(){
+        findByClass("gmod_wire_expression2")
+        findExcludeEntity(entity())
+        findSortByDistance(entity():pos())
+        Find=findToArray()
+        foreach(I,E2:entity = Find){
+            local Ent=Find[I,entity]
+            if(LastT[I,entity]!=Ent){
+                if(!AlreadyUsed[Ent:toString(),number]){
+                    if(!(Ent:getName()=="generic") || Counter>25){
+                        print("New E2: "+Ent:getName()+"<br>Owner: "+Ent:owner():name()+" ("+Ent:owner():steamID()+")")
+                        AlreadyUsed[Ent:toString(),number]=1
+                        Counter=0
+                    }else{
+                        Counter++
+                    }
+                    timer("Update",Speed)
+                    exit()
+                }
+            }
+        }
+        LastT=Find
+    }
+    LastT=array()
+    timer("Update",Speed)
+}
+if(clk("Update")){
+    checkChanges()
+    timer("Update",Speed)
+}

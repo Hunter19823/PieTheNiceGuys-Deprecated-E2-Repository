@@ -1,0 +1,133 @@
+@name Pie's Mini-Mapper
+@persist [Settings,RunTime]:table
+if(first()){
+    Settings=table(
+        "Scale"=0.1,
+        "File"="minimap/"+map()+"/minimap.txt"
+    )
+    
+    RunTime=table()
+    runOnChat(1)
+    RunTime["Mins",array]=array()
+    RunTime["Maxs",array]=array()
+    timer("LoadFile",0)
+}
+if(clk("SaveToFile")){
+    if(fileCanWrite()){
+        fileWrite(Settings["File",string],vonEncode(table(
+            "Mins"=RunTime["Mins",array],
+            "Maxs"=RunTime["Maxs",array]
+        )))
+        print("Finished Writing to File: "+Settings["File",string])
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(clk("LoadFile")){
+    if(fileCanLoad()){
+        runOnFile(1)
+        fileLoad(Settings["File",string])
+    }else{
+        timer(clkName(),500)
+    }
+}
+if(fileClk()){
+    switch(fileStatus()){
+        case _FILE_OK,
+            Data=vonDecodeTable(fileRead())
+            RunTime["Mins",array]=Data["Mins",array]
+            RunTime["Maxs",array]=Data["Maxs",array]
+            print("Data Loaded")
+            break
+        case _FILE_404,
+            print("No file made, making file")
+            timer("SaveToFile",1000)
+            break
+        default,
+            error("Something went horribly wrong in the fileCLk section. File Status: "+fileStatus())
+            break
+    }
+}
+if(clk("CreateMiniMap")){
+    RunTime["CloneMaxs",array]=RunTime["Maxs",array]:clone()
+    RunTime["CloneMins",array]=RunTime["Mins",array]:clone()
+    timer("Display",100)
+}
+if(clk("Display")){
+    if(RunTime["CloneMaxs",array]:count()>0){
+        while(RunTime["CloneMaxs",array]:count()>0 & holoCanCreate() & perf(60)){
+            Id=RunTime["CloneMaxs",array]:count()+1
+            Max=RunTime["CloneMaxs",array]:popVector()
+            Min=RunTime["CloneMins",array]:popVector()
+            holoCreate(Id,entity():toWorld(entity():toLocal(Max-(Max-Min)/2)*Settings["Scale",number]),vec(1),ang(),vec(255),"models/hunter/blocks/cube2x2x2.mdl")
+            holoScaleUnits(Id,-(Max-Min)*Settings["Scale",number])
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished")
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "map",
+            rangerPersist(1)
+            rangerHitEntities(0)
+            Subject=lastSpoke()
+            local Origin=Subject:pos()+vec(0,0,5)
+            local RD=rangerOffset(5000,Origin,ang(0,0,0):forward())
+            Max=RD:position()
+            Min=Max
+            local RD=rangerOffset(5000,Origin,ang(0,45,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,90,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,135,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,180,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,225,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,270,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,315,0):forward())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,0,0):up())
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            local RD=rangerOffset(5000,Origin,ang(0,0,0):up()*-1)
+            Max=maxVec(RD:position(),Max)
+            Min=minVec(RD:position(),Min)
+            #print(Max,Min)
+            holoCreate(1,Max-(Max-Min)/2,vec(1),ang(),vec(255),"models/hunter/blocks/cube2x2x2.mdl")
+            #print(Max-(Max-Min)/2)
+            holoScaleUnits(1,-(Max-Min))
+            #print(-(Max-Min))
+            RunTime["LastMin",vector]=Min
+            RunTime["LastMax",vector]=Max
+            break
+        case "save",
+            RunTime["Mins",array]:pushVector(RunTime["LastMin",vector])
+            RunTime["Maxs",array]:pushVector(RunTime["LastMax",vector])
+            holoDelete(1)
+            break
+        case "last",
+            holoCreate(1,RunTime["LastMax",vector]-(RunTime["LastMax",vector]-RunTime["LastMin",vector])/2,vec(1),ang(),vec(255),"models/hunter/blocks/cube2x2x2.mdl")
+            holoScaleUnits(1,-(RunTime["LastMax",vector]-RunTime["LastMin",vector]))
+            break
+        case "minimap",
+            print("CreatingMiniMap")
+            timer("CreateMiniMap",500)
+            break
+        case "filesave",
+            timer("SaveToFile",1000)
+            break
+    }
+}

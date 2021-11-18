@@ -1,0 +1,183 @@
+@name Pie's Scalable Printer Vault Profitier v1
+@outputs [Fire]
+@persist [Size,I,N,Frequency,ProfitMargin,PrinterCollectionRate,TransferAmount,TotalProfit,ShouldCuteKittyBeKilledAndNeverComeBackBecauseYouAreAHeartlessMonster] [Max,Min]:vector [Vectors,ColorArray,TempColors]:array [User,CurrentPrinter]:entity [Printers]:array [UserEntityType,PrinterEntityType]:string
+if(first()){
+    #[
+        Profit margin is how much money YOU, 
+        the collector, receives as payment for
+        holding onto the printers.
+        0.1 = 10%
+        0.2 = 20%
+        0.01 = 1%
+        
+        Type: Number
+            Between 0 and 1.
+            
+    ]#
+    ProfitMargin=0
+    #[
+        How frequent will the user collect from the printers? (in miliseconds)
+        (Server rules say minimum of 5 minutes)
+        
+        Type: Number
+            Mimumum of 300,000 to be legal.
+            
+    ]#
+    Frequency=5 * 60 * 1000
+    #[
+        Should the cat hologram and the other hit detection 
+        holograms be cleared 30 seconds after placement?
+        
+        Type: Boolean
+            Either 1 or 0.
+            1 being yes
+            0 being no
+            
+    ]#
+    ShouldCuteKittyBeKilledAndNeverComeBackBecauseYouAreAHeartlessMonster=1
+    
+    
+    PrinterCollectionRate=100
+    Size=1000
+    Vectors=array(
+        #vec(-Size,Size,0),
+        #vec(Size,Size,0),
+        #vec(Size,-Size,0),
+        #vec(-Size,-Size,0),
+        vec(0,0,Size),
+        vec(0,0,-Size),
+        vec(Size,0,0),
+        vec(-Size,0,0),
+        vec(0,Size,0),
+        vec(0,-Size,0)
+    
+    )
+    rangerHitEntities(1)
+    UserEntityType="gmod_wire_user"
+    PrinterEntityType="sent_elegant_printer"
+    
+    
+    V=entity():toWorld(Vectors[1,vector])
+    Off=rangerOffset(entity():pos(),V)
+    if(Off:hit()){
+        holoCreate(I,Off:pos())
+        Max=Off:pos()
+        Min=Off:pos()
+    }else{
+        holoCreate(I,V)
+        Max=V
+        Min=V
+    }
+    N=Vectors:count()
+    I=1
+    I++
+    timer("Math",0)
+}
+if(clk("Math")){
+    if(I<=Vectors:count()){
+        N++
+        V=entity():toWorld(Vectors[I,vector])
+        Off=rangerOffset(entity():pos(),V)
+        if(Off:hit()){
+            holoCreate(N,Off:pos())
+            Max=maxVec(Off:pos(),Max)
+            Min=minVec(Off:pos(),Min)
+        }else{
+            holoCreate(N,V)
+            Max=maxVec(V,Max)
+            Min=minVec(V,Min)
+        }
+        I++
+        timer(clkName(),0)
+    }else{
+        holoCreate(I,Max-(Max-Min)/2,vec(0),ang(),vec(255),"models/hunter/blocks/cube2x2x2.mdl")
+        holoMaterial(I,"matsys_regressiontest/background.vmt")
+        #entity():setPos(Max-(Max-Min)/2)
+        holoScaleUnits(I,-(Max-Min))
+        timer("GetPrinters",1000)
+        print("E2 has properly setup boundaries")
+        if(ShouldCuteKittyBeKilledAndNeverComeBackBecauseYouAreAHeartlessMonster){
+            timer("KillTheKitty",30000)
+        }
+    }
+}
+if(clk("GetPrinters")){
+    if(User & ->Fire){
+        findClearBlackList()
+        findClearWhiteList()
+        findIncludeClass(PrinterEntityType)
+        findInBox(Min,Max)
+        Printers=findToArray()
+        print("Identified "+Printers:count()+" printers.")
+        print(Printers)
+        timer("CollectNextPrinter",PrinterCollectionRate)
+    }else{
+        print("User has not been connected yet. Trying to auto connect now.")
+        timer("ConnectUser",1000)
+    }
+}
+if(clk("ConnectUser")){
+    findClearBlackList()
+    findClearWhiteList()
+    findIncludePlayerProps(owner())
+    findByClass(UserEntityType)
+    if(findToArray():count()<0){
+        print("Could not find any users that belong to you.")
+    }else{
+        User=find()
+        if(User:type()==UserEntityType){
+            if(User:createWire(entity(),"Fire","Fire") || ->Fire){
+                print("Successfully wired to user.")
+                Fire=0
+                timer("GetPrinters",1000)
+            }else{
+                print("Failed to wire to user properly")
+            }
+        }else{
+            print("Failed to properly search for user")
+        }
+    }
+}
+if(clk("CollectNextPrinter")){
+    if(Printers:count()>0){
+        if(User & ->Fire){
+            CurrentPrinter=Printers:popEntity()
+            User:setPos(CurrentPrinter:pos())
+            if(CurrentPrinter:printerAmount()==0){
+                print("A Printer was recently emptied")
+            }
+            
+            Fire=0
+            timer("ActivateUser",100)
+        }else{
+            print("User was disconnected, trying to reconnect now")
+            timer("ConnectUser",1000)
+        }
+    }else{
+        print("All Printers have been collected for a total profit of $"+TotalProfit+", A routine collection will be preformed in another "+round(Frequency/1000/60,5)+" minutes.")
+        TotalProfit=0
+        timer("GetPrinters",Frequency)
+    }
+}
+if(clk("ActivateUser")){
+    TransferAmount=CurrentPrinter:printerAmount()
+    Fire=1
+    timer("DeactivateUser",100)
+}
+if(clk("DeactivateUser")){
+    AmountGivenToOwner=TransferAmount*(1-ProfitMargin)
+    
+    if(CurrentPrinter:printerOwner()!=owner()){
+        TotalProfit+=TransferAmount-AmountGivenToOwner
+        print("Giving ",CurrentPrinter:printerOwner()," $"+AmountGivenToOwner+"/$"+TransferAmount)
+        moneyGive(CurrentPrinter:printerOwner(),AmountGivenToOwner)
+    }else{
+        TotalProfit+=TransferAmount
+    }
+    Fire=0
+    timer("CollectNextPrinter",0)
+}
+if(clk("KillTheKitty")){
+    holoDeleteAll(1)
+    print("You have officially deleted every last particle that made up the creature that is the kitty. Was it worth it you monster!?")
+}

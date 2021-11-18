@@ -1,0 +1,74 @@
+@name Pie's LED Editor
+@outputs [Flicker,On,Type,Speed] [Color]:vector [Text]:string
+@persist [Signs]:array [CurrentSign]:entity [Prefix]:string [Commands]:table
+if(first()){
+    Prefix="."
+    
+    
+    findIncludePlayerProps(owner())
+    findByClass("gb_rp_sign_wire")
+    Signs=findToArray()
+    
+    Commands=table(
+    "help"=Prefix+"help",
+    "list"=Prefix+"list",
+    "choose"=Prefix+"choose",
+    "text"=Prefix+"text",
+    "color"=Prefix+"color",
+    "speed"=Prefix+"speed",
+    "type"=Prefix+"type",
+    "on"=Prefix+"on",
+    "flicker"=Prefix+"flicker"
+    )
+    
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case Commands["help",string],
+            print("The full list of commands can be found below: ")
+            printTable(Commands)
+            break
+        case Commands["list",string],
+            print("List of available signs: ",Signs)
+            break
+        case Commands["choose",string],
+            Target=lastSpoke():aimEntity()
+            if (Target:type()=="gb_rp_sign_wire") {
+                CurrentSign=Target
+                print(CurrentSign:createWire(entity(),"Text","Text"),
+                CurrentSign:createWire(entity(),"Color","Color"),
+                CurrentSign:createWire(entity(),"Speed","Speed"),
+                CurrentSign:createWire(entity(),"Type","Type"),
+                CurrentSign:createWire(entity(),"On","On"),
+                CurrentSign:createWire(entity(),"Flicker","Flicker"))
+                On=1
+                Color=vec(255)
+                
+                print("Sign has been properly selected")
+            }else{
+                print("Error not a valid LED Sign")
+            }
+            break
+        case Commands["text",string],
+            Text=lastSaid():sub(LS[1,string]:length()+1)
+            break
+        case Commands["color",string],
+            Color=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+            break
+        case Commands["speed",string],
+            Speed=LS[2,string]:toNumber()
+            break
+        case Commands["type",string],
+            Type=LS[2,string]:toNumber()
+            break
+        case Commands["on",string],
+            On=LS[2,string]:toNumber()
+            break
+        case Commands["flicker",string],
+            Flicker=LS[2,string]:toNumber()
+            break
+        
+    }
+}

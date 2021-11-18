@@ -1,0 +1,294 @@
+@name Hologram Editor
+@persist Ent:entity [ID,Speed] [Car]:entity [Prefix]:string
+if(first()){
+    runOnChat(1)
+    noDuplications()
+    Speed=10
+    Prefix="/"
+}
+if(chatClk(owner()) | chatClk(Car:driver())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case Prefix+"create",
+        case Prefix+"spawn",
+            ID=LS[3,string]:toNumber()
+            holoCreate(ID,lastSpoke():aimPos(),vec(1),ang(),vec(255),LS[2,string])
+            Ent=holoEntity(ID)
+            timer("createDPanel",100)
+            break
+        case Prefix+"choose",
+        case Prefix+"select",
+            E=owner():aimEntity()
+            if(E:isValid()){
+                Ent=E
+                timer("createDPanel",100)
+            }
+            break
+        case Prefix+"open",
+        case Prefix+"show",
+            dShow("Prop Editor",1)
+            break
+        case Prefix+"close",
+        case Prefix+"hide",
+            dShow("Prop Editor",0)
+            break
+        case Prefix+"owner",
+        case Prefix+"me",
+            Ent=owner()
+            timer("createDPanel",100)
+            break
+        case Prefix+"menu",
+        case Prefix+"edit",
+        case Prefix+"get",
+            ID=LS[2,string]:toNumber()
+            Ent=holoEntity(ID)
+            timer("createDPanel",100)
+            break
+        case Prefix+"speed",
+            Speed=LS[2,string]:toNumber()
+            break
+        case Prefix+"car",
+            E=lastSpoke():aimEntity()
+            if(E:isVehicle()){
+                Car=E
+                dPod(Car)
+            }
+            break
+    }
+}
+if(clk("createDPanel")){
+    dPanel("Prop Editor",vec2(50,100),vec2(400,400))
+    dShow("Prop Editor",1)
+    dShowCloseButton("Prop Editor",0)
+    dButton("Close","Prop Editor",vec2(370,0),vec2(30))
+    dButton("Delete","Prop Editor",vec2(340,0),vec2(30))
+    
+    dSlider("Pitch","Prop Editor",vec2(0,30),200,-180,180)
+    dSlider("Yaw","Prop Editor",vec2(0,60),200,-180,180)
+    dSlider("Roll","Prop Editor",vec2(0,90),200,-180,180)
+    
+    dSlider("Red","Prop Editor",vec2(0,120),200,0,255)
+    dSlider("Green","Prop Editor",vec2(0,150),200,0,255)
+    dSlider("Blue","Prop Editor",vec2(0,180),200,0,255)
+    
+    dButton("Up","Prop Editor",vec2(250,50),vec2(50))
+    dButton("Down","Prop Editor",vec2(250,150),vec2(50))
+    dButton("Left","Prop Editor",vec2(250,100),vec2(50))
+    dButton("Right","Prop Editor",vec2(350,100),vec2(50))
+    dButton("Forward","Prop Editor",vec2(300,50),vec2(50))
+    dButton("Backward","Prop Editor",vec2(300,150),vec2(50))
+    dButton("Teleport","Prop Editor",vec2(300,100),vec2(50))
+    dButton("+Speed","Prop Editor",vec2(350,50),vec2(50))
+    dButton("-Speed","Prop Editor",vec2(350,150),vec2(50))
+    
+    dLabel("Material: ","Prop Editor",vec2(0,210))
+    
+    dTextBox("Material","Prop Editor",vec2(60,210),200)
+    dDropBox("PreSet Materials","Prop Editor",vec2(260,210),140)
+    
+    dLabel("Render FX: ","Prop Editor",vec2(0,240))
+    dDropBox("Render FX","Prop Editor",vec2(60,240),200)
+    
+    dLabel("Render Mode: ","Prop Editor",vec2(0,270))
+    dDropBox("Render Mode","Prop Editor",vec2(60,270),200)
+    
+    dLabel("Animate: ","Prop Editor",vec2(260,270))
+    dTextBox("Animation","Prop Editor",vec2(300,270),100)
+    
+    dLabel("Collision: ","Prop Editor",vec2(0,300))
+    dDropBox("Collision","Prop Editor",vec2(60,300),200)
+    
+    dLabel("Sound: ","Prop Editor",vec2(260,300))
+    dTextBox("Sound","Prop Editor",vec2(300,300),100)
+    
+    dLabel("Prop Model: ","Prop Editor",vec2(0,330))
+    dTextBox("Prop","Prop Editor",vec2(60,330),200)
+    
+    dLabel("Shadow: ","Prop Editor",vec2(0,360))
+    dCheckBox("Shadow","Prop Editor",vec2(60,360))
+    
+    dSlider("Scale","Prop Editor",vec2(160,350),240,0.1,25.0)
+    
+    dCheckBox("Update","Prop Editor",vec2(380,380))
+    
+    Ang=Ent:angles()
+    dSetNval("Pitch",Ang:pitch())
+    dSetNval("Yaw",Ang:yaw())
+    dSetNval("Roll",Ang:roll())
+    Col=Ent:getColor()
+    dSetNval("Red",Col:x())
+    dSetNval("Green",Col:y())
+    dSetNval("Blue",Col:z())
+    dSetSval("Material",Ent:getMaterial())
+    dSetSval("Model",Ent:model())
+    dArray("Render FX",array("00: None","01: Slow Pulse","02: Fast Pulse","03: Slow Wide Pulse","04: Fast Wide Pulse","05: Slow Fade Away","06: Fast Fade Away","07: Slow Become Solid","08: Fast Become Solid","09: Slow Strobe","10: Fast Strobe","11: Faster Strobe","12: Slow Flicker","13: Fast Flicker","14: Constant Glow","15: Distort","16: Hologram (Distort + fade)","17: Scale Up","22: Spotlight FX","23: Cull By Distance","24: Fade Wider Pulse","26: Fade Near"))
+    dArray("Render Mode",array("00: Normal","01: TransColor","02: TransTexture","03: Glow","04: TransAlpha","05: TransAdd","06: Enviromental","07: TransAddFrameBlend","08: TransAlphaAdd","09: WorldGlow","10: None"))
+    dArray("Collision",array("00: None","01: BSP (QPhysics)","02: Bounding Box","03: Oriented Bounding Box","04: Oriented Bounding Box, constrained to Yaw only","05: Custom/Test","06: VPhysics"))
+    dArray("PreSet Materials",Ent:getMaterials())
+    dSetNval("Update",1)
+    dSetSval("Render FX","00: None")
+    dSetSval("Render Mode","00: Normal")
+    dSetSval("Collision","06: VPhysics")
+    dSetSval("Prop",Ent:model())
+    dRunOnChange("Pitch",1)
+    dRunOnChange("Yaw",1)
+    dRunOnChange("Roll",1)
+    dRunOnChange("Red",1)
+    dRunOnChange("Green",1)
+    dRunOnChange("Blue",1)
+    dRunOnChange("Material",1)
+    dRunOnChange("Update",1)
+    dRunOnChange("Render FX",1)
+    dRunOnChange("Render Mode",1)
+    dRunOnChange("Collision",1)
+    dRunOnChange("PreSet Materials",1)
+    dRunOnChange("Prop",1)
+    dRunOnChange("Close",1)
+    dRunOnChange("Delete",1)
+    dRunOnChange("Shadow",1)
+    dRunOnChange("Up",1)
+    dRunOnChange("Dowm",1)
+    dRunOnChange("Left",1)
+    dRunOnChange("Right",1)
+    dRunOnChange("Forward",1)
+    dRunOnChange("Backward",1)
+    dRunOnChange("Teleport",1)
+    dRunOnChange("+Speed",1)
+    dRunOnChange("-Speed",1)
+    dRunOnChange("Animation",1)
+    dRunOnChange("Sound",1)
+    dRunOnChange("Scale",1)
+}
+if(Ent:isValid()){
+    switch(1){
+        case dClk("Pitch"),
+        case dClk("Yaw"),
+        case dClk("Roll"),
+            Ent:setAng(ang(dNval("Pitch"),dNval("Yaw"),dNval("Roll")))
+            break
+        case dClk("Red"),
+        case dClk("Green"),
+        case dClk("Blue"),
+            FinColor=vec(dNval("Red"),dNval("Green"),dNval("Blue"))
+            Ent:setColor(FinColor)
+            break
+        case dClk("Material"),
+            Ent:setMaterial(dSval("Material"))
+            dSetSval("PreSet Materials",dSval("Material"))
+            break
+        case dClk("PreSet Materials"),
+            Ent:setMaterial(dSval("PreSet Materials"))
+            dSetSval("Material",dSval("PreSet Materials"))
+            break
+        case dClk("Render FX"),
+            Ent:setKeyValue("renderfx",dSval("Render FX"):sub(0,2):toNumber())
+            break
+        case dClk("Render Mode"),
+            Ent:setRenderMode(dSval("Render Mode"):sub(0,2):toNumber())
+            break
+        case dClk("Collision"),
+            Mat=Ent:getMaterial()
+            Pos=Ent:pos()
+            Ang=Ent:angles()
+            Col=Ent:getColor()
+            Mod=Ent:model()
+            holoDelete(ID)
+            ID+=1000
+            holoCreate(ID,Pos,vec(1),Ang,Col,Mod):setKeyValue("solid",dSval("Collision"):sub(0,2):toNumber())
+            Ent:setMaterial(Mat)
+            Ent=holoEntity(ID)
+            break
+        case dClk("Update"),
+            Ang=Ent:angles()
+            dSetNval("Pitch",Ang:pitch())
+            dSetNval("Yaw",Ang:yaw())
+            dSetNval("Roll",Ang:roll())
+            Col=Ent:getColor()
+            dSetNval("Red",Col:x())
+            dSetNval("Green",Col:y())
+            dSetNval("Blue",Col:z())
+            dSetSval("Material",Ent:getMaterial())
+            dSetNval("Update",0)
+            break
+        case dClk("Prop"),
+            holoModel(ID,dSval("Prop"))
+            timer("createDPanel",100)
+            break
+        case dClk("Close"),
+            dShow("Prop Editor",0)
+            break
+        case dClk("Delete"),
+            holoDelete(ID)
+            dShow("Prop Editor",0)
+            break
+        case dClk("Shadow"),
+            Ent:setKeyValue("disableshadows",!dNval("Shadow"))
+            Ent:setKeyValue("disablereceiveshadows",!dNval("Shadow"))
+            break
+        case dClk("Up"),
+            Ent:teleport(Ent:toWorld(vec(0,0,Speed)))
+            Ent:setPos(Ent:toWorld(vec(0,0,Speed)))
+            break
+        case dClk("Down"),
+            Ent:teleport(Ent:toWorld(vec(0,0,-Speed)))
+            Ent:setPos(Ent:toWorld(vec(0,0,-Speed)))
+            break
+        case dClk("Left"),
+            Ent:teleport(Ent:toWorld(vec(0,Speed,0)))
+            Ent:setPos(Ent:toWorld(vec(0,Speed,0)))
+            break
+        case dClk("Right"),
+            Ent:teleport(Ent:toWorld(vec(0,-Speed,0)))
+            Ent:setPos(Ent:toWorld(vec(0,-Speed,0)))
+            break
+        case dClk("Forward"),
+            Ent:teleport(Ent:toWorld(vec(Speed,0,0)))
+            Ent:setPos(Ent:toWorld(vec(Speed,0,0)))
+            break
+        case dClk("Backward"),
+            Ent:teleport(Ent:toWorld(vec(-Speed,0,0)))
+            Ent:setPos(Ent:toWorld(vec(-Speed,0,0)))
+            break
+        case dClk("Teleport"),
+            Ent:setPos(owner():aimPos())
+            Ent:teleport(owner():aimPos())
+            break
+        case dClk("Scale"),
+            Ent:setFire("setmodelscale",abs(dNval("Scale"))+"",0)
+            break
+        case dClk("+Speed"),
+            if(dNval("+Speed")){
+                Speed++
+                if(Car:driver():isValid()){
+                    Car:printDriver("Speed Changed To: "+Speed+". Do \".speed [amount]\" in chat to make it custom.")
+                }else{
+                    print("Speed Changed To: "+Speed+". Do \".speed [amount]\" in chat to make it custom.")
+                }
+                dSetNval("+Speed",0)
+            }else{
+                dSetNval("+Speed",1)
+            }
+            break
+        case dClk("-Speed"),
+            if(dNval("-Speed")){
+                Speed--
+                if(Car:driver():isValid()){
+                    Car:printDriver("Speed Changed To: "+Speed+". Do \".speed [amount]\" in chat to make it custom.")
+                }else{
+                    print("Speed Changed To: "+Speed+". Do \".speed [amount]\" in chat to make it custom.")
+                }
+                dSetNval("-Speed",0)
+            }else{
+                dSetNval("-Speed",1)
+            }
+            break
+        case dClk("Animation"),
+            Ent:animate(Ent:getAnimationByName(dSval("Animation")),1)
+            break
+        case dClk("Sound"),
+            Ent:soundPlay(0,100,dSval("Sound"))
+            break
+    }
+}else{
+    dShow("Prop Editor",0)
+}

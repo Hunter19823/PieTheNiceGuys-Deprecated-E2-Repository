@@ -1,0 +1,19 @@
+@name Friend Finder
+@persist [Trap,Enemy]:entity
+if( first() ) {
+    runOnChat(1)
+}#https://www.dropbox.com/s/v1p5oortdhogexw/Spirits%20-%20The%20Strumbellas%20%28Lyrics%29.mp3?dl=0
+elseif( chatClk( owner() ) ) {                    # E2 triggered by a chat message of the owner
+    local Message = lastSaid()                      # get message
+    local Words = Message:explode(" ")              # split message at spaces (into words)
+    if( Words[1, string] == "!friends" ) {             # first word matches command?
+        local SearchName = Words[2, string]           # get second word
+        local Player = findPlayerByName( SearchName ) # try to find a player that matches that
+        if( !Player:isPlayer() ) {
+            print( "Could not find a playername matching '" + SearchName + "'." )
+    } else{
+        print("Player: "+Player:name()+"'s Friends online: ")
+        print(Player:friends())
+    }
+  }
+}

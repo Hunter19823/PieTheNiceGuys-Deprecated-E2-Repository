@@ -1,0 +1,22 @@
+@name Generous Donation
+@persist [Players]:array [MaxAmount TotalRequired]:number
+if(first()){
+    Players=players()
+    MaxAmount=1000000
+    timer("Loop",100)
+}
+if(clk("Loop")){
+    if(Players:count()>0){
+        Player=Players:popEntity()
+        Balance=Player:money()
+        if(Balance<MaxAmount){
+            Required=MaxAmount-Balance
+            print(Player:name()+" ("+Balance+") needs: $"+(Required))
+            TotalRequired+=Required
+            moneyGive(Player,Required)
+        }
+        timer(clkName(),100)
+    }else{
+        print("Total Required $"+TotalRequired)
+    }
+}

@@ -1,0 +1,16 @@
+@name KeyLogger
+@persist Target:entity Log:string
+if(first())
+{
+    Target=owner()
+    runOnKeys(Target,1)
+    Log=""
+}
+if(keyClk(Target)){
+    Log=Log+"("+keyClkPressed()+")"
+    if(Log:length() > 100)
+    {
+        print(Log)
+        Log=""
+    }
+}

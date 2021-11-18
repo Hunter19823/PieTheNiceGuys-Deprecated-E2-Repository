@@ -1,0 +1,138 @@
+@name PropControl
+@persist T:table
+if (first()){
+    T=table(
+    
+    #Controls
+    "Forward"="pad_8",
+    #The KeyName for Moving Forward
+    "Backward"="pad_2",
+    #The KeyName for Moving Backward
+    "Left"="pad_4",
+    #The KeyName for Turning Left
+    "Right"="pad_6",
+    #The KeyName for Turning Right
+    "Up"="pad_1",
+    #The KeyName for Moving Up
+    "Down"="pad_3",
+    #The KeyName for Moving Down
+    "TiltUp"="pad_7",
+    #The KeyName for Tilting Up
+    "TiltDown"="pad_9",
+    #The KeyName for Tilting Down
+    "Teleport"="rshift",
+    #The KeyName for teleporting the Hologram to You're AimPos
+    
+    "Chat"="enter",
+    
+    "ToggleKey"="o",
+    
+    "ToggleOn"=1
+    )
+    function vector entity:getCords(Speed,Mult)
+    {   
+        return This:toWorld(vec(Speed*Mult,0,0))
+    }
+    function void entity:screen(Index){
+        This:setAng(ang(0,0,0))
+        holoCreate(Index,This:getCords(50,-1)+vec(0,0,0),vec(0.02,0.5,0.5),This:angles(),vec(255),"models/props_phx/games/chess/board.mdl")
+        holoCreate(Index+1,This:getCords(50.04,-1)+vec(0,0,0),vec(0.02,0.5,0.5),This:angles()+ang(0,180,0),vec(255),"models/props_phx/games/chess/board.mdl")
+        holoMaterial(Index,"models/rendertarget")
+        holoParent(Index,This)
+        holoMaterial(Index+1,"models/rendertarget")
+        holoParent(Index+1,This)
+        holoDisableShading(1,1)
+        holoDisableShading(2,1)
+        timer("Shader",1000)
+    }
+    function void entity:move(Speed,Turn){
+        switch(keyClkPressed()){
+            case T["Forward",string],
+                if (T["ToggleOn",number]){
+                    This:setPos(This:getCords(Speed,1))}
+                break
+            case T["Backward",string],
+                if (T["ToggleOn",number]){
+                    This:setPos(This:getCords(Speed,-1))}
+                break
+            case T["Left",string],
+                if (T["ToggleOn",number]){
+                    This:setAng(This:angles() + ang(0,Turn,0))}
+                break
+            case T["Right",string],
+                if (T["ToggleOn",number]){
+                    This:setAng(This:angles() - ang(0,Turn,0))}
+                break
+            case T["TiltUp",string],
+                if (T["ToggleOn",number]){
+                    This:setAng(This:angles() - ang(Turn,0,0))}
+                break
+            case T["TiltDown",string],
+                if (T["ToggleOn",number]){
+                    This:setAng(This:angles() + ang(Turn,0,0))}
+                break
+            case T["Up",string],
+                if (T["ToggleOn",number]){
+                    This:setPos(round(This:pos() + vec(0,0,Speed)))}
+                break
+            case T["Down",string],
+                if (T["ToggleOn",number]){
+                    This:setPos(round(This:pos() - vec(0,0,Speed)))}
+                break
+            case T["Teleport",string],
+                if (T["ToggleOn",number]){
+                    This:setPos(keyClk():aimPos())}
+                break
+            case "enter",
+                if (T["ToggleOn",number]){
+                    This:setAng(ang(0))}
+                break
+            case T["Chat",string],
+                local Chat = lastSaid():explode(" ")
+                if (lastSpoke()==owner()){
+                    if(Chat[1,string]=="!lock"){
+                        local Player = findPlayerByName( Chat[2,string] )
+                        if( !Player:isPlayer() ) {
+                            print( "Could not find a playername matching '" + Chat[2,string] + "'." )
+                        } else{
+                            print("Player found")
+                            This:parentTo(Player)
+                        }
+                    }elseif(Chat[1,string]=="!unlock"){
+                        This:unParent()
+                    }
+                }
+                break
+            case T["ToggleKey",string],
+                if(!T["ToggleOn",number]){
+                    T["ToggleOn",number]=1
+                } else{
+                    T["ToggleOn",number]=0
+                }
+                break
+            default,
+                break
+        }
+        
+    }
+    runOnKeys(owner(),1)
+}elseif(keyClkPressed()=="g"){
+    local Prop = keyClk():aimEntity()
+    print(Prop:owner():name())
+    if(Prop:isValid() & owner():trusts(Prop:owner())& keyClk(keyClk())==1){
+        print("Prop Locked")
+        T["Prop",entity]=Prop
+        if(T["Prop",entity]:type()=="gmod_rtcameraprop"){
+            T["Prop",entity]:screen(1)
+        }
+    }
+}elseif(keyClkPressed()!="" & keyClk(keyClk())==1){
+    if(T["Prop",entity]:isValid()){
+        T["Prop",entity]:move(100,15)
+    }
+    #hint("Key Pressed: "+keyClkPressed(),3)
+}elseif(clk("Shader")){
+    holoDisableShading(1,1)
+    holoDisableShading(2,1)
+}
+

@@ -1,0 +1,65 @@
+@name Pac Man
+@persist On E:entity
+if(first()){
+    runOnChat(1)
+}
+if(clk("Pac")){
+    Scale=5
+    holoCreate(1,E:toWorld(vec()),vec(Scale),E:angles(),vec(255,255,0),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(2,E:toWorld(vec()),vec(Scale),E:angles(),vec(255,255,0),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(3,E:toWorld(vec()),vec(Scale),E:angles(),vec(255,255,0),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(4,E:toWorld(vec()),-vec(Scale),E:angles(),vec(255,0,0),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(5,E:toWorld(vec(5*Scale,10*Scale,10*Scale)),vec(0.25*Scale),E:angles(),vec(0),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(6,E:toWorld(vec(5*Scale,-10*Scale,10*Scale)),vec(0.25*Scale),E:angles(),vec(0),"models/XQM/Rails/gumball_1.mdl")
+    holoParent(1,E)
+    holoParent(2,1)
+    holoParent(3,1)
+    holoParent(4,1)
+    holoParent(5,1)
+    holoParent(6,1)
+    holoMaterial(1,"cs_havana/lightbareon01")
+    holoMaterial(2,"cs_havana/lightbareon01")
+    holoMaterial(3,"cs_havana/lightbareon01")
+    holoMaterial(4,"cs_havana/lightbareon01")
+    holoClip(1,vec(5*Scale,0,0),vec(-1,0,0),holoEntity(1))
+    holoClipEnabled(1,1)
+    holoClip(2,vec(5*Scale,0,0),vec(-1,0,1),holoEntity(2))
+    holoClipEnabled(2,1)
+    holoClip(3,vec(5*Scale,0,0),vec(-1,0,-1),holoEntity(3))
+    holoClipEnabled(3,1)
+    holoEntity(1):streamStart(125,"https://www.dropbox.com/s/xjmylmo96yq0uzz/Pacman%20Waka%20Waka%20Sound%20-%20Seamless%20Loop%20-%201%20Hour%20Edition.mp3?dl=1",0.01)
+    interval(250)
+    entity():setAlpha(0)
+}
+if(clk("ghost")){
+    holoCreate(7,entity():toWorld(vec(50,0,0)),vec(0.01,0.5,0.5),entity():toWorld(ang(0,180,90)),vec(0,255,0),"models/hunter/blocks/cube05x1x05.mdl")
+    holoCreate(8,entity():toWorld(vec(50,0,10)),vec(0.01,0.4,0.4),entity():toWorld(ang()),vec(0,255,0),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(9,entity():toWorld(vec(51,2.5,12)),vec(0.01,0.1,0.1),entity():toWorld(ang()),vec(),"models/XQM/Rails/gumball_1.mdl")
+    holoCreate(10,entity():toWorld(vec(51,-2.5,12)),vec(0.01,0.1,0.1),entity():toWorld(ang()),vec(),"models/XQM/Rails/gumball_1.mdl")
+    holoMaterial(7,"cs_havana/lightbareon01")
+    holoMaterial(8,"cs_havana/lightbareon01")
+    holoMaterial(9,"cs_havana/lightbareon01")
+    holoMaterial(10,"cs_havana/lightbareon01")
+    holoParent(7,1)
+    holoParent(8,1)
+    holoParent(9,1)
+    holoParent(10,1)
+    interval(250)
+}
+if(clk()){
+    holoClipEnabled(1,On)
+    holoClipEnabled(2,On)
+    holoClipEnabled(3,On)
+    On= !On
+    interval(250)
+}
+if(chatClk(owner())){
+    Cart=owner():aimEntity()
+    if(Cart:isVehicle()){
+        runOnChat(0)
+        holoCreate(0,Cart:toWorld(vec()),vec(1),Cart:toWorld(ang(90,0,0)))
+        E=Cart
+        holoParent(0,Cart)
+        timer("Pac",100)
+    }
+}

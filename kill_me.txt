@@ -1,0 +1,1 @@
+owner():plyGod(1) selfDestruct()

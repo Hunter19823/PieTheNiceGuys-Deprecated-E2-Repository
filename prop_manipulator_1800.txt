@@ -1,0 +1,56 @@
+@name Prop Manipulator 1800
+if(first()){
+    
+    function number entity:canManipulate(){
+        return This:owner() == owner()
+    }
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    AimEntity=owner():aimEntity()
+    Parameters=lastSaid():sub(LS[1,string]:length()+2)
+    switch(LS[1,string]:lower()){
+        case "material",
+            if(AimEntity:canManipulate()){
+                print(Parameters)
+                AimEntity:setMaterial(Parameters)
+            }
+            break
+        case "parent",
+            if(AimEntity:canManipulate()){
+                AimEntity:parentTo(entity())
+            }
+            break
+        case "delete",
+            if(AimEntity:canManipulate()){
+                AimEntity:propDelete()
+                #AimEntity:propBreak()
+            }
+            break
+        case "store",
+            if(AimEntity:canManipulate()){
+                AimEntity:propManipulate(entity():toWorld(vec(0,0,50)),AimEntity:angles(),0,gravity(),0)
+            }
+            break
+        case "save",
+            if(AimEntity:canManipulate()){
+                P=propSpawn("models/sterling/lootcrate.mdl",AimEntity:pos()+vec(0,0,25),1)
+                AimEntity:parentTo(P)
+                
+            }
+            break
+        case "mass",
+            if(AimEntity:canManipulate()){
+                P:setMass(LS[2,string]:toNumber())
+            }
+            break
+        case "grav",
+        case "gravity",
+            if(AimEntity:canManipulate()){
+                #P:setPhysProp(AimEntity:propPhysicalMaterial(),LS[2,string]:toNumber())
+                P:propManipulate(AimEntity:pos(),AimEntity:angles(),0,LS[2,string]:toNumber(),0)
+            }
+            break
+    }
+}

@@ -1,0 +1,76 @@
+@name Pie's Vault Door System
+@persist [LeftDoor,RightDoor,E]:entity [IsOpen,I,Speed,Timer] [LClosed,RClosed,LOpen,ROpen,LOffset,ROffset]:vector
+if(first()){
+    E=entity()
+    LOffset=vec(0,-100,0)
+    ROffset=vec(0,100,0)
+    Speed=20
+    Timer=100
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".left",
+            D=lastSpoke():aimEntity()
+            if(D:type()=="prop_physics"){
+                LeftDoor=D
+                LClosed=D:pos()
+                LOpen=D:toWorld(LOffset)
+                print("Left Door Saved")
+            }
+            break
+        case ".right",
+            D=lastSpoke():aimEntity()
+            if(D:type()=="prop_physics"){
+                RightDoor=D
+                RClosed=D:pos()
+                ROpen=D:toWorld(ROffset)
+                print("Right Door Saved")
+            }
+            break
+        case ".open",
+            if(RightDoor & LeftDoor & !IsOpen){
+                timer("Open",1000)
+            }
+            break
+        case ".close",
+            if(RightDoor & LeftDoor & IsOpen){
+                timer("Close",1000)
+            }
+            break
+    }
+}
+if(clk("Open")){
+    I=0
+    timer("MoveO",Timer)
+}
+if(clk("MoveO")){
+    I++
+    if(I<=Speed){
+        Pos = (ROpen-RClosed)/Speed*I + RClosed 
+        RightDoor:setPos(Pos)
+        Pos = (LOpen-LClosed)/Speed*I + LClosed 
+        LeftDoor:setPos(Pos)
+        timer(clkName(),Timer)
+    }else{
+        IsOpen=1
+    }
+}
+if(clk("Close")){
+    I=0
+    timer("MoveC",Timer)
+}
+
+if(clk("MoveC")){
+    I++
+    if(I<=Speed){
+        Pos = (RClosed-ROpen)/Speed*I + ROpen 
+        RightDoor:setPos(Pos)
+        Pos = (LClosed-LOpen)/Speed*I + LOpen 
+        LeftDoor:setPos(Pos)
+        timer(clkName(),Timer)
+    }else{
+        IsOpen=0
+    }
+}

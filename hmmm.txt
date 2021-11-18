@@ -1,0 +1,5 @@
+owner():tele(vec(2180,855,600))#[-12975]# selfDestruct()
+#owner():tele(vec(2180,855,-12975))#[-12975]# selfDestruct()#14474,-14474,-15755
+#owner():tele(vec(2180,855,-13975))#[-12975]# selfDestruct()
+#owner():tele(vec(14474,-14474,-15755))#[-12975]# selfDestruct()
+#owner():tele(vec(-300.418549,3474.953857,409.239319))#[-12975]# selfDestruct()
