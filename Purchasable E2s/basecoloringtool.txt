@@ -1,0 +1,108 @@
+@persist [Target]:entity [Alpha] [Color]:vector [Material,KeyBind1,KeyBind2]:string
+if(first()){
+    KeyBind1="pad_4"
+    KeyBind2="pad_5"
+    runOnChat(1)
+    runOnKeys(owner(),1)
+    Color=vec(255)
+    Alpha=255
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "material",
+            Material=LS[2,string]
+            print("Settings Saved:<br>Material: "+Material+"<br>Color: ("+Color:x()+","+Color:y()+","+Color:z()+")<br>Alpha: "+Alpha)
+            break
+        case "color",
+            Color=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+            print("Settings Saved:<br>Material: "+Material+"<br>Color: ("+Color:x()+","+Color:y()+","+Color:z()+")<br>Alpha: "+Alpha)
+            break
+        case "alpha",
+            Alpha=LS[2,string]:toNumber()
+            print("Settings Saved:<br>Material: "+Material+"<br>Color: ("+Color:x()+","+Color:y()+","+Color:z()+")<br>Alpha: "+Alpha)
+            break
+        case "copy",
+            T=lastSpoke():aimEntity()
+            if(T:isValidPhysics()){
+                Alpha=T:getAlpha()
+                Material=T:getMaterial()
+                Color=T:getColor()
+                print("Settings Saved:<br>Material: "+Material+"<br>Color: ("+Color:x()+","+Color:y()+","+Color:z()+")<br>Alpha: "+Alpha)
+            }
+            break
+        case "revert",
+            T=lastSpoke():aimEntity()
+            if(T:isValidPhysics()){
+                if(T["Version",number]>0){
+                    local V=T["Version",number]
+                    print("Reverting Back to version: "+V)
+                    T:setColor(T["PreviousColor"+V,vector])
+                    T:setMaterial(T["PreviousMaterial"+V,string])
+                    T:setAlpha(T["PreviousAlpha"+V,number])
+                    T["Version",number]=T["Version",number]-1
+                }
+            }
+            break
+    }
+}
+if(keyClk(keyClk())==1){
+    switch(keyClkPressed()){
+        case KeyBind1,
+            T=keyClk():aimEntity()
+            if(T:isValidPhysics()){
+                T:noDraw(1)
+                holoCreate(1,T:pos(),vec(1),T:angles(),Color,T:model())
+                holoMaterial(1,Material)
+                Target=T
+            }
+            break
+        case KeyBind2,
+            T=keyClk():aimEntity()
+            if(T:isValidPhysics()){
+                Target=T
+                Col=T:getColor()
+                print("Settings Selected:<br>Material: "+T:getMaterial()+"<br>Color: ("+Col:x()+","+Col:y()+","+Col:z()+")<br>Alpha: "+T:getAlpha())
+            }
+            break
+    }
+}
+if(keyClk(keyClk())==-1){
+    switch(keyClkPressed()){
+        case KeyBind1,
+            T=keyClk():aimEntity()
+            if(T:isValidPhysics()){
+                if(T==Target){
+                    T["Version",number]=T["Version",number]+1
+                    T["PreviousMaterial"+T["Version",number],string]=T:getMaterial()
+                    T["PreviousAlpha"+T["Version",number],number]=T:getAlpha()
+                    T["PreviousColor"+T["Version",number],vector]=T:getColor()
+                    T:setColor(holoEntity(1):getColor())
+                    T:setMaterial(holoEntity(1):getMaterial())
+                    T:setAlpha(holoEntity(1):getAlpha())
+                    T:noDraw(0)
+                    holoDelete(1)
+                }else{
+                    holoDelete(1)
+                    Target:noDraw(0)
+                }
+            }else{
+                holoDelete(1)
+                Target:noDraw(0)
+            }
+            break
+        case KeyBind2,
+            T=keyClk():aimEntity()
+            if(T:isValidPhysics()){
+                Target=T
+                if(T==Target){
+                    Alpha=T:getAlpha()
+                    Material=T:getMaterial()
+                    Color=T:getColor()
+                    print("Settings Saved:<br>Material: "+Material+"<br>Color: ("+Color:x()+","+Color:y()+","+Color:z()+")<br>Alpha: "+Alpha)
+                }
+            }
+            break
+    }
+}

@@ -1,0 +1,47 @@
+@name Pie's Example Hologram Screenshot E2
+@persist [Counter,Speed] Parent:entity
+@model models/maxofs2d/hover_rings.mdl
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    #noDuplications()
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    timer("bunker1",Speed)
+}
+if(clk("bunker1")){holoCreate(1,entity():pos()+vec(16.69,88.84,42.5),vec(0.3),ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoParent(1,entity()) timer("bunker2",Speed)}	
+if(clk("bunker2")){holoCreate(2,entity():pos()+vec(17.11,-35.64,40.42),vec(0.3),ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoMaterial(2,"Models/effects/vol_light001") holoParent(2,entity()) timer("bunker3",Speed)}	
+if(clk("bunker3")){holoCreate(3,entity():pos()+vec(2.64,-21.12,40.37),vec(0.3),ang(0,90,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoMaterial(3,"Models/effects/vol_light001") holoParent(3,entity()) timer("bunker4",Speed)}	
+if(clk("bunker4")){holoCreate(4,entity():pos()+vec(-19.59,63.84,37.12),vec(0.3),ang(-90,-180,180),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoParent(4,entity()) timer("bunker5",Speed)}	
+if(clk("bunker5")){holoCreate(5,entity():pos()+vec(-43.58,-69.86,15.25),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube075x2x1.mdl") holoMaterial(5,"Models/effects/vol_light001") holoParent(5,entity()) timer("bunker6",Speed)}	
+if(clk("bunker6")){holoCreate(6,entity():pos()+vec(-23.54,-85.76,-1.7),vec(0.3),ang(0,0,0),vec(255,255,255),"models/drover/shield_d.mdl") holoParent(6,entity()) timer("bunker7",Speed)}	
+if(clk("bunker7")){holoCreate(7,entity():pos()+vec(-30.64,-35.44,14.65),vec(0.3),ang(0,-45,0),vec(255,255,255),"models/hunter/blocks/cube075x2x1.mdl") holoMaterial(7,"Models/effects/vol_light001") holoParent(7,entity()) timer("bunker8",Speed)}	
+if(clk("bunker8")){holoCreate(8,entity():pos()+vec(-23.96,38.71,0.39),vec(0.3),ang(0,0,0),vec(255,255,255),"models/drover/shield_d.mdl") holoParent(8,entity()) timer("bunker9",Speed)}	
+if(clk("bunker9")){holoCreate(9,entity():pos()+vec(-44,54.61,17.33),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube075x2x1.mdl") holoParent(9,entity()) timer("bunker10",Speed)}	
+if(clk("bunker10")){holoCreate(10,entity():pos()+vec(-31.06,89.04,16.73),vec(0.3),ang(0,-45,0),vec(255,255,255),"models/hunter/blocks/cube075x2x1.mdl") holoParent(10,entity()) timer("bunker11",Speed)}	
+if(clk("bunker11")){holoCreate(11,entity():pos()+vec(-6.14,-87.59,11.99),vec(0.3),ang(0,180,0),vec(255,255,255),"models/props_c17/furnituretoilet001a.mdl") holoParent(11,entity()) timer("bunker12",Speed)}	
+if(clk("bunker12")){holoCreate(12,entity():pos()+vec(12.64,-84.6,10.02),vec(0.3),ang(90,-180,180),vec(255,255,255),"models/zerochain/zmlab/zmlab_dropoffshaft.mdl") holoParent(12,entity()) timer("bunker13",Speed)}	
+if(clk("bunker13")){holoCreate(13,entity():pos()+vec(-0.51,-64.9,0),vec(0.3),ang(0,0,0),vec(255,255,255),"models/expression 2/cpu_microchip.mdl") holoParent(13,entity()) timer("bunker14",Speed)}	
+if(clk("bunker14")){holoCreate(14,entity():pos()+vec(-46.83,51.44,42.46),vec(0.3),ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoParent(14,entity()) timer("bunker15",Speed)}
+if(clk("bunker15")){holoCreate(15,entity():pos()+vec(2.22,103.35,42.46),vec(0.3),ang(0,90,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoParent(15,entity()) timer("bunker16",Speed)}	
+if(clk("bunker16")){holoCreate(16,entity():pos()+vec(-6.56,36.89,14.08),vec(0.3),ang(0,180,0),vec(255,255,255),"models/props_c17/furnituretoilet001a.mdl") holoParent(16,entity()) timer("bunker17",Speed)}	
+if(clk("bunker17")){holoCreate(17,entity():pos()+vec(12.22,39.88,12.1),vec(0.3),ang(90,180,180),vec(255,255,255),"models/zerochain/zmlab/zmlab_dropoffshaft.mdl") holoParent(17,entity()) timer("bunker18",Speed)}	
+if(clk("bunker18")){holoCreate(18,entity():pos()+vec(-16.58,23.44,42.46),vec(0.3),ang(0,-90,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoParent(18,entity()) timer("bunker19",Speed)}	
+if(clk("bunker19")){holoCreate(19,entity():pos()+vec(-32.65,91.2,42.46),vec(0.3),ang(0,135,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoParent(19,entity()) timer("bunker20",Speed)}	
+if(clk("bunker20")){holoCreate(20,entity():pos()+vec(-14.58,63.57,-1.3),vec(0.3),ang(0,180,0),vec(255,255,255),"models/props_phx/misc/bunker01.mdl") holoParent(20,entity()) timer("bunker21",Speed)}	
+if(clk("bunker21")){holoCreate(21,entity():pos()+vec(-19.16,-60.64,35.03),vec(0.3),ang(-90,-180,180),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoMaterial(21,"Models/effects/vol_light001") holoParent(21,entity()) timer("bunker22",Speed)}
+if(clk("bunker22")){holoCreate(22,entity():pos()+vec(-14.16,-60.9,-3.38),vec(0.3),ang(0,-180,0),vec(255,255,255),"models/props_phx/misc/bunker01.mdl") holoMaterial(22,"models/wireframe") holoParent(22,entity()) timer("bunker23",Speed)}	
+if(clk("bunker23")){holoCreate(23,entity():pos()+vec(-32.23,-33.27,40.37),vec(0.3),ang(0,135,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoMaterial(23,"Models/effects/vol_light001") holoParent(23,entity()) timer("bunker24",Speed)}
+if(clk("bunker24")){holoCreate(24,entity():pos()+vec(-16.16,-101.03,40.37),vec(0.3),ang(0,-90,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoMaterial(24,"Models/effects/vol_light001") holoParent(24,entity()) timer("bunker25",Speed)}
+if(clk("bunker25")){holoCreate(25,entity():pos()+vec(-46.41,-73.04,40.37),vec(0.3),ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/board.mdl") holoMaterial(25,"Models/effects/vol_light001") holoParent(25,entity()) timer("bunker26",Speed)}

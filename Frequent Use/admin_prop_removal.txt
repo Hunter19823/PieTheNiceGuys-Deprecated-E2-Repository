@@ -1,0 +1,11 @@
+@name Prop Ownership Checker
+@persist [WantToRemove] [EntityToRemove]:entity
+if(first()){
+    runOnKey(1)
+}
+if(clKeyPress(16)){
+    P=owner():aimEntity()
+    if(P:isValid()){
+        print("Prop Model: "+P:model()+"<br>Owned By: "+P:owner():name()+"<br>Prop Type: "+P:type()+"<br>Owner Type: "+P:owner():type()+"<br>Owner Job: "+P:owner():team():teamName()+"<br>Owner SteamID: "+P:owner():steamID()+"<br>Prop Health: "+P:health())
+    }
+}

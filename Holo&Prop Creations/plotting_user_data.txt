@@ -1,0 +1,74 @@
+@persist [OffSetX,OffSetY,Restarts] [Players]:array [E2,User]:entity
+
+if(first()){
+    #noDuplications()
+    User=owner()
+    E2=entity()
+    OffSetX=10
+    OffSetY=1
+    function plotPoint(X, Y , Color:vector ){
+        holoCreate(X,entity():pos()+vec(OffSetX*X,0,OffSetY*Y),vec(1),entity():angles(),Color,"models/XQM/Rails/trackball_1.mdl")
+        holoParent(X,entity())
+    }
+    Players=players()
+    if(User["HasInit",number]==0){
+        User["HasInit",number]=1
+        User["PlayerCount",number]=Players:count()*-1/2
+    }
+    timer("Restart",0)
+}
+if(clk("Restart")){
+    Restarts++
+    Players=players()
+    timer("AddData",10)
+    if(Restarts>10){
+        reset()
+    }
+}
+if(clk("AddData")){
+    if(Players:count()>0){
+        P=Players:popEntity()
+        if(P:isPlayer()){
+            if(0){
+                if(P["Numbers",number]==0 || P["Numbers",number]==User["PlayerCount",number]){
+                    P["Numbers",number]=User["PlayerCount",number]
+                    User["PlayerCount",number]=User["PlayerCount",number]+1
+                }
+                if(P:isCrouch()){
+                    plotPoint(P["Numbers",number],P:height()*2,teamColor(P:team()))
+                }else{
+                    plotPoint(P["Numbers",number],P:height(),teamColor(P:team()))
+                }
+            }
+            if(0){
+                if(P["Numbers",number]==0 || P["Numbers",number]==User["PlayerCount",number]){
+                    P["Numbers",number]=User["PlayerCount",number]
+                    User["PlayerCount",number]=User["PlayerCount",number]+1
+                }
+                if(P:isCrouch()){
+                    plotPoint(P["Numbers",number],P:height()*2,teamColor(P:team()))
+                }else{
+                    plotPoint(P["Numbers",number],P:height(),teamColor(P:team()))
+                }
+            }
+            if(1){
+                if(P["Numbers",number]==0 || P["Numbers",number]==User["PlayerCount",number]){
+                    P["Numbers",number]=User["PlayerCount",number]
+                    User["PlayerCount",number]=User["PlayerCount",number]+1
+                }
+                plotPoint(P["Numbers",number],P:health(),teamColor(P:team()))
+            }
+            
+            if(0){
+                if(P["Numbers",number]==0 || P["Numbers",number]==User["PlayerCount",number]){
+                    P["Numbers",number]=User["PlayerCount",number]
+                    User["PlayerCount",number]=User["PlayerCount",number]+1
+                }
+                plotPoint(P["Numbers",number],P:money()/1000000,teamColor(P:team()))
+            }
+        }
+        timer("AddData",10)
+    }else{
+        timer("Restart",100)
+    }
+}

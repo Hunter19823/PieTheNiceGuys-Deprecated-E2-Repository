@@ -1,0 +1,113 @@
+@name Effects
+@persist Effect:string Time Partner:entity Speed Scale
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    #noDuplications()
+    runOnKeys(owner(),1)
+    runOnChat(1)
+    #timer("Entrace",1000)
+    Partner=owner()
+    Speed=250
+    Time=250
+    Scale=1
+}
+if(keyClk(keyClk())==1){
+switch(keyClkPressed()){
+    case "r",
+        owner():effectSpawn(Effect,owner():aimPos(),vec(1),Scale)
+        break
+    case "f",
+        owner():effectSpawn(Effect,owner():pos(),vec(1),Scale)
+        break
+    case "rshift",
+        Partner=owner():aimEntity()
+        runOnKeys(Partner,1)
+        break
+    case "mouse_left",
+        keyClk():effectSpawn(Effect,keyClk():aimPos(),vec(1),Scale)
+        break
+    case "mouse_right",
+        keyClk():effectSpawn(Effect,keyClk():pos(),vec(1),Scale)
+        break
+    case "space",
+        #keyClk():applyPlayerForce(vec(0,0,Speed))
+        break
+    case "up",
+        #keyClk():applyPlayerForce(vec(-Speed,0,0))
+        break
+    case "down",
+        #keyClk():applyPlayerForce(vec(Speed,0,0))
+        break
+    case "left",
+        #keyClk():applyPlayerForce(vec(0,-Speed,0))
+        break
+    case "right",
+        #keyClk():applyPlayerForce(vec(0,Speed,0))
+        break
+    case "l",
+        #keyClk():tele(keyClk():aimPos())
+        break
+    case "h",
+        #keyClk():tele(vec(-2837,-3562,12192))
+        break
+    case "k",
+        break
+    default,
+        break
+}
+}
+if(chatClk(owner()) || chatClk(Partner)){
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "effect",
+            Effect=LS[2,string]
+            break
+        case "speed",
+            Speed=LS[2,string]:toNumber()
+            break
+        case "scale",
+            Scale=LS[2,string]:toNumber()
+            break
+    }
+}   
+switch(clkName()){
+    case "Entrace",
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(250,0,0)),vec(1),1)
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(-250,0,0)),vec(1),1)
+        timer("Entrance1",Time)
+        break
+    case "Entrance1",
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(200,0,0)),vec(1),1)
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(-200,0,0)),vec(1),1)
+        timer("Entrance2",Time)
+        break
+    case "Entrance2",
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(150,0,0)),vec(1),1)
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(-150,0,0)),vec(1),1)
+        timer("Entrance3",Time)
+        break
+    case "Entrance3",
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(100,0,0)),vec(1),1)
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(-100,0,0)),vec(1),1)
+        timer("Entrance4",Time)
+        break
+    case "Entrance4",
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(50,0,0)),vec(1),1)
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(-50,0,0)),vec(1),1)
+        timer("Entrance5",Time)
+        break
+    case "Entrance5",
+        entity():effectSpawn("WaterSurfaceExplosion",entity():toWorld(vec(0,0,0)),vec(1),1)
+        streamDisable3D(1)
+        timer("Entrance6",Time)
+        break
+    case "Entrance6",
+        holoCreate(1,entity():toWorld(vec(0,0,100)),vec(5),ang(0),vec(255),"models/maxofs2d/hover_rings.mdl")
+        timer("Entrance7",Time)
+        break
+    case "Entrance7",
+        holoEntity(1):streamStart(1,"https://www.dropbox.com/s/o8soejsz4nfc76r/%D0%A2%D0%A0%D0%98%20%D0%9F%D0%9E%D0%9B%D0%9E%D0%A1%D0%9A%D0%98%20KOLM%20TRIIPU%20THREE%20STRIPES%20%281%29.mp3?dl=1",1)
+        break
+    default,
+        break
+}

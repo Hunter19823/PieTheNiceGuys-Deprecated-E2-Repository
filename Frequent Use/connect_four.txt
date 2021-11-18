@@ -1,0 +1,435 @@
+@name Connect Four
+@persist [Grid]:table [CheckX,CheckY,CheckTimer,DebugMode,Setup,SetupDelay,CheckerSize,Turn,LastTurn,TurnCounter] [CheckerModel,CheckerMaterial]:string [Player1Color,Player2Color,WinColor]:vector [ResetProp]:entity
+@model models/maxofs2d/hover_rings.mdl
+if(first()){
+    CheckTimer=0
+    SetupDelay=1000
+    CheckerSize=50
+    CheckerMaterial="models/debug/debugwhite"
+    CheckerModel="models/hunter/blocks/cube05x05x05.mdl"
+    BackGround="models/hunter/blocks/cube4x4x4.mdl"
+    Player1Color=vec(255,0,0)
+    Player2Color=vec(0,255,0)
+    WinColor=vec(255,255,0)
+    Grid=table(
+        "c1"=array(0,0,0,0,0,0),
+        "c2"=array(0,0,0,0,0,0),
+        "c3"=array(0,0,0,0,0,0),
+        "c4"=array(0,0,0,0,0,0),
+        "c5"=array(0,0,0,0,0,0),
+        "c6"=array(0,0,0,0,0,0),
+        "c7"=array(0,0,0,0,0,0)
+    )
+    
+    DebugMode=0
+    Setup=0
+    CheckX=0
+    CheckY=1
+    TurnCounter=0
+    #ResetProp=propSpawn("models/props_junk/popcan01a.mdl",entity():toWorld(vec(0,0,0)),entity():angles(),1)
+    ResetProp:parentTo(entity())
+    holoCreate(1,entity():toWorld(vec(0,0,CheckerSize*3+CheckerSize*2)),vec(1),entity():angles(),vec(255,255,0),BackGround)
+    holoScaleUnits(1,vec(0,CheckerSize*7+10,CheckerSize*6+10))
+    holoParent(1,ResetProp)
+    holoMaterial(1,CheckerMaterial)
+    entity():setName("Connect Four")
+    timer("Setup",CheckTimer)
+}
+if(clk("Setup")){
+    switch(Setup){
+        case 0,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+        case 1,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+        case 2,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+        case 3,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+        case 4,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+        case 5,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+        case 6,
+            Prop=propSpawn(CheckerModel,entity():toWorld(vec(0,CheckerSize*7/2 - CheckerSize/2 - Setup*(CheckerSize),CheckerSize)),entity():angles(),1)
+            Prop:parentTo(ResetProp)
+            Prop["c",string]="c"+(Setup+1)
+            Prop["HI",number]=10+10*Setup
+            holoCreate(Prop["HI",number],Prop:toWorld(vec(0,0,CheckerSize+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+1,Prop:toWorld(vec(0,0,CheckerSize*2+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+2,Prop:toWorld(vec(0,0,CheckerSize*3+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+3,Prop:toWorld(vec(0,0,CheckerSize*4+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+4,Prop:toWorld(vec(0,0,CheckerSize*5+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoCreate(Prop["HI",number]+5,Prop:toWorld(vec(0,0,CheckerSize*6+CheckerSize/2)),vec(1),Prop:angles(),vec(255),CheckerModel)
+            holoScaleUnits(Prop["HI",number],vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+1,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+2,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+3,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+4,vec(1,CheckerSize,CheckerSize))
+            holoScaleUnits(Prop["HI",number]+5,vec(1,CheckerSize,CheckerSize))
+            holoMaterial(Prop["HI",number],CheckerMaterial)
+            holoMaterial(Prop["HI",number]+1,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+2,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+3,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+4,CheckerMaterial)
+            holoMaterial(Prop["HI",number]+5,CheckerMaterial)
+            holoParent(Prop["HI",number],Prop)
+            holoParent(Prop["HI",number]+1,Prop)
+            holoParent(Prop["HI",number]+2,Prop)
+            holoParent(Prop["HI",number]+3,Prop)
+            holoParent(Prop["HI",number]+4,Prop)
+            holoParent(Prop["HI",number]+5,Prop)
+            runOnUse(1,Prop)
+            break
+    }
+    Setup++
+    if(Setup<7){
+        timer("Setup",SetupDelay)
+    }else{
+        Turn=1
+        if(Turn==1){
+            entity():setColor(Player1Color)
+        }else{
+            entity():setColor(Player2Color)
+        }
+        LastTurn=Turn
+        #entity():streamStart(10,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Connect Four board has finished setting up. Player"+Turn+" may now go first!")+"&tl="+"en-us"+"&client=tw-ob",1)
+    }
+}
+if(useEntClk():inUse()){
+    Prop=useEntClk()
+    if(Turn){
+        local ValidMove=1
+        if(DebugMode){
+            print(Grid[Prop["c",string],array])
+        }
+        if(!Grid[Prop["c",string],array][1,number]){
+            Grid[Prop["c",string],array][1,number] = Turn
+            if(Turn==1){
+                holoColor(Prop["HI",number],Player1Color)
+            }else{
+                holoColor(Prop["HI",number],Player2Color)
+            }
+        }elseif(!Grid[Prop["c",string],array][2,number]){
+            Grid[Prop["c",string],array][2,number] = Turn
+            if(Turn==1){
+                holoColor(Prop["HI",number]+1,Player1Color)
+            }else{
+                holoColor(Prop["HI",number]+1,Player2Color)
+            }
+        }elseif(!Grid[Prop["c",string],array][3,number]){
+            Grid[Prop["c",string],array][3,number] = Turn
+            if(Turn==1){
+                holoColor(Prop["HI",number]+2,Player1Color)
+            }else{
+                holoColor(Prop["HI",number]+2,Player2Color)
+            }
+        }elseif(!Grid[Prop["c",string],array][4,number]){
+            Grid[Prop["c",string],array][4,number] = Turn
+            if(Turn==1){
+                holoColor(Prop["HI",number]+3,Player1Color)
+            }else{
+                holoColor(Prop["HI",number]+3,Player2Color)
+            }
+        }elseif(!Grid[Prop["c",string],array][5,number]){
+            Grid[Prop["c",string],array][5,number] = Turn
+            if(Turn==1){
+                holoColor(Prop["HI",number]+4,Player1Color)
+            }else{
+                holoColor(Prop["HI",number]+4,Player2Color)
+            }
+        }elseif(!Grid[Prop["c",string],array][6,number]){
+            Grid[Prop["c",string],array][6,number] = Turn
+            if(Turn==1){
+                holoColor(Prop["HI",number]+5,Player1Color)
+            }else{
+                holoColor(Prop["HI",number]+5,Player2Color)
+            }
+        }else{
+            ValidMove=0
+            if(DebugMode){
+                print("Column Full")
+            }
+        }
+        if(ValidMove){
+            TurnCounter++
+            LastTurn=Turn
+            Turn=0
+            entity():setColor(vec(255))
+            timer("Check",CheckTimer)
+        }
+    }
+}
+if(clk("Check")){
+    if(CheckX<7){
+        CheckX++
+        local HasWon = 0
+        local Value = Grid["c"+CheckX,array][CheckY,number]
+        if(Value){
+            if(CheckY<4){
+                #Check North
+                
+                if(Value==Grid["c"+CheckX,array][CheckY+1,number] & Value==Grid["c"+CheckX,array][CheckY+2,number] & Value==Grid["c"+CheckX,array][CheckY+3,number]){
+                    HasWon=1
+                    
+                    holoColor(CheckX*10+(CheckY-1),WinColor)
+                    holoColor(CheckX*10+1+(CheckY-1),WinColor)
+                    holoColor(CheckX*10+2+(CheckY-1),WinColor)
+                    holoColor(CheckX*10+3+(CheckY-1),WinColor)
+                    
+                    setName("Player "+Value+" has won")
+                    #entity():streamStart(10,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Player "+Value+" has gotten a Vertical Connect 4!")+"&tl="+"en-us"+"&client=tw-ob",1)
+                }
+            }
+            if(CheckX<5){
+                #Check East
+                
+                if(Value==Grid["c"+(CheckX+1),array][CheckY,number] & Value==Grid["c"+(CheckX+2),array][CheckY,number] & Value==Grid["c"+(CheckX+3),array][CheckY,number]){
+                    HasWon=1
+                    
+                    holoColor(CheckX*10+(CheckY-1),WinColor)
+                    holoColor((CheckX+1)*10+(CheckY-1),WinColor)
+                    holoColor((CheckX+2)*10+(CheckY-1),WinColor)
+                    holoColor((CheckX+3)*10+(CheckY-1),WinColor)
+                    
+                    setName("Player "+Value+" has won")
+                    #entity():streamStart(10,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Player "+Value+" has gotten a Horizontal Connect 4!")+"&tl="+"en-us"+"&client=tw-ob",1)
+                }
+            }
+            if(CheckX>3 & CheckY<4){
+                #Diagonal North-West
+                
+                if(Value==Grid["c"+(CheckX-1),array][CheckY+1,number] & Value==Grid["c"+(CheckX-2),array][CheckY+2,number] & Value==Grid["c"+(CheckX-3),array][CheckY+3,number]){
+                    HasWon=1
+                    
+                    holoColor(CheckX*10+(CheckY-1),WinColor)
+                    holoColor((CheckX-1)*10+(CheckY-1+1),WinColor)
+                    holoColor((CheckX-2)*10+(CheckY-1+2),WinColor)
+                    holoColor((CheckX-3)*10+(CheckY-1+3),WinColor)
+                    
+                    setName("Player "+Value+" has won")
+                    #entity():streamStart(10,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Player "+Value+" has gotten a Diagonal Connect 4!")+"&tl="+"en-us"+"&client=tw-ob",1)
+                }
+            }
+            if(CheckX<5 & CheckY<4){
+                #Diagonal North-East
+                
+                if(Value==Grid["c"+(CheckX+1),array][CheckY+1,number] & Value==Grid["c"+(CheckX+2),array][CheckY+2,number] & Value==Grid["c"+(CheckX+3),array][CheckY+3,number]){
+                    HasWon=1
+                    
+                    holoColor(CheckX*10+(CheckY-1),WinColor)
+                    holoColor((CheckX+1)*10+(CheckY-1+1),WinColor)
+                    holoColor((CheckX+2)*10+(CheckY-1+2),WinColor)
+                    holoColor((CheckX+3)*10+(CheckY-1+3),WinColor)
+                    
+                    setName("Player "+Value+" has won")
+                    #entity():streamStart(10,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Player "+Value+" has gotten a Diagonal Connect 4!")+"&tl="+"en-us"+"&client=tw-ob",1)
+                }
+            }
+        }
+        if(CheckX>=7){
+            CheckY++
+            CheckX=0
+        }
+        if(CheckY!=7 & !HasWon){
+            if(DebugMode){
+                print("Now Checking ("+(CheckX+1)+","+(CheckY)+")")
+            }
+            timer("Check",CheckTimer)
+        }else{
+            CheckX=0
+            CheckY=1
+            if(!HasWon & TurnCounter<52){
+                if(LastTurn==1){
+                    Turn=2
+                    entity():setColor(Player2Color)
+                }else{
+                    Turn=1
+                    entity():setColor(Player1Color)
+                }
+            }else{
+                timer("ResetGame",10000)
+            }
+        }
+    }else{
+        CheckX=0
+        CheckY=1
+    }
+}
+if(clk("ResetGame")){
+    ResetProp:remove()
+    reset()
+}

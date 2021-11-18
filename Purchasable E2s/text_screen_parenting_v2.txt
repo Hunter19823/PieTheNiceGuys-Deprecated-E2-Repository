@@ -1,0 +1,103 @@
+@name Pie's Rotating 3D Text Screens v2
+@persist [Prop,Screen]:entity [Timer,Spacing,Speed] [Model]:string
+if(first()){
+    #The time in miliseconds between each time the textscreen
+    #is turned.
+    Timer=200
+    
+    #Change this to make it rotate x times faster than normal
+    Speed=1
+    
+    #Spacing between the E2 chip, the center ball, and the text screen.
+    Spacing=5
+    
+    #The Model Directory of the spinning circle in the center that spins the text screen.
+    #If you change this it can use other types of props nearby. E2s as well if done correctly.
+    Model="models/maxofs2d/hover_rings.mdl"
+    
+    #[
+    
+    Setup:
+    Navigate in your Q menu to the 'Construction' tab under tools. Then
+    find the toolgun at the top, named '3D2D Textscreen'. Select it,
+    then edit whatever you'd like to spin. Once you are satisfied with
+    your text screen, place it on a wall as close to where you plan to put the e2.
+    Then Switch back to your expression 2 gun and place down this e2. It will search
+    for the closest prop with the model directory of "Model". If it can't find one
+    closer than 100 units it will create it's own. The Sign will then be teleported 
+    and parented to the ball/e2.
+    
+    After Setup:
+    If you would like to adjust the sign so that it is farther away or at a
+    a different angle then all you have to do is physgun the text screen
+    while it is rotating.
+    
+    If you would like to move the sign itself you can just move the E2 chip itself
+    using your physgun. The parent prop and the text screen will move with it.
+    
+    ]#
+    
+    
+    
+    
+    
+    timer("SpawnNewProp",1000)
+    #ifdef noDuplications()
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+    #endif
+}
+if(clk("Update")){
+    if(Screen:isValid() && Prop:isValid()){
+        Prop:propManipulate(entity():toWorld(vec(0,0,25)),ang(0,sin(curtime()*5)*360,0),0,0,1)
+        timer("Update",Timer)
+    }else{
+        print("Restarting")
+        if(Prop:isValid()){
+            Prop:propDelete()
+            
+        }
+        if(Screen:isValid()){
+            Screen:propDelete()
+        }
+        timer("SpawnNewProp",2500)
+    }
+}
+if(clk("SpawnNewProp")){
+    findClearWhiteList()
+    findClearBlackList()
+    findAllowPlayerProps(findPlayerBySteamID("STEAM_0:0:132057860"))
+    findByModel(Model)
+    if(findSortByDistance(entity():pos())==0){
+        Prop=propSpawn(Model,entity():toWorld(vec(0,0,25)),entity():angles(),0)
+    }else{
+        Ent=find()
+        if(Ent:pos():distance(entity():pos())>100){
+            Prop=propSpawn(Model,entity():toWorld(vec(0,0,50)),entity():angles(),1)
+        }else{
+            Prop=Ent
+        }
+    }
+    timer("Try",500)
+}
+if(clk("Try")){
+    findIncludePlayerProps(owner())
+    findByClass("sammyservers_textscreen")
+    if(findSortByDistance(Prop:pos())>0){
+        Screen=find()
+        print("Prop Found")
+        Screen:setPos(Prop:toWorld(vec(0,0,Spacing/2)))
+        timer("Parent",1000)
+    }else{
+        timer("Try",1000)
+    }
+}
+if(clk("Parent")){
+    #ifdef entity:setParent(entity)
+    Screen:setParent(Prop)
+    #endif
+    Screen:parentTo(Prop)
+    timer("Update",Timer)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

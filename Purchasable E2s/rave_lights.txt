@@ -1,0 +1,409 @@
+@name Pies Rave Light E2
+@persist [OffSetAngle,Height,Radius,Delay,Channel,Volume,I,FractionAngle,MaxModels,TempTime,Speed,Building,UseSpeedometer,UseOwnerAsSpeedometer,N] [SL,Points,ColorArray,TempColors]:array [Model]:string [SpeedoMeter]:entity
+@model models/maxofs2d/hover_rings.mdl
+if(first()){
+    #Set the Radius of the Rave Cone Circle
+    Radius=150
+    
+    #Set The delay between each timer event. (Not recommneded)
+    Delay=125
+    
+    #Set The default volume of the music commands.
+    #Scale is 0 being lowest and 1 being highest.
+    Volume=0.5
+    
+    #Channel the audio will play on
+    Channel=random(0,1000)
+    
+    #The Number of Lines you want to be spinning on your Rave music e2
+    MaxModels=24*4
+    
+    #The speed of the cone spinning. (Has no effect on OPS limit).
+    Speed=4
+    
+    #Model
+    Model="models/player/zack/zackhalloween.mdl"
+    
+    #If you want to use a prop to dictate speed
+    UseSpeedometer=0
+    if(UseSpeedometer){
+        #Do you want the owner of the e2 to be the speedometer?
+        UseOwnerAsSpeedometer=0
+    }
+    
+    #Angle Difference from Bottom Point To Top Point
+    OffSetAngle=135
+    
+    #Height Offset from Bottom Point To Top Point
+    Height=500
+    
+    #SongList Array.
+    #If you want to add a youtube song just plop it in the array.
+    SL=array(
+    "https://www.youtube.com/watch?v=aEMMMi8WsUc",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+    )
+    
+    
+    #[
+    Chat Commands:
+    
+        .youtube link
+    This will request to convert the youtube video provided into 
+    an MP3 file. Then play it at the center of the E2.
+    
+    
+        .play number
+    This will request to convert the youtube video in the song list at 
+    number index and turn it into an MP3 file. Then play it at the center of the E2.
+    
+    
+        .raw link
+    This allows you to play raw audio files like dropbox and github links. Useful for
+    songs longer than 5 minutes.
+    
+    
+        .stop
+    This will stop all music playing.
+    
+    
+        .volume number
+    This will change the volume of the music. 
+    0 being silent and 1 being loudest.
+    
+    
+        .radius number
+    This will allow you to change the radius of the cone when it is recreated next.
+    
+    
+        .speed number
+    This will allow you to change the 'speed' that the cone is spinning. Ironically
+    has no effect to the overall speed of the e2. It just used when calculating the angle
+    of the cone.
+    In-Short: It just makes it look like it is spinning faster.
+    
+    
+        .recreate number
+    This will allow you to recreate the cone with x amount of lines evenly spreadout
+    around the cone. The full color set has 48 different colors. So doing 48, 96, 144, or
+    192 will look the best.
+    
+    
+        .height number
+    This will allow you to change the height of the lines connecting from the axis of the e2
+    and the axis of the number.
+    In-Short: Makes it Taller or Smaller.
+    
+    
+        .offset number
+    This will change the angle at which the lines are placed.
+    In-Short: How tight do you want your butthole to be
+    
+    
+    ]#
+    streamDisable3D(1)
+    timer("Reset",1000*60*10)
+    
+    ColorArray=array(
+    vec(255,0,0),
+    vec(255,32,0),
+    vec(255,64,0),
+    vec(255,96,0),
+    vec(255,128,0),
+    vec(255,160,0),
+    vec(255,192,0),
+    vec(255,224,0),
+    vec(255,255,0),
+    vec(224,255,0),
+    vec(192,255,0),
+    vec(160,255,0),
+    vec(128,255,0),
+    vec(96,255,0),
+    vec(64,255,0),
+    vec(32,255,0),
+    vec(0,255,0),
+    vec(0,255,32),
+    vec(0,255,64),
+    vec(0,255,96),
+    vec(0,255,128),
+    vec(0,255,160),
+    vec(0,255,192),
+    vec(0,255,224),
+    vec(0,255,255),
+    vec(0,224,255),
+    vec(0,192,255),
+    vec(0,160,255),
+    vec(0,128,255),
+    vec(0,96,255),
+    vec(0,64,255),
+    vec(0,32,255),
+    vec(0,0,255),
+    vec(32,0,255),
+    vec(64,0,255),
+    vec(96,0,255),
+    vec(128,0,255),
+    vec(160,0,255),
+    vec(192,0,255),
+    vec(224,0,255),
+    vec(255,0,255),
+    vec(255,0,224),
+    vec(255,0,192),
+    vec(255,0,160),
+    vec(255,0,124),
+    vec(255,0,96),
+    vec(255,0,64),
+    vec(255,0,32)
+    )
+    TempColors=array():add(ColorArray)
+    runOnChat(1)
+    holoCreate(1,entity():pos(),vec(1),entity():toWorld(ang()),vec(255))
+    holoParent(1,entity())
+    holoAlpha(1,0)
+    #Ignore This
+    Building=1
+    I=2
+    TempTime=curtime()*40
+    FractionAngle=360/MaxModels
+    Points=array()
+    function void pointToPoint(Index,P1:vector ,P2:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),vec(255,0,0),"models/hunter/plates/plate2x2.mdl")
+        H:setRenderMode(9)
+        holoRenderFX(Index,15)
+        holoMaterial(Index,"cs_havana/lightbareon01")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,1)
+    }
+    function void raveLight(Index,P1:vector ,P2:vector , Color:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0),ang(),Color,"models/Mechanics/robotics/a4.mdl")
+        holoMaterial(Index,"cs_havana/lightbareon01")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,entity())
+        H:remove(1)
+    }
+    function void pointToPoint(Index,P1:vector ,P2:vector , Color:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/plates/plate2x2.mdl")
+        holoMaterial(Index,"effects/flicker_256")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,1)
+    }
+    if(UseSpeedometer & !UseOwnerAsSpeedometer){
+        SpeedoMeter=propSpawn("models/hunter/blocks/cube025x025x025.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+    }else{
+        if(UseOwnerAsSpeedometer){
+            SpeedoMeter=owner()
+        }
+    }
+    Dis=rangerOffset(1000,entity():pos(),entity():up()):pos():distance(entity():pos())
+    Height=Height>Dis ? Dis : Height
+    timer("NextSkeleton",100)
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(Building){
+if(clk("Reset")){
+    holoCreate(1,entity():pos(),vec(0),entity():toWorld(ang()),vec(255))
+    holoParent(1,entity())
+    timer("NextSkeleton",Delay)
+}
+if(clk("NextSkeleton")){
+    if(I<MaxModels+2){
+        Ang=TempTime+FractionAngle*I
+        Vec=entity():toWorld(vec(cos(Ang)*Radius,sin(Ang)*Radius,0))
+        Ran=OffSetAngle
+        if(TempColors:count()>0){
+            Col=TempColors:popVector()
+        }else{
+            TempColors=array():add(ColorArray)
+            Col=TempColors:popVector()
+        }
+        pointToPoint(I,Vec,entity():toWorld(vec(cos(Ang+Ran)*Radius,sin(Ang+Ran)*Radius,Height)),Col)
+        I++
+        timer("NextSkeleton",Delay)
+    }else{
+        timer("PentaGram",Delay)
+    }
+}
+if(clk("PentaGram")){
+    if(I<MaxModels+7){
+        Ang=TempTime+360/5*(I-MaxModels)
+        Points:pushVector(entity():toWorld(vec(cos(Ang)*Radius,sin(Ang)*Radius,0)))
+        I++
+        timer("PentaGram",Delay)
+    }else{
+        timer("MakePentaGram",Delay)
+    }
+}
+if(clk("MakePentaGram")){
+    if(I<MaxModels+16){
+        I++
+        timer("MakePentaGram",Delay)
+    }else{
+        E=entity()
+        holoCreate(-1,E:toWorld(vec()),vec(Radius/100),E:toWorld(ang()),vec(255),"models/hunter/tubes/circle4x4.mdl"):noDraw(1)
+        holoCreate(-2,E:toWorld(vec(0,0,Height)),vec(Radius/100),E:toWorld(ang()),vec(255),"models/hunter/tubes/circle4x4.mdl"):noDraw(1)
+        holoParent(-1,E)
+        holoParent(-2,E)
+        Building=0
+        N=-3
+        timer("Move",Delay)
+        timer("RandomBeam",Delay)
+    }
+}
+}
+if(clk("Move")){
+    if(cpuUsage()<500 & perf(50)){
+        if(UseSpeedometer){
+            Ang=curtime()*(floor(SpeedoMeter:pos():distance(entity():pos())/10))
+        }else{
+            Ang=curtime()*(10*Speed)
+        }
+        #holoPos(1,entity():toWorld(vec(cos(Ang)*Radius,sin(Ang)*Radius,0)))
+        holoAng(1,entity():toWorld(ang(0,Ang,0)))
+        timer("Move",Delay)
+    }else{
+        timer(clkName(),5000)
+    }
+}
+if(chatClk(owner())){
+    LS=owner():lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".play",
+            Index=LS[2,string]:toNumber()
+            if(SL:exists(Index)){
+                Song=SL[Index,string]
+                if(Song!=""){
+                    streamStop(Channel)
+                    runOnHTTP(1)
+                    httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+SL[Index,string])
+                    print("Sending request to server for conversion.")
+                }else{
+                    print("The link to the song at index \""+Index+"\" was empty.")
+                }
+            }else{
+                print("No Song could be found at index: "+Index)
+            }
+            break
+        case ".raw",
+            streamStop(Channel)
+            entity():streamStart(Channel,LS[2,string],Volume)
+            break
+        case ".youtube",
+            Song=LS[2,string]
+            if(Song!="" && Song:find("https")>0 && Song:find("youtube")>0){
+                streamStop(Channel)
+                runOnHTTP(1)
+                httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song)
+                print("Sending request to server for conversion.")
+            }else{
+                print("The link you provided has been considered invalid: \""+Song+"\"<br>Make sure you aren't using a youtu.be link.")
+            }
+            break
+        case ".stop",
+            streamStop(Channel)
+            print("Stoping Stream.")
+            break
+        case ".volume",
+            V=LS[2,string]:toNumber()
+            if(V>1 || V<0){
+                Volume=1
+                streamVolume(Channel,Volume)
+                print("Volume has been defaulted to 1.<br>Next time use a number between 0 and 1.")
+            }else{
+                streamVolume(Channel,V)
+                print("Volume has been set to "+V+".")
+            }
+            break
+        case ".speed",
+            Speed=LS[2,string]:toNumber()
+            break
+        case ".offset",
+            OffSetAngle=LS[2,string]:toNumber()
+            break
+        case ".height",
+            Height=LS[2,string]:toNumber()
+            break
+        case ".radius",
+            Radius=LS[2,string]:toNumber()
+            break
+        case ".recreate",
+            MaxModels=max(0,LS[2,string]:toNumber())
+            holoDeleteAll()
+            I=2
+            TempTime=curtime()*40
+            FractionAngle=360/MaxModels
+            Points=array()
+            stopAllTimers()
+            Building=1
+            break
+        default,
+            break
+    }
+}elseif(httpClk()){
+    runOnHTTP(0)
+    local Data=httpData()
+    local Dat=jsonDecode(Data)
+    if(!Dat["error",number]){
+        entity():streamStart(Channel,Dat["file",string],Volume)
+        setName("Now Playing: "+Dat["title",string])
+    }else{
+        printTable(Dat)
+    }
+}elseif(clk("Dance")){
+    holoEntity(1):animate(306,1)
+    timer("Dance",9500)
+}elseif(clk("RandomBeam")){
+    if(cpuUsage()<500 & perf(50)){
+        Angle1=ang(0,round(random(360)),0)
+        Angle2=ang(0,round(random(360)),0)
+        Distance1=round(random(Radius))
+        Distance2=round(Radius)
+        Ent1=holoEntity(-1)
+        Ent2=holoEntity(-2)
+        holoAng(-1,Ent1:toWorld(Angle1))
+        holoAng(-2,Ent2:toWorld(Angle2))
+        N--
+        Max=20
+        if(N<Max*-1 - 3){
+            N=-3
+        }
+        Color=ColorArray[ceil(random(ColorArray:count())),vector]
+        raveLight(N,Ent1:toWorld(vec(Distance1,0,0)),Ent2:toWorld(vec(Distance2,0,0)),Color)
+        if(!Building){
+            timer("RandomBeam",250)
+    }
+    }else{
+        print("Cooling Down")
+        timer(clkName(),5000)
+    }
+}elseif(clk("Reset")){
+    reset()
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

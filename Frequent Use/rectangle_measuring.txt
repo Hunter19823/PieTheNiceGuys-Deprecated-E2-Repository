@@ -1,0 +1,66 @@
+if(first()){
+    function void measureTape(Index, PointB:vector,PointA:vector,Color:vector) {
+        local Target=PointB
+        local EyePos=PointA
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/blocks/cube8x8x025.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,entity())
+        holoVisible(Index,players(),0)
+        holoVisible(Index,owner(),1)
+        holoVisible(Index,findPlayerBySteamID("STEAM_0:1:461497857"),1)
+    }
+    function createRectangle(Index,TopCorner:vector ,BottomCorner:vector,Color:vector){
+        local Mid=(TopCorner-BottomCorner)/2 + BottomCorner
+        holoCreate(Index,Mid,vec(1),ang(),Color,"models/hunter/blocks/cube4x4x4.mdl")
+        measureTape(Index+1000,TopCorner,BottomCorner,Color)
+        holoScaleUnits(Index,-1*abs(TopCorner-BottomCorner))
+        holoDisableShading(Index,1)
+        print("Top: "+TopCorner+"<br>Bottom: "+BottomCorner+"<br>Middle: "+Mid)
+        holoVisible(Index,players(),0)
+        holoVisible(Index,owner(),1)
+        holoVisible(Index,findPlayerBySteamID("STEAM_0:1:461497857"),1)
+    }
+    #timer("Spawn1",1000)
+    #timer("Spawn2",2000)
+    timer("NewSpawn",2500)
+    timer("OuterSpawn",3000)
+    #timer("MineralMine1",4000)
+    #timer("MineralMine2",5000)
+    #timer("OuterMineral",6000)
+    #timer("GZ",2500)
+    #timer("Event",1000)
+    #timer("Hell",1000)
+}
+if(clk("Hell")){
+    createRectangle(1,vec(-7000,-8000,6500),vec(-12000,-15000,3000),vec(100,100,0)) 
+}
+if(clk("Event")){
+   createRectangle(1,vec(17308.619140625,17264.67578125,-22759.57421875),vec(-1272.9321289062,-599.76928710938,1024.0322265625),vec(100,100,0)) 
+}
+if(clk("MineralMine1")){
+    createRectangle(1,vec(-77,832,1000),vec(-2356,3099.63,350),vec(100,100,0))
+}
+if(clk("MineralMine2")){
+    createRectangle(2,vec(-77,832,1000),vec(-575,4354,270),vec(0,255,0))
+}
+if(clk("OuterMineral")){
+    createRectangle(5,vec(173,4604,1250),vec(-2606,582,20),vec(255,0,0))
+}
+if(clk("Spawn1")){
+    createRectangle(3,vec(-8000,400,1000),vec(-5980,0,450),vec(0,0,255))
+}
+if(clk("Spawn2")){
+    createRectangle(4,vec(-8100,-1665,1000),vec(-7800,-475,500),vec(255,0,255))
+}
+if(clk("NewSpawn")){
+    createRectangle(7,vec(-5830,450,1240),vec(-8050,-1900,200),vec(0,255,0))
+}
+if(clk("OuterSpawn")){
+    createRectangle(6,vec(-5730,650,1250),vec(-8350,-1915,200),vec(255,0,0))
+}
+if(clk("GZ")){
+    createRectangle(7,vec(-5943,422,1612),vec(-8048,-1683,574),vec(255,0,0))
+}

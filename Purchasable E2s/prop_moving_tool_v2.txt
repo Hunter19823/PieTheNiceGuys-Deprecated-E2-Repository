@@ -1,0 +1,233 @@
+@name Prop Moving Tool v2
+@persist [Prop]:entity [Selecting,Speed,AngTurn] [StartPos]:vector [StartAng]:angle [UndoVectors,UndoAngles,RedoVectors,RedoAngles]:array
+if(first()){
+    #The Distance the hologram moves everytime you move it.
+    Speed=10
+    
+    #The Degrees the hologram turns everytime you turn it.
+    AngTurn=45
+    
+    
+    #[
+        Controls:
+    
+    F to select a prop. (Create a Hologram)
+    F to save a prop (Turn Hologram Into a Prop)
+    
+    Backspace = Undo
+    Numpad 0 = Redo
+    Numpad 1 = Up
+    Numpad 2 = Backward
+    Numpad 3 = Down
+    Numpad 4 = Left
+    Numpad 5 = Round Pos&Ang
+    Numpad 6 = Right
+    Numpad 7 = Tilt Left
+    Numpad 8 = Forward
+    Numpad 9 = Tilt Right
+    Numpad / = Tilt Down
+    Numpad * = Tilt Up
+    Numpad + = Teleport To Owner's Aiming Position plus half the height of the object off the ground.
+    Numpad Enter = Teleport To Owner's Aiming Position plus the height of the object off the ground.
+    Right Shift = Teleport To Owner's Aiming Position.
+     ______________________________________________________________
+    |                    |                    |                    |
+    |NumLock             |Numpad / =Tilt Down |Numpad * =Tilt Up   |
+    |____________________|____________________|____________________|
+    |                    |                    |                    |
+    |Numpad 7 =Tilt Left |Numpad 8 =Forward   |Numpad 9 =Tilt Right|
+    |____________________|____________________|____________________|
+    |                    |                    |                    |
+    |Numpad 4 =Left      |Numpad 5 =Round Pos |Numpad 6 =Right     |
+    |____________________|____________________|____________________|
+    |                    |                    |                    |
+    |Numpad 1 =Up        |Numpad 2 =Backward  |Numpad 3 =Down      |
+    |____________________|____________________|____________________|
+    
+        Chat Commands:
+        
+        .speed distance
+    Sets the distance the hologram moves each time you move it.
+    
+        .turn degrees
+    Set the angle the hologram rotates each time you rotate it.
+    
+    ]#
+    
+    
+    
+    runOnKey(1)
+    runOnChat(1)
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}elseif(chatClk(owner())){
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case ".speed",
+            local Sped=LS[2,string]:toNumber()
+            if(Sped!=0){
+                Speed=Sped
+            }
+            break
+        case ".turn",
+            local Angle=LS[2,string]:toNumber()
+            if(Angle!=0){
+                AngTurn=Angle
+            }
+            break
+    }
+}else{
+    local Update=0
+    switch(clLastKeyPress()){
+        case 16,
+            if(Prop==noentity()){
+                Selecting=0
+            }
+            if(Selecting && !owner():isTyping()){
+                local P=propSpawn(Prop,Prop:pos(),Prop:angles(),1)
+                P:setAlpha(Prop:getAlpha())
+                P:setMaterial(Prop:getMaterial())
+                holoDelete(1)
+                Prop=noentity()
+                print("Prop Successfully Unselected")
+                Selecting=0
+            }else{
+                local E=owner():aimEntity()
+                if(E:isValid()){
+                    Prop=holoCreate(1,E:pos(),vec(1),E:angles(),E:getColor(),E:model())
+                    holoAlpha(1,E:getAlpha())
+                    holoMaterial(1,E:getMaterial())
+                    Prop:animate(3,1)
+                    holoDisableShading(1,1)
+                    StartPos=Prop:pos()
+                    StartAng=Prop:angles()
+                    UndoVectors:clear()
+                    UndoAngles:clear()
+                    print("Prop Successfully Selected")
+                    Selecting=1
+                }else{
+                    print("Prop Not Valid")
+                }
+            }
+            break
+        case 45,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(Speed,0,0)))
+            }
+            break
+        case 41,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,Speed,0)))
+            }
+            break
+        case 43,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,(Speed*-1),0)))
+            }
+            break
+        case 39,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec((Speed*-1),0,0)))
+            }
+            break
+        case 38,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,0,Speed)))
+            }
+            break
+        case 40,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,0,(Speed*-1))))
+            }
+            break
+        case 44,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang(0,AngTurn,0)))
+            }
+            break
+        case 46,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang(0,(AngTurn*-1),0)))
+            }
+            break
+        case 80,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(owner():aimPos())
+            }
+            break
+        case 42,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(round(Prop:pos()))
+                Prop:setAng(round(Prop:angles()))
+            }
+            break
+        case 51,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(owner():aimPos()+Prop:height())
+            }
+            break
+        case 50,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setPos(owner():aimPos()+Prop:height()/2)
+            }
+            break
+        case 66,
+            if(Prop!=noentity()){
+                if(UndoVectors:count()!=0 && UndoAngles:count()!=0){
+                    local Pos=UndoVectors:popVector()
+                    local Ang=UndoAngles:popAngle()
+                    RedoVectors:pushVector(Pos)
+                    RedoAngles:pushAngle(Ang)
+                    Prop:setPos(Pos)
+                    Prop:setAng(Ang)
+                }
+            }
+            break
+        case 37,
+            if(Prop!=noentity()){
+                if(RedoVectors:count()!=0 && RedoAngles:count()!=0){
+                    local Pos=RedoVectors:popVector()
+                    local Ang=RedoAngles:popAngle()
+                    UndoVectors:pushVector(Pos)
+                    UndoAngles:pushAngle(Ang)
+                    Prop:setPos(Pos)
+                    Prop:setAng(Ang)
+                }
+            }
+            break
+        case 47,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang(AngTurn,0,0)))
+            }
+            break
+        case 48,
+            Update++
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang((AngTurn*-1),0,0)))
+            }
+            break
+        default,
+            Update=0
+            break
+    }
+    if(Update && Prop!=noentity()){
+        UndoVectors:pushVector(Prop:pos())
+        UndoAngles:pushAngle(Prop:angles())
+        #print(round(Prop:pos()-StartPos)+"<br>"+round(Prop:angles()))
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

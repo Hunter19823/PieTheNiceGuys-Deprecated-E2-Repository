@@ -1,0 +1,498 @@
+@name Pies TTS v2
+@persist [Amount,Channel,Volume,Timer,Init,VoiceAdverts,TTSEverything] [Target,Pl]:entity  [Text,Lang,LR,Prefix,PlayerModel,ReferencePlaylist,Model]:string
+if(first()){
+    
+    #The Channel The E2 Plays On
+    Channel=300
+    
+    
+    #[
+        Prefix:
+    This is the phrase that goes before the command said in chat.
+    This could be useful if you have other e2s that use similar commands.
+    If you change what is inside the "" to something like: "e2" then
+    when you do commands like: "stop"
+    you would instead do: "e2stop"
+    
+    ]#
+    Prefix=""
+	   
+    #Would you like everything you say to be in a TTS voice.
+    TTSEverything=1
+    
+    #This is the volume the TTS voice and Music will be by default.
+    #0 being silent and 1 being the loudest.
+    Volume=1
+    
+    
+    #The Native Language the TTS speaker will use to speak by default.
+    Lang="en-us"
+    
+    #[
+        Model:
+    The Model Directory for the Hologram that teleports everywhere.
+    In order to get a model Directory you must hold C and right click a model in game.
+    Then Click copy model. It should look something like this: models/payday2/units/cop2_player.mdl
+    If You want your custom wardrobe model to show up then hold C, go to your wardrobe.
+    You should see the Workshop ID, Name, Path, and Hands?
+    Copy the Path. The path is what you want to use for this.
+    ]#
+    #Model="models/zerochain/props_weedfarm/zwf_npc.mdl"
+    Model="models/player/zack/zackhalloween.mdl"
+    #The Animation for the hologram that teleports everywere:
+    Animation=3
+    
+    
+    #If you want to Enable or Disable TTS adverts.
+    VoiceAdverts=1
+    
+    
+    #[
+    
+    WARNING
+    PIE IS NOT RESPONSIBLE FOR ANY SORT OF ABUSE AS A RESULT OF THIS E2
+    PIE IS NOT RESPONSIBLE FOR ANY SORT OF ABUSE AS A RESULT OF THIS E2
+    PIE IS NOT RESPONSIBLE FOR ANY SORT OF ABUSE AS A RESULT OF THIS E2
+    WARNING
+    
+    Chat Commands:
+    
+        find Person
+    Hmmmm. I wonder what this command does.....
+    
+    
+        say Text
+    Says the text in a TTS voice on the current speaker. (You)
+    
+    
+        status Person
+    Brings an assistant to the speaker and says the health
+    and armor of the specified Person.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        last Person
+    Says the last thing the player said in a TTS voice.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        weapon Person
+    Brings an assistant to the speaker and says the name of the
+    weapon the player is holding.
+    The Person can be part of a name, a SteamID, or a SteamID64.
+    
+    
+        kd Person
+    Brings an assistant to the speaker and says the player's
+    Kill/Death Ratio as well as says their individual kills and deaths.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        info Person
+    Gets the name, SteamID, and SteamID64 of specified Person.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        props Person
+    Check the number of props a person has.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        price
+    Gets the name and price of the shipment you are looking at.
+    
+    
+        hp
+    Gets the hp of a prop you are looking at.
+    
+    
+        lag
+    Gets the number of players on the server, and the number of props on the map.
+    Not an entirely accurate way of checking lag but it gives people a thing to
+    blame the lag on.
+    
+    
+        owner
+    Gets the owner of the prop you are looking at. It also displays their
+    RP Name, SteamID, and SteamID64 to chat.
+    
+    
+        give Person $ Message
+    Give a Specified Person x amount of money and attached a
+    message to it. This will send the hologram to the player after
+    immediately giving the money.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+        
+        
+        request Person $ Message
+    Requests a certain amount of money from the person with a specfici message attached.    
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        language language
+    (abreiviated and hard to find I don't advice using
+    without proper knowledge)
+    
+    --------------------------
+    FEATURE UNDER CONSTRUCTION
+        playlist youtubePlaylistLink
+    Defines a playlist for the E2 to reference later when grabbing videos from the playlist.
+
+
+        playlist videoIndex
+    After defining the YouTube Playlist you would like to reference with the first command,
+    you can, using the second command, play any song in that playlist using just the
+    position of the song in the playlist.
+    FEATURE UNDER CONSTRUCTION
+    --------------------------
+    
+        play youtubelink
+    Teleports a hologram infront of the speaker. The hologram plays
+    the youtube link after it is converted which may take some time
+    to convert. Please give it time. If the audio does not play then
+    request it again.
+    
+    
+        raw rawAudioFileLink
+    Teleports a hologram infront of the speaker. The hologram plays
+    the audio file specififed. A link on how to get a proper raw
+    link can be found here:
+    https://www.exhibitionrp.com/topic/7952-stream-able-song-link-tut-for-music-e2s/
+    
+    
+        start rawAudioFileLink
+    plays the audio file specififed onto the entity the owner is looking at. 
+    A link on how to get a proper raw link can be found here:
+    https://www.exhibitionrp.com/topic/7952-stream-able-song-link-tut-for-music-e2s/
+    
+    
+        ping Player
+    Returns the ping of the specfified player.
+    The Person can be part of a name, a SteamID, or a SteamID64. !No Spaces!
+    
+    
+        credit
+    Credits the E2 the proper people.
+    
+    
+        buy
+    If anyone asks how they can get this e2 then just say
+    this in chat and send them to me on discord: @ILIKEPIEFOO2#4987
+    
+    
+        stop
+    Stops any TTS currently playing
+    
+    ]#
+    runOnChat(1)
+    holoCreate(1)
+    holoModel(1,Model)
+    holoEntity(1):animate(Animation,1)
+    holoAlpha(1,0)
+    #streamDisable3D(1)
+    function void say(Stuff:string){
+        if(!(Target==noentity())){
+            holoPos(1,Target:toWorld(vec(50,0,0)))
+            holoAng(1,Target:angles()+ang(0,180,0))
+            holoAlpha(1,255)
+            holoEntity(1):animate(309,1)
+            holoEntity(1):streamStart(Channel,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Stuff)+"&tl="+Lang+"&client=tw-ob",Volume)
+        }else{
+            owner():streamStart(Channel,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Stuff)+"&tl="+Lang+"&client=tw-ob",Volume)
+        }
+        timer("TurnOff",10000)
+    }
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerBySteamID64(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerByName(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    Text="Hello. I am a Text To Speech E2 made by Pie The Nice Guy. The HTTP website was discovered by im chris. Some Additional Functions have been added by Teleputer. I hope you enjoy. Also."
+    Target=owner()
+    #timer("Wait",1000)
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/?"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}elseif(chatClk(owner())){
+    local LastSaid=lastSaid()
+    local LS=LastSaid:explode(" ")
+    Target=noentity()
+    Amount=0
+    Text=""
+    switch(LS[1,string]:sub(Prefix:length()+1)){
+        case "say",
+            Text=LastSaid:sub(Prefix:length()+4)
+            break
+        case "buy",
+            Text="Hello. I'm Text To Speach Program made by Pie the Nice Guy. If you are interested in buying me I am being sold for $15000000"
+            Target=lastSpoke()
+            break
+        case "volume",
+			         Volume=LS[2,string]:toNumber()
+            Text="Volume has been set to: "+Volume*100+"% ."
+            streamVolume(Channel*2,Volume)
+            break
+        case "playlist",
+            Pos=LS[2,string]:toNumber()
+            if(Pos!=0){
+                if(ReferencePlaylist!=""){
+                    runOnHTTP(1)
+                    LR="https://get-youtube-video-from-playlist-20--classchanger.repl.co/?playlist="+ReferencePlaylist+"&position="+Pos
+                    httpRequest(LR)
+                    Target=lastSpoke()
+                    print("Sending Request to get and convert video from playlist.")
+                }else{
+                    print("Please post a playlist first before picking a song:<br>Example: playlist https://www.youtube.com/playlist?list=PLVVOhIUAR8_cxY4GHTe1rkzpDGMCRUj-g")
+                }
+            }else{
+                ReferencePlaylist=LS[2,string]
+                print("YouTube Playlist has been set to: "+ReferencePlaylist+"<br>In order to play music from this playlist do:<br>playlist number<br>Example: playlist 5")
+            }
+            break
+        case "play",
+            httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+LS[2,string])
+            LR="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+LS[2,string]
+            Target=lastSpoke() 
+            runOnHTTP(1)
+            break
+        case "raw",
+            LR=LS[2,string]
+            Target=lastSpoke()
+            timer("PlaySong",1000)
+            break
+        case "start",
+            P=lastSpoke():aimEntity()
+            if(P:isValid()){
+                P:streamStart(Channel,LS[2,string],Volume)
+            }
+            break
+        case "language",
+            Lang=LS[2,string]
+            Text="Language has been set to " + Lang
+            break
+        case "bal",
+            local P=searchForPlayer(LS[2,string])
+            Target=owner()
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a total of $" + P:money() + "."
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "weapon",
+            local P=searchForPlayer(LS[2,string])
+            Target=owner()
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" is currently holding " + P:weapon():type() + "."
+                print(P:weapon():model())
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "ping",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a ping of " + P:ping() + " miliseconds."
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "kd",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a KD of " + P:frags()/P:deaths() + " with a total of "+P:frags()+" kills and "+P:deaths()+" Deaths."
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            Target=owner()
+            break
+        case "owner",
+            local P=lastSpoke():aimEntity()
+            if(P:isValid()){
+                local O=P:owner()
+                Text="Query Matched. Prop "+P:model() +" is owned by "+ O:name()+"."
+                print(O:name()+"<br>"+O:steamID()+"<br>"+O:steamID64())
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "info",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" is a "+ P:team():teamName()+"."
+                print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "find",
+            Text="Fuck You. Go Find Him you're self you lazy piece of shit."
+            Target=owner()
+            break
+        case "lag",
+            findClearWhiteList()
+            findIncludeClass("prop_physics")
+            findByClass("prop_physics")
+            local Total = findToArray():count()
+            Text="Calculation Complete. Currently there is a total of "+players():count()+" players on right now with a total of "+Total+" props on the map."
+            Target=owner()
+            break
+        case "search",
+            findClearWhiteList()
+            findIncludeClass(LS[2,string])
+            findByClass(LS[2,string])
+            local Total = findToArray():count()
+            Text="Calculation Complete. I found a total of "+Total+" "+LS[2,string]+"s on the map right now."
+            Target=owner()
+            break
+        case "props",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                findClearWhiteList()
+                findIncludePlayerProps(P)
+                findByClass("prop_physics") 
+                Props=findToArray()
+                Text="Query Matched. Player "+P:name() +" has a total of " + Props:count() + " props spawned."
+                Target=lastSpoke()
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "status",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" currently has " +P:health()+" Health and "+P:armor()+" Armor."
+                Target=lastSpoke()
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "give",
+            if(lastSpoke()==owner()){
+                local P=searchForPlayer(LS[2,string])
+                Amount=LS[3,string]:toNumber()
+                if(P:isPlayer()){
+                    Text="Query Matched. Giving Player "+P:name()+" $"+Amount+" A message was attached with "
+                    Text+=LastSaid:explode(LS[3,string])[2,string]
+                    moneyGive(P,Amount)
+                    Target=P
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+            }
+            break
+        case "/advert",
+            if(VoiceAdverts){
+                Text=LastSaid
+            }
+            break
+        case "last",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched: "+ P:name() + " last said: " + P:lastSaid()
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "hp",
+            local S=lastSpoke():aimEntity()
+            if(S:isValidPhysics()){
+                Text="This prop has: " + S:health() + " health."
+            }else{
+                Text="Sorry, I couldn't find a prop at that position."
+            }
+            break
+        case "price",
+            local S=lastSpoke():aimEntity()
+            if(S:isShipment()){
+                Text="This shipment of " + S:shipmentName() + " has a shipment price of $" + S:shipmentPrice()
+            }else{
+                Text="Sorry, I couldn't find a shipment at that position."
+            }
+            break
+        case "request",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Amount = LS[3,string]:toNumber()
+                Text="Hello Player "+P:name()+" "+lastSpoke():name() +" would like to request $"+Amount+" from you with this message attached: "
+                Text+=LastSaid:explode(LS[3,string])[2,string]
+                Target=P
+                timer("RequestMoney",7500)
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "credit",
+            Text="Hello. I am a Text To Speech E2 made by Pie The Nice Guy. The HTTP website was discovered by im chris. Some Additional Functions have been added by Teleputer. I hope you enjoy."
+            Target=lastSpoke()
+            break
+        case "stop",
+            streamStop(Channel)
+            streamStop(Channel*2)
+            break
+        default,
+            Pre=LastSaid[1]
+            if(Pre!="." && Pre!="!" && Pre!="/" && Pre!="@" && TTSEverything){
+                if(LastSaid[1]=="h" & LastSaid[2]=="t" & LastSaid[3]=="t" & LastSaid[4]=="p"){
+                    
+                }else{
+                    Text=LastSaid
+                }
+            }
+            break
+    }
+    if(Text!=""){
+        timer("Wait",100)
+    }
+}elseif(httpClk() & LR==httpRequestUrl()){
+    runOnHTTP(0)
+    local Data=httpData()
+    if(Data:sub(1,5)!="Error"){
+        local Dat=jsonDecode(Data)
+        if(!Dat["error",number]){
+            if(!(Target==noentity())){
+                local E=holoEntity(1)
+                holoPos(1,Target:toWorld(vec(50,0,0)))
+                holoAng(1,Target:angles()+ang(0,180,0))
+                holoAlpha(1,255)
+                E:streamStart(Channel*2,Dat["file",string],Volume)
+                E["SongName",string]=Dat["title",string]
+            }
+            streamRadius(Channel*2,100)
+        }else{
+            printTable(Dat)
+            timer("TurnOff",10000)
+        }
+    }else{
+        print(Data)
+    }
+}elseif(clk("TurnOff")){
+    holoAlpha(1,0)
+}elseif(clk("RequestMoney")){
+    moneyRequest(Target,Amount)
+}elseif(clk("Wait")){
+    if(streamCanStart()){
+        if(Text!=""){
+            say(Text)
+        }
+    }else{
+        timer("Wait",100)
+    }
+}elseif(clk("PlaySong")){
+    if(!(Target==noentity())){
+        local E=holoEntity(1)
+        holoPos(1,Target:toWorld(vec(50,0,0)))
+        holoAng(1,Target:angles()+ang(0,180,0))
+        holoAlpha(1,255)
+        E:streamStart(Channel*2,LR,Volume)
+    }
+    streamRadius(Channel*2,100)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/

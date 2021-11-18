@@ -1,0 +1,82 @@
+@name Money Profit Profiler v2
+@inputs [Hud]:wirelink
+@persist [User,E2]:entity [HUD]:wirelink [Shift]
+if(first()){
+    #[
+    
+        Instructions/Setup:
+    Open up your Q menu and find where your expression 2 tool gun is
+    and look right about it. You should find the "EGPv3" toolgun.
+    Select the tool gun, and then go into the toolgun settings. Change
+    the 'screen type' to be 'HUD'. Then place it down somewhere. Next
+    switch back to the expression 2 gun. Then place this e2 chip
+    onto the HUD. Next spam e on the hud from every angle until 
+    it says, "EGP Hud connected" in chat. (Or something similar).
+    
+    ]#
+    
+    #Shift defines how far to the left or right you would like
+    #The text to display on the screen.
+    Shift=0
+    
+    #Defines the owner of the e2 chip.
+    User=owner()
+    #Defines the e2 chip itself.
+    E2=entity()
+    
+    #If you would like to reset the starting balance then remove the # of the statement
+    #below this one and run the e2 chip once. Then add the # back to the front.
+    #(Not Recomended)
+    
+    #User["Reset",number]=1
+    
+    
+    
+    
+    
+    
+    if(!User["FirstTime",number]){
+        User["Reset",number]=1
+        User["FirstTime",number]=1
+    }
+    if(User["Reset",number]){
+        User["StartingCash",number]=User:money()
+        User["Reset",number]=0
+    }
+    
+    if(->Hud){
+        HUD=Hud
+        timer("CreateHud",100)
+    }else{
+        HUD=E2:isWeldedTo():wirelink()
+    }
+    if(HUD:entity() != noentity()){
+        timer("CreateHud",100)
+    }
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(~Hud && ->Hud){
+    HUD=Hud
+    timer("CreateHud",10)
+}
+if(clk("CreateHud")){
+    HUD:egpClear()
+    Scr=egpScrSize(User)
+    HUD:egpText(1+Shift,"You Started With: "+User["StartingCash",number],vec2(Scr:x()/2+Shift,50))
+    HUD:egpText(2+Shift,"Profit Goes Here",vec2(Scr:x()/2+Shift,70))
+    timer("UpdateProfit",10)
+}
+if(clk("UpdateProfit")){
+    Bal=User:money()-User["StartingCash",number]
+    if(Bal>=0){
+        HUD:egpSetText(2+Shift,"+"+Bal)
+        HUD:egpColor(2+Shift,vec(0,255,0))
+    }else{
+        HUD:egpSetText(2+Shift,Bal+"")
+        HUD:egpColor(2+Shift,vec(255,0,0))
+    }
+    timer("UpdateProfit",2500)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

@@ -1,0 +1,738 @@
+@name Overly Complex Chat Commands
+@persist [LastCommand,ParamTypes]:array Table:table [AimEnt]:entity
+if(first()){
+    runOnChat(1)
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    function void stream(Player:entity,Num,Link:string){
+        Player:streamStart(Num,Link)
+    }
+}
+
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    if(LS[1,string]:lower() == "func"){
+        Parameters=LS[2,string]:lower():explode("")
+        if(Parameters:count()==(LS:count()-2)){
+            ParamTypes=Parameters
+            LastCommand=LS
+            timer("ProcessCommand",1000)
+            Table=table()
+            AimEnt=lastSpoke():aimEntity()
+        }else{
+            print(Parameters:count()+"!="+(LS:count()-2))
+        }
+    }
+}else{
+
+}
+if(clk("ProcessCommand")){
+    local TSize=Table:count()
+    if(TSize<ParamTypes:count()){
+        TSize++
+        local Param=ParamTypes[TSize,string]
+        switch(Param){
+            case "f",
+                Table[TSize,string]=LastCommand[(TSize+2),string]
+                break
+            case "n",
+                Table[TSize,number]=LastCommand[(TSize+2),string]:toNumber()
+                break
+            case "s",
+                Table[TSize,string]=LastCommand[(TSize+2),string]
+                break
+            case "v",
+                Vec=LastCommand[(TSize+2),string]:explode(",")
+                Table[TSize,vector]=vec(Vec[1,string]:toNumber(),Vec[2,string]:toNumber(),Vec[3,string]:toNumber())
+                break
+            case "a",
+                Vec=LastCommand[(TSize+2),string]:explode(",")
+                Table[TSize,angle]=ang(Vec[1,string]:toNumber(),Vec[2,string]:toNumber(),Vec[3,string]:toNumber())
+                break
+            case "e",
+                Table[TSize,entity]=AimEnt
+                break
+            case "p",
+                Table[TSize,entity]=searchForPlayer(LastCommand[(TSize+2),string])
+                break
+            default,
+                print("Invalid Paramater Type: "+Param:lower())
+                exit()
+                break
+        }
+        timer(clkName(),10)
+    }else{
+        printTable(Table)
+        timer("LoadCommand",10)
+    }
+}
+if(clk("LoadCommand")){
+    switch(ParamTypes:count()){
+        case 2,
+            switch(ParamTypes[2,string]){
+                case "n",
+                    Table[1,string](Table[2,number])
+                    break
+                case "s",
+                    Table[1,string](Table[2,string])
+                    break
+                case "v",
+                    Table[1,string](Table[2,vector])
+                    break
+                case "a",
+                    Table[1,string](Table[2,angle])
+                    break
+                case "p",
+                case "e",
+                    Table[1,string](Table[2,entity])
+                    break
+            }
+            break
+        case 3,
+            switch(ParamTypes[2,string]){
+                case "n",
+                    switch(ParamTypes[3,string]){
+                        case "n",
+                            Table[1,string](Table[2,number],Table[3,number])
+                            break
+                        case "s",
+                            Table[1,string](Table[2,number],Table[3,string])
+                            break
+                        case "v",
+                            Table[1,string](Table[2,number],Table[3,vector])
+                            break
+                        case "a",
+                            Table[1,string](Table[2,number],Table[3,angle])
+                            break
+                        case "p",
+                        case "e",
+                            Table[1,string](Table[2,number],Table[3,entity])
+                            break
+                    }
+                    break
+                case "s",
+                    switch(ParamTypes[3,string]){
+                        case "n",
+                            Table[1,string](Table[2,string],Table[3,number])
+                            break
+                        case "s",
+                            Table[1,string](Table[2,string],Table[3,string])
+                            break
+                        case "v",
+                            Table[1,string](Table[2,string],Table[3,vector])
+                            break
+                        case "a",
+                            Table[1,string](Table[2,string],Table[3,angle])
+                            break
+                        case "p",
+                        case "e",
+                            Table[1,string](Table[2,string],Table[3,entity])
+                            break
+                    }
+                    break
+                case "v",
+                    switch(ParamTypes[3,string]){
+                        case "n",
+                            Table[1,string](Table[2,vector],Table[3,number])
+                            break
+                        case "s",
+                            Table[1,string](Table[2,vector],Table[3,string])
+                            break
+                        case "v",
+                            Table[1,string](Table[2,vector],Table[3,vector])
+                            break
+                        case "a",
+                            Table[1,string](Table[2,vector],Table[3,angle])
+                            break
+                        case "p",
+                        case "e",
+                            Table[1,string](Table[2,vector],Table[3,entity])
+                            break
+                    }
+                    break
+                case "a",
+                    switch(ParamTypes[3,string]){
+                        case "n",
+                            Table[1,string](Table[2,angle],Table[3,number])
+                            break
+                        case "s",
+                            Table[1,string](Table[2,angle],Table[3,string])
+                            break
+                        case "v",
+                            Table[1,string](Table[2,angle],Table[3,vector])
+                            break
+                        case "a",
+                            Table[1,string](Table[2,angle],Table[3,angle])
+                            break
+                        case "p",
+                        case "e",
+                            Table[1,string](Table[2,angle],Table[3,entity])
+                            break
+                    }
+                    break
+                case "p",
+                case "e",
+                    switch(ParamTypes[3,string]){
+                        case "n",
+                            Table[1,string](Table[2,entity],Table[3,number])
+                            break
+                        case "s",
+                            Table[1,string](Table[2,entity],Table[3,string])
+                            break
+                        case "v",
+                            Table[1,string](Table[2,entity],Table[3,vector])
+                            break
+                        case "a",
+                            Table[1,string](Table[2,entity],Table[3,angle])
+                            break
+                        case "p",
+                        case "e",
+                            Table[1,string](Table[2,entity],Table[3,entity])
+                            break
+                    }
+                    break
+            }
+            break
+            case 4,
+                switch(ParamTypes[2,string]){
+                    case "n",
+                        switch(ParamTypes[3,string]){
+                            case "n",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,number],Table[3,number],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,number],Table[3,number],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,number],Table[3,number],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,number],Table[3,number],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,number],Table[3,number],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "s",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,number],Table[3,string],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,number],Table[3,string],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,number],Table[3,string],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,number],Table[3,string],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,number],Table[3,string],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "v",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,number],Table[3,vector],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,number],Table[3,vector],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,number],Table[3,vector],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,number],Table[3,vector],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,angle],Table[3,vector],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "a",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,number],Table[3,angle],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,number],Table[3,angle],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,number],Table[3,angle],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,number],Table[3,angle],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,number],Table[3,angle],Table[4,entity])
+                                    break
+                                }
+                            break
+                            case "p",
+                            case "e",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,number],Table[3,entity],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,number],Table[3,entity],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,number],Table[3,entity],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,number],Table[3,entity],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,number],Table[3,entity],Table[4,entity])
+                                    break
+                                }
+                            break
+                        }
+                    break
+                    case "s",
+                        switch(ParamTypes[3,string]){
+                            case "n",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,string],Table[3,number],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,string],Table[3,number],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,string],Table[3,number],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,string],Table[3,number],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,string],Table[3,number],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "s",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,string],Table[3,string],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,string],Table[3,string],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,string],Table[3,string],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,string],Table[3,string],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,string],Table[3,string],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "v",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,string],Table[3,vector],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,string],Table[3,vector],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,string],Table[3,vector],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,string],Table[3,vector],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,string],Table[3,vector],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "a",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,string],Table[3,angle],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,string],Table[3,angle],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,string],Table[3,angle],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,string],Table[3,angle],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,string],Table[3,angle],Table[4,entity])
+                                    break
+                                }
+                            break
+                            case "p",
+                            case "e",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,string],Table[3,entity],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,string],Table[3,entity],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,string],Table[3,entity],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,string],Table[3,entity],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,string],Table[3,entity],Table[4,entity])
+                                    break
+                                }
+                            break
+                        }
+                    break
+                    case "v",
+                        switch(ParamTypes[3,string]){
+                            case "n",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,vector],Table[3,number],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,vector],Table[3,number],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,vector],Table[3,number],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,vector],Table[3,number],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,vector],Table[3,number],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "s",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,vector],Table[3,string],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,vector],Table[3,string],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,vector],Table[3,string],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,vector],Table[3,string],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,vector],Table[3,string],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "v",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,vector],Table[3,vector],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,vector],Table[3,vector],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,vector],Table[3,vector],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,vector],Table[3,vector],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,vector],Table[3,vector],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "a",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,vector],Table[3,angle],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,vector],Table[3,angle],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,vector],Table[3,angle],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,vector],Table[3,angle],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,vector],Table[3,angle],Table[4,entity])
+                                    break
+                                }
+                            break
+                            case "p",
+                            case "e",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,vector],Table[3,entity],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,vector],Table[3,entity],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,vector],Table[3,entity],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,vector],Table[3,entity],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,vector],Table[3,entity],Table[4,entity])
+                                    break
+                                }
+                            break
+                        }
+                    break
+                    case "a",
+                        switch(ParamTypes[3,string]){
+                            case "n",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,angle],Table[3,number],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,angle],Table[3,number],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,angle],Table[3,number],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,angle],Table[3,number],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,angle],Table[3,number],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "s",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,angle],Table[3,string],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,angle],Table[3,string],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,angle],Table[3,string],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,angle],Table[3,string],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,angle],Table[3,string],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "v",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,angle],Table[3,vector],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,angle],Table[3,vector],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,angle],Table[3,vector],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,angle],Table[3,vector],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,angle],Table[3,vector],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "a",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,angle],Table[3,angle],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,angle],Table[3,angle],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,angle],Table[3,angle],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,angle],Table[3,angle],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,angle],Table[3,angle],Table[4,entity])
+                                    break
+                                }
+                            break
+                            case "p",
+                            case "e",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,angle],Table[3,entity],Table[4,number])
+                                    break
+                                    case "s",
+                                        Table[1,string](Table[2,angle],Table[3,entity],Table[4,string])
+                                    break
+                                    case "v",
+                                        Table[1,string](Table[2,angle],Table[3,entity],Table[4,vector])
+                                    break
+                                    case "a",
+                                        Table[1,string](Table[2,angle],Table[3,entity],Table[4,angle])
+                                    break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,angle],Table[3,entity],Table[4,entity])
+                                    break
+                                }
+                            break
+                        }
+                    break
+                    case "p",
+                    case "e",
+                        switch(ParamTypes[3,string]){
+                            case "n",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,entity],Table[3,number],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,entity],Table[3,number],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,entity],Table[3,number],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,entity],Table[3,number],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,entity],Table[3,number],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "s",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,entity],Table[3,string],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,entity],Table[3,string],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,entity],Table[3,string],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,entity],Table[3,string],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,entity],Table[3,string],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "v",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,entity],Table[3,vector],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,entity],Table[3,vector],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,entity],Table[3,vector],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,entity],Table[3,vector],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,entity],Table[3,vector],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "a",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,entity],Table[3,angle],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,entity],Table[3,angle],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,entity],Table[3,angle],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,entity],Table[3,angle],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,entity],Table[3,angle],Table[4,entity])
+                                        break
+                                }
+                                break
+                            case "p",
+                            case "e",
+                                switch(ParamTypes[4,string]){
+                                    case "n",
+                                        Table[1,string](Table[2,entity],Table[3,entity],Table[4,number])
+                                        break
+                                    case "s",
+                                        Table[1,string](Table[2,entity],Table[3,entity],Table[4,string])
+                                        break
+                                    case "v",
+                                        Table[1,string](Table[2,entity],Table[3,entity],Table[4,vector])
+                                        break
+                                    case "a",
+                                        Table[1,string](Table[2,entity],Table[3,entity],Table[4,angle])
+                                        break
+                                    case "p",
+                                    case "e",
+                                        Table[1,string](Table[2,entity],Table[3,entity],Table[4,entity])
+                                        break
+                                }
+                                break
+                        }
+                        break
+                }
+                break
+    }
+}

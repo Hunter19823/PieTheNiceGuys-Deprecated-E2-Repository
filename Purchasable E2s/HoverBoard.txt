@@ -1,0 +1,233 @@
+@name Shipment Drone
+@persist TempS:entity Profit Running ShipmentSize KeyWord:string BlackListed:entity OtherE2Chip:entity Model:string Text:string Person:entity
+@outputs [Target]:entity PosB:vector AngB:angle Buyer:entity
+if(first()){
+    #noDuplications()
+    runOnChat(1)
+    ShipmentSize=10
+    KeyWord="gun"
+    BlackListed=findPlayerBySteamID("some guy's steamid")
+    Profit=1
+    Model="models/player/dewobedil/kancolle/shimakaze/default_p.mdl"
+    function void entity:say(Stuff:string){
+        if(!(This==noentity())){
+            holoCreate(1,This:toWorld(vec(50,0,0)),vec(1),This:angles()+ang(0,180,0),vec(255),Model):animate(3,1)
+            holoEntity(1):streamStart(123,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Stuff)+"&tl="+"en-us"+"&client=tw-ob",1)
+        }else{
+            print("Invalid Target Entity")
+        }
+        holoAlpha(1,255)
+        timer("TurnOff",10000)
+    }
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    timer("Refresh",1000)
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(->Target>0 && ->AngB>0 && ->PosB>0){
+if(chatClk()){
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "sendto",
+            if(chatClk(owner())){
+                local Temp=lastSpoke():aimEntity()
+                Target=noentity()
+                if(Temp:shipmentAmount()>0){
+                    local P=searchForPlayer(LS[2,string])
+                    if(P:isValid()){
+                        print("Requesting..." + P:name())
+                        TempS=Temp
+                        local Price=Temp:shipmentPrice()/ShipmentSize*Temp:shipmentAmount()*Profit
+                        moneyRequest(P,Price,Temp:shipmentAmount()+"x "+Temp:shipmentName()+" for $"+Price)
+                    }else{
+                        print("Invalid Player")
+                    }
+                }else{
+                    print("Invalid Shipment")
+                }
+            }
+            break
+        case "customsend",
+            if(chatClk(owner())){
+                local Temp=lastSpoke():aimEntity()
+                Target=noentity()
+                if(Temp:shipmentAmount()>0){
+                    local P=searchForPlayer(LS[2,string])
+                    if(P:isPlayer()){
+                        #print("Requesting..." + P:name())
+                        TempS=Temp
+                        local Price=Temp:shipmentPrice()/ShipmentSize*Temp:shipmentAmount()*LS[3,string]:toNumber()
+                        Text="Hello Player "+P:name()+" "+owner():name() +" would like to request $"+Price+" from you with this message attached: "
+                        Text+="This is the price for a shipment of "+Temp:shipmentAmount() + " " +Temp:shipmentName() + "s."
+                        Person=P
+                        timer("say",100)
+                        timer(P:steamID()+"|9-9|"+Price+"|9-9|"+Temp:shipmentAmount()+"x "+Temp:shipmentName()+" for $"+Price,7500)
+                    }else{
+                        print("Invalid Player")
+                    }
+                }else{
+                    print("Invalid Shipment")
+                }
+            }
+            break
+        case "store",
+            if(chatClk(owner())){
+                local Temp=lastSpoke():aimEntity()
+                Target=noentity()
+                if(Temp:isShipment()){
+                    TempS=Temp
+                    print("Shipment Stored")
+                }else{
+                    print("Entity is not a shipment.")
+                }
+            }
+            break
+        case "."+KeyWord,
+        case "/"+KeyWord,
+        case "!"+KeyWord,
+        case KeyWord,
+            if(lastSpoke()!=BlackListed){
+                print(lastSpoke():name()+" is requesting a shipment.")
+                if(TempS:isShipment()){
+                    local Price=TempS:shipmentPrice()/ShipmentSize*TempS:shipmentAmount()*Profit
+                    moneyRequest(lastSpoke(),Price,TempS:shipmentAmount()+"x "+TempS:shipmentName()+" for $"+Price)
+                }else{
+                    print("No Shipments in stock.")
+                }
+            }
+            break
+        case "/advert",
+        case "//",
+        case "/ooc",
+            if(LS[2,string]:lower()==KeyWord){
+                print(lastSpoke():name()+" is requesting a shipment.")
+                if(TempS:isShipment()){
+                    local Price=TempS:shipmentPrice()/ShipmentSize*TempS:shipmentAmount()*Profit
+                    moneyRequest(lastSpoke(),Price,TempS:shipmentAmount()+"x "+TempS:shipmentName()+" for $"+Price)
+                }else{
+                    print("No Shipments in stock.")
+                }
+            }
+        default,
+            break
+    }
+}}else{
+    findIncludePlayerProps(owner())
+    findByClass("gmod_wire_expression2")
+    findSortByDistance(entity():pos())
+    local E2=find()
+    if(E2:isValid()){
+        if(E2:owner()==owner() && E2:getName()=="Create Pathway"){
+            E2:createWire(entity(),"PointB","PosB")
+            E2:createWire(entity(),"AngleB","AngB")
+            E2:createWire(entity(),"Buyer","Buyer")
+            E2:createWire(entity(),"Target","Target")
+        }elseif(findCount()>1){
+            E2=findResult(2)
+            if(E2:isValid()){
+                if(E2:owner()==owner() && E2:getName()=="Create Pathway"){
+                    E2:createWire(entity(),"PointB","PosB")
+                    E2:createWire(entity(),"AngleB","AngB")
+                    E2:createWire(entity(),"Buyer","Buyer")
+                    E2:createWire(entity(),"Target","Target")
+                }
+            }
+        }
+    }
+}
+if(moneyClk()){
+    if(TempS:isValid() && !Running){
+        Running=1
+        PosB=moneyClkPlayer():pos()+vec(0,0,25)
+        AngB=moneyClkPlayer():eyeAngles()
+        Target=TempS
+        Buyer=moneyClkPlayer()
+        print("Sending...")
+        
+        timer("HoldOffTransaction",5000)
+        timer("AutoStore",4000)
+    }else{
+        print("Shipment Invalid. Refunding.")
+        moneyGive(moneyClkPlayer(),moneyClkAmount())
+    }
+}
+if(clk("HoldOffTransaction")){
+    Running=0
+}elseif(clk("AutoStore")){
+    findClearWhiteList()
+    findClearBlackList()
+    findIncludePlayerProps(owner())
+    findExcludeEntity(Target)
+    findByClass("spawned_shipment")
+    findSortByDistance(entity():pos())
+    local ShipmentsFound=findToArray():count()
+    if(ShipmentsFound>0){
+        print(ShipmentsFound+" Shipments Found.")
+        T=find()
+        if(T:owner()==owner()){
+            TempS=T
+        }else{
+            print("Lack of Permission to Own This Shipment")
+        }
+    }else{
+        timer("AutoStore",5000)
+        print("Searching...")
+    }
+}elseif(clk("Refresh")){
+    if(!TempS:isValid()){
+        print("Shipment Invalid")
+        findClearWhiteList()
+        findClearBlackList()
+        findIncludePlayerProps(owner())
+        findByClass("spawned_shipment")
+        findSortByDistance(entity():pos())
+        local ShipmentsFound=findToArray():count()
+        if(ShipmentsFound>0){
+            print(ShipmentsFound+" Shipments Found.")
+            T=find()
+            if(T:owner()==owner()){
+                TempS=T
+            }else{
+                print("Lack of Permission to Own This Shipment")
+            }
+        }else{
+            print("Searching...")
+        }
+    }
+    timer("Refresh",10000)
+}elseif(clk("say")){
+    if(streamCanStart()){
+        Person:say(Text)
+    }else{
+        timer("say",100)
+    }
+}elseif(clk("TurnOff")){
+    holoAlpha(1,0)
+}else{
+    if(clkName():find("|9-9|")>0){
+        TempArray=clkName():explode("|9-9|")
+        P=searchForPlayer(TempArray[1,string])
+        if(P:isPlayer()){
+            Price=TempArray[2,string]:toNumber()
+            if(Price==0){
+                moneyRequest(P,1,TempArray[3,string])
+            }else{
+                moneyRequest(P,Price,TempArray[3,string])
+            }
+        }
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

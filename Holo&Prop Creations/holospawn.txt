@@ -1,0 +1,102 @@
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    #timer(Counter+"",Speed)
+    timer("base1",Speed)
+}
+if(clk("base1")){holoCreate(1,entity():pos()+vec(20.37,183.18,3.34),vec(0.1),ang(-0.13,-90.01,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(1,255) holoParent(1,entity()) timer("base2",Speed)}
+if(clk("base2")){holoCreate(2,entity():pos()+vec(12.71,183.18,3.34),vec(0.1),ang(0.02,-90,0.01),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(2,255) holoParent(2,entity()) timer("base3",Speed)}
+if(clk("base3")){holoCreate(3,entity():pos()+vec(19.46,57.84,0.77),vec(0.1),ang(0,-45,0),vec(255,255,255),"models/player/group01/male_07.mdl") holoAlpha(3,255) holoEntity(3):animate(108,1) holoParent(3,entity()) timer("base4",Speed)}
+if(clk("base4")){holoCreate(4,entity():pos()+vec(-394.13,-422.97,-55.83),vec(0.1),ang(0,3149.93,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(4,255) holoParent(4,entity()) timer("base5",Speed)}
+if(clk("base5")){holoCreate(5,entity():pos()+vec(-394.13,-422.97,-55.83),vec(0.1),ang(0,3149.93,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(5,255) holoParent(5,entity()) timer("base6",Speed)}
+if(clk("base6")){holoCreate(6,entity():pos()+vec(-13.54,13.06,-0.03),vec(0.1),ang(0,-149.18,0),vec(255,255,255),"models/player/eli.mdl") holoAlpha(6,255) holoEntity(6):animate(141,1) holoParent(6,entity()) timer("base7",Speed)}
+if(clk("base7")){holoCreate(7,entity():pos()+vec(-0.11,0.22,4.64),vec(0.1),ang(0,-119.54,0),vec(255,255,255),"models/player/combine_advisor_guard.mdl") holoAlpha(7,255) holoEntity(7):animate(2,1) holoParent(7,entity()) timer("base8",Speed)}
+if(clk("base8")){timer("base9",Speed)}
+if(clk("base9")){holoCreate(9,entity():pos()+vec(10.29,-22.83,0.77),vec(0.1),ang(0,90.42,0),vec(255,255,255),"models/player/group01/female_01.mdl") holoAlpha(9,255) holoParent(9,entity()) timer("base10",Speed)}
+if(clk("base10")){holoCreate(10,entity():pos()+vec(5.01,-22.77,0.77),vec(0.1),ang(0,90.23,0),vec(255,255,255),"models/eli.mdl") holoAlpha(10,255) holoEntity(10):animate(7,1) holoParent(10,entity()) timer("base11",Speed)}
+if(clk("base11")){holoCreate(11,entity():pos()+vec(8.89,-16.19,0.77),vec(0.1),ang(0,97.26,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(11,255) holoEntity(11):animate(3,1) holoParent(11,entity()) timer("base12",Speed)}
+if(clk("base12")){holoCreate(12,entity():pos()+vec(5.66,-6.07,-0.03),vec(0.1),ang(0,162.07,0),vec(255,255,255),"models/player/group01/female_01.mdl") holoAlpha(12,255) holoEntity(12):animate(108,1) holoParent(12,entity()) timer("base13",Speed)}
+if(clk("base13")){holoCreate(13,entity():pos()+vec(-25.34,38.5,0.77),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/group01/male_05.mdl") holoAlpha(13,255) holoEntity(13):animate(108,1) holoParent(13,entity()) timer("base14",Speed)}
+if(clk("base14")){holoCreate(14,entity():pos()+vec(-11.77,-17.84,0.8),vec(0.1),ang(0,0,0),vec(255,255,255),"models/expression 2/cpu_microchip.mdl") holoAlpha(14,255) holoParent(14,entity()) timer("base15",Speed)}
+if(clk("base15")){holoCreate(15,entity():pos()+vec(16.61,12.33,-0.03),vec(0.1),ang(0,-97.23,0),vec(255,255,255),"models/jessev92/player/military/cod4_sniper.mdl") holoAlpha(15,255) holoEntity(15):animate(2,1) holoParent(15,entity()) timer("base16",Speed)}
+if(clk("base16")){holoCreate(16,entity():pos()+vec(-89.46,27.15,0.77),vec(0.1),ang(0,-169.88,0),vec(255,255,255),"models/player/group01/male_05.mdl") holoAlpha(16,255) holoEntity(16):animate(149,1) holoParent(16,entity()) timer("base17",Speed)}
+if(clk("base17")){holoCreate(17,entity():pos()+vec(-17.19,-83.64,0.77),vec(0.1),ang(0,180,0),vec(255,255,255),"models/player/magnusson.mdl") holoAlpha(17,255) holoEntity(17):animate(2,1) holoParent(17,entity()) timer("base18",Speed)}
+if(clk("base18")){holoCreate(18,entity():pos()+vec(-16.44,-75.31,0.77),vec(0.1),ang(0,180,0),vec(255,255,255),"models/player/monk.mdl") holoAlpha(18,255) holoEntity(18):animate(2,1) holoParent(18,entity()) timer("base19",Speed)}
+if(clk("base19")){holoCreate(19,entity():pos()+vec(-25.95,-394,-56.83),vec(0.1),ang(0,180.09,0),vec(255,255,255),"models/gman_high.mdl") holoAlpha(19,255) holoEntity(19):animate(2,1) holoParent(19,entity()) timer("base20",Speed)}
+if(clk("base20")){timer("base21",Speed)}
+if(clk("base21")){holoCreate(21,entity():pos()+vec(-17.69,-2.85,-0.03),vec(0.1),ang(0,108.14,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(21,255) holoEntity(21):animate(148,1) holoParent(21,entity()) timer("base22",Speed)}
+if(clk("base22")){holoCreate(22,entity():pos()+vec(9.16,-21.45,0.77),vec(0.1),ang(0,-43.63,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(22,255) holoEntity(22):animate(3,1) holoParent(22,entity()) timer("base23",Speed)}
+if(clk("base23")){timer("base24",Speed)}
+if(clk("base24")){timer("base25",Speed)}
+if(clk("base25")){holoCreate(25,entity():pos()+vec(-72.24,103,1.17),vec(0.1),ang(0,-90.77,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(25,255) holoEntity(25):animate(388,1) holoParent(25,entity()) timer("base26",Speed)}
+if(clk("base26")){holoCreate(26,entity():pos()+vec(-342.09,-296.82,3.34),vec(0.1),ang(-0.01,-90,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(26,255) holoParent(26,entity()) timer("base27",Speed)}
+if(clk("base27")){holoCreate(27,entity():pos()+vec(-72.24,103,0.57),vec(0.1),ang(0,180,0),vec(0,0,0),"models/nova/airboat_seat.mdl") holoAlpha(27,0) holoParent(27,entity()) timer("base28",Speed)}
+if(clk("base28")){timer("base29",Speed)}
+if(clk("base29")){holoCreate(29,entity():pos()+vec(-285.74,232.88,3.34),vec(0.1),ang(0,-178.3,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(29,255) holoParent(29,entity()) timer("base30",Speed)}
+if(clk("base30")){holoCreate(30,entity():pos()+vec(-285.6,248.55,3.34),vec(0.1),ang(-0.09,-180,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(30,255) holoParent(30,entity()) timer("base31",Speed)}
+if(clk("base31")){holoCreate(31,entity():pos()+vec(-285.6,240.84,3.34),vec(0.1),ang(-0.13,179.97,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(31,255) holoParent(31,entity()) timer("base32",Speed)}
+if(clk("base32")){holoCreate(32,entity():pos()+vec(-64.49,38.64,0.77),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/player/group01/female_02.mdl") holoAlpha(32,255) holoEntity(32):animate(107,1) holoParent(32,entity()) timer("base33",Speed)}
+if(clk("base33")){holoCreate(33,entity():pos()+vec(-72.54,-50.96,0.77),vec(0.1),ang(0,-45,0),vec(255,255,255),"models/player/group01/female_04.mdl") holoAlpha(33,255) holoEntity(33):animate(107,1) holoParent(33,entity()) timer("base34",Speed)}
+if(clk("base34")){holoCreate(34,entity():pos()+vec(-72.45,-64.22,0.77),vec(0.1),ang(0,-45,0),vec(255,255,255),"models/player/group01/male_05.mdl") holoAlpha(34,255) holoEntity(34):animate(108,1) holoParent(34,entity()) timer("base35",Speed)}
+if(clk("base35")){holoCreate(35,entity():pos()+vec(-72.54,-76.56,0.77),vec(0.1),ang(0,-45,0),vec(255,255,255),"models/player/group01/female_01.mdl") holoAlpha(35,255) holoEntity(35):animate(107,1) holoParent(35,entity()) timer("base36",Speed)}
+if(clk("base36")){timer("base37",Speed)}
+if(clk("base37")){holoCreate(37,entity():pos()+vec(-265.94,43.84,0.97),vec(0.1),ang(0,0,0),vec(255,255,255),"models/hunter/plates/plate2x5.mdl") holoAlpha(37,255) holoMaterial(37,"Models/effects/vol_light001") holoParent(37,entity()) timer("base38",Speed)}
+if(clk("base38")){timer("base39",Speed)}
+if(clk("base39")){timer("base40",Speed)}
+if(clk("base40")){holoCreate(40,entity():pos()+vec(-279.17,52.19,0.77),vec(0.1),ang(0,1.03,0),vec(255,255,255),"models/gman_high.mdl") holoAlpha(40,255) holoEntity(40):animate(1,1) holoParent(40,entity()) timer("base41",Speed)}
+if(clk("base41")){holoCreate(41,entity():pos()+vec(-278.32,35.49,0.77),vec(0.1),ang(0,359.92,0),vec(255,255,255),"models/humans/group01/female_01.mdl") holoAlpha(41,255) holoEntity(41):animate(2,1) holoParent(41,entity()) timer("base42",Speed)}
+if(clk("base42")){timer("base43",Speed)}
+if(clk("base43")){holoCreate(43,entity():pos()+vec(-273.32,87.18,3.34),vec(0.1),ang(-0.05,-90,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(43,255) holoParent(43,entity()) timer("base44",Speed)}
+if(clk("base44")){holoCreate(44,entity():pos()+vec(-265.72,87.18,3.34),vec(0.1),ang(-0.01,-89.95,0.03),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(44,255) holoParent(44,entity()) timer("base45",Speed)}
+if(clk("base45")){holoCreate(45,entity():pos()+vec(-257.86,87.18,3.34),vec(0.1),ang(0,-90.01,0),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(45,255) holoParent(45,entity()) timer("base46",Speed)}
+if(clk("base46")){holoCreate(46,entity():pos()+vec(-271.94,107.84,37.77),vec(0.1),ang(0,32.98,0),vec(255,255,255),"models/freeman/vault/floor_safe_door.mdl") holoAlpha(46,255) holoEntity(46):animate(2,1) holoParent(46,entity()) timer("base47",Speed)}
+if(clk("base47")){holoCreate(47,entity():pos()+vec(-90.1,-11.07,52.04),vec(0.1),ang(90,180,180),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(47,255) holoParent(47,entity()) timer("base48",Speed)}
+if(clk("base48")){holoCreate(48,entity():pos()+vec(-88,-7.97,46.94),vec(0.1),ang(0,90,0),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(48,255) holoParent(48,entity()) timer("base49",Speed)}
+if(clk("base49")){holoCreate(49,entity():pos()+vec(-92.2,-14.17,46.94),vec(0.1),ang(0,90,0),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(49,255) holoParent(49,entity()) timer("base50",Speed)}
+if(clk("base50")){holoCreate(50,entity():pos()+vec(-84.9,-11.07,46.94),vec(0.1),ang(0,0,0),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(50,255) holoParent(50,entity()) timer("base51",Speed)}
+if(clk("base51")){holoCreate(51,entity():pos()+vec(-88,-14.17,46.94),vec(0.1),ang(0,90,0),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(51,255) holoParent(51,entity()) timer("base52",Speed)}
+if(clk("base52")){holoCreate(52,entity():pos()+vec(-93.6,-9.67,41.94),vec(0.1),ang(0,-18.49,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(52,255) holoEntity(52):animate(98,1) holoParent(52,entity()) timer("base53",Speed)}
+if(clk("base53")){timer("base54",Speed)}
+if(clk("base54")){timer("base55",Speed)}
+if(clk("base55")){holoCreate(55,entity():pos()+vec(-90.1,-11.07,41.84),vec(0.1),ang(90,180,180),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(55,255) holoParent(55,entity()) timer("base56",Speed)}
+if(clk("base56")){holoCreate(56,entity():pos()+vec(-92.2,-7.97,46.94),vec(0.1),ang(0,90,0),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(56,255) holoParent(56,entity()) timer("base57",Speed)}
+if(clk("base57")){holoCreate(57,entity():pos()+vec(-95.3,-11.07,46.94),vec(0.1),ang(0,0,0),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(57,255) holoParent(57,entity()) timer("base58",Speed)}
+if(clk("base58")){holoCreate(58,entity():pos()+vec(-85.34,-63.76,0.77),vec(0.1),ang(0,-45,0),vec(255,255,255),"models/player/group01/female_01.mdl") holoAlpha(58,255) holoEntity(58):animate(107,1) holoParent(58,entity()) timer("base59",Speed)}
+if(clk("base59")){holoCreate(59,entity():pos()+vec(-78.94,-95.76,0.77),vec(0.1),ang(0,-45,0),vec(255,255,255),"models/player/group01/male_06.mdl") holoAlpha(59,255) holoEntity(59):animate(108,1) holoParent(59,entity()) timer("base60",Speed)}
+if(clk("base60")){holoCreate(60,entity():pos()+vec(-90.64,-344.74,0.77),vec(0.1),ang(0,-87.49,0),vec(255,255,255),"models/player/monk.mdl") holoAlpha(60,255) holoEntity(60):animate(108,1) holoParent(60,entity()) timer("base61",Speed)}
+if(clk("base61")){holoCreate(61,entity():pos()+vec(-117.32,134.67,43.32),vec(0.1),ang(90,90,0),vec(255,255,255),"models/expression 2/cpu_microchip.mdl") holoAlpha(61,255) holoParent(61,entity()) timer("base62",Speed)}
+if(clk("base62")){holoCreate(62,entity():pos()+vec(-138.64,-47.36,2.04),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(62,255) holoParent(62,entity()) timer("base63",Speed)}
+if(clk("base63")){holoCreate(63,entity():pos()+vec(-138.64,-43.86,2.04),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(63,255) holoParent(63,entity()) timer("base64",Speed)}
+if(clk("base64")){holoCreate(64,entity():pos()+vec(-138.34,-69.76,2.04),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(64,255) holoParent(64,entity()) timer("base65",Speed)}
+if(clk("base65")){holoCreate(65,entity():pos()+vec(-236.09,24.28,-56.83),vec(0.1),ang(0,90.65,0),vec(255,255,255),"models/gman_high.mdl") holoAlpha(65,255) holoEntity(65):animate(1,1) holoParent(65,entity()) timer("base66",Speed)}
+if(clk("base66")){holoCreate(66,entity():pos()+vec(-138.34,-73.26,2.04),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(66,255) holoParent(66,entity()) timer("base67",Speed)}
+if(clk("base67")){holoCreate(67,entity():pos()+vec(-138.64,-50.86,2.04),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(67,255) holoParent(67,entity()) timer("base68",Speed)}
+if(clk("base68")){holoCreate(68,entity():pos()+vec(-138.34,-76.76,2.04),vec(0.1),ang(0,-90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(68,255) holoParent(68,entity()) timer("base69",Speed)}
+if(clk("base69")){holoCreate(69,entity():pos()+vec(-222.01,42.59,0.77),vec(0.1),ang(0,97.06,0),vec(255,255,255),"models/player/phoenix.mdl") holoAlpha(69,255) holoEntity(69):animate(114,1) holoParent(69,entity()) timer("base70",Speed)}
+if(clk("base70")){holoCreate(70,entity():pos()+vec(-211.35,44.29,0.77),vec(0.1),ang(0,114.18,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(70,255) holoEntity(70):animate(108,1) holoParent(70,entity()) timer("base71",Speed)}
+if(clk("base71")){timer("base72",Speed)}
+if(clk("base72")){holoCreate(72,entity():pos()+vec(-194.91,61.16,0.77),vec(0.1),ang(0,1.62,0),vec(255,255,255),"models/player/kleiner.mdl") holoAlpha(72,255) holoParent(72,entity()) timer("base73",Speed)}
+if(clk("base73")){holoCreate(73,entity():pos()+vec(-205.04,45.24,2.04),vec(0.1),ang(0,90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(73,255) holoParent(73,entity()) timer("base74",Speed)}
+if(clk("base74")){holoCreate(74,entity():pos()+vec(-205.04,38.24,2.04),vec(0.1),ang(0,90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(74,255) holoParent(74,entity()) timer("base75",Speed)}
+if(clk("base75")){holoCreate(75,entity():pos()+vec(-205.04,41.74,2.04),vec(0.1),ang(0,90,0),vec(255,255,255),"models/nova/airboat_seat.mdl") holoAlpha(75,255) holoParent(75,entity()) timer("base76",Speed)}
+if(clk("base76")){holoCreate(76,entity():pos()+vec(-195.32,34.93,4.39),vec(0.1),ang(0,0,0),vec(255,255,255),"models/props_trainstation/payphone001a.mdl") holoAlpha(76,255) holoParent(76,entity()) timer("base77",Speed)}
+if(clk("base77")){holoCreate(77,entity():pos()+vec(-195.49,49.87,3.33),vec(0.1),ang(-0.01,-0.01,0.02),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(77,255) holoParent(77,entity()) timer("base78",Speed)}
+if(clk("base78")){holoCreate(78,entity():pos()+vec(-234.7,67.28,1.97),vec(0.1),ang(0,-54.46,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(78,255) holoEntity(78):animate(14,1) holoParent(78,entity()) timer("base79",Speed)}
+if(clk("base79")){holoCreate(79,entity():pos()+vec(-195.43,42.34,3.34),vec(0.1),ang(-0.04,-0.77,-0.07),vec(255,255,255),"models/props_junk/trashdumpster01a.mdl") holoAlpha(79,255) holoParent(79,entity()) timer("base80",Speed)}
+if(clk("base80")){holoCreate(80,entity():pos()+vec(-241.73,99.49,41.84),vec(0.1),ang(0.05,90,360),vec(255,255,255),"models/freeman/vault/vault_door.mdl") holoAlpha(80,255) holoEntity(80):animate(1,1) holoParent(80,entity()) timer("base81",Speed)}
+if(clk("base81")){holoCreate(81,entity():pos()+vec(-217.2,40.57,0.77),vec(0.1),ang(0,-100.86,0),vec(255,255,255),"models/player/skeleton.mdl") holoAlpha(81,255) holoEntity(81):animate(16,1) holoParent(81,entity()) timer("base82",Speed)}
+if(clk("base82")){holoCreate(82,entity():pos()+vec(-132.24,70.34,0.77),vec(0.1),ang(0,-157.3,0),vec(255,255,255),"models/fearless/mafia07.mdl") holoAlpha(82,255) holoEntity(82):animate(2,1) holoParent(82,entity()) timer("base83",Speed)}

@@ -1,0 +1,66 @@
+@name Pie's Gunshop Assistant
+if(first()){
+    runOnChat(1)
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(chatClk(owner())) {
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "request",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isValid()){
+                local Price=LS[3,string]:toNumber()
+                moneyRequest(P,Price,lastSpoke():name()+" is requesting: $"+Price)
+                print("Requesting: $"+Price+" from: "+P:name())
+            }
+            break
+        case "price",
+            local P=owner():aimEntity()
+            if(P:isShipment()){
+                local Price=P:shipmentPrice()/LS[2,string]:toNumber() * P:shipmentAmount() * LS[3,string]:toNumber()
+                print(P:shipmentAmount()+" "+P:shipmentName()+"s for $"+Price+"<br>Purchased At: $"+P:shipmentPrice())
+            }
+            break
+        case "sendto",
+            local P=owner():aimEntity()
+            findIncludePlayerProps(owner())
+            findByClass("spawned_shipment")
+            findSortByDistance(entity():pos())
+            local ShipmentsFound=findToArray():count()
+            if(ShipmentsFound>0){
+                print(ShipmentsFound+" Shipments Found.")
+                P=find()
+            }
+            if(P:type()=="spawned_shipment"){
+                local T=searchForPlayer(LS[2,string])
+                if(T:isPlayer()){
+                    P:setPos(T:pos()+T:height()/2)
+                }
+            }
+            break
+        case "give",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isValid()){
+                local Price=LS[3,string]:toNumber()
+                moneyGive(P,Price)
+                print("Giving: $"+Price+" to: "+P:name())
+            }
+            break
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

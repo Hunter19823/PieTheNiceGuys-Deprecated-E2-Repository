@@ -1,0 +1,125 @@
+@name User Polls v2
+@model models/bitminers2/bitminer_rack.mdl
+@persist AlreadyClaimed:gtable WhitelistName:string [OffSetX,OffSetY,Amount,Channel] Question:string [Option1,Option2,E2]:entity
+if(first()){
+    #The E2 Chip
+    E2=entity()
+    
+    #The offset multipliers for the spacing of the graph points
+    OffSetX=20
+    OffSetY=10
+    
+    #Amount of money a player recieves for voting.
+    Amount=100000
+    
+    #Channel StreamCore Plays TTS Voice
+    Channel=random(0,200)
+    
+    #Change the "Question" to be the question you would like to make a poll about.
+    Question = "Should this server recieve a Economy Wipe?"
+    
+    #I wouldn't change this unless you want to confuse people
+    Question=Question+" (Use the Green for Yes. Use the Red for No.)"
+    WhitelistName=Question
+    
+    
+    
+    AlreadyClaimed=gTable(owner():steamID()+"'s Voting Tables"+Question:length(),1)
+    if(E2["Question",number]!=Question:length()){
+        AlreadyClaimed:clear()
+        E2["Question",number]=Question:length()
+    }else{
+        E2["Question",number]=Question:length()
+    }
+    if(AlreadyClaimed[WhitelistName,table]:count()<1){
+        AlreadyClaimed[WhitelistName,table]=table()
+    }
+    Option1=propSpawn("models/exhibitionrp/moneyprinter/money_printer.mdl",entity():toWorld(vec(0,-(OffSetX*2),40)),entity():angles(),1)
+    
+    Option1["Option",number]=1
+    
+    runOnUse(1,Option1)
+    
+    Option2=propSpawn("models/exhibitionrp/moneyprinter/money_printer.mdl",entity():toWorld(vec(0,(OffSetX*2),40)),entity():angles(),1)
+    
+    Option2["Option",number]=2
+    
+    runOnUse(1,Option2)
+    timer("getFunctions",100)
+    timer("DoStuff",200)
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(clk("getFunctions")){
+    function plotPoint(X, Y , Color:vector ){
+        if(X<0){
+            holoCreate(abs(X*2),entity():toWorld(vec(0,OffSetX*X,OffSetY*Y)),vec(1),entity():angles(),Color,"models/XQM/Rails/trackball_1.mdl")
+            holoParent(abs(X*2),entity())
+        }else{
+            holoCreate(X,entity():toWorld(vec(0,OffSetX*X,OffSetY*Y)),vec(1),entity():angles(),Color,"models/XQM/Rails/trackball_1.mdl")
+            holoParent(X,entity())
+        }
+        
+    }
+    function number hasClaimedGift(Person:entity){
+        if(Person:isPlayer()){
+            local HasClaimed=AlreadyClaimed[WhitelistName,table]:exists(Person:steamID())
+            if(HasClaimed){
+                return 1
+            }else {
+                return 0
+            }
+        }
+    }
+    function void sayEnjoy(Player:entity){
+        local Text=""
+        if(Amount<=0){
+            Text="Greetings "+Player:name()+"! Thank you for voting. Enjoy the rest of your day!"
+        }else{
+            Text="Greetings "+Player:name()+"! Thank you for voting. Enjoy $"+Amount+" as a thank you for voting!"
+        }
+        local Language="en-us"
+        entity():streamStart(Channel,("http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+Language+"&client=tw-ob"),1)
+        timer("shush",9000)
+    }
+}
+if(clk("DoStuff")){
+    Option1:setNoCollideAll()
+    Option1:parentTo(entity())
+    Option1:setColor(vec(255,0,0))
+    Option2:setNoCollideAll()
+    Option2:parentTo(entity())
+    Option2:setColor(vec(0,255,0))
+    timer("updateVisuals",250)
+}
+if ( useEntClk():inUse() ) {
+    Option=useEntClk()
+    local Person = Option:inUseBy()
+    People=AlreadyClaimed[WhitelistName,table]
+    if(!hasClaimedGift(Person) && !Person[WhitelistName,number]){
+        Person[WhitelistName,number]=1
+        AlreadyClaimed[WhitelistName,table][Person:steamID(),number]=1
+        if(Option["Option",number]!=0){
+            local N=Option["Option",number]
+            AlreadyClaimed[N,number]=AlreadyClaimed[N,number]+1
+            timer("updateVisuals",1000)
+            moneyGive(Person,Amount)
+            sayEnjoy(Person)
+        }
+    }
+}
+if( clk("updateVisuals") ){
+    plotPoint(0,100,vec())
+    plotPoint(-2,AlreadyClaimed[1,number]+6,vec(255,0,0))
+    plotPoint(2,AlreadyClaimed[2,number]+6,vec(0,255,0))
+    if(Amount<=0){
+        setName(Question+" (Yes: "+AlreadyClaimed[2,number]+"||No: "+AlreadyClaimed[1,number]+")")
+    }else{
+        setName("Free $"+Amount+" If you Answer this Question: "+Question+" (Yes: "+AlreadyClaimed[2,number]+"||No: "+AlreadyClaimed[1,number]+")")
+    }
+}
+if ( clk("shush") ) {
+    streamStop(Channel)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

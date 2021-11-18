@@ -1,0 +1,376 @@
+@name Pie's Updated Youtube Music E2 v1.3.2
+@model models/props_phx/games/chess/white_king.mdl
+@persist [Prefix,LastRequest]:string [StreamData,Commands]:table [Playlist]:gtable [LastSongDuration]
+if(first()){
+    Prefix="."
+    
+    Commands=table(
+        "Help Command"              =Prefix+"help",
+        "Stop Current Song"         =Prefix+"stop",
+        "Change the Volume"         =Prefix+"volume",
+        "Play a song"               =Prefix+"play",
+        "Get Current Playlist"      =Prefix+"playlist",
+        "Set/Get Playlist ID"       =Prefix+"setplaylist",
+        "Search for a Song by name" =Prefix+"search",
+        "Retry the last song"       =Prefix+"retry"
+    )
+    
+    StreamData=table(
+        "Channel"=743,
+        "Volume"=0.25,
+        "StreamSource"=entity(),
+        "playlistID"=owner():steamID()+"'s Backup",
+        "CurrentSong"="",
+        "Youtube API Link"="https://rainsapi.com/yt/@api/json/mp3/",
+        "Youtube Search API"="https://rainsapi.com/yt/@api/search/YouTube/",
+        "Hint Length"=7.5
+    )
+    
+    
+    
+    
+    
+    DefaultPlaylist= gTable(owner():steamID()+"'s Backup",1)
+    DefaultSongs   = table(
+        1=       "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kendrick%20Lamar%20-%20M.A.A.D.%20City%20(Feat.%20MC%20eiht).mp3?raw=1",
+        2=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/Magnolia.mp3?raw=true",
+        3=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/24K%20Magic.mp3?raw=true",
+        4=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/Look%20At%20Me.mp3?raw=true",
+        5=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/XO%20Life.mp3?raw=true",
+        6=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/Time.mp3?raw=true",
+        7=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/beibs.mp3?raw=true",
+        8=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/X.mp3?raw=true",
+        9=       "https://github.com/SkylerHadaway/expression2-scripts/blob/master/hopper.mp3?raw=true",
+        10=      "http://speedofsoundpgh.files.wordpress.com/2011/12/kendrick-lamar-adhd.mp3",
+        11=      "http://www.dopewax.com/wp-content/uploads/2015/03/Kendrick-Lamar-King-Kunta.mp3",
+        12=      "https://www.stuffdown.com/track/2%20Chainz%20Ft.%20Travis%20Scott%20-%204%20AM%20-%20(www.SongsLover.com).mp3",
+        13=      "https://github.com/SkylerHadaway/expression2-scripts/blob/master/teriyakiboyz.mp3?raw=true",
+        14=      "http://yp.shoutcast.com/sbin/tunein-station.pls?id=313609",
+        15=      "http://listen.housetime.fm/dsl.pls",
+        16=      "https://github.com/tetatheman/Test-4/blob/master/Attom_-_Always%5BMp3Converter.net%5D.mp3?raw=true",
+        17=      "https://github.com/tetatheman/Test-4/blob/master/San_Holo_-_Light%5BMp3Converter.net%5D.mp3?raw=true",
+        18=      "https://github.com/tetatheman/Test-4/blob/master/EDEN_-_Gravity%5BMp3Converter.net%5D.mp3?raw=1",
+        19=      "https://github.com/tetatheman/Test-4/blob/master/San_Holo_-_We_Rise%5BMp3Converter.net%5D.mp3?raw=1",
+        20=      "https://github.com/tetatheman/Test-4/blob/master/Smash_Mouth_-_All_Star_Kasum_remix%5BMp3Converter.net%5D.mp3?raw=1",
+        21=      "https://github.com/tetatheman/Test-4/blob/master/Tight_Pants_Body_Rolls%5BMp3Converter.net%5D.mp3?raw=1",
+        22=      "https://github.com/tetatheman/Test-4/blob/master/Vexento_-_Masked_Heroes%5BMp3Converter.net%5D.mp3?raw=1",
+        23=      "https://github.com/tetatheman/Test-4/blob/master/%EF%BC%B3%EF%BD%88%EF%BD%81%EF%BD%84%EF%BD%89%EF%BD%8C%EF%BD%81%EF%BD%99%5BMp3Converter.net%5D.mp3?raw=1",
+        24=      "https://github.com/tetatheman/Test-4/blob/master/Yung_Pinch_-_Rock_With_Us_Official_Music_Video%5BMp3Converter.net%5D.mp3?raw=1",
+        25=      "https://github.com/tetatheman/Test-4/blob/master/nwa_fuck_the_police_hq%5BMp3Converter.net%5D.mp3?raw=1",
+        26=      "https://github.com/tetatheman/Test-4/blob/master/Yung_Pinch_-_Look_Like_Dir_by_ColeBennett_%5BMp3Converter.net%5D.mp3?raw=1",
+        27=      "https://github.com/tetatheman/Test-4/blob/master/Yung_Pinch_-_When_I_Was_Yung_Prod_Matics_OFFICIAL_VIDEO%5BMp3Converter.net%5D.mp3?raw=1",
+        28=      "https://github.com/tetatheman/Test-4/blob/master/Jake_Paul_-_Its_Everyday_Bro_Song_feat_Team_10_Official_Music_Video%5BMp3Converter.net%5D.mp3?raw=1",
+        29=      "https://github.com/tetatheman/Test-4/blob/master/Rick_Astley_-_Never_Gonna_Give_You_Up%5BMp3Converter.net%5D.mp3?raw=1",
+        30=      "https://github.com/tetatheman/Test-4/blob/master/WELCOME_TO_MY_MINE_MINECRAFT_PARODI_OF_WELCOME_TO_MY_HOUSE%5BMp3Converter.net%5D.mp3?raw=1",
+        31=      "https://github.com/tetatheman/Test-4/blob/master/CupcakKe_-_Best_Dick_Sucker_prod_by_energybrooks%5BMp3Converter.net%5D.mp3?raw=1",
+        32=      "https://github.com/tetatheman/Test-4/blob/master/My_iCarly_Intro_HD_Leave_It_All_to_Me_by_Miranda_Cosgrove_featuring_Drake_Bell%5BMp3Converter.net%5D%20(1).mp3?raw=1",
+        33=      "https://github.com/tetatheman/Test-4/blob/master/iDubbbzTV_-_Im_Gay_Im_Blue_Cover%5BMp3Converter.net%5D.mp3?raw=1",
+        34=      "https://github.com/tetatheman/Test-4/blob/master/We%20Are%20All%20Astronauts%20-%20Ether.mp3?raw=1",
+        35=      "https://github.com/tetatheman/Test-4/blob/master/Just%20A%20Gent%20-%20Driftless%20Spirits.mp3?raw=1",
+        36=      "https://github.com/tetatheman/Test-4/blob/master/Queen%20-%20Under%20Pressure%20(Mr%20Saccardo%20Remix).mp3?raw=1",
+        37=      "https://github.com/tetatheman/Test-4/blob/master/Glue70%20-%20Casin.mp3?raw=1",
+        38=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Altitude.mp3?raw=1",
+        39=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Seven%20Lions%20-%20Freesol%20(Dabin%20Remix).mp3?raw=1",
+        40=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/TRINIX%20-%20Midnight.mp3?raw=1",
+        41=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Whethan%20-%20Good%20Nights.mp3?raw=1",
+        42=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Olmos%20-%20Hey.mp3?raw=1",
+        43=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Brigitte%20Bardot%20-%20La%20Madrague%20(Antis%20Remix).mp3?raw=1",
+        44=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mii%20Channel%20Music.mp3?raw=1",
+        45=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mii%20Channel%20(Remix).mp3?raw=1",
+        46=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kero%20Kero%20Bonito%20-%20Flamingo.mp3?raw=1",
+        47=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/WALMART%20YODELING%20KID%20(Bombs%20Away%20EDM%20Remix).mp3?raw=1",
+        48=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/The%20Ghosts%20Of%20Beverly%20Drive.mp3?raw=1",
+        49=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kungs%20%26%20Mozambo%20ft.%20Molly%20-%20To%20Describe%20You.mp3?raw=1",
+        50=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Lemaitre%20-%20The%20End.mp3?raw=1",
+        51=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Hot%20%26%20Cold%20-%20Jermaine%20Stewart.mp3?raw=1",                
+        52=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/DANGER%20-%20059.mp3?raw=1",                                                 
+        53=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Duskus%20x%20San%20Holo%20-%20Take%20Me%20Home.mp3?raw=1",
+        54=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/The%20Glitch%20Mob%20-%20Enter%20Formless%20(feat.%20Rituals%20Of%20Mine).mp3?raw=1",
+        55=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Dyalla%20-%20Radio%20On.mp3?raw=1",
+        56=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/James%20Bay%20-%20Hold%20Back%20The%20River%20(FlyBoy%20Bootleg).mp3?raw=1",
+        57=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Dillon%20Francis%20%20Kygo%20-%20Coming%20Over%20ft%20James%20Hersey%20(Lyric%20Video).mp3?raw=1",  
+        58=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/GHOSTS%20-%20Powerless%20ft.%20Lea%20Santee.mp3?raw=1",
+        59=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Hurley%20Mower%20-%20Home%20Cooked.mp3?raw=1",
+        60=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Miku%20-%20Amour.mp3?raw=1",
+        61=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Trinix%20-%20Last%20Ship.mp3?raw=1",
+        62=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Glimmer%20Of%20Blooms%20-%20Take%20My%20Hand.mp3?raw=1",
+        63=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Eastside%20-%20Ellie%20(Ark%20Patrol%20Remix).mp3?raw=1",
+        64=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Lemaitre%20-%20Cut%20To%20Black.mp3?raw=1",
+        65=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Josiah%20Wilkinson%20-%20Hold%20So%20Deep.mp3?raw=1",
+        66=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Jay%20Rock%20%20Kendrick%20Lamar%20%20%20Hood%20Gone%20Love%20It%20%20Full%20Official%20Music%20Video%20%20%20Lyrics%20).mp3?raw=1",
+        67=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Calvin%20Harris%20-%20Summer%20(Audio).mp3?raw=1",
+        68=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Fluencie%20-%20Lazy.mp3raw=1",
+        69=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/KnowMads%20-%20Freshman%20Year.mp3?raw=1",
+        70=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Logic%20-%201-800-273-8255%20ft.%20Alessia%20Cara%20%20Khalid%20(Official%20Audio).mp3?raw=1",
+        71=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Abstract%20-%20Neverland%20(ft.%20Ruth%20B)%20(Prod.%20Blulake).mp3?raw=1",
+        72=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/XXXTENTACION%20-%20Jocelyn%20Flores%20(Audio).mp3?raw=1",
+        73=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Gods%20Plan.mp3?raw=1",
+        74=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/NF%20-%20Let%20You%20Down%20(Audio).mp3?raw=1",
+        75=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Nightcore%20-%20Alien%20Boy.mp3?raw=1",
+        76=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/CAVETOWN%20-%20This%20Is%20Home%20%20LYRICS.mp3?raw=1",
+        77=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/HOME%20-%20Resonance.mp3?raw=1",
+        78=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Petit%20Biscuit%20-%20You.mp3?raw=1",
+        79=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/M%C3%B8me%20-%20Playground.mp3?raw=1",
+        80=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Clyde%20Carson%20-%20Slow%20Down%20ft.%20The%20Team%20(Audio).mp3?raw=1",
+        81=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kedam%20-%20Night%20Out.mp3?raw=1",
+        82=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Odesza%20-%20Across%20The%20Room%20(feat.%20Leon%20Bridges)%20%5BTycho%20Remix%5D.mp3?raw=1",
+        83=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Ossian%20-%20Hollow.mp3?raw=1",
+        84=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Emil%20Rottmayer%20-%20Limit.mp3?raw=1",
+        85=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/EMROD%20-%20Malabar.mp3?raw=1",
+        86=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Minecraft%20Theme%20(Chill%20Trap%20Remix).mp3?raw=1",
+        87=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Peppermint%20(feat.%20Lexy)%20-%20Jack%20Stauber.mp3?raw=1",
+        88=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Yoe%20Mase%20-%20Lonely.mp3?raw=1",
+        89=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20Waiting%20For%20Love.mp3?raw=1",
+        90=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20The%20Nights.mp3?raw=1",
+        91=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/OneRepublic%20-%20Counting%20Stars.mp3?raw=1",
+        92=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Flume%20-%20Say%20It%20(feat.%20Tove%20Lo)%20(Illenium%20Remix).mp3?raw=1",
+        93=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Gryffin%2C%20Illenium%20-%20Feel%20Good%20ft.%20Daya%20(Lyrics).mp3?raw=1",
+        94=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/KRANE%20x%20Jupom%20-%20Nothing%20To%20Lose.mp3?raw=1",
+        95=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mark%20Ronson%20-%20Uptown%20Funk%20ft.%20Bruno%20Mars.mp3?raw=1",
+        96=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Illenium%20-%20Lost%20(Lyrics%20%20Lyric%20Video)%20ft.%20Emilie%20Brandt%20(1).mp3?raw=1",
+        97=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Halsey%20-%20Colors%20(Audien%20Remix).mp3?raw=1",
+        98=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/DROELOE%20-%20Lilypads.mp3?raw=1",
+        99=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/ODESZA%20-%20IPlayYouListen.mp3?raw=1",
+        100=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Tom%20Day%20-%20Going%20Home.mp3?raw=1",
+        101=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Porter%20Robinson%20%20Madeon%20-%20Shelter.mp3?raw=1",
+        102=      "https://www.dropbox.com/s/52u23wn8xfsu3z9/Untitled.mp3?dl=1",
+        103=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Hurley%20Mower%20-%20Home%20Cooked.mp3?raw=1",
+        104=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Aaron%20Smith%20-%20Dancin%20(KRONO%20Remix).mp3?raw=1",
+        105=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kedam%20-%20Shy%20Girl.mp3?raw=1",
+        106=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Murray%20Head%20%20One%20Night%20In%20Bangkok%20(HQ%20Audio).mp3?raw=1",
+        107=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Louis%20The%20Child%20-%20Better%20Not%20(feat.%20Wafia)%20%5BHotel%20Garuda%20Remix%5D.mp3?raw=1",
+        108=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/The%20Cha%20Cha%20Slide%20Funny%20Remix%20For%20DJs.mp3?raw=1",
+        109=      "https://github.com/tetatheman/Fuck-oof-2/blob/master/Imagine%20Dragons%20-%20Its%20Time%20(Lyrics).mp3?raw=1",
+        110=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Cool%20(Hey%20I%20Like%20You%20a%20Lot).mp3?raw=1",
+        111=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Nightcore%20-%20Senpai.mp3?raw=1",
+        112=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Thulin%20-%20Dancer%20(Kygo%20Remix).mp3?raw=1",
+        113=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/limbo%20%20tinder%20(prod.%20dove%20%20limbo)%20(lyrics).mp3?raw=1",
+        114=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/saaaz%20x%20l%20over%20-%20valentine.mp3?raw=1",
+        115=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/MIke%20Perry%20-%20The%20Ocean%20(ft.%20Shy%20Martin).mp3?raw=1",
+        116=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mr.%20Probz%20-%20Waves%20(Robin%20Schulz%20Remix%20Radio%20Edit).mp3?raw=1",
+        117=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Tom%20Odell%20-%20Another%20Love%20(Zwette%20Edit).mp3?raw=1",
+        118=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20Sunset%20Jesus%20(Lyric%20Video).mp3?raw=1",
+        119=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Disclosure%20-%20Help%20Me%20Lose%20My%20Mind%20(Mazde%20Remix).mp3?raw=1",
+        120=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Disclosure%20-%20You%20and%20Me%20(Flume%20Remix)%20Deluxe%20Version.mp3?raw=1",
+        121=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Ed%20Sheeran%20-%20I%20See%20Fire%20(Kygo%20Remix).mp3?raw=1",
+        122=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Daft%20Punk%20-%20Harder%2C%20Better%2C%20Faster%2C%20Stronger%20(Far%20Out%20Remix).mp3?raw=1",
+        123=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Alessia%20Cara%20-%20Here%20(Lucian%20Remix).mp3?raw=1",
+        124=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Black%20Coast%20-%20TRNDSTTR%20(Lucian%20Remix).mp3?raw=1",
+        125=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Deep%20Chills%20%20-%20Lighthearted.mp3?raw=1",
+        126=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/D4NNY%20-%20Respect%20(Official%20Music%20Video).mp3?raw=1",
+        127=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/D4NNY%20-%20Amazing%20Person%20On%20My%20Mind%20(Official%20Music%20Video).mp3?raw=1",
+        128=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Skinbone%20-%20100%20Miles%20(A%20Thousand%20Miles%20Remix)%20%20Shot%20by%20TSIMSFILMS.mp3?raw=1",
+        129=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Geometry%20Dash%20%20Deadlocked%20Full.mp3?Raw=1",
+        130=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/FAttY%20SPiNS%20-%20Doin%20Your%20Mom.mp3?raw=1",
+        131=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/OMEGAWAVE1986%20ft%20Matt%20Watson.mp3?raw=1",
+        132=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/DUCAT%20-%20YOSHIS%20ISLAND.mp3?raw=1",
+        133=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/%EF%BC%A3%EF%BC%A8%EF%BC%A9%EF%BC%AC%EF%BC%AC%20%EF%BC%AC%EF%BC%AF%EF%BC%AF%EF%BC%B0%EF%BC%B3%20%20%EF%BC%A1%EF%BD%84%EF%BD%96%EF%BD%85%EF%BD%8E%EF%BD%94%EF%BD%95%EF%BD%92%EF%BD%85%20%EF%BC%B4%EF%BD%89%EF%BD%8D%EF%BD%85%EF%BD%97%EF%BD%81%EF%BD%96%EF%BD%85%201.mp3?raw=1",
+        134=      "https://www.dropbox.com/s/w9c83fx522zb22j/%EF%BD%8E%EF%BD%89%EF%BD%8E%EF%BD%94%EF%BD%85%EF%BD%8E%EF%BD%84%EF%BD%8F%E3%80%80%EF%BD%81%EF%BD%8E%EF%BD%84%E3%80%80%EF%BD%8C%EF%BD%8F%EF%BD%86%EF%BD%89.mp3?dl=1",
+        135=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Drake%20%20In%20My%20Feelings%20(Lyrics)%20_%20Keke%2C%20do%20you%20love%20me%20Drake.mp3?raw=1",
+        136=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kygo%20-%20Stranger%20Things%20ft.%20OneRepublic.mp3?raw=1",
+        137=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Nightcore%20-%20Bonjour%20Madame%20(CLAWZ%20Remix).mp3?raw=1",
+        138=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Maan%20on%20the%20Moon%20-%20Gone%20(Flyboy%20Remix).mp3?raw=1",
+        139=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/XXXTENTACION%20-%20SAD!%20(MINECRAFT%20PARODY).mp3?raw=1",
+        140=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Twenty%20One%20Pilots%20-%20Ride%20(Unlike%20Pluto%20remix).mp3?raw=1",
+        141=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Weird%20Al%20Yankovic%20-%20White%20%26%20Nerdy%20(Official%20Video).mp3?raw=1",
+        142=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/IMDABES.mp3?raw=1",
+        143=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Imagine%20Dragons%20-%20Natural.mp3?raw=1",
+        144=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Ed%20Sheeran%20-%20Castle%20On%20The%20Hill%20%5BOfficial%20Video%5D.mp3?raw=1",
+        145=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Infinity%20Ink%20-%20Infinity%20(Dubdogz%20%20Bhaskar%20Remix)%20(Bass%20Boosted).mp3?raw=1",
+        146=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Blackbear%20-%20Idfc%20(Tarro%20Remix).mp3?raw=1",
+        147=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/CVBZ%20-%20Vicodin%20(Lyrics%20%20Lyric%20Video)%20%5BPremiere%5D.mp3?raw=1",
+        148=      "https://www.dropbox.com/s/a5esm8lohkfa4u2/_BASS%20BOOSTED_%20CAR%20MUSIC%20MIX%202018%20_%20BEST%20EDM%2C%20BOUNCE%2C%20ELECTRO%20HOUSE%2014.mp3?dl=1",
+        149=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/TheFatRat%20-%20Oblivion%20(feat.%20Lola%20Blanc).mp3?raw=1",
+        150=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20Without%20You%20(AFISHAL%20Remix).mp3?raw=1",
+        151=      "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Big%20Wild%20-%20Invincible%20(feat.%20iDA%20HAWK).mp3?raw=1",
+        152=      "https://www.dropbox.com/s/y1kot4096avrgcw/1%20HOUR%20Ultimate%20Nightcore%20Mix%20%20Best%20Nightcore%20Gaming%20Music%207.mp3?dl=1",
+        153=      "https://www.dropbox.com/s/pfw9v0fjxutga0i/Undertale%20-%20Megalovania.mp3?dl=1",
+        154=      "https://www.dropbox.com/s/mk22rwkz1f6n4z8/JPB%20-%20Defeat%20The%20Night%20%28feat.%20Ashley%20Apollodor%29%20%5BNCS%20Release%5D.mp3?dl=1",
+        155=      "https://www.dropbox.com/s/b2tsd4zbo8qymk4/TheFatRat%20-%20No%20No%20No.mp3?dl=1",
+        156=      "https://www.dropbox.com/s/jz6zr5tnnbu2i8a/Daft%20Punk%20-%20One%20More%20Time%20%5BHQ%5D.mp3?dl=1",
+        157=      "https://www.dropbox.com/s/3i7d6nntv3goptt/ACDC%20ThunderStruck%20%2B%20Lyrics.mp3?dl=1",
+        158=      "https://www.dropbox.com/s/rbpiivdliuohqwv/Renegades.mp3?dl=1",
+        159=      "https://www.dropbox.com/s/jahtx2syav4bd4m/Aloe%20Blacc%20-%20I%20Need%20A%20Dollar.mp3?dl=1",
+        160=      "https://www.dropbox.com/s/g2ttzidociqybkc/Stonebank.mp3?dl=1",
+        161=      "https://www.dropbox.com/s/eeg165syxzdu6ke/Watsky-%20Whoa%20Whoa%20Whoa%20%5BAll%20You%20Can%20Do%5D.mp3?dl=1",
+        162=      "https://www.dropbox.com/s/gbmpb2f4istelgw/Madeon%20-%20Cut%20The%20Kid.mp3?dl=1",
+        163=      "https://www.dropbox.com/s/ypvkb3m7s7amrwc/Pretty%20Rave%20Girl%202010%20-%20S3RL.mp3?dl=1",
+        164=      "https://www.dropbox.com/s/awzk7tdn4tgmh7i/Fitz%20and%20the%20Tantrums%20-%20HandClap%20%5BOfficial%20Video%5D.mp3?dl=1",
+        165=      "https://www.dropbox.com/s/a6pl76cvxemu1pt/Mr.%20Blue%20Sky%20%28Audio%29.mp3?dl=1",
+        166=      "https://www.dropbox.com/s/jw70c0flsy7gv25/Redfoo%20-%20Let%27s%20Get%20Ridiculous%20%28Lyric%20Video%29.mp3?dl=1",
+        167=      "https://www.dropbox.com/s/t793dijzskiyxb7/tripaloski.mp3?dl=1",
+        168=      "https://www.dropbox.com/s/h8qqd71wy7hsslq/Armin%20van%20Buuren%20-%20Blah%20Blah%20Blah%20%28Official%20Lyric%20Video%29.mp3?dl=1",
+        169=      "https://www.dropbox.com/s/176t9s6yqgeuuvp/Nightcore%20-%20Everytime%20We%20Touch.mp3?dl=1",
+        170=      "https://www.dropbox.com/s/9t2ycddo323hra1/Hero.mp3?dl=1",
+        171=      "https://www.dropbox.com/s/nmxp0v91xqgs5mi/Electro%20-%20Swing%20%7C%7C%20Jamie%20Berry%20Ft.%20Octavia%20Rose%20-%20Delight.mp3?dl=1",
+        172=      "https://www.dropbox.com/s/13fxet7z8ue0d1h/She%20Want%20me%20dead.mp3?dl=1",
+        173=      "https://www.dropbox.com/s/j3r7dphgbcq8um4/You%27re%20Gonna%20Go%20Far%2C%20Kid.mp3?dl=1",
+        174=      "https://www.dropbox.com/s/u0gzekqbo4db77v/Rasputin.mp3?dl=1",
+        175=      "https://www.dropbox.com/s/rnv6hk08sikaffp/Initial%20D%20-%20Deja%20Vu.mp3?dl=1",
+        176=      "https://www.dropbox.com/s/hw3mfk6rwknawto/Kevin%20MacLeod%20~%20Sneaky%20Snitch.mp3?dl=1",
+        177=      "https://www.dropbox.com/s/w361n1fwyijtba3/Alia.mp3?dl=1",
+        178=      "https://www.dropbox.com/s/03awb7u3ijoonxk/e-dubble%20-%20Let%20Me%20Oh%20%28Freestyle%20Friday%20%239%29.mp3?dl=1"
+    )
+    
+    DefaultPlaylist["Songs",array]=DefaultSongs:values()
+    
+    
+    
+    Playlist=gTable(StreamData["playlistID",string],1)
+     
+    
+    function void playSong(Song:string){
+        Index=Song:toNumber()
+        
+        if(Index>0 || (Index==0 & Song=="0")){ #Check if the user gave a number as a song
+            print("Assuming \""+Song+"\" is a playlist position.")
+            if(Playlist["Songs",array]:exists(Index)){
+                StreamData["LastSongPlayed",number]=Index
+                playSong(Playlist["Songs",array][Index,string])
+            }else{
+                print("Error: Could not find Song at index "+Index+".")
+            }
+        }elseif(Song:find("youtube.com/watch?v=")){ #Check if the user gave a youtube link as a song
+            print("Assuming \""+Song+"\" is a youtube link.")
+            Start=Song:find("/watch?v=")+9
+            ID=Song:sub(Start,Start+10)
+            Link=StreamData["Youtube API Link",string]+ID
+            if(httpCanRequest()){
+                runOnHTTP(1)
+                stoptimer("SongHasEnded")
+                httpRequest(Link)
+                setName("Converting Youtube URL")
+            }else{
+                LastRequest=Link
+                timer("RetryRequest",1000)
+                print("Error: Cannot make conversion request. Try again in a few seconds")
+            }
+        }else{
+            print("Assuming \""+Song+"\" is a raw link.")
+            StreamData["CurrentSong",string]=Song
+            StreamData["StreamSource",entity]:streamStart(StreamData["Channel",number],Song,StreamData["Volume",number])
+            stoptimer("SongHasEnded")
+            StreamData["SongLength",number]=0
+            setName("Currently Playing Raw Audio Link: "+httpUrlDecode(Song))
+        }
+    }
+    
+    
+    streamDisable3D(1)
+    runOnChat(1)
+}elseif(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case Commands["Help Command",string],
+            printTable(Commands)
+            break
+        case Commands["Stop Current Song",string],
+            streamStop(StreamData["Channel",number])
+            stoptimer("SongHasEnded")
+            break
+        case Commands["Play a song",string],
+            playSong(LS[2,string])
+            break
+        case Commands["Get Current Playlist",string],
+            printTable(invert(Playlist["Songs",array]))
+            break
+        case Commands["Change the Volume",string],
+            local Vol=LS[2,string]:toNumber()
+            StreamData["Volume",number] = Vol
+            streamVolume(StreamData["Channel",number],Vol)
+            break
+        case Commands["Search for a Song by name",string],
+            Title=lastSaid():sub(LS[1,string]:length()+2)
+            if(Title:toNumber()>0 | (Title=="0" & Title:toNumber()==0)){
+                playSong("https://www.youtube.com/watch?v="+StreamData["LastSearch",table][Title,table]["id",string])
+            }else{
+                Link=StreamData["Youtube Search API",string]+httpUrlEncode(Title)
+                if(httpCanRequest()){
+                    runOnHTTP(1)
+                    httpRequest(Link)
+                    print("Searching for Song "+Title)
+                }else{
+                    LastRequest=Link
+                    timer("RetryRequest",1000)
+                    print("Error: Cannot make conversion request. Try again in a few seconds")
+                }
+            }
+            break
+        case Commands["Retry the last song",string],
+            if(streamCanStart()){
+                stoptimer("SongHasEnded")
+                hint("Attempting to play url \""+StreamData["CurrentSong",string]+"\"",StreamData["Hint Length",number])
+                StreamData["StreamSource",entity]:streamStart(StreamData["Channel",number],StreamData["CurrentSong",string],StreamData["Volume",number])
+                if(StreamData["SongLength",number]){
+                    timer("SongHasEnded",StreamData["SongLength",number])
+                }
+            }else{
+                print("Error: Cannot start stream right now. Retry in a few seconds.")
+            }
+            break
+        
+    }
+}elseif(httpClk() & httpRequestUrl():find("/json/mp3")){
+    runOnHTTP(0)
+    local Data=httpData()
+    local JSON=jsonDecode(Data)
+    
+    if(!JSON["errorMsg",number] & httpSuccess()){
+        SongURL="https:"+JSON["vidInfo",table][JSON["vidInfo",table]:count()-3,table]["dloadUrl",string]
+        
+        
+        LastSongDuration=JSON["duration",number]*1000+5000
+        StreamData["CurrentSong",string]=SongURL
+        StreamData["SongLength",number]=LastSongDuration
+        
+        StreamData["StreamSource",entity]:streamStart(StreamData["Channel",number],SongURL,StreamData["Volume",number])
+        setName("Now Playing: "+JSON["vidTitle",string])
+        timer("SongHasEnded",LastSongDuration)
+    }else{
+        printTable(JSON)
+        print(Data)
+        print("Error: Youtube video was not successful in being converted")
+    }
+}elseif(httpClk() & httpRequestUrl():find("/search/")){
+    Data=httpData()
+    JData=jsonDecode(Data)
+    Items=JData["items",table]
+    Item=Items[1,table]
+    StreamData["LastSearch",table]=table(
+        "1"=table(
+            "title"=Items[1,table]["title",string],
+            "duration"=Items[1,table]["duration",string],
+            "channel"=Items[1,table]["channelTitle",string],
+            "id"=Items[1,table]["id",string]
+        ),
+        "2"=table(
+            "title"=Items[2,table]["title",string],
+            "duration"=Items[2,table]["duration",string],
+            "channel"=Items[2,table]["channelTitle",string],
+            "id"=Items[2,table]["id",string]
+        ),
+        "3"=table(
+            "title"=Items[3,table]["title",string],
+            "duration"=Items[3,table]["duration",string],
+            "channel"=Items[3,table]["channelTitle",string],
+            "id"=Items[3,table]["id",string]
+        )
+    )
+    
+    printTable(StreamData["LastSearch",table])
+}elseif(clk("SongHasEnded")){
+    print("Auto-Play has been triggered")
+    if(StreamData["Scramble",number]){
+        Index=ceil(random()*Playlist:count())
+    }else{
+        Index=StreamData["LastSongPlayed",number]+1
+    }
+    playSong(Index+"")
+}elseif(clk("RetryRequest")){
+    if(httpCanRequest()){
+        print("Request Retrying for "+LastRequest)
+    }else{
+        timer(clkName(),1000)
+    }
+}
+

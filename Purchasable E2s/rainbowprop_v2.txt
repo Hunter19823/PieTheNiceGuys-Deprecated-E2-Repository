@@ -1,0 +1,22 @@
+@name Rainbow Prop v2
+@persist IntervalTimer
+@inputs Prop:entity 
+if(first()){
+    #Speed that the prop changes colors.
+    IntervalTimer=500
+    
+    
+    #[
+    Instructions:
+    https://gyazo.com/8b810f0a557cccde88ce899163df973e
+    ]#
+    
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(->Prop){
+    Prop:setColor(vec(random(0,255),random(0,255),random(0,255)))
+    interval(IntervalTimer)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

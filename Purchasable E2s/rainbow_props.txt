@@ -1,0 +1,109 @@
+@name RainbowProps
+@inputs Prop:entity
+@persist [PropTable]:gtable [ArrayIndex,LoopCounter,Reset,Timer] [Color]:vector [ColorArray,TempColors]:array
+if(first()){
+    Timer=1000
+    Reset=48
+    
+    
+    ColorArray=array(
+    vec(255,0,0),
+    vec(255,32,0),
+    vec(255,64,0),
+    vec(255,96,0),
+    vec(255,128,0),
+    vec(255,160,0),
+    vec(255,192,0),
+    vec(255,224,0),
+    vec(255,255,0),
+    vec(224,255,0),
+    vec(192,255,0),
+    vec(160,255,0),
+    vec(128,255,0),
+    vec(96,255,0),
+    vec(64,255,0),
+    vec(32,255,0),
+    vec(0,255,0),
+    vec(0,255,32),
+    vec(0,255,64),
+    vec(0,255,96),
+    vec(0,255,128),
+    vec(0,255,160),
+    vec(0,255,192),
+    vec(0,255,224),
+    vec(0,255,255),
+    vec(0,224,255),
+    vec(0,192,255),
+    vec(0,160,255),
+    vec(0,128,255),
+    vec(0,96,255),
+    vec(0,64,255),
+    vec(0,32,255),
+    vec(0,0,255),
+    vec(32,0,255),
+    vec(64,0,255),
+    vec(96,0,255),
+    vec(128,0,255),
+    vec(160,0,255),
+    vec(192,0,255),
+    vec(224,0,255),
+    vec(255,0,255),
+    vec(255,0,224),
+    vec(255,0,192),
+    vec(255,0,160),
+    vec(255,0,124),
+    vec(255,0,96),
+    vec(255,0,64),
+    vec(255,0,32)
+    )
+    TempColors=array():add(ColorArray)
+    
+    PropTable=gTable(owner():steamID()+"s prop table",1)
+    if(PropTable["props",array]:count()>0){
+        Color=TempColors:popVector()
+        timer("change",Timer)
+    }else{
+        PropTable["props",array]=array()
+    }
+}
+
+if(~Prop & ->Prop){
+    Invert=invert(PropTable["props",array])
+    if(Invert[Prop:toString(),number]>0){
+        PropTable["props",array]:remove(Invert[Prop:toString(),number])
+        Prop:setColor(vec(255))
+    }else{
+        PropTable["props",array]:pushEntity(Prop)
+        if(PropTable["props",array]:count()<2){
+            Color=TempColors:popVector()
+            timer("change",Timer)
+        }
+    }
+}
+
+if(clk("change")){
+    if(ArrayIndex<=PropTable["props",array]:count()){
+        while(perf(90) & ArrayIndex<=PropTable["props",array]:count()){
+            Prop=PropTable["props",array][ArrayIndex,entity]
+            if(Prop!= noentity()){
+                Prop:setColor(Color)
+            }
+            ArrayIndex++
+        }
+        timer("change",0)
+    }else{
+        if(TempColors:count()>0){
+            Color=TempColors:popVector()
+        }else{
+            TempColors=array():add(ColorArray)
+            Color=TempColors:popVector()
+        }
+        ArrayIndex=0
+        LoopCounter++
+        #setName("Loop Counter: "+LoopCounter)
+        if(LoopCounter-1==Reset){
+            reset()
+        }
+        timer("change",Timer)
+    }
+}

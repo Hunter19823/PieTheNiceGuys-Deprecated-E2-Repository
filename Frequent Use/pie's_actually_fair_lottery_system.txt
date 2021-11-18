@@ -1,0 +1,149 @@
+@name Pie's Actually Fair Lottery System. Type 'Scratch' for info.
+@persist [Tickets]:gtable [PossibleNumbers,TicketPrice,TicketPrize,ScratchNumbers,AdvertTimer,DummyScratcher]:number
+@model models/props/cs_assault/ticketmachine.mdl
+if(first()){
+    
+    PossibleNumbers=10
+    ScratchNumbers=3
+    DummyScratcher=0
+    
+    
+    EnableRecursiveAdverts=1
+    AutomaticPrizeCalculations=1
+    if(AutomaticPrizeCalculations){
+        ScoreMultiplier=1
+    }
+    
+    AdvertTimer=5*60*1000
+    
+    TicketPrice=100
+    TicketPrize=405000
+    if(AutomaticPrizeCalculations){
+        ChanceOfWinning = (1/PossibleNumbers)^(ScratchNumbers-1)
+        TicketPrize = (TicketPrice/ChanceOfWinning)*ScoreMultiplier
+        setName("Pie's Actually Fair Lottery System. Type 'Scratch' for info. Current Chances: 1 in "+(1/ChanceOfWinning)+". Prize: $"+TicketPrize+". Ticket Price: $"+TicketPrice)
+        print("Automatic Pricing has determined the best price for a 1 in "+(1/ChanceOfWinning)+" chance of winning is $"+TicketPrize)
+    }
+    
+    
+    
+    Tickets=gTable(owner():steamID()+"'s Lottery System",1)
+    if(EnableRecursiveAdverts){
+        timer("Advert",AdvertTimer)
+    }
+    runOnChat(1)
+}
+if(chatClk()){
+    LS=lastSaid():explode(" ")
+    User=lastSpoke()
+    switch(LS[1,string]:lower()){
+        case "\"scratch\"",
+        case "'scratch'",
+        case "/ticket",
+        case ".ticket",
+        case "/scratch",
+        case ".scratch",
+        case "scratch",
+        case "ticket",
+            Data=Tickets[User:steamID(),table]
+            if(!(Data["RemainingTickets",number]>0) & !DummyScratcher){
+                print(concmd("say /pm "+User:steamID()+" Current Ticket Prize: $"+TicketPrize+". Type \"buyticket amount\" to purchase some scratch tickets for $"+TicketPrice+" each."))
+            }elseif(Data["RemainingTickets",number]<50 & DummyScratcher){
+                exit()
+            }else{
+                TicketsScratched=0
+                while(Data["RemainingTickets",number]>0& perf(75)){
+                    TicketsScratched++
+                    Data["RemainingTickets",number]=Data["RemainingTickets",number]-1
+                    Numbers=array()
+                    HasWon=1
+                    WinningNumber=-1
+                    for( Index=1, ScratchNumbers ){
+                        local CurrentNumber = ceil(random()*PossibleNumbers)
+                        if(Index==1){
+                            WinningNumber=CurrentNumber
+                        }else{
+                            if(CurrentNumber != WinningNumber){
+                                HasWon = 0
+                            }
+                        }
+                        Numbers:pushNumber(CurrentNumber)
+                    }
+                    if(HasWon){
+                        moneyGive(User,TicketPrize)
+                        Data["Wins",number] = Data["Wins",number]+1
+                        Data["MoneyWon",number] = Data["MoneyWon",number] + TicketPrize
+                    }else{
+                        Data["Loses",number] = Data["Loses",number]+1
+                    }
+                }
+                if(!DummyScratcher){
+                    print(concmd("say /pm "+User:steamID()+" Tickets scratched: "+TicketsScratched+". Wins: "+Data["Wins",number]+" | Loses: "+Data["Loses",number]+" | Remaining: "+Data["RemainingTickets",number]))
+                }
+            }
+            break
+        case "\"buyticket",
+        case "\"buyscratch",
+        case "\"buyticket\"",
+        case "\"buyscratch\"",
+        case "\"buyticket'",
+        case "\"buyscratch'",
+        case "'buyticket",
+        case "'buyscratch",
+        case "'buyticket\"",
+        case "'buyscratch\"",
+        case "'buyticket'",
+        case "'buyscratch'",
+        case "buyticket",
+        case "buyscratch",
+            if(!DummyScratcher){
+                ID=User:steamID()
+                if(!Tickets[ID+"IsCreated?",number]){
+                    Tickets[ID,table]=table()
+                    Tickets[ID+"IsCreated?",number]=1
+                }
+                Data=Tickets[ID,table]
+                NumberOfTickets=round(LS[2,string]:toNumber())
+                if(NumberOfTickets>0 & Data["RemainingTickets",number]+NumberOfTickets<=1000){
+                    local Price=NumberOfTickets*TicketPrice
+                    moneyRequest(User,Price,"Would you like to buy "+NumberOfTickets+" scratch tickets for $"+Price)
+                }elseif(Data["RemainingTickets",number]+NumberOfTickets>1000){
+                    print(concmd("say /pm "+User:steamID()+" Error: You are trying to buy more tickets than allowed. Max tickets: 1000"))
+                }else{
+                    print(concmd("say /pm "+User:steamID()+" Current Ticket Prize: $"+TicketPrize+". You currently have "+Data["RemainingTickets",number]+" tickets. Type \""+LS[1,string]+" amount\" to purchase some tickets."))
+                }
+            }
+            break
+        case "stats",
+            if(!DummyScratcher){
+                if(Tickets[User:steamID()+"IsCreated?",number]){
+                    Data=Tickets[User:steamID(),table]
+                    MoneyLost = Data["MoneySpent",number]
+                    MoneyWon = Data["MoneyWon",number]
+                    Profit = MoneyWon-MoneyLost
+                    if(User!=owner()){
+                        print(concmd("say /pm "+User:steamID()+" Currently you have spent a total of $"+MoneyLost+". You have won a total of $"+MoneyWon+". Current profit: $"+Profit))
+                    }else{
+                        print("say /pm "+User:steamID()+" Currently you have spent a total of $"+MoneyLost+". You have won a total of $"+MoneyWon+". Current profit: $"+Profit)
+                    }
+                }
+            }
+            break
+    }
+}
+if(!DummyScratcher){
+    if(moneyClk()){
+        User=moneyClkPlayer()
+        Data=Tickets[User:steamID(),table]
+        AmountOfTickets=moneyClkAmount()/TicketPrice
+        Data["RemainingTickets",number]=Data["RemainingTickets",number]+AmountOfTickets
+        Data["MoneySpent",number]=Data["MoneySpent",number]+moneyClkAmount()
+        print(concmd("say /pm "+User:steamID()+" Thank you for your purchase. Total Tickets: "+Data["RemainingTickets",number]+".Type \"scratch\" in chat to scratch off your tickets."))
+    }
+    if(clk("Advert")){
+        print(concmd("say /advert Statistically favorable gambling? Try Pies scratch ticket e2! A ticket is $"+TicketPrice+" and worth $"+TicketPrize+"! Type 'scratch'!"))
+        
+        
+        timer(clkName(),AdvertTimer)
+    }
+}

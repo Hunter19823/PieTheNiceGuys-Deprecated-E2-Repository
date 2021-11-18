@@ -1,0 +1,448 @@
+#Define the name of the e2.
+@name Pie's Efficient Smart Door System v1.2
+#Define variables that won't be cleared between run cycles.
+@persist [Doors,WhiteListed]:array [WhiteListLookUp,DoorsLookUp]:table [CheckDelay,Mode] [SearchSize]:vector
+#If the E2 is being run for the first time.
+if(first()){
+    #[
+        Check Delay
+        How many miliseconds until the 
+        next ranger check.
+    ]#
+    CheckDelay=500
+    
+    #[
+        Search Size
+        How large the ranger is that 
+        scans for players around it.
+    ]#
+    SearchSize=vec(25,25,25)
+    
+    #[
+        Mode
+        How would you like the door to
+        open.
+        1: No Draw and NoCollide
+        2: Teleport prop upwards of 100 units.
+    ]#
+    Mode=1
+    
+    #[
+        WhiteListed
+        What entities are whitelisted by default.
+        
+    ]#
+    WhiteListed = array(
+        owner()
+    )
+    
+    #[
+        Doors
+        What entities are doors by default.
+    ]#
+    Doors = array(
+        
+    )
+    
+    #[
+        DoorsLookUp and WhiteListedLookUp
+        Setups a lookup table for later use.
+    ]#
+    
+    DoorsLookUp=invert(Doors)
+    WhiteListLookUp=invert(WhiteListed)
+    
+    #[
+        onWhitelistedEntry
+        The function that is called whenever
+        a whitelisted player is scanned next to a door.
+    ]#
+    function void onWhitelistedEntry(Door:entity, Player:entity, Index:number){
+        #print("Whitelisted player "+Player:name()+" is next to ",Door)
+        if(!Door["IsOpen",number]){
+            timer("Open"+"|||"+Index,0)
+            timer("Close"+"|||"+Index,6000)
+        }
+    }
+    #[
+        onNonWhitelistedEntry
+        The function that is called whenever
+        a non-whitelisted player is scanned 
+        next to a door.
+    ]#
+    function void onNonWhitelistedEntry(Door:entity, Player:entity, Index:number){
+        #print("Non-Whitelisted player "+Player:name()+" is next to ",Door)
+        
+    }
+    #[
+        onOpen
+        The function called once whenever a whitelisted player
+        wants to open a door.
+    ]#
+    function void onOpen(Door:entity){
+        switch(Mode){
+            case 1,
+                #ifdef entity:noDraw(number)
+                Door:noDraw(1)
+                #else
+                Door:propDraw(0)
+                #endif
+                Door:noCollideAll(1)
+                break
+            case 2,
+                Door:setPos(Door:toWorld(vec(0,0,100)))
+                break
+        }
+    }
+    #[
+        onClose
+        The function called once whenever an opened
+        door is being closed.
+    ]#
+    function void onClose(Door:entity){
+        switch(Mode){
+            case 1,
+                #ifdef entity:noDraw(number)
+                Door:noDraw(0)
+                #else
+                Door:propDraw(1)
+                #endif
+                Door:noCollideAll(0)
+                break
+            case 2,
+                Door:setPos(Door:toWorld(vec(0,0,-100)))
+                break
+        }
+    }
+    #Check if there are any doors added already,
+    #if so then start the scanning timer.
+    if(Doors:count()){
+        timer("Check",CheckDelay)
+    }
+    #Run the e2 everytime someone says something in chat.
+    runOnChat(1)
+}
+#Check if the e2 was run be a timer
+#that contains three | .
+if(clkName():find("|||")){
+    #Break up the timer name between each occurance of |||
+    Data=clkName():explode("|||")
+    #Compare the first part of the timer name to each case.
+    switch(Data[1,string]){
+        #If the first part of the timer name was Open
+        case "Open",
+            Door = Doors[Data[2,string]:toNumber(),entity]
+            Door["IsOpen",number] = 1
+            onOpen(Door)
+        break
+        #If the first part of the timer name was Close
+        case "Close",
+            Door = Doors[Data[2,string]:toNumber(),entity]
+            Door["IsOpen",number] = 0
+            onClose(Door)
+        break
+    }
+}
+#If the E2 is being run for the first time.
+if(first()){
+    #Make all ranger filters stay after each scan.
+    rangerPersist(1)
+    #Make the ranger ignore the world.
+    rangerIgnoreWorld(1)
+    
+    
+    #Check if the player is whitelisted.
+    function number entity:whitelist(){
+        #Check if the entity is a player.
+        if(This:isPlayer()){
+            #Check if the player is not already in the whitelist.
+            #Otherwise add them.
+            if(WhiteListLookUp:exists(This:toString())){
+                print("This player is already whitelisted")
+                return 0
+            }else{
+                WhiteListed:pushEntity(This)
+                WhiteListLookUp=invert(WhiteListed)
+                return 1
+            }
+        }else{
+            print("Invalid Entity, Entity is not a player")
+            return 0
+        }
+    }
+    function number whitelist(Player:entity){
+        if(Player:isPlayer()){
+            if(WhiteListLookUp:exists(Player:toString())){
+                print("This player is already whitelisted")
+                return 0
+            }else{
+                WhiteListed:pushEntity(Player)
+                WhiteListLookUp=invert(WhiteListed)
+                return 1
+            }
+        }else{
+            print("Invalid Entity, Entity is not a player")
+            return 0
+        }
+    }
+    #Remove player from whitelist.
+    function number removeWhitelist(Player:entity){
+        #Check if the entity is a player.
+        if(Player:isPlayer()){
+            #Check if the player is in the whitelist and remove them.
+            if(WhiteListLookUp:exists(Player:toString())){
+                WhiteListed:remove(WhiteListLookUp[Player:toString(),number])
+                return 1
+            }else{
+                print("This player was not whitelisted")
+                return 0
+            }
+        }else{
+            print("Invalid Entity, Entity is not a player")
+            return 0
+        }
+    }
+    function number entity:removeWhitelist(){
+        if(This:isPlayer()){
+            if(WhiteListLookUp:exists(This:toString())){
+                WhiteListed:remove(WhiteListLookUp[This:toString(),number])
+                return 1
+            }else{
+                print("This player was not whitelisted")
+                return 0
+            }
+        }else{
+            print("Invalid Entity, Entity is not a player")
+            return 0
+        }
+    }
+    
+    #Check if the player is whitelisted
+    function number entity:isWhitelisted(){
+        #Check if the entity is a player
+        if(This:isPlayer()){
+            #Check if the player is in the whitelisted lookup table.
+            if(WhiteListLookUp:exists(This:toString())){
+                return 1
+            }else{
+                return 0
+            }
+        }else{
+            print("Invalid Entity, Entity is not a player")
+            return 0
+        }
+    }
+    function number isWhitelisted(Player:entity){
+        if(Player:isPlayer()){
+            if(WhiteListLookUp:exists(Player:toString())){
+                return 1
+            }else{
+                return 0
+            }
+        }else{
+            print("Invalid Entity, Entity is not a player")
+            return 0
+        }
+    }
+    
+    #Add a door to the list of doors that will be scanned.
+    function number addDoor(Door:entity){
+        #Check if the door has has physics.
+        if(Door:isValidPhysics()){
+            #Check if the door is already in the smart door list.
+            #Otherwise add it.
+            if(DoorsLookUp:exists(Door:toString())){
+                print("This door was already added")
+                return 0
+            }else{
+                Doors:pushEntity(Door)
+                DoorsLookUp=invert(Doors)
+                #ifdef timerRunning(string)
+                if(!timerRunning("Check")){
+                    timer("Check",CheckDelay)
+                }
+                #else
+                timer("Check",CheckDelay)
+                #endif
+                return 1
+            }
+        }else{
+            print("Invalid Entity, Entity does not have any physical properties")
+            return 0
+        }
+    }
+    function number entity:addDoor(){
+        if(This:isValidPhysics()){
+            if(DoorsLookUp:exists(This:toString())){
+                print("This door was already added")
+                return 0
+            }else{
+                Doors:pushEntity(This)
+                DoorsLookUp=invert(Doors)
+                
+                #ifdef timerRunning(string)
+                if(!timerRunning("Check")){
+                    timer("Check",CheckDelay)
+                }
+                #else
+                timer("Check",CheckDelay)
+                #endif
+                return 1
+            }
+        }else{
+            print("Invalid Entity, Entity does not have any physical properties")
+            return 0
+        }
+    }
+    #Remove a door to the list of doors that will be scanned.
+    function number removeDoor(Door:entity){
+        #Check if the door has has physics.
+        if(Door:isValidPhysics()){
+            #Check if the door is in the smart door list and remove it.
+            if(DoorsLookUp:exists(Door:toString())){
+                Doors:remove(DoorsLookUp[Door:toString(),number])
+                return 1
+            }else{
+                print("This door was already removed")
+                return 0
+            }
+        }else{
+            print("Invalid Entity, Entity does not have any physical properties")
+            return 0
+        }
+    }
+    function number entity:removeDoor(){
+        if(This:isValidPhysics()){
+            if(DoorsLookUp:exists(This:toString())){
+                Doors:remove(DoorsLookUp[This:toString(),number])
+                return 1
+            }else{
+                print("This door was already removed")
+                return 0
+            }
+        }else{
+            print("Invalid Entity, Entity does not have any physical properties")
+            return 0
+        }
+    }
+    #Perform a scan near the door until a player is found or nothing is found.
+    function entity findNearbyEntity(Door:entity,Size:vector){
+        #Check if the door is a valid entity.
+        if(Door){
+            #Create a ranger with a distance of 150units
+            #50 units below the door in the upward direction
+            #with the size of the Size
+            RangerData=rangerOffsetHull(150,Door:pos()-vec(0,0,50),vec(0,0,1),Size)
+            #Check if the Ranger has hit an entity.
+            if(RangerData:hit()){
+                Entity=RangerData:entity()
+                #Is the entity that the ranger hit a player and return it.
+                #Otherwise filter it out and recursively rescan.
+                if(Entity:isPlayer()){
+                    return Entity
+                }else{
+                    rangerFilter(Entity)
+                    return findNearbyEntity(Door,Size)
+                }
+            }else{
+                return noentity()
+            }
+        }else{
+            return noentity()
+        }
+    }
+    #Return a player entity based on
+    #Their Name, SteamID, or SteamID64
+    function entity searchForPlayer(Person:string){
+        local P=findPlayerBySteamID64(Person)
+        if (!P:isPlayer()){
+            P=findPlayerBySteamID(Person)
+            if (!P:isPlayer()){
+                P=findPlayerByName(Person)
+                if (!P:isPlayer()){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    
+    
+}
+
+#If the current run cycle was caused by the
+#owner of the e2 chip talking in chat.
+if(chatClk(owner())){
+    #Take what was last said in chat and break it up
+    #between each space.
+    LS=lastSaid():explode(" ")
+    #Compare the lowercase first word to each case.
+    switch(LS[1,string]:lower()){
+        #If the first word is .adddoor
+        case ".adddoor",
+            P=lastSpoke():aimEntity()
+            if(P:addDoor()){
+                print("Door has successfully been added")
+            }
+        break
+        #If the first word is .removedoor
+        case ".removedoor",
+            P=lastSpoke():aimEntity()
+            P:removeDoor()
+        break
+        #If the first word is .add
+        case ".add",
+            if(LS[2,string]!=""){
+                P=searchForPlayer(LS[2,string])
+            }else{
+                P=lastSpoke():aimEntity()
+            }
+            if(P:whitelist()){
+                print(P:name()+" has been successfully whitelisted")    
+            }
+        break
+        #If the first word is .remove
+        case ".remove",
+            if(LS[2,string]!=""){
+                P=searchForPlayer(LS[2,string])
+            }else{
+                P=lastSpoke():aimEntity()
+            }
+            if(P:removeWhitelist()){
+                print(P:name()+" has been successfully whitelisted")    
+            }
+        break
+    }
+}
+#if the current run cycle was caused by
+#the timer Check.
+if(clk("Check")){
+    #If the door count is greater than 0
+    if(Doors:count()>0){
+        #For every door, perform a scan 
+        foreach(Index, Door:entity = Doors){
+            #Get the entity near the door.
+            Player = findNearbyEntity(Door,SearchSize)
+            #If the entity is valid.
+            if(Player){
+                #Check if the player is whitelisted.
+                #Call onWhitelistedEntry if whitelisted,
+                #Otherwise call onNonWhitelistedEntry
+                if(Player:isWhitelisted()){
+                    onWhitelistedEntry(Door,Player,Index)
+                }else{
+                    onNonWhitelistedEntry(Door,Player,Index)
+                }
+            }else{
+                #If the door is not valid then remove it from the 
+                #list of doors.
+                if(!Door){
+                    Doors:remove(Index)
+                }
+            }
+        }
+        #Recall this check timer so the door will be rescanned.
+        timer("Check",CheckDelay)
+    }
+}
+

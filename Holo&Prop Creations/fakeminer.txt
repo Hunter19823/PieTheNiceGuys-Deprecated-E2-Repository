@@ -1,0 +1,36 @@
+@persist [Counter,Speed,Chunk,NumOfPrinters] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    NumOfPrinters=5
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    propSpawn("models/maxofs2d/hover_rings.mdl",1)
+    Speed=1000
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    #timer(Counter+"",Speed)
+    timer("uno1",Speed)
+}
+if(clk("uno1")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.16,4.7,0.22),vec(1),ang(0.21,-87.11,-0.5),vec(255,255,255),"models/bitminers2/bitminer_rack.mdl") holoParent(Counter,Parent) timer("uno2",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno2")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-34.06,30.14,3.72),vec(1),ang(-0.09,93.02,0.1),vec(255,255,255),"models/bitminers2/bitminer_plug_2.mdl") holoParent(Counter,Parent) timer("uno3",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno3")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.14,4.61,55.5),vec(1),ang(0,-86.98,-0.07),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno4",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno4")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.16,4.61,48.3),vec(1),ang(0,-86.98,-0.05),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno5",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno5")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.18,4.61,41.11),vec(1),ang(0,-86.98,-0.04),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno6",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno6")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.19,4.61,33.91),vec(1),ang(0,-86.98,-0.03),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno7",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno7")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.2,4.61,26.71),vec(1),ang(0,-86.98,-0.02),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno8",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno8")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.2,4.61,19.51),vec(1),ang(0,-86.98,-0.02),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno9",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno9")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.2,4.61,12.32),vec(1),ang(0,-86.98,-0.01),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno10",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno10")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(-18.21,4.61,5.12),vec(1),ang(0,-86.98,-0.01),vec(255,255,255),"models/bitminers2/bitminer_2.mdl") holoParent(Counter,Parent) timer("uno11",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno11")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(34.37,25.11,14.25),vec(1),ang(0.05,-177.46,0),vec(255,255,255),"models/bitminers2/bitminer_plug_1.mdl") holoParent(Counter,Parent) timer("uno12",Speed) Counter++}else{timer(clkName(),Speed)}
+if(clk("uno12")&holoCanCreate()){holoCreate(Counter,entity():pos()+vec(21.57,4.83,0.24),vec(1),ang(0.05,-177.46,0),vec(255,255,255),"models/bitminers2/generator.mdl") Parent:soundPlay(Counter,0,"vehicles\\v8\\v8_idle_loop1.wav") holoParent(Counter,Parent) timer("uno13",Speed) Counter++}
+if(clk("uno13")){Parent:setPos(Parent:toWorld(vec(0,100,0))) if(Counter<NumOfPrinters*12){
+    timer("uno1",Speed)}}

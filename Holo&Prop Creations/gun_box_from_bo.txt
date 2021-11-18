@@ -1,0 +1,209 @@
+@name Pie's Blackops 2 Random Gun Dispencer
+@model models/hunter/blocks/cube1x150x1.mdl
+@persist [Settings,RunTime]:table [Offset]:vector [E2,Player]:entity 
+if(first()){
+    Settings = table(
+        #"FilePath"="gunshop/data.txt",
+        "FilePath"="gunshop/"+owner():team():teamName()+"/data.txt",
+        "Multiplier"=1.75,
+        "SoundFile"="https://www.dropbox.com/s/gwl28o41lsh46bf/Nazi%20Zombies%20-%20Mystery%20Box%20song.mp3?dl=1",
+        "NumberOfGunsToDisplay"=10,
+        "TimeToReveal"=4000,
+        "Destination"=vec(0,0,30)
+    )
+    RunTime=table(
+    )
+    
+    E2=entity()
+    Settings["CurrentlyRunning",number]=0
+    E2:propDraw(0)
+    streamDisable3D(1)
+    timer("FileLoad",0)
+    #timer("Setup",0)
+}
+elseif(clk("FileLoad")){
+    if(fileCanLoad()){
+        runOnFile(1)
+        #print("Loading data from Steam/steamapps/common/GarrysMod/garrysmod/data/e2files/"+Settings["GunDataFolder",string])
+        fileLoad(Settings["FilePath",string])
+    }else{
+        hint("Could not load data. Retrying...",1)
+        timer("FileLoad",250)
+    }
+}
+elseif(fileClk()){
+    switch(fileStatus()){
+        case _FILE_OK,
+            GT=gTable(owner():steamID()+"'s GunshopData",1)
+            RunTime["GunData",table]=vonDecodeTable(fileRead())
+            RunTime["GunDataKey",array]=RunTime["GunData",table]:keys()
+            printTable(RunTime["GunDataKey",array])
+            print("Found "+RunTime["GunData",table]:count()+" guns.")
+            #timer("Setup",0)
+            RunTime["TempKeys",array]=RunTime["GunData",table]:keys()
+            RunTime["TotalCash",number]=0
+            timer("GetAveragePrice",0)
+            break
+        case _FILE_404,
+            error("File returned a 404. Please contact Pie to get the proper data for this e2.")
+            break
+        case _FILE_UNKNOWN,
+            error("File does not exist. Please contact Pie to get the proper data for this e2.")
+            break
+        case _FILE_TIMEOUT,
+            print("File timed out. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+        case _FILE_TRANSFER_ERROR,
+            print("File Transfer Error")
+            break
+    }
+}
+elseif(clk("Setup")){
+    Offset=vec(0,0,5)
+    holoCreate(1,E2:toWorld(Offset),vec(1,1,0.75),E2:toWorld(ang()),vec(255),"models/hunter/blocks/cube1x150x1.mdl")
+    holoClip(1,E2:toWorld(Offset*2*0.75),vec()-E2:up(),1)
+    holoClipEnabled(1,1)
+    holoCreate(2,E2:toWorld(Offset),vec(-1,-1,-0.75),E2:toWorld(ang()),vec(255),"models/hunter/blocks/cube1x150x1.mdl")    
+    holoClip(2,E2:toWorld(Offset*2*0.75),vec()-E2:up(),1)
+    holoClipEnabled(2,1)
+    holoCreate(3,E2:toWorld(Offset*2*0.75),vec(1),E2:toWorld(ang(-90,90,0)),vec(255),"models/freeman/vault/vault_door.mdl")
+    holoScaleUnits(3,vec(5,50,75))
+    Z=26
+    holoCreate(4,E2:toWorld(Offset-vec(-15,20,Z)),vec(2,2,2),E2:toWorld(ang(0,-15,0)),vec(255),"models/props_debris/concrete_cynderblock001.mdl")
+    holoCreate(5,E2:toWorld(Offset-vec(-15,0,Z)),vec(2,2,2),E2:toWorld(ang(0,15,0)),vec(255),"models/props_debris/concrete_cynderblock001.mdl")
+    holoCreate(6,E2:toWorld(Offset-vec(-15,-20,Z)),vec(2,2,2),E2:toWorld(ang(0,35,0)),vec(255),"models/props_debris/concrete_cynderblock001.mdl")
+    holoCreate(7,E2:toWorld(Offset-vec(15,-20,Z)),vec(2,2,2),E2:toWorld(ang(0,145,0)),vec(255),"models/props_debris/concrete_cynderblock001.mdl")
+    holoCreate(8,E2:toWorld(Offset-vec(15,20,Z)),vec(2,2,2),E2:toWorld(ang(0,-135,0)),vec(255),"models/props_debris/concrete_cynderblock001.mdl")
+    #[
+    holoCreate(9,E2:toWorld(Offset),vec(0.5,0.5,1),E2:toWorld(ang()),vec(255),"models/hunter/tubes/tube1x1x5.mdl")
+    holoMaterial(9,"models/props_combine/stasisshield_sheet")
+    holoAlpha(9,1)
+    ]#
+    Size=500
+    holoCreate(9,E2:toWorld(vec(-10,0,Size/4*3)),vec(0),ang(),vec(0,161,255),"models/maxofs2d/hover_rings.mdl")
+    holoScaleUnits(9,vec(25,25,Size))
+    holoAlpha(9,100)
+    holoMaterial(9,"models/props_combine/stasisshield_sheet")
+    
+    holoParent(1,E2)
+    holoParent(2,E2)
+    holoParent(3,E2)
+    holoParent(4,E2)
+    holoParent(5,E2)
+    holoParent(6,E2)
+    holoParent(7,E2)
+    holoParent(8,E2)
+    holoParent(9,E2)
+    
+    holoMaterial(1,"models/props/CS_militia/roofbeams01")
+    holoMaterial(2,"models/props/CS_militia/roofbeams01")
+    holoMaterial(3,"models/props/CS_militia/roofbeams01")
+    #ifdef runOnUse(number,entity)
+    runOnUse(1,E2)
+    #else
+    runOnUse(1)
+    #endif
+}
+elseif(moneyClk()){
+    if(!Settings["CurrentlyRunning",number]){
+        Player=moneyClkPlayer()
+        RunTime["CurrentPlayer",entity]=Player
+        Settings["CurrentlyRunning",number]=1
+        holoCreate(99,E2:pos(),vec(0),E2:angles(),vec(255))
+        holoParent(99,E2)
+        holoEntity(3):animate(holoEntity(3):getAnimationByName("open"),2)
+        E2:streamStart(99,Settings["SoundFile",string],1)
+        timer("StartAnimation",1000)
+    }else{
+        moneyGive(moneyClkPlayer(),moneyClkAmount())
+    }
+}
+elseif(clk("GetAveragePrice")){
+    if(RunTime["TempKeys",array]:count()>0){
+        while(RunTime["TempKeys",array]:count()>0 & perf(75)){
+            Key=RunTime["TempKeys",array]:popString()
+            Gun=RunTime["GunData",table][Key,table]
+            RunTime["TotalCash",number]=RunTime["TotalCash",number]+Gun["Price",number]
+        }
+        timer(clkName(),100)
+    }else{
+        RunTime["AverageCash",number]=round(RunTime["TotalCash",number]/RunTime["GunDataKey",array]:count())
+        print("Average Price is: $"+RunTime["AverageCash",number])
+        RunTime["AverageCash",number]=round(RunTime["AverageCash",number] * Settings["Multiplier",number])
+        print("Box price after multiplier: $"+RunTime["AverageCash",number])
+        timer("Setup",0)
+    }
+    #RunTime["TotalCash",number]
+}
+#ifdef useEntClk()
+elseif(useEntClk()){
+#else
+elseif(useClk()){
+#endif
+    if(!Settings["CurrentlyRunning",number]){
+        #ifdef useEntClk()
+        moneyRequest(useEntClk():inUseBy(),RunTime["AverageCash",number],"Random Weapon for $"+RunTime["AverageCash",number]+"?")
+        #else
+        moneyRequest(useClk(),RunTime["AverageCash",number],"Random Weapon for $"+RunTime["AverageCash",number]+"?")
+        #endif
+        
+    }
+}
+elseif(clk("StartAnimation")){
+    for(I=0, Settings["NumberOfGunsToDisplay",number]){
+        timer("Cycle,"+I+"",Settings["TimeToReveal",number]/Settings["NumberOfGunsToDisplay",number] * (I+1))
+    }
+    timer("GiveGun",Settings["TimeToReveal",number]+2500)
+}elseif(clk("GiveGun")){
+    Key=RunTime["LastGun",string]
+    Gun=RunTime["GunData",table][Key,table]
+    GunToGiveThem=Gun["Model",string]
+    if(GunToGiveThem!="models/props/de_tides/vending_turtle.mdl"){
+        holoScale(99,vec())
+        #print("Give "+Player:name()+" a "+GunToGiveThem)
+        print(holoEntity(99):model())
+        printTable(Gun)
+        holoEntity(3):animate(holoEntity(3):getAnimationByName("close"),3)
+        streamStop(3)
+        SteamId=RunTime["CurrentPlayer",entity]:steamID()
+        if(Gun["Name",string]:lower():find("single")){
+            concmd("say /freesingle "+SteamId+","+Gun["Name",string])
+        }else{
+            concmd("say /freeshipment "+SteamId+","+Gun["Name",string])
+        }
+        concmd(Settings["SpawnShipment",string]+Key)
+        Settings["CurrentlyRunning",number]=0
+    }else{
+        streamStop(3)
+        E2:streamStart(3,"https://www.dropbox.com/s/eu2r071nt8aukka/Call%20of%20Duty%20Teddy%20Bear%20Laugh.mp3?dl=1",1)
+        
+        timer("Fly Away",8000)
+        #E2:remove(13)
+    }
+    
+}elseif(clk("Fly Away")){
+    E2:setPos(E2:toWorld(vec(0,0,2.5)))
+    holoClipEnabled(1,0)
+    holoClipEnabled(2,0)
+    timer(clkName(),100)
+}else{
+    if(clkName():find("Cycle")){
+        ModelNumber=clkName():explode(",")[2,string]:toNumber()
+        Key=RunTime["GunDataKey",array][ceil(random()*RunTime["GunDataKey",array]:count()),string]
+        Gun=RunTime["GunData",table][Key,table]
+        RunTime["LastGun",string]=Key
+        
+        if(Gun["Price",number]<RunTime["AverageCash",number]){
+            Color=vec(255,0,0)
+        }else{
+            Color=vec(0,255,0)
+        }
+        holoCreate(99,E2:toWorld(Settings["Destination",vector]/Settings["NumberOfGunsToDisplay",number] *ModelNumber),vec(1),E2:angles()+ang(0,90,0),Color,Gun["Model",string])
+    }
+}
+if(changed(E2:pos())){
+    holoClip(1,E2:toWorld(Offset*2*0.75),vec()-E2:up(),1)
+    holoClip(2,E2:toWorld(Offset*2*0.75),vec()-E2:up(),1)
+}
+

@@ -1,0 +1,38 @@
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            #Parent=entity()
+            Parent=owner()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=500
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    #timer("speeder1",Speed)
+}
+Up=5
+if(clk("1")){P=propSpawn("models/hunter/blocks/cube075x2x1.mdl",entity():pos()+vec(-100.4395,98.2123,48.8217)+vec(0,0,Up),ang(0,-45,0),1) P:setMaterial("Models/effects/vol_light001") P:parentTo(Parent) P:drawShadow(0)  timer("2",Speed)}	
+if(clk("2")){P=propSpawn("models/hunter/blocks/cube075x2x1.mdl",entity():pos()+vec(-143.5774,-16.525,50.8315)+vec(0,0,Up),ang(0,0,0),1) P:setMaterial("Models/effects/vol_light001") P:parentTo(Parent) P:drawShadow(0)  timer("3",Speed)}	
+if(clk("3")){P=propSpawn("models/props_phx/facepunch_logo.mdl",entity():pos()+vec(43.8145,-65.634,33.3894)+vec(0,0,Up),ang(90,180,180),1) P:parentTo(Parent) P:drawShadow(0)  timer("4",Speed)}	
+if(clk("4")){P=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos()+vec(-62.1946,14.2101,116.7705)+vec(0,0,Up),ang(-90,-180,180),1) P:setMaterial("Models/effects/vol_light001") P:noCollideAll(1) P:parentTo(Parent) P:drawShadow(0)  timer("5",Speed)}	
+if(clk("5")){P=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos()+vec(58.7302,97.5553,134.7173)+vec(0,0,Up),ang(0,0,0),1) P:setMaterial("Models/effects/vol_light001") P:noCollideAll(1) P:parentTo(Parent) P:drawShadow(0)  timer("6",Speed)}	
+if(clk("6")){P=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos()+vec(-153.0095,-27.1173,134.5799)+vec(0,0,Up),ang(0,179.9999,0),1) P:setMaterial("Models/effects/vol_light001") P:noCollideAll(1) P:parentTo(Parent) P:drawShadow(0)  timer("7",Speed)}	
+if(clk("7")){P=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos()+vec(10.4812,145.943,134.5799)+vec(0,0,Up),ang(0,90,0),1) P:setMaterial("Models/effects/vol_light001") P:noCollideAll(1) P:parentTo(Parent) P:drawShadow(0)  timer("8",Speed)}	
+if(clk("8")){P=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos()+vec(-52.1838,-120.4293,134.5799)+vec(0,0,Up),ang(0,-90,0),1) P:setMaterial("Models/effects/vol_light001") P:noCollideAll(1) P:parentTo(Parent) P:drawShadow(0)  timer("9",Speed)}	
+if(clk("9")){P=holoCreate(2,entity():pos()+vec(-18.7673,-75.6024,0)+vec(0,0,Up),vec(1),ang(0),vec(255),"models/gman_high.mdl") holoParent(2,Parent) timer("10",Speed)}	
+if(clk("10")){P=propSpawn("models/drover/shield_d.mdl",entity():pos()+vec(-76.7729,-69.5309,-5.6653)+vec(0,0,Up),ang(0,0,0),1) P:parentTo(Parent) timer("12",Speed)}	
+if(clk("12")){P=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos()+vec(-105.7268,105.4457,134.5799)+vec(0,0,Up),ang(0,135,0),1) P:setMaterial("Models/effects/vol_light001") P:noCollideAll(1) P:parentTo(Parent) P:drawShadow(0) timer("13",Speed)}	
+if(clk("13")){P=propSpawn("models/props_phx/misc/bunker01.mdl",entity():pos()+vec(-45.4993,13.333,-11.2716)+vec(0,0,Up),ang(0,180,0),1) P:setMaterial("models/wireframe") P:parentTo(Parent) timer("14",Speed)}
+if(clk("14")){
+    print("Finished")
+    selfDestruct()
+}

@@ -1,0 +1,118 @@
+@name Pie's Sample Fileload
+@persist FileName:string LoadedData:table
+if(first()){
+    #The .txt file being loaded from the file at this location
+    #Steam Install Location/steamapps/common/GarrysMod/garrysmod/data/e2files/
+    FileName="example/example.txt"
+    
+    #If the .txt file doesn't exist, this will serve as
+    #a default for the table.
+    LoadedData=table(
+        "Name"=owner():name(),
+        "Model"=owner():model(),
+        "TimeStamp"=time("hour")+":"+time("min")+":"+time("sec")
+    )
+    
+    #Begin the "LoadData" timer in 0 miliseconds.
+    timer("LoadData",0)
+}
+#Check if the E2 was executed by a "SaveData" event.
+if(clk("FileLoaded")){
+    #Once the file has finished being loaded
+    #and the information was transferred to LoadedData
+    print("File Data Has Been Loaded")
+    printTable(LoadedData)
+    
+    #Do something with the data.
+    
+    LoadedData["Model",string]=owner():model()
+    LoadedData["TimeStamp",string]=time("hour")+":"+time("min")+":"+time("sec")
+    
+    timer("SaveData",1000)
+}
+#Check if the E2 was executed by a "SaveData" event.
+if(clk("SaveData")){
+    #Can fileWrite be called
+    if(fileCanWrite()){
+        #Begin the file write process.
+        
+        #JSON Format (Compressed).
+        #fileWrite(FileName,jsonEncode(LoadedData))
+        
+        #JSON Format (Spaced/PrettyPrint).
+        #fileWrite(FileName,jsonEncode(LoadedData,1))
+        
+        #VON Format. (Table or Array).
+        fileWrite(FileName,vonEncode(LoadedData))
+        print("Data Has been saved.")
+    }else{
+        #Recall the "SaveData" event in 1 second.
+        timer(clkName(),1000)
+    }
+}
+#Check if the E2 was executed by a "LoadData" event.
+if(clk("LoadData")){
+    #Can fileLoad be called
+    if(fileCanLoad()){
+        #Hook onto the file events to handle the fileLoad Data.
+        runOnFile(1)
+        #Begin the file loading process.
+        fileLoad(FileName)
+        print("File Data has begun loading...")
+    }else{
+        #Recall the "LoadData" event in 1 second.
+        timer(clkName(),1000)
+    }
+}
+#Check if the E2 was executed by a file Event.
+if(fileClk()){
+    #Compare the status of the file to the 
+    #file status constants.
+    switch(fileStatus()){
+        #If the loaded file is okay.
+        case _FILE_OK,
+            #Choose what format the file was encoded in 
+            #and decode it.
+            
+            #JSON Format. Returns table.
+            #LoadedData=jsonDecode(fileRead()
+            
+            #VON (Gmod specific). Returns array.
+            #LoadedData=vonDecode(fileRead())
+            
+            #VON (Gmod specific). Returns table.
+            LoadedData=vonDecodeTable(fileRead())
+            print("File Data has finished loading successfully.")
+            timer("FileLoaded",0)
+            break
+        #If the loaded file doesn't exist at that location.
+        case _FILE_404,
+            #error("File returned a 404. Please contact Pie to get the proper data for this e2.")
+            
+            #If the file doesn't exist than make one
+            #and initilize the table.
+            if(!LoadedData){
+                LoadedData=table()
+            }
+            print("File Data has finished loading successfully.")
+            timer("SaveData",0)
+            break
+        #This should never be true if fileClk() returned 1.
+        case _FILE_UNKNOWN,
+            print("You definitely fucked up somewhere.")
+            error("Error Bad Formatting: You definitely put this segment of code in the wrong place. Probably because you removed the if(fileClk())")
+            break
+        #If the file you attempted to load timed out while 
+        #uploading to server.
+        case _FILE_TIMEOUT,
+            print("File timed out while loading. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+        #If the file ever gets into an undefined state, or
+        #the data length doesn't match the expected.
+        case _FILE_TRANSFER_ERROR,
+            print("File Transfer Error. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+    }
+}

@@ -1,0 +1,79 @@
+@name Trap Mass RDMers
+@persist [Trap,Enemy,Trap2]:entity [Players,Looping]:array
+if( first() ) {
+    runOnChat(1)
+    function void entity:trap(){
+        P=propSpawn("models/hunter/blocks/cube2x2x2.mdl",owner():pos()+vec(0,0,200),ang(),1)
+        Trap=P
+        P=propSpawn("models/hunter/tubes/tube2x2x2.mdl",owner():pos()+vec(0,0,200),ang(),1)
+        Trap2=P
+        timer("spawnTime",1000)
+    }
+    function entity searchForPlayer(Name:string){
+        local P= findPlayerByName(Name)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Name)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Name)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        if(P:isPlayer()){
+            print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+        }
+        return P
+    }
+}
+elseif( chatClk( owner() ) ) {                    # E2 triggered by a chat message of the owner
+  local Message = lastSaid()                      # get message
+  local Words = Message:explode(" ")              # split message at spaces (into words)
+  if( Words[1, string] == "!trap" ) {             # first word matches command?
+    local SearchName = Words[2, string]           # get second word
+    local Player = searchForPlayer( SearchName ) # try to find a player that matches that
+    if( !Player:isPlayer() ) {
+      print( "Could not find a playername matching '" + SearchName + "'." )
+    } else{
+      Player:trap()
+      Enemy=Player
+      print("Trapped")
+    }
+  }
+} elseif(clk("spawnTime")){
+  Trap:setPos(Enemy:pos()+vec(0,0,Enemy:height()/2))
+  Trap:setMaterial("models/wireframe")
+  Enemy["T1",entity]=Trap
+  Trap2:setPos(Enemy:pos()+vec(0,0,Enemy:height()/4*3))
+  Trap2:setMaterial("cs_havana/lightbareon01")
+  Enemy["T2",entity]=Trap2
+  Players:pushEntity(Enemy)
+  Trap:noDraw(1)
+  Trap2:noDraw(1)
+  timer("Parent",1000)
+} elseif(clk("Parent")){
+  Trap:parentTo(Enemy)
+  Trap:propShadow(0)
+  Trap2:parentTo(Enemy)
+  Trap2:propShadow(0)
+  timer("PrepareLoop",1000)
+} elseif(clk("PrepareLoop")){
+  Looping=array():add(Players)
+  timer("Looping",1000)
+} elseif(clk("Looping")){
+  if(Looping:count()>0){
+    P=Looping:popEntity()
+    if(!P["T1",entity] & !P["T2",entity]){
+        Enemy:trap()
+    }else{
+        if(P:isPlayer()){
+          P["T1",entity]:setPos(Enemy:pos()+vec(0,0,Enemy:height()/2)) 
+          P["T2",entity]:setPos(Enemy:pos()+vec(0,0,Enemy:height()/4*3))
+        }
+        timer("Looping",250)
+    }
+    
+  }else{
+    timer("PrepareLoop",1000)
+  }
+}

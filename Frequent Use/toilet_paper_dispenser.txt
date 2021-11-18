@@ -1,0 +1,45 @@
+@name Toilet Paper Dispencer
+@persist [Cost,StreamChannel,DeleteTimer] [TTSQueue]:array [Prop,Language]:string [UseableEntity]:entity
+
+if(first()){
+    Cost = 5000
+    Prop = "models/props/cs_office/paper_towels.mdl"
+    Language = "en-na"
+    DeleteTimer = 60*1
+    
+    
+    UseableEntity=propSpawn("models/props/cs_assault/ticketmachine.mdl",entity():pos(),entity():angles(),1)
+    entity():parentTo(UseableEntity)
+    
+    
+    StreamChannel = 3835
+    runOnUse(1,UseableEntity)
+    TTSQueue=array()
+}
+
+if(useEntClk()){
+    P=useEntClk():inUseBy()
+    moneyRequest(P,Cost,"Would you like to buy a roll of toilet paper for $"+Cost+"?")
+}
+
+if(moneyClk()){
+    P=moneyClkPlayer()
+    TTSQueue:pushString("Thank you "+P:name()+". Come back if you need any more.")
+    if(!(TTSQueue:count()>1)){
+        #timer("Check",0)
+    }
+    Roll=propSpawn(Prop,entity():toWorld(vec(50,0,200)),ang(),0)
+    Roll:propManipulate(entity():toWorld(vec(50,0,200)),ang(),0,5,0)
+    Roll:remove(DeleteTimer)
+}
+
+if(clk("Check")){
+    if(streamCanStart()){
+        Message=TTSQueue:popString()
+        UseableEntity:streamStart(StreamChannel,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Message)+"&tl="+Language+"&client=tw-ob",1)
+    }
+    if((TTSQueue:count()>0)){
+        timer("Check",500)
+    }
+}
+

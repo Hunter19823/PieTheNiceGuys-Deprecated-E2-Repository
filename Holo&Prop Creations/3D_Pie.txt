@@ -1,0 +1,33 @@
+@name 3D Piew
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    timer("speeder1",Speed)
+}
+if(Chunk==0){ if(clk("1")){ holoCreate(1,vec(-119.97,-2145.87,-142.47),vec(0.1),ang(4.02,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(1,vec(9.63,1,1)) holoMaterial(1,"phoenix_storms/stripes") timer("2",100) }
+if(clk("2")){ holoCreate(2,vec(-119.97,-2144.94,-155.78),vec(0.1),ang(4.04,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(2,vec(12.4,1,1)) holoMaterial(2,"phoenix_storms/stripes") timer("3",100) }
+if(clk("3")){ holoCreate(3,vec(-119.97,-2150.89,-141.87),vec(0.1),ang(89.03,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(3,vec(26.96,1,1)) holoMaterial(3,"phoenix_storms/stripes") timer("4",100) }
+if(clk("4")){ holoCreate(4,vec(-119.97,-2145.64,-128.62),vec(0.1),ang(1.63,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(4,vec(12.78,1,1)) holoMaterial(4,"phoenix_storms/stripes") timer("5",100) }
+if(clk("5")){ holoCreate(5,vec(-119.97,-2180.24,-155.16),vec(0.1),ang(1.29,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(5,vec(14.91,1,1)) holoMaterial(5,"phoenix_storms/stripes") timer("6",100) }
+if(clk("6")){ holoCreate(6,vec(-119.97,-2178.28,-141.99),vec(0.1),ang(90,0,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(6,vec(27.38,1,1)) holoMaterial(6,"phoenix_storms/stripes") timer("7",100) }
+if(clk("7")){ holoCreate(7,vec(-119.97,-2178.12,-128.13),vec(0.1),ang(2,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(7,vec(13.7,1,1)) holoMaterial(7,"phoenix_storms/stripes") timer("8",100) }
+if(clk("8")){ holoCreate(8,vec(-119.97,-2203.17,-138.64),vec(0.1),ang(0.57,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(8,vec(10.75,1,1)) holoMaterial(8,"phoenix_storms/stripes") timer("9",100) }
+if(clk("9")){ holoCreate(9,vec(-119.97,-2195.98,-135.97),vec(0.1),ang(57.4,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(9,vec(6.21,1,1)) holoMaterial(9,"phoenix_storms/stripes") timer("10",100) }
+if(clk("10")){ holoCreate(10,vec(-119.97,-2195.77,-130.97),vec(0.1),ang(58.49,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(10,vec(5.59,1,1)) holoMaterial(10,"phoenix_storms/stripes") timer("11",100) }
+if(clk("11")){ holoCreate(11,vec(-119.97,-2202.81,-128.01),vec(0.1),ang(5.88,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(11,vec(11.22,1,1)) holoMaterial(11,"phoenix_storms/stripes") timer("12",100) }
+if(clk("12")){ holoCreate(12,vec(-119.97,-2208.76,-141.58),vec(0.1),ang(-88.51,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(12,vec(28.29,1,1)) holoMaterial(12,"phoenix_storms/stripes") timer("13",100) }}

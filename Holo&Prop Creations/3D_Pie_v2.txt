@@ -1,0 +1,33 @@
+@name Was Here
+@model models/smile/smile.mdl
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    #timer("speeder1",Speed)
+}
+if(Chunk==0){ if(clk("1")){ holoCreate(1,vec(-1303.65,-2047.65,-132.69),vec(0.1),ang(0,-90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(1,vec(88.51,14,14)) holoMaterial(1,"cs_havana/lightbareon01") timer("2",100) }
+if(clk("2")){ holoCreate(2,vec(-1305.44,-2046.15,-62.23),vec(0.1),ang(0,90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(2,vec(88.46,14,14)) holoMaterial(2,"cs_havana/lightbareon01") timer("3",100) }
+if(clk("3")){ holoCreate(3,vec(-1303.58,-2047.68,-195.69),vec(0.1),ang(0,-90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(3,vec(88.53,14,14)) holoMaterial(3,"cs_havana/lightbareon01") timer("4",100) }
+if(clk("4")){ holoCreate(4,vec(-1304.52,-2002.66,-128.96),vec(0.1),ang(88.97,-38.76,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(4,vec(133.48,14,14)) holoMaterial(4,"cs_havana/lightbareon01") timer("5",100) }
+if(clk("6")){ holoCreate(6,vec(-1304.52,-1949.28,-128.96),vec(0.1),ang(88.98,-38.94,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(6,vec(133.48,14,14)) holoMaterial(6,"cs_havana/lightbareon01") timer("7",100) }
+if(clk("7")){ holoCreate(7,vec(-1305.44,-1948.53,-62.23),vec(0.1),ang(0,-90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(7,vec(71.17,14,14)) holoMaterial(7,"cs_havana/lightbareon01") timer("8",100) }
+if(clk("5")){ holoCreate(5,vec(-1303.59,-1950.04,-195.69),vec(0.1),ang(0,90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(5,vec(71.17,14,14)) holoMaterial(5,"cs_havana/lightbareon01") timer("6",100) }
+if(clk("8")){ holoCreate(8,vec(-1303.64,-1843.5,-132.69),vec(0.1),ang(0,90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(8,vec(70.72,14,14)) holoMaterial(8,"cs_havana/lightbareon01") timer("9",100) }
+if(clk("9")){ holoCreate(9,vec(-1304.54,-1878.11,-97.46),vec(0.1),ang(88.08,-39.56,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(9,vec(70.5,14,14)) holoMaterial(9,"cs_havana/lightbareon01") timer("10",100) }
+if(clk("10")){ holoCreate(10,vec(-1305.45,-1842.02,-62.23),vec(0.1),ang(0,-90,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(10,vec(70.67,14,14)) holoMaterial(10,"cs_havana/lightbareon01") timer("11",100) }
+if(clk("11")){ holoCreate(11,vec(-1304.54,-1807.43,-128.96),vec(0.1),ang(-88.99,140.66,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(11,vec(133.48,14,14)) holoMaterial(11,"cs_havana/lightbareon01") timer("12",100) }}

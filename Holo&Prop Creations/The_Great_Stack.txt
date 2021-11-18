@@ -1,0 +1,30 @@
+@name The Great Stack
+@persist [Counter,Speed] Parent:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    timer("bunker1",Speed)
+}
+if(clk("bunker1")){holoCreate(1,entity():pos()+vec(81.31,86.29,1.94),vec(0.25),ang(0,143.97,0),vec(255,255,255),"models/player/phoenix.mdl") holoEntity(1):animate(3,1) holoParent(1,entity()) timer("bunker2",Speed)}	
+if(clk("bunker2")){holoCreate(2,entity():pos()+vec(124.87,47.92,18.68),vec(0.25),ang(0,-9.43,0),vec(255,255,255),"models/player/phoenix.mdl") holoEntity(2):animate(92,1) holoParent(2,entity()) timer("bunker3",Speed)}	
+if(clk("bunker3")){holoCreate(3,entity():pos()+vec(9.02,-24.76,39.9),vec(0.25),ang(0,155.87,0),vec(255,255,255),"models/player/combine_advisor_guard.mdl") holoEntity(3):animate(108,1) holoParent(3,entity()) timer("bunker4",Speed)}	
+if(clk("bunker4")){holoCreate(4,entity():pos()+vec(56.49,-42.59,65.94),vec(0.25),ang(0,115.25,0),vec(255,255,255),"models/player/skeleton.mdl") holoEntity(4):animate(215,1) holoParent(4,entity()) timer("bunker5",Speed)}	
+if(clk("bunker5")){holoCreate(5,entity():pos()+vec(7.48,-23.35,120.94),vec(0.25),ang(0,99.13,0),vec(255,255,255),"models/player/zack/zackhalloween.mdl") holoEntity(5):animate(2,1) holoParent(5,entity()) timer("bunker6",Speed)}	
+if(clk("bunker6")){holoCreate(6,entity():pos()+vec(6.7,-22.8,73.81),vec(0.25),ang(0,67.05,0),vec(255,255,255),"models/player/skeleton.mdl") holoEntity(6):animate(3,1) holoParent(6,entity()) timer("bunker7",Speed)}	
+if(clk("bunker7")){holoCreate(7,entity():pos()+vec(7.3,-23.21,55.58),vec(0.25),ang(0,-22.33,0),vec(255,255,255),"models/code_gs/robber/robberplayer.mdl") holoEntity(7):animate(126,1) holoParent(7,entity()) timer("bunker8",Speed)}	
+if(clk("bunker8")){holoCreate(8,entity():pos()+vec(7.24,-24.93,90.21),vec(0.25),ang(0,-81.69,0),vec(255,255,255),"models/player/group01/female_04.mdl") holoEntity(8):animate(71,1) holoParent(8,entity()) timer("bunker9",Speed)}	
+if(clk("bunker9")){holoCreate(9,entity():pos()+vec(6.69,-23.7,98.36),vec(0.25),ang(0,125.34,0),vec(255,255,255),"models/player/skeleton.mdl") holoEntity(9):animate(131,1) holoParent(9,entity()) timer("bunker10",Speed)}	
+if(clk("bunker10")){holoCreate(10,entity():pos()+vec(-2.44,-82.89,-0.06),vec(0.25),ang(0,44.02,0),vec(255,255,255),"models/player/gasmaskcitizen/gasmask_civi_01playermodel.mdl") holoEntity(10):animate(108,1) holoParent(10,entity()) timer("bunker11",Speed)}

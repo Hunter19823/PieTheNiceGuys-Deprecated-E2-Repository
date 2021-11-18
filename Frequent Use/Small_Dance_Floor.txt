@@ -1,0 +1,131 @@
+@name Pie Small Dance Floor
+@persist State Spacing Limit Original:vector
+if (first() | duped()) {
+    function vector randomColor(){
+        Limit=175
+        R=random(Limit)
+        G=random(Limit)
+        B=random(Limit)
+        return vec(R,G,B)
+    }
+    function vector vector:nextColor(){
+        #[
+        R=This:x()+28+(1/3)
+        G=This:y()-(28+(1/3))
+        B=This:z()+(28+(1/3))
+        ]#
+        R=This:x()+((255-Original:x())/18)
+        G=This:y()+((255-Original:y())/18)
+        B=This:z()+((255-Original:z())/18)
+        
+        return vec(R,G,B)
+    }
+    State=100
+    Spacing=112.5
+}
+Speed=1000
+interval(Speed)
+if(clk()){
+    switch(State){
+        #mid,left,down,right,up,bl,tr,tl,br
+        case 100,
+            entity():setfLight(entity():pos()+vec(0,0,100),randomColor(),entity():angles()+ang(90,0,0),"cs_havana/white",100,500,1)
+            State++
+            break
+        case 101,
+            holoCreate(State,entity():pos()+vec(Spacing,(Spacing)*-1,0),vec(1),ang(0),randomColor())
+            #tl
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 102,
+            holoCreate(State,entity():pos()+vec(0,(Spacing)*-1,0),vec(1),ang(0),randomColor())
+            #up
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 103,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,(Spacing)*-1,0),vec(1),ang(0),randomColor())
+            #tr
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 104,
+            holoCreate(State,entity():pos()+vec(Spacing,0,0),vec(1),ang(0),randomColor())
+            #Left
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 105,
+            holoCreate(State,entity():pos()+vec(0,0,0),vec(1),ang(0),randomColor())
+            #Mid
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 106,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,0,0),vec(1),ang(0),randomColor())
+            #right
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 107,
+            holoCreate(State,entity():pos()+vec((Spacing),(Spacing),0),vec(1),ang(0),randomColor())
+            #br
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 108,
+            holoCreate(State,entity():pos()+vec(0,Spacing,0),vec(1),ang(0),randomColor())
+            #Down
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 109,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,Spacing,0),vec(1),ang(0),randomColor())
+            #bl
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            holoParent(State,entity())
+            State++
+            break
+        case 110,
+            local Count=100
+            local Color=randomColor()
+            Original=Color
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            Color=Color:nextColor()
+            Count++
+            holoColor(Count,Color)
+            entity():fLightColor(randomColor())
+            break
+    }
+}

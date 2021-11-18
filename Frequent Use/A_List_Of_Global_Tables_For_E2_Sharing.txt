@@ -1,0 +1,82 @@
+@name Creates a List of Global Tables that e2s can access
+if(first()){
+    timer("0",0)
+    timer("1",1000)
+    timer("2",2000)
+    timer("3",3000)
+}
+#E2 designed by Pie
+if(clk("0")){
+    G=gTable("TableName",1)
+    G["Key",string] = "Value"
+    G["",string] = ""
+}
+
+if(clk("1")){
+    G=gTable("CommandToModel",1)
+    G["buycctvbug",string] = "models/props_c17/pottery01a.mdl"
+    G["buycctvcamera",string] = "models/tobadforyou/surveillance_camera.mdl"
+    G["buycctvscreen",string] = "models/props_c17/tv_monitor01.mdl"
+    G["buychpnpin",string] = "models/bluesatm/atm_reader.mdl"
+    G["buytbfycomputer",string] = "models/props/de_inferno/tableantique.mdl"
+    G["buyzbl_gasmask",string] = "models/zerochain/props_bloodlab/zbl_maskbox.mdl"
+    G["tipjar",string] = "models/props_lab/jar01a.mdl"
+    G["uniammo",string] = "models/items/boxmrounds.mdl"
+    G["buyzvm_machine",string] = "models/zerochain/props_vendingmachine/zvm_machine.mdl"
+    G["buyminingshelf",string] = "models/craphead_scripts/bitminers/rack/rack.mdl"
+    G["buycooling1",string] = "models/craphead_scripts/bitminers/utility/cooling_upgrade_1.mdl"
+    G["buycooling2",string] = "models/craphead_scripts/bitminers/utility/cooling_upgrade_2.mdl"
+    G["buycooling3",string] = "models/craphead_scripts/bitminers/utility/cooling_upgrade_3.mdl"
+    G["buygeneratorfuel",string] = "models/craphead_scripts/bitminers/utility/jerrycan.mdl"
+    G["buypowergenerator",string] = "models/craphead_scripts/bitminers/power/generator.mdl"
+    G["buypowercable",string] = "models/craphead_scripts/bitminers/utility/plug.mdl"
+    G["buypowercombiner",string] = "models/craphead_scripts/bitminers/utility/plug.mdl"
+    G["buyupsupgrade",string] = "models/craphead_scripts/bitminers/utility/ups_solo.mdl"
+    G["buyrgbkit",string] = "models/craphead_scripts/bitminers/utility/rgb_kit.mdl"
+    G["buynucleargenerator",string] = "models/craphead_scripts/bitminers/power/rtg.mdl"
+    G["buysolarpanels",string] = "models/craphead_scripts/bitminers/power/solar_panel.mdl"
+    G["buyprinter_sapphire",string] = "models/freeman/compact_printer.mdl"
+    G["buyprinter_emerald",string] = "models/freeman/compact_printer.mdl"
+    G["buyprinter_ruby",string] = "models/freeman/compact_printer.mdl"
+    G["buyprinter_diamond",string] = "models/freeman/compact_printer.mdl"
+    G["buyprinter_nitroprinter",string] = "models/freeman/compact_printer.mdl"
+    G["buyprinter_platinum",string] = "models/freeman/compact_printer.mdl"
+    G["buyprinter_god",string] = "models/freeman/compact_printer.mdl"
+}
+
+if(clk("2")){
+    G=gTable("CommandToType",1)
+    G["buycctvbug",string] = "cctv_bug"
+    G["buycctvcamera",string] = "tbfy_cctv_camera"
+    G["buycctvscreen",string] = "tbfy_cctv_screen"
+    G["buychpnpin",string] = "atm_reader"
+    G["buytbfycomputer",string] = "tbfy_computer"
+    G["buyzbl_gasmask",string] = "zbl_gasmask"
+    G["tipjar",string] = "darkrp_tip_jar"
+    G["uniammo",string] = "universal_ammo"
+    G["buyzvm_machine",string] = "zvm_machine"
+    G["buyminingshelf",string] = "ch_bitminer_shelf"
+    G["buycooling1",string] = "ch_bitminer_upgrade_cooling1"
+    G["buycooling2",string] = "ch_bitminer_upgrade_cooling2"
+    G["buycooling3",string] = "ch_bitminer_upgrade_cooling3"
+    G["buygeneratorfuel",string] = "ch_bitminer_power_generator_fuel"
+    G["buypowergenerator",string] = "ch_bitminer_power_generator"
+    G["buypowercable",string] = "ch_bitminer_power_cable,ch_bitminer_power_cable_end"
+    G["buypowercombiner",string] = "ch_bitminer_power_combiner"
+    G["buyupsupgrade",string] = "ch_bitminer_upgrade_ups"
+    G["buyrgbkit",string] = "ch_bitminer_upgrade_rgb"
+    G["buynucleargenerator",string] = "ch_bitminer_power_rtg"
+    G["buysolarpanels",string] = "ch_bitminer_power_solar"
+    G["buyprinter_sapphire",string] = "sent_elegant_printer"
+    G["buyprinter_emerald",string] = "sent_elegant_printer"
+    G["buyprinter_ruby",string] = "sent_elegant_printer"
+    G["buyprinter_diamond",string] = "sent_elegant_printer"
+    G["buyprinter_nitroprinter",string] = "sent_elegant_printer"
+    G["buyprinter_platinum",string] = "sent_elegant_printer"
+    G["buyprinter_god",string] = "sent_elegant_printer"
+}
+
+if(clk("3")){
+    print("Pie's global table e2 has finished generating, chip is being deleted")
+    selfDestruct()
+}

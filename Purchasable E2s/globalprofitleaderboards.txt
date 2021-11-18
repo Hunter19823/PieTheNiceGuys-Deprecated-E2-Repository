@@ -1,0 +1,82 @@
+@name Global Profit Leaderboards
+@inputs Emitter:wirelink
+@persist [TotalPlayers,Size,Speed,RefreshRate] [Players]:array [StartPos,Change,Current,TopLeft,BottomRight,TotalSize]:vector2
+if(->Emitter && ~Emitter){
+    timer("CalculateLeaderBoard",1000)
+}
+if(first()){
+    RefreshRate=60*1000
+    entity():createWire(entity():isWeldedTo(),"Emitter","wirelink")
+    Speed=1
+    if(->Emitter){
+        timer("CalculateLeaderBoard",1000)
+    }
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(clk("CalculateLeaderBoard")){
+    #TopLeft=vec2(-256,-256)*2
+    TopLeft=vec2(0,20)
+    #TopLeft=vec2(0,0)
+    BottomRight=vec2(512,480)
+    #BottomRight=vec2(512,512)
+    TotalSize=vec2(abs(TopLeft:x())+abs(BottomRight:x()),abs(TopLeft:y())+abs(BottomRight:y()))
+    Players=players()
+    TotalPlayers=Players:count()
+    StartPos=vec2(20,0)+TopLeft
+    Size=floor((TotalSize:y())/(TotalPlayers/2))
+    if(Size>15){
+        Size=15
+    }
+    Change=vec2(0,Size)
+    Current=StartPos-Change
+    timer("UpdatePlayers",1000)
+    Emitter:egpClear()
+    Emitter:egpBox(200,(BottomRight+TopLeft)/2,TotalSize+vec2(40,40))
+    Emitter:egpColor(200,vec(0))
+    Emitter:egpText(300,"Server-Wide Profit Leaderboard",StartPos-vec2(0,20))
+    Emitter:egpSize(300,20)
+    Emitter:egpText(150,"Last Updated: "+(time("hour"))+":"+(time("min")),StartPos-vec2(0,20)+vec2(TotalSize:x()/2,0))
+    Emitter:egpSize(150,20)
+}
+if(clk("UpdatePlayers")){
+    if(Players:count()>0){
+        User=Players:popEntity()
+        if(!User["FirstTime",number]){
+            User["Reset",number]=1
+            User["FirstTime",number]=1
+        }
+        if(User["Reset",number]){
+            User["StartingCash",number]=User:money()
+            User["Reset",number]=0
+        }
+        Bal=User:money()-User["StartingCash",number]
+        Percent=round(abs(Bal)/User["StartingCash",number],4)*100
+        local Index=TotalPlayers-Players:count()
+        if(Index%2==0){
+            Current=Current+vec2(TotalSize:x()/2,0)
+        }else{
+            Current=Current+Change
+            Current=vec2(StartPos:x(),Current:y())
+        }
+        if(Bal>=round(User["StartingCash",number]/100,4)){
+            Emitter:egpText(Index,User:name()+" ($+"+Bal+")(+"+Percent+"%)",Current)
+            Emitter:egpColor(Index,vec(0,255,0))
+        }elseif(Bal>=0){
+            Emitter:egpText(Index,User:name()+" ($+"+Bal+")(+"+Percent+"%)",Current)
+            Emitter:egpColor(Index,vec(0,255,255))
+        }elseif(Bal>=round(User["StartingCash",number]/100,4)*-1){
+            Emitter:egpText(Index,User:name()+" ($"+Bal+")(-"+Percent+"%)",Current)
+            Emitter:egpColor(Index,vec(0,255,255))
+        }else{
+            Emitter:egpText(Index,User:name()+" ($"+Bal+")(-"+Percent+"%)",Current)
+            Emitter:egpColor(Index,vec(255,0,0))
+        }
+        Emitter:egpSize(Index,Size)
+        timer("UpdatePlayers",Speed)
+    }else{
+        timer("CalculateLeaderBoard",RefreshRate)
+    }
+}
+
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/

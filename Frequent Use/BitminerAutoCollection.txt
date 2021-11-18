@@ -1,0 +1,101 @@
+@name Pie's Auto-Bitminer Collection v1
+@persist [Frequency,LockPlayerAim,Warning,StopWarning] [Shelf,Player]:entity [OwnerOriginalAim,OriginalRackAngle]:angle [OriginalRackPos,Distance]:vector
+if(first()){
+    Frequency=5 * 60 * 1000
+    Warning=1
+    Distance=vec(10,18,17)
+    
+    Player=owner()
+    
+    findIncludePlayerProps(owner())
+    findByClass("ch_bitminer_shelf")
+    
+    if(findToArray():count()>0){
+        Shelf=find()
+        StopWarning=1
+        #runOnChat(1)
+        timer("RecollectQue",1000)
+    }
+}
+if(clk("RecollectQue")){
+    if(Warning){
+        StopWarning=0
+        timer("Warn",1000)
+    }
+    
+    timer("Collect",5000)
+}
+if(clk("Warn")){
+    print("COLLECTION INCOMING")
+    print("STOP SHOOTING/MOVING")
+    print("COLLECTION INCOMING")
+    if(!StopWarning){
+        timer(clkName(),1000)
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "test",
+            Player=lastSpoke()
+            Vec=vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber())
+            #Position=lastSpoke():toWorld(Vec)
+            
+            Player:setEyeAngles(ang())
+            Position=toWorld(Vec,ang(),Player:pos(),ang())
+            Shelf:propManipulate(Position,ang(180,0,180),1,0,0)
+            
+            
+            break
+        
+        case "collect",
+            Player=lastSpoke()
+            timer("Collect",1000)
+            break
+    }
+}
+if(clk("Collect")){
+    StopWarning=1
+    stoptimer("warn")
+    if(Shelf){
+        OriginalRackPos=Shelf:pos()
+        OriginalRackAngle=Shelf:angles()
+        OwnerOriginalAim=Player:eyeAngles()
+        Player:setEyeAngles(ang())
+        Position=toWorld(Distance,ang(),Player:pos(),ang())
+        Shelf:propManipulate(Position,ang(180,0,180),1,gravity(),0)
+        LockPlayerAim=1
+        Shelf:noDraw(1)
+        Shelf:noCollideAll(1)
+        concmd("+use")
+        timer("AimLock",0)
+        timer("StopUse",500)
+    }else{
+        print("Bitminer has been destroyed")
+    }
+}
+if(clk("AimLock")){
+    if(LockPlayerAim){
+        Player:setEyeAngles(ang())
+        Position=toWorld(Distance,ang(),Player:pos(),ang())
+        Shelf:propManipulate(Position,ang(180,0,180),1,gravity(),0)
+        timer(clkName(),0)
+    }
+}
+if(clk("StopUse")){
+    LockPlayerAim=0
+    stoptimer("AimLock")
+    concmd("-use")
+    timer("ReturnRack",0)
+}
+if(clk("ReturnRack")){
+    if(Shelf){
+        Player:setEyeAngles(OwnerOriginalAim)
+        Shelf:propManipulate(OriginalRackPos,OriginalRackAngle,1,gravity(),0)
+        Shelf:noDraw(0)
+        Shelf:noCollideAll(0)
+        timer("RecollectQue",Frequency)
+    }else{
+        print("Bitminer has been destroyed")
+    }
+}

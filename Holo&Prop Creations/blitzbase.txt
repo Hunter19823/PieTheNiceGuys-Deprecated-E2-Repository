@@ -1,0 +1,97 @@
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    #timer(Counter+"",Speed)
+    timer("blitz1",Speed)
+}
+if(Chunk==0){
+if(clk("blitz1")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11472.0234375,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz2",Speed)}
+if(clk("blitz2")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11566.924804688,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz3",Speed)}
+if(clk("blitz3")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11590.649414062,-5952.2211914062,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz4",Speed)}
+if(clk("blitz4")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11590.649414062,-5901.1176757812,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz5",Speed)}
+if(clk("blitz5")){P=propSpawn("models/hunter/blocks/cube4x4x05.mdl",vec(-11503.76171875,-5888.8852539062,831.85131835938),ang(0,-179.9999,0),1) P:setColor(127,0,255) P:setMaterial("models/shadertest/shield")   timer("blitz6",Speed)}
+if(clk("blitz6")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11590.649414062,-5806.2177734375,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz7",Speed)}
+if(clk("blitz7")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11590.649414062,-5711.3178710938,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz8",Speed)}
+if(clk("blitz8")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11590.649414062,-5616.41796875,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz9",Speed)}
+if(clk("blitz9")){P=propSpawn("models/hunter/plates/plate1x3.mdl",vec(-11564.890625,-5687.1870117188,748.53759765625),ang(-0.0003,-0.0012,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz10",Speed)}
+if(clk("blitz10")){P=propSpawn("models/hunter/plates/plate1x3.mdl",vec(-11564.890625,-5687.1870117188,724.53759765625),ang(-0.0003,-0.0012,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz11",Speed)}
+if(clk("blitz11")){P=propSpawn("models/hunter/blocks/cube025x3x025.mdl",vec(-11529.301757812,-5669.3823242188,723.05206298828),ang(0,-0.0001,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz12",Speed)}
+if(clk("blitz12")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11493.666992188,-5770.31640625,745.35876464844),ang(0,0,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz13",Speed)}
+if(clk("blitz13")){P=propSpawn("models/hunter/blocks/cube1x2x05.mdl",vec(-11564.841796875,-5770.224609375,712.09973144531),ang(0,0,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz14",Speed)}
+if(clk("blitz14")){P=propSpawn("models/hunter/blocks/cube1x2x05.mdl",vec(-11564.841796875,-5770.224609375,806.99975585938),ang(0,0,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz15",Speed)}
+if(clk("blitz15")){P=propSpawn("models/hunter/blocks/cube4x4x05.mdl",vec(-11503.76171875,-5699.0854492188,831.85119628906),ang(0,-179.9999,0),1) P:setColor(127,0,255) P:setMaterial("models/shadertest/shield")   timer("blitz16",Speed)}
+if(clk("blitz16")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11567.803710938,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz17",Speed)}
+if(clk("blitz17")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11495.750976562,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz18",Speed)}
+if(clk("blitz18")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11282.22265625,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz19",Speed)}
+if(clk("blitz19")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11377.123046875,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz20",Speed)}
+if(clk("blitz20")){P=propSpawn("models/hunter/blocks/cube4x4x05.mdl",vec(-11195.356445312,-5869.8701171875,831.82250976562),ang(0,-179.9999,0),1) P:setColor(127,0,255) P:setMaterial("models/shadertest/shield")   timer("blitz21",Speed) Chunk++}
+}elseif(Chunk==1){if(clk("blitz21")){P=propSpawn("models/hunter/blocks/cube4x4x05.mdl",vec(-11313.961914062,-5888.884765625,831.85131835938),ang(0,-179.9999,0),1) P:setColor(127,0,255) P:setMaterial("models/shadertest/shield")   timer("blitz22",Speed)}
+if(clk("blitz22")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11337.688476562,-5767.8515625,737.41033935547),ang(0,0,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz23",Speed)}
+if(clk("blitz23")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11242.788085938,-5767.8515625,737.41033935547),ang(0,0,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz24",Speed)}
+if(clk("blitz24")){P=propSpawn("models/hunter/plates/plate1x3.mdl",vec(-11244.810546875,-5687.1899414062,747.74041748047),ang(-0.0041,179.9942,-0.0079),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz25",Speed)}
+if(clk("blitz25")){P=propSpawn("models/hunter/plates/plate1x3.mdl",vec(-11244.810546875,-5687.1899414062,724.56811523438),ang(0,179.994,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz26",Speed)}
+if(clk("blitz26")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10831.450195312,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz27",Speed)}
+if(clk("blitz27")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10926.350585938,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz28",Speed)}
+if(clk("blitz28")){P=propSpawn("models/hunter/blocks/cube1x4x05.mdl",vec(-10902.645507812,-5710.9130859375,830.62872314453),ang(0,-90,0),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz29",Speed)}
+if(clk("blitz29")){P=propSpawn("models/hunter/blocks/cube1x1x1.mdl",vec(-10836.21875,-5755.4829101562,808.00543212891),ang(0,-89.9999,0),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz30",Speed)}
+if(clk("blitz30")){P=propSpawn("models/hunter/blocks/cube2x2x05.mdl",vec(-10926.369140625,-5779.7143554688,751.03662109375),ang(89.9999,89.9994,180),1) P:setColor(127,0,255) P:setMaterial("models/wireframe")   timer("blitz31",Speed)}
+if(clk("blitz31")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10786.368164062,-5675.6850585938,765.34039306641),ang(0,90,90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz32",Speed)}
+if(clk("blitz32")){P=propSpawn("models/hunter/blocks/cube025x3x025.mdl",vec(-11280.397460938,-5705.0141601562,723.0810546875),ang(0,179.9953,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz33",Speed)}
+if(clk("blitz33")){P=propSpawn("models/hunter/blocks/cube4x4x05.mdl",vec(-11313.962890625,-5699.0854492188,831.85119628906),ang(0,-179.9999,0),1) P:setColor(127,0,255) P:setMaterial("models/shadertest/shield")   timer("blitz34",Speed)}
+if(clk("blitz34")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11400.850585938,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz35",Speed)}
+if(clk("blitz35")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11305.950195312,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz36",Speed)}
+if(clk("blitz36")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10810.09375,-5711.2202148438,768.21826171875),ang(0,90,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz37",Speed)}
+if(clk("blitz37")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10810.09375,-5806.1201171875,768.21826171875),ang(0,90,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz38",Speed)}
+if(clk("blitz38")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10997.51953125,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz39",Speed)}
+if(clk("blitz39")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11092.420898438,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz40",Speed) Chunk++}
+}elseif(Chunk==2){if(clk("blitz40")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11187.322265625,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz41",Speed)}
+if(clk("blitz41")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-11009.41015625,-5675.3071289062,774.82379150391),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz42",Speed)}
+if(clk("blitz42")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-11009.40625,-5732.2641601562,774.80096435547),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz43",Speed)}
+if(clk("blitz43")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11147.887695312,-5767.8515625,737.41033935547),ang(0,0,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz44",Speed)}
+if(clk("blitz44")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11207.254882812,-5722.7744140625,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz45",Speed)}
+if(clk("blitz45")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11207.254882812,-5627.875,737.38464355469),ang(0,90.0001,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz46",Speed)}
+if(clk("blitz46")){P=propSpawn("models/props_wasteland/interior_fence002b.mdl",vec(-11018.390625,-5707.6508789062,761.94879150391),ang(0,179.9999,0),1) P:setAlpha(1) P:setMaterial("vgui/screens/vgui_overlay") P:setNoCollideAll()   timer("blitz47",Speed)}
+if(clk("blitz47")){P=propSpawn("models/props_wasteland/interior_fence002b.mdl",vec(-11013.721679688,-5707.6508789062,761.94879150391),ang(0,179.9999,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow") P:setNoCollideAll()   timer("blitz48",Speed)}
+if(clk("blitz48")){P=propSpawn("models/hunter/blocks/cube1x3x1.mdl",vec(-11124.305664062,-5684.8056640625,727.11016845703),ang(-0.669,-0.0214,0.0005),1) P:setColor(127,0,255) P:setMaterial("models/wireframe") P:setNoCollideAll()   timer("blitz49",Speed)}
+if(clk("blitz49")){P=propSpawn("models/hunter/blocks/cube3x3x05.mdl",vec(-10926.373046875,-5675.3256835938,774.80096435547),ang(89.9999,89.9998,180),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz50",Speed)}
+if(clk("blitz50")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11211.05078125,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz51",Speed)}
+if(clk("blitz51")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11116.150390625,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz52",Speed)}
+if(clk("blitz52")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-11021.25,-5604.150390625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz53",Speed)}
+if(clk("blitz53")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10830.499023438,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz54",Speed)}
+if(clk("blitz54")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10902.619140625,-5975.9462890625,737.38464355469),ang(0,-179.9999,-90),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz55",Speed)}
+if(clk("blitz55")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10810.09375,-5952.189453125,768.21826171875),ang(0,90,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz56",Speed)}
+if(clk("blitz56")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",vec(-10810.09375,-5901.0200195312,768.21826171875),ang(0,90,-89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz57",Speed)}
+if(clk("blitz57")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10867.059570312,-5732.2641601562,774.80108642578),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz58",Speed)}
+if(clk("blitz58")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10867.059570312,-5755.9887695312,774.80096435547),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz59",Speed)}
+if(clk("blitz59")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10867.059570312,-5779.7138671875,774.80090332031),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz60",Speed) Chunk++}
+}elseif(Chunk==3){if(clk("blitz60")){P=propSpawn("models/props_wasteland/interior_fence002c.mdl",vec(-10933.364257812,-5727.9604492188,763.61193847656),ang(0,-89.9997,0),1) P:setAlpha(1) P:setMaterial("vgui/screens/vgui_overlay")   timer("blitz61",Speed)}
+if(clk("blitz61")){P=propSpawn("models/hunter/plates/plate1x3.mdl",vec(-10856.657226562,-5639.7377929688,774.8115234375),ang(0,-90,90.0001),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow") P:setNoCollideAll()   timer("blitz62",Speed)}
+if(clk("blitz62")){P=propSpawn("models/hunter/blocks/cube1x4x05.mdl",vec(-10869.381835938,-5639.7377929688,768.17578125),ang(0,-90,90.0001),1) P:setAlpha(1) P:setMaterial("vgui/screens/vgui_overlay")   timer("blitz63",Speed)}
+if(clk("blitz63")){P=propSpawn("models/squad/sf_bars/sf_bar8.mdl",vec(-10900.38671875,-5704.3984375,807.99395751953),ang(89.9999,-90,180),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz64",Speed)}
+if(clk("blitz64")){P=propSpawn("models/squad/sf_bars/sf_bar8.mdl",vec(-10937.38671875,-5704.3984375,807.99395751953),ang(89.9999,-90,180),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz65",Speed)}
+if(clk("blitz65")){P=propSpawn("models/squad/sf_bars/sf_bar8.mdl",vec(-10974.38671875,-5704.3984375,807.99395751953),ang(89.9999,-90,180),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz66",Speed)}
+if(clk("blitz66")){P=propSpawn("models/props_wasteland/interior_fence002c.mdl",vec(-10933.364257812,-5723.2915039062,763.61193847656),ang(0,-89.9997,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz67",Speed)}
+if(clk("blitz67")){P=propSpawn("models/hunter/blocks/cube1x1x05.mdl",vec(-10843.797851562,-5756.0522460938,775.17456054688),ang(89.9999,89.9997,180),1) P:setAlpha(1) P:setMaterial("vgui/screens/vgui_overlay")   timer("blitz68",Speed)}
+if(clk("blitz68")){P=propSpawn("models/hunter/triangles/2x2x2.mdl",vec(-10950.096679688,-5839.0463867188,751.07580566406),ang(0,-179.9999,0),1) P:setColor(127,0,255) P:setMaterial("models/wireframe")   timer("blitz69",Speed)}
+if(clk("blitz69")){P=propSpawn("models/props_wasteland/interior_fence002b.mdl",vec(-10831.013671875,-5737.0522460938,761.16107177734),ang(0,-90.0001,0),1) P:setColor(220,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz70",Speed)}
+if(clk("blitz70")){P=propSpawn("models/hunter/blocks/cube1x1x1.mdl",vec(-10831.938476562,-5755.4931640625,727.72454833984),ang(0,90,90.0001),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz71",Speed)}
+if(clk("blitz71")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10985.681640625,-5779.7138671875,774.80084228516),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("models/wireframe") P:setNoCollideAll()   timer("blitz72",Speed)}
+if(clk("blitz72")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10985.681640625,-5755.9887695312,774.80090332031),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("models/wireframe") P:setNoCollideAll()   timer("blitz73",Speed)}
+if(clk("blitz73")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10867.059570312,-5803.4389648438,774.80084228516),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz74",Speed)}
+if(clk("blitz74")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10890.784179688,-5803.4389648438,774.80084228516),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("models/wireframe")   timer("blitz75",Speed)}
+if(clk("blitz75")){P=propSpawn("models/hunter/blocks/cube05x3x05.mdl",vec(-10985.681640625,-5732.2641601562,774.80096435547),ang(0,-179.9999,89.9999),1) P:setColor(127,0,255) P:setMaterial("cs_italy/yellow")   timer("blitz76",Speed)}
+}

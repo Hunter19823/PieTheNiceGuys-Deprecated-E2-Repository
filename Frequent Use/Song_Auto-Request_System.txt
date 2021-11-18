@@ -1,0 +1,130 @@
+@name Song Auto-Request System. Do "request youtubeLink" to request a song. Songs In Que:  .
+@model models/freeman/exhibition_roleplay_logo_large.mdl
+@persist [Player]:entity [Volume,Cost,Delay,Distance,Channel] [Array]:array
+if(first()){
+    runOnChat(1)
+    Volume=1
+    Delay=5000
+    Cost=1000
+    Distance=250
+    Channel=random(0,10000)
+    #timer("FindPlayer",Delay)
+    Player=entity()
+    holoCreate(1,Player:pos()-vec(0,0,Player:height()/2),vec(1),ang(0),vec(255),"models/hunter/tubes/tube4x4x025.mdl")
+    holoScaleUnits(1,vec(Distance*2,Distance*2,10))
+    holoParent(1,entity())
+    timer("UpdateName",1000)
+}elseif(clk("FindPlayer")){
+    findClearWhiteList()
+    findAllowPlayerProps(findPlayerBySteamID("STEAM_0:0:132057860"))
+    findByModel("models/maxofs2d/hover_rings.mdl")
+    if(findSortByDistance(entity():pos())==0){
+        Player=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+    }else{
+        local P=find()
+        if(P:pos():distance(entity():pos())>500){
+            Player=Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+        }else{
+            Player=P
+        }
+    }
+    Player:setNoCollideAll()
+}elseif(chatClk()){
+    local LS=lastSaid():explode(" ")
+    local SL=lastSpoke()
+    if(entity():pos():distance(SL:pos())<Distance){
+        switch(LS[1,string]){
+            case "request",
+                if(LS[2,string]:find("http") && LS[2,string]:find("youtube")){
+                    Array:pushString(LS[2,string])
+                    moneyRequest(SL,Cost,invert(Array)[LS[2,string],number]+"",10)
+                }
+                break
+            case "songlist",
+                if(SL==owner()){
+                    printTable(invert(Player["Que",string]:explode("||||")))
+                }
+                break
+            case "stop",
+                if(SL==owner()){
+                    streamStop(Channel)
+                }
+                break
+            case "volume",
+                if(SL==owner()){
+                    Volume=LS[2,string]:toNumber()
+                    streamVolume(Channel,Volume)
+                }
+                break
+            case "start",
+                if(SL==owner()){
+                    stoptimer("NextSong")
+                    timer("NextSong",10)
+                }
+                break
+            case "skip",
+                if(SL==owner()){
+                    stoptimer("NextSong")
+                    timer("NextSong",10)
+                }
+                break
+            case "clear",
+                if(SL==owner()){
+                    Player["Que",string]=""
+                    Player["RequestedBy",string]=""
+                    Player["RequestedCost",string]=""
+                }
+                break
+            default,
+                break
+        }
+        print(SL:name()+": "+lastSaid())
+    }
+}elseif(httpClk()){
+    runOnHTTP(0)
+    local Table=jsonDecode(httpData())
+    local People=Player["RequestedBy",string]:explode("||||")
+    local Costs=Player["RequestedCost",string]:explode("||||")
+    local Person=People[1,string]
+    local Cost=Costs[1,string]
+    if(!Table["error",number]){
+        streamStop(Channel)
+        Player:streamStart(Channel,Table["file",string],Volume)
+        local Text="Now Playing: " +Table["title",string]+". Request a song by doing \"request youtubelink\". Songs In Que:  " + (Player["Que",string]:explode("||||"):count()-1) 
+        setName(Text)
+        timer("NextSong",Table["duration",number]*1000-Delay)
+    }else {
+        printTable(Table)
+        moneyGive(findPlayerBySteamID(Person),Cost:toNumber())
+    }
+    Player["RequestedBy",string]=Player["RequestedBy",string]:replace(Person+"||||","")
+    Player["RequestedCost",string]=Player["RequestedCost",string]:replace(Cost+"||||","")
+}elseif(moneyClk()){
+    Player["Que",string]=Player["Que",string]+Array[moneyClkTitle():toNumber(),string]+"||||"
+    Player["RequestedBy",string]=Player["RequestedBy",string]+moneyClkPlayer():steamID()+"||||"
+    Player["RequestedCost",string]=Player["RequestedCost",string]+moneyClkAmount()+"||||"
+    if(invert(getTimers())["NextSong",number]!=-1){
+        timer("NextSong",10)
+    }else{
+        timer("UpdateName",0)
+    }
+}elseif(clk("NextSong")){
+    local Links=Player["Que",string]:explode("||||")
+    local Link=Links[1,string]
+    local People=Player["RequestedBy",string]:explode("||||")
+    local Person=People[1,string]
+    Player["Que",string]=Player["Que",string]:replace(Link+"||||","")
+    print("Requested By: "+Person)
+    print("Link: "+Link)
+    if(Link!=""){
+        runOnHTTP(1)
+        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Link)
+        
+    }else{
+        setName("Status: Waiting For New Request. Request a song by doing \"request youtubelink\". Songs In Que:  ")
+        timer("UpdateName",10)
+    }
+}elseif(clk("UpdateName")){
+    setName(entity():getName():sub(0,-2)+(entity()["Que",string]:explode("||||"):count()-1))
+    timer("UpdateName",5000)
+}

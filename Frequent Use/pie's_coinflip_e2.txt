@@ -1,0 +1,210 @@
+@name Pie's Coin Flipping E2
+#@model models/maxofs2d/cube_tool.mdl
+@persist [CoinModel,IDSystem]:string [Heads,Tails,Testing]:number [RunTime]:table
+if(first()){
+    CoinModel = "models/hunter/tubes/circle2x2.mdl"
+    IDSystem = "FlippingIdSyste"
+    RunTime = table()
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerBySteamID(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerByName(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    runOnChat(1)
+}
+elseif(chatClk()){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case ".challenge",
+            Challenger=lastSpoke()
+            if(Challenger[IDSystem,string]==""){
+                Price=LS[2,string]:toNumber()
+                if(Price){
+                    Opponent=searchForPlayer(LS[3,string])
+                    if(Opponent:isPlayer() & Challenger!=Opponent & Challenger:pos():distance(Opponent:pos())<=350){
+                        if(Challenger[IDSystem,string]==""){
+                            CoinFlipId=(random()*10000):toString()
+                            RunTime[CoinFlipId,table]=table(
+                                "Challenger"=Challenger,
+                                "Bet"=Price,
+                                "Opponent"=Opponent
+                            )
+                            moneyRequest(Challenger,Price,10,"Would you like to challenge "+Opponent:name()+" to a $"+Price+" coinflip?")
+                            Challenger[IDSystem,string]=CoinFlipId
+                            print(Challenger[IDSystem,string])
+                        }else{
+                            concmd("say /pm "+lastSpoke():steamID()+" Opponent is already in a flip")
+                        }
+                    }else{
+                        concmd("say /pm "+lastSpoke():steamID()+" Not a valid opponent or Opponenent is not close enough.")
+                    }
+                }else{
+                    concmd("say /pm "+lastSpoke():steamID()+" Invalid Price")
+                }
+            }else{
+                concmd("say /pm "+lastSpoke():steamID()+" You are Already Flipping")
+            }
+            break
+        case ".flip",
+            if(lastSpoke()==owner()){
+                timer(lastSpoke():id()+";Create",1000)
+            }
+            break
+        case ".test",
+            if(lastSpoke()==owner()){
+                Testing=!Testing
+                timer("test",1000)
+            }
+            break
+    }
+}
+elseif(moneyClk()){
+    MoneySender=moneyClkPlayer()
+    Data=RunTime[MoneySender[IDSystem,string],table]
+    #printTable(Data)
+    if(Data["Challenger",entity] == MoneySender){
+        print("Challenger Paid")
+        Data["ChallengerHasPaid",number]=1
+    }elseif(Data["Opponent",entity] == MoneySender){
+        print("Opponent Paid")
+        Data["OpponentHasPaid",number]=1
+    }else{
+        print("Nobody just paid")
+    }
+    if(Data["OpponentHasPaid",number] & Data["ChallengerHasPaid",number]){
+        #Start The Flip.
+        print("Starting Flip between "+Data["Challenger",entity]:name()+" and "+ Data["Opponent",entity]:name()+" for $"+Data["Bet",number]*2)
+        timer(Data["Opponent",entity]:id()+";Create;"+MoneySender[IDSystem,string],1000)
+    }elseif(Data["ChallengerHasPaid",number]){
+        print("Waiting on "+Data["Opponent",entity]:name()+" to pay.")
+        Data["Opponent",entity][IDSystem,string]=MoneySender[IDSystem,string]
+        moneyRequest(Data["Opponent",entity],Data["Bet",number],10,Data["Challenger",entity]:name()+" Challenged you to a coinflip. Do you accept?")
+    }else{
+        print("Error: Refund Needed")
+    }
+}
+elseif(moneyNoClk()){
+    print("Clicked No")
+    MoneySender=moneyClkPlayer()
+    Data=RunTime[MoneySender[IDSystem,string],table]
+    #printTable(Data)
+    if(Data["ChallengerHasPaid",number]){
+        print("Challenger Declined")
+        moneyGive(Data["Challenger",entity],Data["Bet",number])
+    }else{
+        print("Challenger Declined")
+    }
+    MoneySender[IDSystem,string]=""
+    Data["OpponentHasPaid",number]=0
+    Data["Opponent",entity][IDSystem,string]=""
+    Data["Challenger",entity][IDSystem,string]=""
+}
+elseif(moneyTimeout()){
+    print("Timed out")
+    MoneySender=moneyClkPlayer()
+    Data=RunTime[MoneySender[IDSystem,string],table]
+    #printTable(Data)
+    if(Data["ChallengerHasPaid",number]){
+        print("Challenger Timedout")
+        moneyGive(Data["Challenger",entity],Data["Bet",number])
+    }else{
+        print("Challenger Timedout")
+    }
+    MoneySender[IDSystem,string]=""
+    Data["OpponentHasPaid",number]=0
+    Data["Opponent",entity][IDSystem,string]=""
+    Data["Challenger",entity][IDSystem,string]=""
+}
+elseif(clk("test")){
+    if(propCanCreate()){
+        timer(owner():id()+";Create",100)
+    }
+    if(Testing){
+        timer(clkName(),1000)
+    }
+}
+elseif(clkName():find("Create")){
+    if(propCanCreate()){
+        Param=clkName():explode(";")
+        Player=entity(Param[1,string]:toNumber())
+        Coin=propSpawn(CoinModel,Player:toWorld(vec(75,0,100)),ang(),1)
+        Coin:setMaterial("models/debug/debugwhite")
+        Coin:setAlpha(255)
+        #Coin:setMass(10000)
+        #Coin:propPhysicalMaterial("gmod_bouncy")
+        #Coin:setPhysProp("gmod_bouncy",gravity())
+        Coin:setColor(vec(255))
+        timer(Coin:id()+";Unfreeze;"+Param[3,string],1000)
+    }else{
+        timer(clkName(),1000)
+    }
+}
+elseif(clkName():find("Unfreeze")){
+    Param=clkName():explode(";")
+    Coin=entity(Param[1,string]:toNumber())
+    Coin:propManipulate(Coin:pos(),Coin:angles(),0,gravity(),0)
+    #Coin:propNotSolid(1)
+    Coin:setMass(10000)
+    Coin:noCollideAll(1)
+    #ifdef entity:remove(number)
+    Coin:remove(15)
+    #else
+    timer("FuckRemovingStuff;;;"+Coin:id(),15000)
+    #endif
+    Id=round(random()*1000)
+    holoCreate(Id,Coin:toWorld(vec(0,0,1)),vec(1),ang(),vec(255),CoinModel)
+    holoParent(Id,Coin)
+    holoMaterial(Id,"models/shadertest/shader5")
+    timer(Coin:id()+";Flip;"+Param[3,string],100)
+}
+elseif(clkName():find("Flip")){
+    Param=clkName():explode(";")
+    Coin=entity(Param[1,string]:toNumber())
+    Coin:applyForce(Coin:up()*(750)*Coin:mass())
+    Torque=(vec(0,50,0)+vec(0,random()*36000-18000,0))*Coin:mass()
+    Coin:applyTorque(Torque)
+    timer(Coin:id()+";Facing;"+Param[3,string],10000)
+}
+elseif(clkName():find("Facing")){
+    Param=clkName():explode(";")
+    Coin=entity(Param[1,string]:toNumber())
+    Data=RunTime[Param[3,string],table]
+    #ifdef entity:remove(number)
+    Coin:remove(1)
+    #else
+    timer("FuckRemovingStuff;;;"+Coin:id(),1000)
+    #endif
+    if(Coin:up():z()>=0){
+        Heads+=1
+        if(Data["Challenger",entity]){
+            print(Data["Challenger",entity]:name()+" has won.")
+            moneyGive(Data["Challenger",entity],Data["Bet",number]*2)
+            concmd("say /advert "+Data["Challenger",entity]:name()+" challenged "+Data["Opponent",entity]:name()+" to a flip for $"+Data["Bet",number]*2+" and WON!")
+            print("Heads")
+        }
+    }else{
+        Tails+=1
+        if(Data["Opponent",entity]){
+            print(Data["Opponent",entity]:name()+" has won.")
+            moneyGive(Data["Opponent",entity],Data["Bet",number]*2)
+            concmd("say /advert "+Data["Challenger",entity]:name()+" challenged "+Data["Opponent",entity]:name()+" to a flip for $"+Data["Bet",number]*2+" and LOST!")
+            print("Tails")
+        }
+    }
+    Data["OpponentHasPaid",number]=0
+    Data["ChallengerHasPaid",number]=0
+    Data["Opponent",entity][IDSystem,string]=""
+    Data["Challenger",entity][IDSystem,string]=""
+}elseif(clkName():find("RemovingStuff")){
+    Param=clkName():explode(";;;")
+    entity(Param[2,string]:toNumber()):propBreak()
+}
+setName("Pie's Coin Flipping E2. Heads: "+Heads+" Tails: "+Tails)

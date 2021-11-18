@@ -1,0 +1,95 @@
+@name Pie's Gameboard API
+@persist [RunTime,Settings]:table
+if(first()){
+    Settings=table(
+        "Scale"=vec(1),
+        "SquareSize"=vec2(32.68994140625,31.84326171875),
+        "BoardModel"="models/props_phx/games/chess/board.mdl",
+        "BlackBishop"="models/props_phx/games/chess/black_bishop.mdl",
+        "BlackKing"="models/props_phx/games/chess/black_king.mdl",
+        "BlackKnight"="models/props_phx/games/chess/black_knight.mdl",
+        "BlackPawn"="models/props_phx/games/chess/black_pawn.mdl",
+        "BlackQueen"="models/props_phx/games/chess/black_queen.mdl",
+        "BlackRook"="models/props_phx/games/chess/black_rook.mdl",
+        "WhiteBishop"="models/props_phx/games/chess/white_bishop.mdl",
+        "WhiteKing"="models/props_phx/games/chess/white_king.mdl",
+        "WhiteKnight"="models/props_phx/games/chess/white_knight.mdl",
+        "WhitePawn"="models/props_phx/games/chess/white_pawn.mdl",
+        "WhiteQueen"="models/props_phx/games/chess/white_queen.mdl",
+        "WhiteRook"="models/props_phx/games/chess/white_rook.mdl",
+        "XReference"=array("a","b","c","d","e","f","g","h"),
+        "YReference"=array("1","2","3","4","5","6","7","8")
+    )
+    Settings["InvertedX",table]=invert(Settings["XReference",array])
+    Settings["InvertedY",table]=invert(Settings["YReference",array])
+    
+    
+    RunTime=table(
+        "Index"=1
+    )
+    function number isPiece(Column:string , Row:string){
+        if(Settings["InvertedX",table][Column,number]){
+            if(Settings["InvertedY",table][Row,number]){
+                return 1
+            }
+        }
+        return 0
+    }
+    function table getPiece(Column:string , Row:string){
+        if(isPiece(Column,Row)){
+                return RunTime["Board",table][Column,table][Row,table]
+        }
+        print("Error getting piece at \""+Column+Row+"\"")
+    }
+    
+    timer("TestDisplay",1000)
+}
+if(clk("TestDisplay")){
+    holoCreate(RunTime["Index",number],entity():toWorld(vec(0,-1,0)*Settings["Scale",vector]),Settings["Scale",vector],entity():angles()+ang(-90,0,0),vec(255),Settings["BoardModel",string])
+    holoParent(RunTime["Index",number],entity())
+    RunTime["X",number]=1
+    RunTime["Y",number]=0
+    RunTime["Board",table]=table()
+    timer("Generate Potental Spaces",1000)
+    
+}
+if(clk("Generate Potental Spaces")){
+    if(RunTime["X",number]<=8){
+        if(RunTime["Y",number]<8){
+            SquareSize=Settings["SquareSize",vector2]
+            while(RunTime["Y",number]<8 & perf(50) & holoCanCreate()){
+                RunTime["Index",number]=RunTime["Index",number]+1
+                RunTime["Y",number]=RunTime["Y",number]+1
+                
+                X=RunTime["X",number]-4
+                Y=RunTime["Y",number]-4
+                Column=Settings["XReference",array][RunTime["X",number],string]
+                Row=Settings["YReference",array][RunTime["Y",number],string]
+                
+                
+                if(!RunTime["Board",table][Column,table]){
+                    RunTime["Board",table][Column,table]=table()
+                }
+                if(!RunTime["Board",table][Column,table][Row,table]){
+                    
+                }
+                
+                RunTime["Board",table][Column,table][Row,table]=table(
+                    "HoloIndex"=RunTime["Index",number],
+                    "LocalPos"=vec(SquareSize:x()*X-SquareSize:x()/2,SquareSize:y()*Y-SquareSize:y()/2,20)*Settings["Scale",vector]
+                )
+                RunTime["Board",table][Column,table][Row,table]["Hologram",entity]=holoCreate(RunTime["Index",number],entity():toWorld(RunTime["Board",table][Column,table][Row,table]["LocalPos",vector]),Settings["Scale",vector],entity():angles(),vec(random()*255))
+            }
+            timer(clkName(),100)
+        }else{
+            RunTime["X",number]=RunTime["X",number]+1
+            RunTime["Y",number]=0
+            timer(clkName(),100)
+        }
+    }else{
+        print("Finished")
+        printTable(getPiece("a","1"))
+        printTable(getPiece("a","8"))
+    }
+}
+

@@ -1,0 +1,49 @@
+@name Print Shit
+@persist GT:gtable Array:array Counter
+if(first()){
+    GT=gTable(owner():steamID()+"'s LocalSaves",1)
+    #GT["Pie",array]=array()
+    Array=GT["Pie",array]:clone()
+    Counter++
+    if(Array:count()>0){
+        timer("PrintStart"+Counter,1000)
+    }
+}
+local Text=""
+if(clk("PrintStart1")){
+    Text="@persist [Counter,Speed,Chunk] Parent:entity"
+    Counter++
+    timer("PrintStart"+Counter,1000)
+}elseif(clk("PrintStart2")){
+    Text="if(first()){ if(owner()!=findPlayerBySteamID(\"STEAM_0:0:191182826\")){noDuplications()}"
+    Counter++
+    timer("PrintStart"+Counter,1000)
+}elseif(clk("PrintStart3")){
+    Text="Chunk=0"
+    Counter++
+    timer("PrintStart"+Counter,1000)
+}elseif(clk("PrintStart4")){
+    Text="Counter=1"
+    Counter++
+    timer("PrintStart"+Counter,1000)
+}elseif(clk("PrintStart5")){
+    Text="function void searchModel(Model:string){findIncludePlayerProps(owner()) findByModel(Model) findSortByDistance(entity():pos()) if(findToTable():count()<0){Parent=entity()}else{Parent=find()}}"
+    Counter++
+    timer("PrintStart"+Counter,1000)
+}elseif(clk("PrintStart6")){
+    Text="Speed=250"
+    Counter++
+    timer("PrintStart"+Counter,1000)
+}elseif(clk("PrintStart7")){
+    Text="searchModel(\"models/maxofs2d/hover_rings.mdl\") timer(Counter+\"\",Speed)}"
+    Counter++
+    timer("getNext",1000)
+}elseif(clk("getNext")){
+    if(Array:count()>0){
+        Text=Array:popString()
+        timer("getNext",1000)
+    }else{
+        print("Finished")
+    }
+}
+print(Text)

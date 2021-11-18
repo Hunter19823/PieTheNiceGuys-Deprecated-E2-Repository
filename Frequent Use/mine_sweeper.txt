@@ -1,0 +1,209 @@
+@name Text-Based Mine Sweeper (10x10)
+@persist [Grid]:table [Rows,Columns,MineCount,TotalMineCount,CurrentRow,CurrentColumn,TotalTiles,Timer] [BombKey,FlagKey]:string [Participent]:entity
+if(first()){
+    #Changeable Variables
+    TotalMineCount=40
+    Rows=10
+    Columns=10
+    Timer=100
+    BombKey="B"
+    FlagKey="F"
+    Participent=owner()
+    
+    #Default Variables
+    TotalTiles=Rows*Columns
+    Grid=table(
+        "Row1"=array("","","","","","","","","",""),
+        "Row2"=array("","","","","","","","","",""),
+        "Row3"=array("","","","","","","","","",""),
+        "Row4"=array("","","","","","","","","",""),
+        "Row5"=array("","","","","","","","","",""),
+        "Row6"=array("","","","","","","","","",""),
+        "Row7"=array("","","","","","","","","",""),
+        "Row8"=array("","","","","","","","","",""),
+        "Row9"=array("","","","","","","","","",""),
+        "Row10"=array("","","","","","","","","",""),
+        "DisplayRow1"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow2"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow3"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow4"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow5"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow6"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow7"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow8"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow9"=array("□","□","□","□","□","□","□","□","□","□"),
+        "DisplayRow10"=array("□","□","□","□","□","□","□","□","□","□"),
+        "BombPositions"=table()
+    )
+    
+    MineCount=0
+    timer("Generate Bombs",1000)
+}
+if(clk("Generate Bombs")){
+    if(MineCount<TotalMineCount){
+        #Generate Bomb Locations and place them
+        while(MineCount<TotalMineCount & perf(90)){
+            local Pos=ceil(random(TotalTiles))
+            while(Grid["BombPositions",table][Pos,number]!=0){
+                Pos=ceil(random(TotalTiles))
+            }
+            Grid["BombPositions",table][Pos,number]=1
+            if(Pos%Columns==0){
+                Grid["Row"+ceil(Pos/Columns),array][Columns,string]=BombKey
+            }else{
+                Grid["Row"+ceil(Pos/Columns),array][Pos%Columns,string]=BombKey
+            }
+            
+            MineCount++
+        }
+        timer(clkName(),Timer)
+    }else{
+        #Finished Generating Bomb Locations
+        print("Finished Generating Bombs<br>Now Generating Tiles")
+        #printTable(Grid)
+        CurrentColumn=0
+        CurrentRow=1
+        timer("SetupWorkspace",Timer)
+    }
+}
+if(clk("SetupWorkspace")){
+    if(CurrentColumn<Columns){
+        CurrentColumn++
+        if(Grid["Row"+CurrentRow,array][CurrentColumn,string]!=BombKey){
+            local TileValue=0
+            #Top Left
+            if(CurrentColumn>1 & CurrentRow>1){
+                if(Grid["Row"+(CurrentRow-1),array][(CurrentColumn-1),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Top Middle
+            if(CurrentRow>1){
+                if(Grid["Row"+(CurrentRow-1),array][(CurrentColumn+0),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Top Right
+            if(CurrentColumn<Columns & CurrentRow>1){
+                if(Grid["Row"+(CurrentRow-1),array][(CurrentColumn+1),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Middle Left
+            if(CurrentColumn>1){
+                if(Grid["Row"+(CurrentRow+0),array][(CurrentColumn-1),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Middle Right
+            if(CurrentRow<Columns){
+                if(Grid["Row"+(CurrentRow+0),array][(CurrentColumn+1),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Bottom Left
+            if(CurrentColumn>1 & CurrentRow<Rows){
+                if(Grid["Row"+(CurrentRow+1),array][(CurrentColumn-1),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Bottom Middle
+            if(CurrentRow<Rows){
+                if(Grid["Row"+(CurrentRow+1),array][(CurrentColumn+0),string]==BombKey){
+                    TileValue++
+                }
+            }
+            #Bottom Right
+            if(CurrentColumn<Columns & CurrentRow<Rows){
+                if(Grid["Row"+(CurrentRow+1),array][(CurrentColumn+1),string]==BombKey){
+                    TileValue++
+                }
+            }
+            if(TileValue==0){
+                Grid["Row"+CurrentRow,array][CurrentColumn,string]="0"
+            }else{
+                Grid["Row"+CurrentRow,array][CurrentColumn,string]=TileValue+""
+            }
+        }
+        timer(clkName(),0)
+    }else{
+        CurrentColumn=0
+        CurrentRow++
+        if(CurrentRow<=Rows){
+            timer(clkName(),Timer)
+        }else{
+            #Finished
+            #printTable(Grid)
+            print("Finished Setting up Tiles")
+            timer("PrintDisplayGrid",Timer)
+            runOnChat(1)
+        }
+    }
+}
+if(clk("PrintRealGrid")){
+    local ConCat=" | "
+    print("0 :"+array(1,2,3,4,5,6,7,8,9,10):concat(ConCat))
+    print("1 :"+Grid["Row1",array]:concat(ConCat),"<br>","2 :"+Grid["Row2",array]:concat(ConCat),"<br>","3 :"+Grid["Row3",array]:concat(ConCat))
+    print("4 :"+Grid["Row4",array]:concat(ConCat),"<br>","5 :"+Grid["Row5",array]:concat(ConCat),"<br>","6 :"+Grid["Row6",array]:concat(ConCat))
+    print("7 :"+Grid["Row7",array]:concat(ConCat),"<br>","8 :"+Grid["Row8",array]:concat(ConCat),"<br>","9 :"+Grid["Row9",array]:concat(ConCat))
+    print("10:"+Grid["Row10",array]:concat(ConCat))
+}
+if(clk("PrintDisplayGrid")){
+    local ConCat=" | "
+    print("0 :"+array(1,2,3,4,5,6,7,8,9,10):concat(ConCat))
+    print("1 :"+Grid["DisplayRow1",array]:concat(ConCat),"<br>","2 :"+Grid["DisplayRow2",array]:concat(ConCat),"<br>","3 :"+Grid["DisplayRow3",array]:concat(ConCat))
+    print("4 :"+Grid["DisplayRow4",array]:concat(ConCat),"<br>","5 :"+Grid["DisplayRow5",array]:concat(ConCat),"<br>","6 :"+Grid["DisplayRow6",array]:concat(ConCat))
+    print("7 :"+Grid["DisplayRow7",array]:concat(ConCat),"<br>","8 :"+Grid["DisplayRow8",array]:concat(ConCat),"<br>","9 :"+Grid["DisplayRow9",array]:concat(ConCat))
+    print("10:"+Grid["DisplayRow10",array]:concat(ConCat))
+}
+if(chatClk(owner()) || chatClk(Participent)){
+    LS=lastSaid():lower():explode(" ")
+    switch(LS[1,string]){
+        case "display",
+            timer("PrintDisplayGrid",Timer)
+            break
+        case "check",
+            X=LS[2,string]:toNumber()
+            if(X>0 & X<=Columns){
+                Y=LS[3,string]:toNumber()
+                if(Y>0 & Y<=Rows){
+                    Tile=Grid["Row"+Y,array][X,string]
+                    Grid["DisplayRow"+Y,array][X,string]=Tile
+                    if(Tile==BombKey){
+                        effectSpawn("Explosion",owner():pos(),1)
+                        print("Boom")
+                        timer("PrintRealGrid",2*Timer)
+                    }
+                    timer("PrintDisplayGrid",Timer)
+                }
+            }
+            break
+        case "flag",
+            X=LS[2,string]:toNumber()
+            if(X>0 & X<=Columns){
+                Y=LS[3,string]:toNumber()
+                if(Y>0 & Y<=Rows){
+                    Grid["DisplayRow"+Y,array][X,string]=FlagKey
+                    
+                    timer("PrintDisplayGrid",Timer)
+                }else{
+                    print("Error: Invalid location '"+X+","+Y+"'. Please choose a valid Y value between 1 and "+Rows+" .")
+                }
+            }else{
+                print("Error: Invalid location '"+X+","+Y+"'. Please choose a valid X value between 1 and "+Columns+" .")
+            }
+            break
+        case "add",
+        case "coop",
+            if(chatClk(owner())){
+                Player=owner():aimEntity()
+                if(Player:isPlayer()){
+                    Participent=Player
+                    print("Added player '"+Participent:name()+"' to minesweeper whitelist.")
+                }else{
+                    print("Error: Owner not looking at player")
+                }
+            }
+            break
+    }
+}

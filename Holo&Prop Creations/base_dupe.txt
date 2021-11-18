@@ -1,0 +1,66 @@
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=500
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    #timer(Counter+"",Speed)
+    timer("base1",Speed)
+}
+if(clk("base1")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2592.8452148438,3586.4768066406,624.02264404297),ang(0.0492,179.9828,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base2",Speed)}
+if(clk("base2")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2640.2951660156,3586.4909667969,623.98187255859),ang(0.0492,179.9828,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base3",Speed)}
+if(clk("base3")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2687.7453613281,3586.5051269531,623.94110107422),ang(0.0492,179.9828,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base4",Speed)}
+if(clk("base4")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2545.3952636719,3586.4626464844,624.06341552734),ang(0.0492,179.9828,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base5",Speed)}
+if(clk("base5")){P=propSpawn("models/props_c17/fence01a.mdl",vec(-2616.5844726562,3918.8251953125,619.07061767578),ang(0,0,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base6",Speed)}
+if(clk("base6")){P=propSpawn("models/props_c17/fence01a.mdl",vec(-2692.587890625,3917.8828125,618.80120849609),ang(0,0,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base7",Speed)}
+if(clk("base7")){P=propSpawn("models/hunter/blocks/cube075x2x025.mdl",vec(-2721.603515625,3916.7309570312,680.3369140625),ang(89.9999,-0.0004,180),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base8",Speed)}
+if(clk("base8")){P=propSpawn("models/hunter/blocks/cube025x05x025.mdl",vec(-2762.0129394531,3966.8693847656,672.13989257812),ang(0,168.7891,0),1) P:parentTo(entity()) timer("base9",Speed)}
+if(clk("base9")){P=propSpawn("models/hunter/blocks/cube2x6x1.mdl",vec(-2573.4072265625,4129.2758789062,623.72772216797),ang(89.916,-87.0052,-176.9973),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base10",Speed)}
+if(clk("base10")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2158.2900390625,3849.7927246094,791.18927001953),ang(0,90,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base11",Speed)}
+if(clk("base11")){P=propSpawn("models/hunter/blocks/cube025x05x025.mdl",vec(-2734.6733398438,3862.4914550781,675.44525146484),ang(-0.0064,-25.3692,-0.1132),1) P:parentTo(entity()) timer("base12",Speed)}
+if(clk("base12")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2644.6328125,4199.3061523438,624.10418701172),ang(0.0492,-0.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base13",Speed)}
+if(clk("base13")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2692.0827636719,4199.3198242188,624.14495849609),ang(0.0492,-0.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base14",Speed)}
+if(clk("base14")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2549.7329101562,4199.27734375,624.02264404297),ang(0.0492,-0.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base15",Speed)}
+if(clk("base15")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2597.1828613281,4199.2915039062,624.06341552734),ang(0.0492,-0.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base16",Speed)}
+if(clk("base16")){P=propSpawn("models/hunter/blocks/cube6x8x05.mdl",vec(-2537.7817382812,3339.80859375,669.17425537109),ang(89.9681,-90.0735,180),1) P:setMaterial("models/props_animated_breakable/smokestack/brickwall002a") P:noCollideAll(1) P:parentTo(entity()) timer("base17",Speed)}
+if(clk("base17")){P=propSpawn("models/props_c17/fence03a.mdl",vec(-2590.3901367188,3868.1437988281,617.61151123047),ang(0,90,0),1) P:setAlpha(1) P:setColor(0,0,0) P:setMaterial("vgui/screens/vgui_overlay") P:parentTo(entity()) timer("base18",Speed)}
+if(clk("base18")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2450.4953613281,3586.4343261719,624.14495849609),ang(0.0492,179.9828,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base19",Speed)}
+if(clk("base19")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2497.9453125,3586.4482421875,624.10418701172),ang(0.0492,179.9828,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base20",Speed)}
+if(clk("base20")){P=propSpawn("models/props_c17/fence03a.mdl",vec(-2590.3901367188,3972.4738769531,617.61151123047),ang(0,90,0),1) P:setAlpha(1) P:setColor(0,0,0) P:setMaterial("vgui/screens/vgui_overlay") P:parentTo(entity()) timer("base21",Speed)}
+if(clk("base21")){P=propSpawn("models/props_c17/fence03a.mdl",vec(-2589.0512695312,3922.3076171875,668.23071289062),ang(89.738,-111.0006,-21.0752),1) P:setAlpha(1) P:setColor(0,0,0) P:setMaterial("vgui/screens/vgui_overlay") P:parentTo(entity()) timer("base22",Speed)}
+if(clk("base22")){P=propSpawn("models/props_c17/fence03a.mdl",vec(-2590.3901367188,3968.1267089844,617.61151123047),ang(0,90,0),1) P:setColor(127,0,0) P:setMaterial("phoenix_storms/pack2/redlight") P:parentTo(entity()) timer("base23",Speed)}
+if(clk("base23")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2158.2900390625,3470.1926269531,791.18927001953),ang(0,90,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base24",Speed)}
+if(clk("base24")){P=propSpawn("models/props_c17/fence01a.mdl",vec(-2506.1848144531,3918.048828125,619.07073974609),ang(0,0,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base25",Speed)}
+if(clk("base25")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2464.8798828125,3470.1740722656,789.80578613281),ang(0.0927,89.9957,-0.0844),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base26",Speed)}
+if(clk("base26")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2526.5021972656,3849.7927246094,791.18939208984),ang(0,90,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base27",Speed)}
+if(clk("base27")){P=propSpawn("models/props_c17/fence01a.mdl",vec(-2461.3659667969,3918.048828125,619.07073974609),ang(0,0,0),1) P:setAlpha(1) P:setColor(0,0,0) P:setMaterial("vgui/screens/vgui_overlay") P:noCollideAll(1) P:parentTo(entity()) timer("base28",Speed)}
+if(clk("base28")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2454.8327636719,4199.2490234375,623.94110107422),ang(0.0492,-0.0171,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base29",Speed)}
+if(clk("base29")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2502.2829589844,4199.2631835938,623.98187255859),ang(0.0492,-0.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base30",Speed)}
+if(clk("base30")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2526.5021972656,4229.392578125,791.18939208984),ang(0,90,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base31",Speed)}
+if(clk("base31")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2526.9213867188,3470.1772460938,788.76538085938),ang(0.0927,89.9957,-0.0844),1) P:setMaterial("phoenix_storms/fender_white") P:noCollideAll(1) P:parentTo(entity()) timer("base32",Speed)}
+if(clk("base32")){P=propSpawn("models/hunter/blocks/cube8x8x1.mdl",vec(-2158.2900390625,4229.392578125,791.18927001953),ang(0,90,0),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base33",Speed)}
+if(clk("base33")){P=propSpawn("models/props_c17/fence03a.mdl",vec(-2589.05859375,3922.2890625,663.92706298828),ang(89.738,-111.0008,-21.0753),1) P:setColor(127,0,0) P:setMaterial("phoenix_storms/pack2/redlight") P:parentTo(entity()) timer("base34",Speed)}
+if(clk("base34")){P=propSpawn("models/hunter/blocks/cube2x6x1.mdl",vec(-2209.6401367188,3913.4323730469,623.72772216797),ang(89.916,-177.0054,-176.9975),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base35",Speed)}
+if(clk("base35")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2139.6669921875,3794.8581542969,623.94110107422),ang(0.0492,-90.0171,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base36",Speed)}
+if(clk("base36")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2139.6528320312,3842.3081054688,623.98187255859),ang(0.0492,-90.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base37",Speed)}
+if(clk("base37")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2139.6245117188,3937.2082519531,624.06341552734),ang(0.0492,-90.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base38",Speed)}
+if(clk("base38")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2139.638671875,3889.7583007812,624.02264404297),ang(0.0492,-90.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base39",Speed)}
+if(clk("base39")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2139.5961914062,4032.1079101562,624.14495849609),ang(0.0492,-90.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base40",Speed)}
+if(clk("base40")){P=propSpawn("models/hunter/triangles/2x2x1.mdl",vec(-2139.6098632812,3984.658203125,624.10418701172),ang(0.0492,-90.0172,-0.0351),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base41",Speed)}
+if(clk("base41")){P=propSpawn("models/props_c17/fence03a.mdl",vec(-2590.3901367188,3872.4909667969,617.61151123047),ang(0,90,0),1) P:setColor(127,0,0) P:setMaterial("phoenix_storms/pack2/redlight") P:parentTo(entity()) timer("base42",Speed)}
+if(clk("base42")){P=propSpawn("models/hunter/blocks/cube2x6x1.mdl",vec(-2569.1708984375,3656.4782714844,623.72772216797),ang(89.916,92.9946,-176.9975),1) P:setMaterial("models/wireframe") P:parentTo(entity()) timer("base43",Speed)}
+if(clk("base43")){P=propSpawn("models/hunter/blocks/cube6x8x05.mdl",vec(-2158.2116699219,3315.5988769531,672.03448486328),ang(89.9681,-90.0735,180),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base44",Speed)}
+if(clk("base44")){P=propSpawn("models/hunter/blocks/cube6x8x05.mdl",vec(-2158.1813964844,3339.3237304688,672.02130126953),ang(89.9681,-90.0735,180),1) P:setMaterial("models/props_animated_breakable/smokestack/brickwall002a") P:parentTo(entity()) timer("base45",Speed)}
+if(clk("base45")){P=propSpawn("models/hunter/blocks/cube6x8x05.mdl",vec(-2158.2419433594,3291.8737792969,672.04766845703),ang(89.9681,-90.0735,180),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base46",Speed)}
+if(clk("base46")){P=propSpawn("models/hunter/blocks/cube6x8x05.mdl",vec(-2573.6791992188,3339.5856933594,669.14318847656),ang(89.9681,-90.0735,180),1) P:setMaterial("phoenix_storms/fender_white") P:parentTo(entity()) timer("base47",Speed)}

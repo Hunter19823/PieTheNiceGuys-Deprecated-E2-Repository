@@ -1,0 +1,37 @@
+@persist [Counter,Speed] Parent:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    timer("bunker1",Speed)
+}
+if(clk("bunker1")){holoCreate(1,entity():pos()+vec(-76.2,58.24,88.23),vec(1),ang(-3.93,-57.38,-63.18),vec(255,255,255),"models/props_junk/harpoon002a.mdl") holoMaterial(1,"phoenix_storms/wire/pcb_green") holoParent(1,entity()) timer("bunker2",Speed)}
+if(clk("bunker2")){holoCreate(2,entity():pos()+vec(-93.87,87.42,85.63),vec(1),ang(-35.8,155.83,-41.69),vec(255,127,127),"models/props_c17/doll01.mdl") holoMaterial(2,"phoenix_storms/wire/pcb_red") holoParent(2,entity()) timer("bunker3",Speed)}	
+if(clk("bunker3")){holoCreate(3,entity():pos()+vec(-70.53,51.58,88.41),vec(1),ang(-6.56,146.3,-9.02),vec(127,0,0),"models/props_c17/doll01.mdl") holoMaterial(3,"phoenix_storms/wire/pcb_red") holoParent(3,entity()) timer("bunker4",Speed)}	
+if(clk("bunker4")){holoCreate(4,entity():pos()+vec(-37.98,28.66,35.41),vec(1),ang(0,-175.18,0),vec(255,255,255),"models/props_lab/cactus.mdl") holoParent(4,entity()) timer("bunker5",Speed)}	
+if(clk("bunker5")){holoCreate(5,entity():pos()+vec(-55.75,44.44,16.82),vec(1),ang(0,90,-90),vec(33,255,0),"models/freeman/duffel_bag.mdl") holoParent(5,entity()) timer("bunker6",Speed)}	
+if(clk("bunker6")){holoCreate(6,entity():pos()+vec(-30.7,46.51,10.26),vec(1),ang(0,90,0),vec(33,255,0),"models/freeman/duffel_bag.mdl") holoParent(6,entity()) timer("bunker7",Speed)}	
+if(clk("bunker7")){holoCreate(7,entity():pos()+vec(-55.75,44.44,49.79),vec(1),ang(0,90,-90),vec(33,255,0),"models/freeman/duffel_bag.mdl") holoParent(7,entity()) timer("bunker8",Speed)}	
+if(clk("bunker8")){holoCreate(8,entity():pos()+vec(-32.03,39.92,0.77),vec(1),ang(1.67,90.67,-0.4),vec(0,127,31),"models/props_c17/playgroundtick-tack-toe_post01.mdl") holoMaterial(8,"phoenix_storms/wood") holoParent(8,entity()) timer("bunker9",Speed)}
+if(clk("bunker9")){holoCreate(9,entity():pos()+vec(-33.11,-2.6,0.03),vec(1),ang(-0.06,-179.07,-0.02),vec(0,127,31),"models/props_combine/breendesk.mdl") holoMaterial(9,"phoenix_storms/wire/pcb_green") holoParent(9,entity()) timer("bunker10",Speed)}	
+if(clk("bunker10")){holoCreate(10,entity():pos()+vec(-60.77,4.39,98.95),vec(1),ang(-1.5,2.16,88.55),vec(0,127,31),"models/props_interiors/vendingmachinesoda01a_door.mdl") holoMaterial(10,"phoenix_storms/wire/pcb_green") holoParent(10,entity()) timer("bunker11",Speed)}
+if(clk("bunker11")){holoCreate(11,entity():pos()+vec(-82.86,69.34,87.81),vec(1),ang(-1.65,-176.33,19.81),vec(255,0,0),"models/props_c17/doll01.mdl") holoMaterial(11,"phoenix_storms/wire/pcb_red") holoParent(11,entity()) timer("bunker12",Speed)}	
+if(clk("bunker12")){holoCreate(12,entity():pos()+vec(-47.79,-45.6,49.19),vec(1),ang(0.33,90.99,-90),vec(33,255,0),"models/freeman/duffel_bag.mdl") holoParent(12,entity()) timer("bunker13",Speed)}	
+if(clk("bunker13")){holoCreate(13,entity():pos()+vec(-27.35,-40.36,0.59),vec(1),ang(0.86,-91.23,-0.42),vec(0,127,31),"models/props_c17/playgroundtick-tack-toe_post01.mdl") holoMaterial(13,"phoenix_storms/wood") holoParent(13,entity()) timer("bunker14",Speed)}
+if(clk("bunker14")){holoCreate(14,entity():pos()+vec(-21.83,-47.54,8.47),vec(1),ang(0,90,0),vec(33,255,0),"models/freeman/duffel_bag.mdl") holoParent(14,entity()) timer("bunker15",Speed)}	
+if(clk("bunker15")){holoCreate(15,entity():pos()+vec(-47.79,-45.79,16.22),vec(1),ang(0,90,-90),vec(33,255,0),"models/freeman/duffel_bag.mdl") holoParent(15,entity()) timer("bunker16",Speed)}	
+if(clk("bunker16")){holoCreate(16,entity():pos()+vec(-29.15,-26.47,34.02),vec(1),ang(0,-168.92,0),vec(255,255,255),"models/props_lab/huladoll.mdl") holoParent(16,entity()) timer("bunker17",Speed)}	
+if(clk("bunker17")){holoCreate(17,entity():pos()+vec(-31.92,17.35,33.13),vec(1),ang(0,-134.07,0),vec(255,255,255),"models/gibs/hgibs.mdl") holoParent(17,entity()) timer("bunker18",Speed)}	
+if(clk("bunker18")){holoCreate(18,entity():pos()+vec(-41.26,0.46,74.65),vec(1),ang(-83.96,157.58,-66.75),vec(30,30,30),"models/props_interiors/vendingmachinesoda01a_door.mdl") holoMaterial(18,"Models/effects/splodearc_sheet") holoParent(18,entity()) timer("bunker19",Speed)}

@@ -1,0 +1,230 @@
+@name (Experimental) CoolDown Monitor v2
+@persist CD:gtable Sec Min Hour OffSet
+@inputs EGPHud:wirelink
+if(first()){
+    #[
+    
+        Instructions/Setup:
+    Open up your Q menu and find where your expression 2 tool gun is
+    and look right about it. You should find the "EGPv3" toolgun.
+    Select the tool gun, and then go into the toolgun settings. Change
+    the 'screen type' to be 'HUD'. Then place it down somewhere. Next
+    switch back to the expression 2 gun. Then place this e2 chip
+    onto the HUD. Next spam e on the hud from every angle until 
+    it says, "EGP Hud connected" in chat. (Or something similar).
+    
+    ]#
+    
+    
+    #How Far Off Of The Middle Do You Want It?
+    #OffSet=475
+    OffSet=0
+    entity():createWire(entity():isWeldedTo(),"EGPHud","wirelink")
+    Sec=1000
+    Min=Sec*60
+    Hour=Min*60
+    runOnChat(1)
+    CD=gTable(owner():steamID()+"CoolDowns")
+    setName(owner():name()+"'s Cool Down Timers (Made By Pie The Nice Guy)")
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    function string formatTime(Time,Max){
+        Time*=1000
+        local Str=""
+        Str+=floor(Max-Time/Min)%60
+        Str+=":"
+        Str+=floor(60-Time/Sec)%60
+        return Str
+    }
+    function void gtable:update(){
+        local CurTime=systime()
+        This["CurTime",number]=CurTime
+        This["RaidDiff",number]=CurTime-CD["Raid",number]
+        This["StealDiff",number]=CurTime-CD["Steal",number]
+        This["MugDiff",number]=CurTime-CD["Mug",number]
+        This["KidnapDiff",number]=CurTime-CD["Kidnap",number]
+        #This["CarjackDiff",number]=CurTime-CD["CarJack",number]
+        #This["PeaceDiff",number]=CurTime-CD["PeaceOver",number]
+        #This["AssDiff",number]=CurTime-CD["Assassination",number]
+        #This["PissedDiff",number]=CurTime-CD["Pissed",number]
+        This["TerrorDiff",number]=CurTime-CD["Terror",number]
+        local Time=CurTime*1000
+        local Str=""
+        Str+=round(Time/Hour)%24
+        Str+=":"
+        Str+=round(Time/Min)%60
+        Str+=":"
+        Str+=round(Time/Sec)%60
+        This["LastUpdate",string]=Str
+    }
+    function void gtable:calculateTime(){
+        This["NormalRaid",string]=formatTime(This["RaidDiff",number],5)
+        
+        This["Bank/SP Raid",string]=formatTime(This["RaidDiff",number],15)
+
+        This["NormalMug",string]=formatTime(This["MugDiff",number],10)
+
+        This["SPMug",string]=formatTime(This["MugDiff",number],15)
+    }
+    function void gtable:calculateSecondTime(){
+        This["Steal",string]=formatTime(This["StealDiff",number],5)
+        
+        This["Kidnap",string]=formatTime(This["KidnapDiff",number],10)
+        
+        This["SPKidnap",string]=formatTime(This["KidnapDiff",number],15)
+        
+        This["Terror",string]=formatTime(This["TerrorDiff",number],10)
+    }
+    function void wirelink:refresh(GT:gtable){
+        if(->EGPHud){
+            local RaidDiff=GT["RaidDiff",number]
+            local StealDiff=GT["StealDiff",number]
+            local MugDiff=GT["MugDiff",number]
+            local KidnapDiff=GT["KidnapDiff",number]
+            #local CarjackDiff=GT["CarjackDiff",number]
+            #local PeaceDiff=GT["PeaceDiff",number]
+            #local AssDiff=GT["AssDiff",number]
+            #local PissedDiff=GT["PissedDiff",number]
+            local TerrorDiff=GT["TerrorDiff",number]
+            
+            This:egpSetText(10,"Last Update: "+GT["LastUpdate",string])
+            
+            if(RaidDiff>300){
+                This:egpSetText(1,"Normal Raid: Ready")
+            }else{
+                This:egpSetText(1,"Normal Raid: "+GT["NormalRaid",string])
+                #This:egpSetText(1,"Normal Raid: Not Ready")
+            }
+            if(RaidDiff>900){
+                This:egpSetText(2,"Bank/SP Raid: Ready")
+            }else{
+                #This:egpSetText(2,"Bank/SP Raid: "+GT["Bank/SP Raid",string])
+                This:egpSetText(2,"Bank/SP Raid: Not Ready")
+            }
+            if(MugDiff>600){
+                This:egpSetText(3,"Normal Mug: Ready")
+            }else{
+                This:egpSetText(3,"Normal Mug: "+GT["NormalMug",string])
+                #This:egpSetText(3,"Normal Mug: Not Ready")
+            }
+            if(MugDiff>900){
+                This:egpSetText(4,"SP Mug: Ready")
+            }else{
+                #This:egpSetText(4,"SP Mug: "+GT["SPMug",string])
+                This:egpSetText(4,"SP Mug: Not Ready")
+            }
+            if(StealDiff>300){
+                This:egpSetText(5,"Steal: Ready")
+            }else{
+                #This:egpSetText(5,"Steal: "+GT["Steal",string])
+                This:egpSetText(5,"Steal: Not Ready")
+            }
+            if(KidnapDiff>600){
+                This:egpSetText(6,"Kidnap: Ready")
+            }else{
+                This:egpSetText(6,"Kidnap: "+GT["Kidnap",string])
+                #This:egpSetText(6,"Kidnap: Not Ready")
+            }
+            if(KidnapDiff>900){
+                This:egpSetText(7,"SP Kidnap: Ready")
+            }else{
+                #This:egpSetText(7,"SP Kidnap: "+GT["SPKidnap",string])
+                This:egpSetText(7,"SP Kidnap: Not Ready")
+            }
+            if(TerrorDiff>600){
+                This:egpSetText(8,"Terror: Ready")
+            }else{
+                This:egpSetText(8,"Terror: "+GT["Terror",string])
+                #This:egpSetText(8,"Terror: Not Ready")
+            }
+        }
+    }
+    timer("Check",100)
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}elseif(chatClk(owner())){
+    local LSaid=lastSaid():lower()
+    local LSpoke=lastSpoke()
+    local GTable=gTable(lastSpoke():steamID()+"CoolDowns")
+    if(LSaid:find("advert")){
+        if(LSaid:find("raid") || LSaid:find("assist")){
+            GTable["Raid",number]=systime()
+        }elseif(LSaid:find("carjack")){
+            GTable["CarJack",number]=systime()
+        }elseif(LSaid:find("steal")){
+            GTable["Steal",number]=systime()
+        }elseif(LSaid:find("terror")){
+            GTable["Terror",number]=systime()
+        }elseif(LSaid:find("mug")){
+            GTable["Mug",number]=systime()
+        }elseif(LSaid:find("kidnap")){
+            GTable["Kidnap",number]=systime()
+        }
+        timer(lastSpoke():steamID()+"CoolDowns",100)
+    }
+}elseif(clk(clkName())){
+    if(clk("Check")){
+        if(->EGPHud){
+            EGPHud:egpClear()
+            local Scr=egpScrSize(owner())
+            local Scr=Scr+vec2(0,0)
+            local Time=systime()*1000
+            local Str=""
+            Str+=round(Time/Hour)%24
+            Str+=":"
+            Str+=round(Time/Min)%60
+            Str+=":"
+            Str+=round(Time/Sec)%60
+            EGPHud:egpText(10,"Current Time: "+Str,vec2(Scr:x()/2+OffSet,50))
+            local Space=20
+            EGPHud:egpText(1,"Normal Raid: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(2,"Bank/SP Raid: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(3,"Normal Mug: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(4,"SP Mug: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(5,"Steal: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(6,"Kidnap: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(7,"SP Kidnap: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(8,"Terror: Ready",vec2(Scr:x()/2+OffSet,50+Space))
+            Space+=20
+            EGPHud:egpText(9,"Player: "+owner():name(),vec2(Scr:x()/2+OffSet,50+Space))
+            timer("Refresh",10*Sec)
+        }else{
+            timer("Check",1*Sec)
+        }
+    }elseif(clk("Refresh")){
+        CD:update()
+        timer("Refresh1",100)
+    }elseif(clk("Refresh1")){
+        CD:calculateTime()
+        timer("Refresh2",100)
+    }elseif(clk("Refresh2")){
+        CD:calculateSecondTime()
+        timer("RefreshMe",100)
+    }elseif(clk("RefreshMe")){
+        EGPHud:refresh(CD)
+        timer("Refresh",1000)
+    }else{
+        local GT=gTable(clkName())
+        GT:update()
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

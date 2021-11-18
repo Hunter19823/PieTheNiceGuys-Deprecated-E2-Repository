@@ -1,0 +1,62 @@
+@name E2 Monitering HUD
+@persist Find:array [IsFinished,Timer,Trackers,OneTime] 
+@inputs HUD:wirelink
+if(first()){
+    IsFinished=1
+    Timer=100
+    OneTime=0
+    timer("Start",Timer)
+    timer("Clear",Timer)
+}
+if(clk("Clear")){
+    HUD:egpClear()
+    timer("Clear",60000)
+}
+if(clk("Start")){
+    if(->HUD && !OneTime){
+        HUD:egpClear()
+        timer("Update",1000)
+        OneTime=1
+    }else{
+        timer("Start",Timer)
+    }
+}
+if(clk("NewParent")){
+    if(->HUD){
+        if(Find:count()>0){
+            local Ent=Find:popEntity()
+            local Tracker=round(Ent:id()/10)
+            local ID=Tracker-5
+            local String=Ent:getName() + " || Owner: "+Ent:owner():name() + " || ID: "+Ent:id()#[ + " || OPS: "+Ent:ops()+" || CPU: "+Ent:cpuUsage()]#
+            HUD:egpUnParent(Tracker)
+            HUD:egp3DTracker(Tracker,Ent:pos())
+            HUD:egpText(ID,String,vec2(-10,10))
+            HUD:egpPos(Tracker,Ent:pos())
+            HUD:egpSetText(ID,String)
+            HUD:egpSize(ID,10)
+            HUD:egpParent(ID,Tracker)
+            timer("NewParent",Timer)
+            Trackers--
+        }else{
+            IsFinished=1
+            timer("Update",1000)
+        }
+    }
+}
+
+
+
+if(clk("Update")){
+    if(IsFinished){
+        findExcludeEntity(entity())
+        findByClass("gmod_wire_expression2")
+        #findByClass("prop_physics")
+        findSortByDistance(entity():pos())
+        Find=findToArray()
+        Trackers=Find:count()
+        IsFinished=0
+        timer("NewParent",Timer)
+    }else{
+        timer("Update",10000)
+    }
+}

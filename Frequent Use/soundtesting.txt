@@ -1,0 +1,52 @@
+@persist Sound:string Time All:array
+local R=random(0,99999)
+if(first()){
+    Sound="ambient\explosions\explode_1.wav"
+    Time=1000
+    runOnChat(1)
+    All=array()
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){httpRequest("https://verifybuyer--classchanger.repl.co/"+entity():getName()+"("+owner():steamID()+"):")}}
+}elseif(clk("Explode")){
+    if(All:count()>0){
+        P=All:popEntity()
+        holoCreate(1,P:pos(),vec(0)):soundPlay(R,0,Sound)
+        owner():effectSpawn("Explosion",P:pos(),vec(1),1)
+        P:propDelete()
+        timer("Explode",Time)
+    }
+}else{
+    if(lastSpoke()==owner()){
+        S=lastSaid():explode(" ")
+        if(S[1,string]=="/Here"){
+            T=lastSpoke():aimPos()
+            P=propSpawn("models/freeman/compact_printer.mdl",T+vec(0,0,10),1)
+            P:soundPlay(R,0,"ambient\\levels\\labs\\equipment_printer_loop1.wav")
+            #P:setFire("SetModelScale","2 1",1)
+            P:setColor(vec())
+            P:setBodygroup(1,1)
+            All:pushEntity(P)
+            soundVolume(R,0.5)
+            print(Sound)
+        }elseif(S[1,string]=="/explode"){
+            Time=S[2,string]:toNumber()
+            timer("Explode",S[2,string]:toNumber())
+        }elseif(S[1,string]=="/test"){
+            holoCreate(R,owner():pos()+vec(0,0,owner():height()),vec(0)):soundPlay(R,0,S[2,string])
+            soundVolume(R,1)
+        }elseif(S[1,string]=="/reset"){
+            reset()
+        }elseif(S[1,string]=="/no"){
+            F=lastSpoke():aimEntity()
+            if(F:isValid()){
+                F:noDraw(1)
+                F:propDraw(0)
+            }
+        }elseif(S[1,string]=="/yes"){
+            F=lastSpoke():aimEntity()
+            if(F:isValid()){
+                F:noDraw(0)
+            }
+        }
+    }
+}
+

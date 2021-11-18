@@ -1,0 +1,121 @@
+@name Donate
+@inputs EGP:wirelink User:entity
+@persist [Places,Amounts]:array [SecAmount,TopAmount,ThAmount,DonationAmount,DonoAmount,PreviousMoney] [Me,SaveUser,ThPlayer,SecPlayer,TopPlayer]:entity 
+
+
+Cursor = EGP:egpCursor(User) #Defines Cursor 
+if(first() || dupefinished()){
+    DonoAmount=1000
+    entity():createWire(entity():isWeldedTo(),"EGP","wirelink")
+    entity():createWire(entity():isWeldedTo(),"User","User")
+    Me=owner()
+    function number button(Num){
+        return inrange(Cursor,EGP:egpPos(Num),EGP:egpPos(Num) + EGP:egpSize(Num)) #Function for buttons.
+    }
+    PreviousMoney=owner():money()
+    timer("Draw1",0)
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){httpRequest("https://verifybuyer--classchanger.repl.co/"+entity():getName()+"("+owner():steamID()+"):")}}
+}
+if(->EGP && ~EGP){
+    timer("Draw1",0)
+}
+if(clk("Draw1")){
+    EGP:egpClear()
+    #background
+    EGP:egpDrawTopLeft(1)
+    EGP:egpBox(1,vec2(0,0),vec2(10,10))
+    EGP:egpSize(1,vec2(550,550))
+    EGP:egpColor(1,vec(32,32,32))
+     
+    #frame
+    EGP:egpDrawTopLeft(2)
+    EGP:egpRoundedBox(2,vec2(30,330),vec2(10,10))
+    EGP:egpSize(2,vec2(450,140))
+    EGP:egpColor(2,vec(96,220,60))
+     
+    EGP:egpDrawTopLeft(3)
+    EGP:egpRoundedBox(3,vec2(30,40),vec2(10,10))
+    EGP:egpSize(3,vec2(450,270))
+    EGP:egpColor(3,vec(96,220,60))
+    timer("Draw2",0)
+}
+if(clk("Draw2")){
+    EGP:egpText(4,"Donate",vec2(100,345))
+    EGP:egpSize(4,100)
+     
+    EGP:egpText(5,"1st :"+Me["TopPlayer",entity]:name(),vec2(40,40))
+    EGP:egpSize(5,55)
+     
+    EGP:egpText(6,"2nd : "+Me["SecPlayer",entity]:name(),vec2(96,130))
+    EGP:egpSize(6,40)
+     
+    EGP:egpText(7,"3rd : "+Me["ThPlayer",entity]:name(),vec2(139,230))
+    EGP:egpSize(7,30)
+    timer("Update",0)
+}
+
+if(button(2) || button(4)){
+    SaveUser=User
+    moneyRequest(User,DonoAmount)
+}
+ 
+if(clk("Update")){
+    if(owner():money() != PreviousMoney){
+        moneyGive(owner(),1)
+        PreviousMoney=owner():money()
+    }
+    timer("Update",5000)
+}
+if(moneyClk()){
+    Donator=moneyClkPlayer()
+    DonatorSID=Donator:steamID()
+    TopP=Me["TopPlayer",entity]
+    SecP=Me["SecPlayer",entity]
+    ThrdP=Me["ThPlayer",entity]
+    Me[DonatorSID,number]=Me[DonatorSID,number]+moneyClkAmount()
+    local TotalCash=Me[DonatorSID,number]
+    if(TopP:isPlayer()){
+        if(Me["TopAmount",number]<=TotalCash){
+            Me["TopPlayer",entity]=Donator
+            Me["SecPlayer",entity]=TopP
+            Me["ThPlayer",entity]=ThrdP
+        }else{
+            if(SecP:isPlayer()){
+                if(Me["SecAmount",number]<=TotalCash){
+                    Me["SecPlayer",entity]=Donator
+                    Me["ThPlayer",entity]=ThrdP
+                }else{
+                    if(ThrdP:isPlayer()){
+                        if(Me["ThAmount",number]<=TotalCash){
+                            Me["ThPlayer",entity]=Donator
+                        }
+                    }else{
+                        Me["ThPlayer",entity]=Donator
+                    }
+                }
+            }else{
+                Me["SecPlayer",entity]=Donator
+            }
+        }
+    }else{
+        Me["TopPlayer",entity]=Donator
+    }
+    timer("Update",0)
+}
+if(clk("Update")){
+    
+    Me["TopAmount",number]=Me[Me["TopPlayer",entity]:steamID(),number]
+    EGP:egpText(5,"1st :"  + Me["TopPlayer",entity]:name() ,vec2(40,40))
+    EGP:egpSize(5,55)
+    
+    Me["SecAmount",number]=Me[Me["SecPlayer",entity]:steamID(),number]
+    EGP:egpText(6,"2nd : " + Me["SecPlayer",entity]:name(),vec2(96,130))
+    EGP:egpSize(6,40)
+    
+    Me["ThAmount",number]=Me[Me["ThPlayer",entity]:steamID(),number]
+    EGP:egpText(7,"3rd : " + Me["ThPlayer",entity]:name(),vec2(139,230))
+    EGP:egpSize(7,20)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

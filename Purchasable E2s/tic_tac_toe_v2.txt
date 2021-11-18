@@ -1,0 +1,354 @@
+@name Pie's Tick Tack Toe Game v2
+@inputs Reset:entity
+@persist [Size,CanMakeMove,HasOpponent,AmountOfThings] [Squares]:table [E2,P1,P2,NextTurn]:entity [SavedSquares,Children]:array [P1Model,P2Model]:string
+if(first()){
+    #The Model Used to represent Os
+    P1Model="models/hunter/tubes/tube2x2x025.mdl"
+    #The Model Used to represent Xs
+    P2Model="models/maxofs2d/thruster_projector.mdl"
+    
+    #The E2 itself
+    E2=entity()
+    
+    #Defining the Person who goes first as nobody
+    P1=noentity()
+    #Setting the next player's turn to nobody. (Yet).
+    NextTurn=P1
+    
+    #Size of the game divided by 3.
+    Size=100
+    
+    #[
+    Instructions:
+    Have 1 person use the colored barrel until it is replaced with a different colored barrel.
+    Have the other person use the other colored barrel.
+    
+    The board will enter a preperation phase. After this 
+    phase is finished it will announce who goes first.
+    
+    Have the player get as close as possible to the props so that
+    the game can register the person pressing e as best as possible.
+    
+    If you would like to force reset the game, you can wire the E2 chip to one of
+    the printers on the board. It will force the game to reset back to start.
+    ]#
+    
+    
+    
+    
+    
+    #Ignore The Rest of This
+    E2["X",number]=1
+    E2["Y",number]=1
+    Squares[1,array]=array()
+    Squares[2,array]=array()
+    Squares[3,array]=array()
+    SavedSquares=array(noentity(),noentity(),noentity(),noentity(),noentity(),noentity(),noentity(),noentity(),noentity())
+    E2["QuadrantsMade",number]=0
+    CanMakeMove=0
+    HasOpponent=0
+    runOnUse(1,propSpawn("models/shadertest/vertexlitselfilluminatedtexture.mdl",entity():toWorld(vec(0,0,0)),1))
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(->Reset && ~Reset){
+    Reset:propDelete()
+    timer("Reset",0)
+}
+if(clk("MakeSquare")){
+    if(E2["QuadrantsMade",number]<9){
+        E2["QuadrantsMade",number]=E2["QuadrantsMade",number]+1
+        if(E2["X",number]==4){
+            E2["X",number]=1
+            E2["Y",number]=E2["Y",number]+1
+        }
+        holoCreate(E2["QuadrantsMade",number],entity():pos()+vec(E2["X",number]*(Size/2)-Size,E2["Y",number]*(Size/2)-Size,25),vec(1),ang())
+        holoParent(E2["QuadrantsMade",number],entity())
+        holoScaleUnits(E2["QuadrantsMade",number],vec(Size/3,Size/3,1))
+        Squares[E2["X",number],array][E2["Y",number],number]=E2["QuadrantsMade",number]
+        E2["X",number]=E2["X",number]+1
+        timer("MakeSquare",10)
+    }else{
+        E2["QuadrantsMade",number]=0
+        E2["X",number]=1
+        E2["Y",number]=1
+        timer("CreateProps",10)
+    }
+}
+if(clk("CreateProps")){
+    if(E2["QuadrantsMade",number]<9){
+        E2["QuadrantsMade",number]=E2["QuadrantsMade",number]+1
+        if(E2["X",number]==4){
+            E2["X",number]=1
+            E2["Y",number]=E2["Y",number]+1
+        }
+        P=propSpawn("models/props_combine/breenglobe.mdl",entity():pos()+vec(E2["X",number]*(Size/2)-Size,E2["Y",number]*(Size/2)-Size,25),ang(),1)
+        P:parentTo(entity())
+        runOnUse(1,P)
+        E2["X",number]=E2["X",number]+1
+        timer("CreateProps",750)
+    }else{
+        print("Finished Setting Up Board")
+        entity():streamStart(1,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("The Tick Tack Toe Board has finished generating. Player: "+NextTurn:name()+" is allowed to pick first.")+"&tl="+"en-us"+"&client=tw-ob",1)
+        CanMakeMove=1
+    }
+}
+if(useEntClk():inUse()){
+    if(HasOpponent){
+        if(useEntClk():inUseBy()==NextTurn && CanMakeMove){
+            local Pos=useEntClk():pos()-entity():pos()
+            local Boundary=Size
+            local HalfB=Size/4
+            local PX=Pos:x()
+            local PY=Pos:y()
+            local X=0
+            local Y=0
+            if(PX>HalfB && PX<Boundary){
+                X=3
+            }elseif(PX<=HalfB && PX>=HalfB*-1){
+                X=2
+            }elseif(PX<=HalfB*-1 && PX>=Boundary*-1){
+                X=1
+            }
+            if(PY>HalfB && PY<Boundary){
+                Y=3
+            }elseif(PY<=HalfB && PY>=HalfB*-1){
+                Y=2
+            }elseif(PY<=HalfB*-1 && PY>=Boundary*-1){
+                Y=1
+            }
+            if(X!=0 && Y!=0){
+                Square=Squares[X,array][Y,number]
+                SavedSquares[Square,entity]=NextTurn
+                runOnUse(0,useEntClk())
+                useEntClk():propBreak()
+                AmountOfThings++
+                if(NextTurn==P1){
+                    NextTurn=P2
+                    holoModel(Square,P1Model)
+                    holoColor(Square,vec(255,0,0))
+                }else{
+                    NextTurn=P1
+                    holoModel(Square,P2Model)
+                    holoColor(Square,vec(0,0,255))
+                }
+                holoScaleUnits(Square,vec(Size/2,Size/2,1))
+                timer("CheckIfCanWin",10)
+                CanMakeMove=0
+            }
+        }
+    }else{
+        P=useEntClk():inUseBy()
+        if(P1!=noentity()){
+            if(P!=P1){
+                HasOpponent=1
+                P2=P
+                NextTurn=round(random(0,1))==0 ? P1 : P2
+                entity():setPos(useEntClk():pos())
+                useEntClk():propBreak()
+                print("Player 2: "+P2:name())
+                timer("MakeSquare",10)
+            }
+        }else{
+            P1=P
+            print("Player 1: "+P1:name())
+            runOnUse(1,propSpawn("models/shadertest/vertexlitmaskedenvmappedtexdet.mdl",useEntClk():pos(),useEntClk():angles(),1))
+            useEntClk():propBreak()
+        }
+    }
+}
+if(clk("CheckForWinnerP1")){
+    Won=0
+    Winner=noentity()
+    if(SavedSquares[1,entity]==P1){
+        if(SavedSquares[1,entity]==SavedSquares[2,entity] && SavedSquares[1,entity]==SavedSquares[3,entity]){
+            Won=Won||1
+            Winner=SavedSquares[1,entity]
+            #print("Row 1")
+        }
+        if(SavedSquares[1,entity]==SavedSquares[4,entity] && SavedSquares[1,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[1,entity]
+            #print("Row 2")
+        }
+    }
+    if(SavedSquares[9,entity]==P1){
+        if(SavedSquares[9,entity]==SavedSquares[8,entity] && SavedSquares[9,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[9,entity]
+            #print("Row 3")
+        }
+        if(SavedSquares[9,entity]==SavedSquares[6,entity] && SavedSquares[9,entity]==SavedSquares[3,entity]){
+            Won=Won||1
+            Winner=SavedSquares[9,entity]
+            #print("Row 4")
+        }
+    }
+    if(SavedSquares[5,entity]==P1){
+        if(SavedSquares[5,entity]==SavedSquares[1,entity] && SavedSquares[5,entity]==SavedSquares[9,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 5")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[2,entity] && SavedSquares[5,entity]==SavedSquares[8,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 6")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[3,entity] && SavedSquares[5,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 7")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[6,entity] && SavedSquares[5,entity]==SavedSquares[4,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 8")
+        }
+    }
+    if(Won && Winner!=noentity()){
+        print("Player "+Winner:name()+" Won!")
+        entity():streamStart(1,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Player "+Winner:name()+" Won!")+"&tl="+"en-us"+"&client=tw-ob",1)
+        timer("Reset",7500)
+    }else{
+        timer("CheckForWinnerP2",10)
+    }
+}
+if(clk("CheckForWinnerP2")){
+    Won=0
+    Winner=noentity()
+    if(SavedSquares[1,entity]==P2){
+        if(SavedSquares[1,entity]==SavedSquares[2,entity] && SavedSquares[1,entity]==SavedSquares[3,entity]){
+            Won=Won||1
+            Winner=SavedSquares[1,entity]
+            #print("Row 1")
+        }
+        if(SavedSquares[1,entity]==SavedSquares[4,entity] && SavedSquares[1,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[1,entity]
+            #print("Row 2")
+        }
+    }
+    if(SavedSquares[9,entity]==P2){
+        if(SavedSquares[9,entity]==SavedSquares[8,entity] && SavedSquares[9,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[9,entity]
+            #print("Row 3")
+        }
+        if(SavedSquares[9,entity]==SavedSquares[6,entity] && SavedSquares[9,entity]==SavedSquares[3,entity]){
+            Won=Won||1
+            Winner=SavedSquares[9,entity]
+            #print("Row 4")
+        }
+    }
+    if(SavedSquares[5,entity]==P2){
+        if(SavedSquares[5,entity]==SavedSquares[1,entity] && SavedSquares[5,entity]==SavedSquares[9,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 5")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[2,entity] && SavedSquares[5,entity]==SavedSquares[8,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 6")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[3,entity] && SavedSquares[5,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 7")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[6,entity] && SavedSquares[5,entity]==SavedSquares[4,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 8")
+        }
+    }
+    if(Won && Winner!=noentity()){
+        print("Player "+Winner:name()+" Won!")
+        entity():streamStart(1,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("Player "+Winner:name()+" Won!")+"&tl="+"en-us"+"&client=tw-ob",1)
+        timer("Reset",7500)
+    }else{
+        if(AmountOfThings!=9){
+            CanMakeMove=1
+        }else{
+            print("RIP It was a Draw :(")
+            entity():streamStart(1,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("RIP It was a Draw :(")+"&tl="+"en-us"+"&client=tw-ob",1)
+            timer("Reset",5000)
+        }
+    }
+}
+if(clk("CheckIfCanWin")){
+    Won=0
+    Winner=noentity()
+    if(SavedSquares[1,entity]==Winner){
+        if(SavedSquares[1,entity]==SavedSquares[2,entity] && SavedSquares[1,entity]==SavedSquares[3,entity]){
+            Won=Won||1
+            Winner=SavedSquares[1,entity]
+            #print("Row 1")
+        }
+        if(SavedSquares[1,entity]==SavedSquares[4,entity] && SavedSquares[1,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[1,entity]
+            #print("Row 2")
+        }
+    }
+    if(SavedSquares[9,entity]==Winner){
+        if(SavedSquares[9,entity]==SavedSquares[8,entity] && SavedSquares[9,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[9,entity]
+            #print("Row 3")
+        }
+        if(SavedSquares[9,entity]==SavedSquares[6,entity] && SavedSquares[9,entity]==SavedSquares[3,entity]){
+            Won=Won||1
+            Winner=SavedSquares[9,entity]
+            #print("Row 4")
+        }
+    }
+    if(SavedSquares[5,entity]==Winner){
+        if(SavedSquares[5,entity]==SavedSquares[1,entity] && SavedSquares[5,entity]==SavedSquares[9,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 5")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[2,entity] && SavedSquares[5,entity]==SavedSquares[8,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 6")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[3,entity] && SavedSquares[5,entity]==SavedSquares[7,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 7")
+        }
+        if(SavedSquares[5,entity]==SavedSquares[6,entity] && SavedSquares[5,entity]==SavedSquares[4,entity]){
+            Won=Won||1
+            Winner=SavedSquares[5,entity]
+            #print("Row 8")
+        }
+    }
+    if((!Won && AmountOfThings!=9) || Winner==noentity()){
+        timer("CheckForWinnerP1",10)
+    }else{
+        print("RIP It was a Draw :(")
+        entity():streamStart(1,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode("RIP It was a Draw :(")+"&tl="+"en-us"+"&client=tw-ob",1)
+        timer("Reset",5000)
+    }
+}
+if(clk("Reset")){
+    holoDeleteAll()
+    Children=entity():children()
+    timer("KillChildren",0)
+}
+if(clk("KillChildren")){
+    if(Children:count()>0){
+        Child=Children:popEntity()
+        if(Child:type()=="prop_physics"){
+            Child:propDelete()
+        }
+        timer("KillChildren",10)
+    }else{
+        reset()
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

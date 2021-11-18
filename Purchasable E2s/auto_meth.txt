@@ -1,0 +1,160 @@
+@name Pie's Meth Assistant
+@persist [Combiner,LastTray]:entity [Trays]:array
+if(first()){
+    runOnChat(1)
+    timer("FindCombiner",1000)
+    timer("FindFrezzer",5000)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".meth",
+            Number=LS[2,string]:toNumber()
+            if(Combiner){
+                for(I=1, Number){
+                    timer("FindMethylamin",6500*I)
+                }
+            }else{
+                timer("FindCombiner",1000)
+            }
+            break
+        case ".alu",
+        case ".aluminum",
+            Number=LS[2,string]:toNumber()
+            if(Combiner){
+                for(I=1, Number){
+                    timer("FindAluminum",5000*I)
+                }
+            }else{
+                timer("FindCombiner",1000)
+            }
+            break
+        case ".filter",
+            if(Combiner){
+                timer("FindFilter",1000)
+            }else{
+                timer("FindCombiner",1000)
+            }
+            break
+        case ".trays",
+            if(Combiner){
+                findIncludePlayerProps(owner())
+                findByClass("zmlab_frezzingtray")
+                Trays = findToArray()
+                LastTray=owner()
+                
+                timer("BringTrays",1000)
+            }else{
+                timer("FindCombiner",1000)
+            }
+            break
+        case ".collect",
+            findIncludePlayerProps(owner())
+            findByClass("zmlab_meth")
+            Trays = findToArray()
+            LastTray=owner()
+            timer("BringTrays",1000)
+            break
+    }
+}
+if(clk("FindCombiner")){
+    findIncludePlayerProps(owner())
+    findByClass("zmlab_combiner")
+    Combiner=find()
+    if(Combiner){
+        Combiner:propManipulate(entity():toWorld(vec(0,0,0)),ang(),1,gravity(),0)
+    }else{
+        print("Combiner not found")
+        timer("BuyCombiner",0)
+    }
+}
+if(clk("FindMethylamin")){
+    if(Combiner){
+        findIncludePlayerProps(owner())
+        findByClass("zmlab_methylamin")
+        Methly=find()
+        if(Methly){
+            print("Teleporting Methylamin")
+            Methly:propManipulate(entity():toWorld(vec(50,0,100)),ang(),0,gravity(),0)
+        }else{
+            print("Methylamin not found")
+            timer("BuyMethylamin",0)
+        }
+    }
+}
+if(clk("FindAluminum")){
+    if(Combiner){
+        findIncludePlayerProps(owner())
+        findByClass("zmlab_aluminium")
+        Methly=find()
+        if(Methly){
+            print("Teleporting Aluminium")
+            Methly:propManipulate(entity():toWorld(vec(50,0,100)),ang(),0,gravity(),0)
+        }else{
+            print("Aluminium not found")
+            timer("BuyAluminium",0)
+        }
+    }
+}
+if(clk("FindFilter")){
+    if(Combiner){
+        findIncludePlayerProps(owner())
+        findByClass("zmlab_filter")
+        Methly=find()
+        if(Methly){
+            print("Teleporting Filter")
+            Methly:propManipulate(entity():toWorld(vec(50,0,100)),ang(),0,gravity(),0)
+        }else{
+            print("Filter not found")
+            timer("BuyAluminium",0)
+        }
+    }
+}
+if(clk("FindFrezzer")){
+    if(Combiner){
+        findIncludePlayerProps(owner())
+        findByClass("zmlab_frezzer")
+        Methly=find()
+        if(Methly){
+            print("Teleporting Frezzer")
+            Methly:propManipulate(entity():toWorld(vec(-150,0,0)),ang(0,90,0),1,gravity(),0)
+        }else{
+            print("Frezzer not found")
+            timer("BuyFrezzer",0)
+        }
+    }
+}
+if(clk("BuyCombiner")){
+    concmd("say /buycombiner_zmlab")
+    timer("FindCombiner",1500)
+}
+
+if(clk("BuyMethylamin")){
+    concmd("say /buymethylamin_zmlab")
+    timer("FindMethylamin",1500)
+}
+
+if(clk("BuyAluminium")){
+    concmd("say /buyaluminium_zmlab")
+    timer("FindAluminum",1500)
+}
+
+if(clk("BuyFilter")){
+    concmd("say /buyfilter_zmlab")
+    timer("FindFilter",1500)
+}
+
+if(clk("BuyFrezzer")){
+    concmd("say /buyfrezzer_zmlab")
+    timer("FindFrezzer",1500)
+}
+if(clk("BringTrays")){
+    if(Trays:count()>0){
+        T=Trays:popEntity()
+        T:propManipulate(LastTray:toWorld(vec(25,0,10)),LastTray:angles(),1,gravity(),0)
+        
+        timer(clkName(),100)
+    }else{
+        print("Finished Sorting Trays")
+    }
+}

@@ -1,0 +1,70 @@
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Chunk=0
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=150
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    #timer(Counter+"",Speed)
+    timer("base1",Speed)
+}
+if(clk("base1")){holoCreate(1,entity():pos()+vec(48,-17.3,14.25),vec(0.1),ang(89.97,0,180),vec(255,93,0),"models/hunter/plates/plate6x7.mdl") holoAlpha(1,255) holoMaterial(1,"debug/env_cubemap_model") holoParent(1,entity()) timer("base2",Speed)}
+if(clk("base2")){holoCreate(2,entity():pos()+vec(47.7,-17.3,14.25),vec(0.1),ang(89.97,0,180),vec(0,0,0),"models/hunter/plates/plate6x7.mdl") holoAlpha(2,1) holoMaterial(2,"vgui/screens/vgui_overlay") holoParent(2,entity()) timer("base3",Speed)}
+if(clk("base3")){holoCreate(3,entity():pos()+vec(-28.7,51.17,27.33),vec(0.1),ang(90,-90,180),vec(255,93,0),"models/hunter/plates/plate075x6.mdl") holoAlpha(3,255) holoMaterial(3,"debug/env_cubemap_model") holoParent(3,entity()) timer("base4",Speed)}
+if(clk("base4")){holoCreate(4,entity():pos()+vec(-7.06,51.17,27.33),vec(0.1),ang(90,-90,180),vec(255,93,0),"models/hunter/plates/plate075x6.mdl") holoAlpha(4,255) holoMaterial(4,"debug/env_cubemap_model") holoParent(4,entity()) timer("base5",Speed)}
+if(clk("base5")){holoCreate(5,entity():pos()+vec(-49.76,47.69,32.97),vec(0.1),ang(0,-180,-45),vec(255,93,0),"models/hunter/plates/plate075x3.mdl") holoAlpha(5,255) holoMaterial(5,"debug/env_cubemap_model") holoParent(5,entity()) timer("base6",Speed)}
+if(clk("base6")){holoCreate(6,entity():pos()+vec(-49.77,47.14,33.44),vec(0.1),ang(0,-180,-45),vec(0,0,0),"models/hunter/plates/plate075x3.mdl") holoAlpha(6,1) holoMaterial(6,"vgui/screens/vgui_overlay") holoParent(6,entity()) timer("base7",Speed)}
+if(clk("base7")){holoCreate(7,entity():pos()+vec(-42.95,53.67,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(7,255) holoMaterial(7,"debug/env_cubemap_model") holoParent(7,entity()) timer("base8",Speed)}
+if(clk("base8")){holoCreate(8,entity():pos()+vec(-28.95,52.96,24.54),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube025x8x025.mdl") holoAlpha(8,255) holoMaterial(8,"debug/env_cubemap_model") holoParent(8,entity()) timer("base9",Speed)}
+if(clk("base9")){holoCreate(9,entity():pos()+vec(-45.89,44.19,33.22),vec(0.1),ang(0,-90,-90),vec(255,93,0),"models/hunter/blocks/cube1x2x1.mdl") holoAlpha(9,255) holoMaterial(9,"debug/env_cubemap_model") holoParent(9,entity()) timer("base10",Speed)}
+if(clk("base10")){holoCreate(10,entity():pos()+vec(-45.89,48.93,33.22),vec(0.1),ang(0,-90,-90),vec(255,93,0),"models/hunter/blocks/cube1x2x1.mdl") holoAlpha(10,255) holoMaterial(10,"debug/env_cubemap_model") holoParent(10,entity()) timer("base11",Speed)}
+if(clk("base11")){holoCreate(11,entity():pos()+vec(-14.61,53.67,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(11,255) holoMaterial(11,"debug/env_cubemap_model") holoParent(11,entity()) timer("base12",Speed)}
+if(clk("base12")){holoCreate(12,entity():pos()+vec(-33.59,53.67,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(12,255) holoMaterial(12,"debug/env_cubemap_model") holoParent(12,entity()) timer("base13",Speed)}
+if(clk("base13")){holoCreate(13,entity():pos()+vec(-14.61,48.92,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(13,255) holoMaterial(13,"debug/env_cubemap_model") holoParent(13,entity()) timer("base14",Speed)}
+if(clk("base14")){holoCreate(14,entity():pos()+vec(-33.59,48.92,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(14,255) holoMaterial(14,"debug/env_cubemap_model") holoParent(14,entity()) timer("base15",Speed)}
+if(clk("base15")){holoCreate(15,entity():pos()+vec(-27.34,49.05,31.14),vec(0.1),ang(0,90,-90),vec(255,93,0),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(15,255) holoMaterial(15,"models/props_lab/warp_sheet") holoParent(15,entity()) timer("base16",Speed)}
+if(clk("base16")){holoCreate(16,entity():pos()+vec(-37.74,49.04,31.14),vec(0.1),ang(0,90,-90),vec(255,93,0),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(16,255) holoMaterial(16,"models/props_lab/warp_sheet") holoParent(16,entity()) timer("base17",Speed)}
+if(clk("base17")){holoCreate(17,entity():pos()+vec(-36.24,53.55,29.9),vec(0.1),ang(0,0,0),vec(255,93,0),"models/hunter/blocks/cube05x05x05.mdl") holoAlpha(17,255) holoMaterial(17,"debug/env_cubemap_model") holoParent(17,entity()) timer("base18",Speed)}
+if(clk("base18")){holoCreate(18,entity():pos()+vec(-37.08,53.57,29.34),vec(0.1),ang(0,-90.41,90),vec(36,36,36),"models/hunter/plates/plate075.mdl") holoAlpha(18,255) holoMaterial(18,"models/props_combine/tpballglow") holoParent(18,entity()) timer("base19",Speed)}
+if(clk("base19")){holoCreate(19,entity():pos()+vec(-7.09,52.96,24.53),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube025x8x025.mdl") holoAlpha(19,255) holoMaterial(19,"debug/env_cubemap_model") holoParent(19,entity()) timer("base20",Speed)}
+if(clk("base20")){holoCreate(20,entity():pos()+vec(-49.74,28.54,28.02),vec(0.1),ang(0,-180,0),vec(255,93,0),"models/hunter/plates/plate075x6.mdl") holoAlpha(20,255) holoMaterial(20,"debug/env_cubemap_model") holoParent(20,entity()) timer("base21",Speed)}
+if(clk("base21")){holoCreate(21,entity():pos()+vec(-49.74,28.54,28.32),vec(0.1),ang(0,-180,0),vec(0,0,0),"models/hunter/plates/plate075x6.mdl") holoAlpha(21,1) holoMaterial(21,"vgui/screens/vgui_overlay") holoParent(21,entity()) timer("base22",Speed)}
+if(clk("base22")){holoCreate(22,entity():pos()+vec(-46.48,23.92,14.24),vec(0.1),ang(89.95,-179.98,180),vec(255,93,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(22,255) holoMaterial(22,"debug/env_cubemap_model") holoParent(22,entity()) timer("base23",Speed)}
+if(clk("base23")){holoCreate(23,entity():pos()+vec(-46.49,37.07,14.24),vec(0.1),ang(89.95,-179.98,180),vec(255,93,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(23,255) holoMaterial(23,"debug/env_cubemap_model") holoParent(23,entity()) timer("base24",Speed)}
+if(clk("base24")){holoCreate(24,entity():pos()+vec(-44.11,23.92,14.24),vec(0.1),ang(89.95,-179.98,180),vec(0,0,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(24,1) holoMaterial(24,"vgui/screens/vgui_overlay") holoParent(24,entity()) timer("base25",Speed)}
+if(clk("base25")){holoCreate(25,entity():pos()+vec(-44.11,37.07,14.24),vec(0.1),ang(89.95,-179.98,180),vec(0,0,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(25,1) holoMaterial(25,"vgui/screens/vgui_overlay") holoParent(25,entity()) timer("base26",Speed)}
+if(clk("base26")){holoCreate(26,entity():pos()+vec(-2.09,53.67,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(26,255) holoMaterial(26,"debug/env_cubemap_model") holoParent(26,entity()) timer("base27",Speed)}
+if(clk("base27")){holoCreate(27,entity():pos()+vec(-2.09,48.92,35.61),vec(0.1),ang(0,-90,0),vec(255,93,0),"models/hunter/blocks/cube1x4x1.mdl") holoAlpha(27,255) holoMaterial(27,"debug/env_cubemap_model") holoParent(27,entity()) timer("base28",Speed)}
+if(clk("base28")){holoCreate(28,entity():pos()+vec(2.11,49.1,31.14),vec(0.1),ang(0,90,-90),vec(255,93,0),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(28,255) holoMaterial(28,"models/props_lab/warp_sheet") holoParent(28,entity()) timer("base29",Speed)}
+if(clk("base29")){holoCreate(29,entity():pos()+vec(-6.52,49.05,31.14),vec(0.1),ang(0,90,-90),vec(255,93,0),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(29,255) holoMaterial(29,"models/props_lab/warp_sheet") holoParent(29,entity()) timer("base30",Speed)}
+if(clk("base30")){holoCreate(30,entity():pos()+vec(-16.93,49.05,31.14),vec(0.1),ang(0,90,-90),vec(255,93,0),"models/props_building_details/storefront_template001a_bars.mdl") holoAlpha(30,255) holoMaterial(30,"models/props_lab/warp_sheet") holoParent(30,entity()) timer("base31",Speed)}
+if(clk("base31")){holoCreate(31,entity():pos()+vec(-1.31,53.55,29.9),vec(0.1),ang(0,0,0),vec(255,93,0),"models/hunter/blocks/cube05x05x05.mdl") holoAlpha(31,255) holoMaterial(31,"debug/env_cubemap_model") holoParent(31,entity()) timer("base32",Speed)}
+if(clk("base32")){holoCreate(32,entity():pos()+vec(-20.1,53.55,29.9),vec(0.1),ang(0,0,0),vec(255,93,0),"models/hunter/blocks/cube05x05x05.mdl") holoAlpha(32,255) holoMaterial(32,"debug/env_cubemap_model") holoParent(32,entity()) timer("base33",Speed)}
+if(clk("base33")){holoCreate(33,entity():pos()+vec(-2.19,53.57,29.34),vec(0.1),ang(0,-90.41,90),vec(36,36,36),"models/hunter/plates/plate075.mdl") holoAlpha(33,255) holoMaterial(33,"models/props_combine/tpballglow") holoParent(33,entity()) timer("base34",Speed)}
+if(clk("base34")){holoCreate(34,entity():pos()+vec(-20.96,53.58,29.34),vec(0.1),ang(0,-90.41,90),vec(36,36,36),"models/hunter/plates/plate075.mdl") holoAlpha(34,255) holoMaterial(34,"models/props_combine/tpballglow") holoParent(34,entity()) timer("base35",Speed)}
+if(clk("base35")){holoCreate(35,entity():pos()+vec(-48.58,12.09,14.27),vec(0.1),ang(0,-179.92,-89.76),vec(255,93,0),"models/hunter/blocks/cube1x6x1.mdl") holoAlpha(35,255) holoMaterial(35,"debug/env_cubemap_model") holoParent(35,entity()) timer("base36",Speed)}
+if(clk("base36")){holoCreate(36,entity():pos()+vec(-48.57,7.34,14.29),vec(0.1),ang(0,-179.92,-89.76),vec(0,0,0),"models/hunter/blocks/cube1x6x1.mdl") holoAlpha(36,1) holoMaterial(36,"vgui/screens/vgui_overlay") holoParent(36,entity()) timer("base37",Speed)}
+if(clk("base37")){holoCreate(37,entity():pos()+vec(-45.29,7.35,14.29),vec(0.1),ang(0,-179.92,-89.76),vec(0,0,0),"models/hunter/blocks/cube1x6x1.mdl") holoAlpha(37,1) holoMaterial(37,"vgui/screens/vgui_overlay") holoParent(37,entity()) timer("base38",Speed)}
+if(clk("base38")){holoCreate(38,entity():pos()+vec(-5.29,41.76,25.57),vec(0.1),ang(0,-90.22,0),vec(255,93,0),"models/hunter/plates/plate4x16.mdl") holoAlpha(38,255) holoMaterial(38,"debug/env_cubemap_model") holoParent(38,entity()) timer("base39",Speed)}
+if(clk("base39")){holoCreate(39,entity():pos()+vec(-31.36,50.14,14.25),vec(0.1),ang(90,90,180),vec(255,93,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(39,255) holoMaterial(39,"debug/env_cubemap_model") holoParent(39,entity()) timer("base40",Speed)}
+if(clk("base40")){holoCreate(40,entity():pos()+vec(12.84,48.71,31.07),vec(0.1),ang(89.9,2.91,-177.11),vec(255,93,0),"models/hunter/blocks/cube3x3x05.mdl") holoAlpha(40,255) holoMaterial(40,"debug/env_cubemap_model") holoParent(40,entity()) timer("base41",Speed)}
+if(clk("base41")){holoCreate(41,entity():pos()+vec(8.93,49.21,24.53),vec(0.1),ang(0,-179.97,0),vec(255,93,0),"models/hunter/blocks/cube025x2x025.mdl") holoAlpha(41,255) holoMaterial(41,"debug/env_cubemap_model") holoParent(41,entity()) timer("base42",Speed)}
+if(clk("base42")){holoCreate(42,entity():pos()+vec(4.41,48.93,33.22),vec(0.1),ang(0,-90,-90),vec(255,93,0),"models/hunter/blocks/cube1x2x1.mdl") holoAlpha(42,255) holoMaterial(42,"debug/env_cubemap_model") holoParent(42,entity()) timer("base43",Speed)}
+if(clk("base43")){holoCreate(43,entity():pos()+vec(-6.85,50.14,14.25),vec(0.1),ang(90,90,180),vec(255,93,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(43,255) holoMaterial(43,"debug/env_cubemap_model") holoParent(43,entity()) timer("base44",Speed)}
+if(clk("base44")){holoCreate(44,entity():pos()+vec(-31.36,47.77,14.25),vec(0.1),ang(90,90,180),vec(0,0,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(44,1) holoMaterial(44,"vgui/screens/vgui_overlay") holoParent(44,entity()) timer("base45",Speed)}
+if(clk("base45")){holoCreate(45,entity():pos()+vec(-6.85,47.77,14.25),vec(0.1),ang(90,90,180),vec(0,0,0),"models/hunter/blocks/cube6x6x05.mdl") holoAlpha(45,1) holoMaterial(45,"vgui/screens/vgui_overlay") holoParent(45,entity()) timer("base46",Speed)}
+if(clk("base46")){holoCreate(46,entity():pos()+vec(-50.49,-32.93,11.87),vec(0.1),ang(90,-180,180),vec(0,0,0),"models/hunter/plates/plate5x16.mdl") holoAlpha(46,1) holoMaterial(46,"vgui/screens/vgui_overlay") holoParent(46,entity()) timer("base47",Speed)}
+if(clk("base47")){holoCreate(47,entity():pos()+vec(-50.79,-32.93,11.87),vec(0.1),ang(90,-180,180),vec(255,93,0),"models/hunter/plates/plate5x16.mdl") holoAlpha(47,255) holoMaterial(47,"debug/env_cubemap_model") holoParent(47,entity()) timer("base48",Speed)}
+if(clk("base48")){holoCreate(48,entity():pos()+vec(-35.73,18.98,11.93),vec(0.1),ang(0,0.22,45),vec(0,0,0),"models/hunter/plates/plate3x8.mdl") holoAlpha(48,1) holoMaterial(48,"vgui/screens/vgui_overlay") holoParent(48,entity()) timer("base49",Speed)}
+if(clk("base49")){holoCreate(49,entity():pos()+vec(-5.29,41.57,25.27),vec(0.1),ang(0,-90.22,0),vec(0,0,0),"models/hunter/plates/plate4x16.mdl") holoAlpha(49,1) holoParent(49,entity()) timer("base50",Speed)}
+if(clk("base50")){holoCreate(50,entity():pos()+vec(-49.91,38.47,10.55),vec(0.1),ang(-0.51,179.77,-43.59),vec(255,93,0),"models/hunter/blocks/cube025x8x025.mdl") holoAlpha(50,255) holoMaterial(50,"debug/env_cubemap_model") holoParent(50,entity()) timer("base51",Speed)}

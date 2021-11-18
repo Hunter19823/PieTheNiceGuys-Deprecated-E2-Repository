@@ -1,0 +1,47 @@
+@name Press E to get a Free Gift
+@model models/bitminers2/bitminer_rack.mdl
+@persist AlreadyClaimed:gtable Amount Channel WhitelistName:string
+if(first()){
+    Amount=100000
+    Channel=123
+    WhitelistName="AlreadyClaimedMoney"
+    runOnUse(1,entity())
+    AlreadyClaimed=gTable(owner():steamID()+"'s Global Tables",1)
+    #AlreadyClaimed[WhitelistName,table]:clear()
+    if(AlreadyClaimed[WhitelistName,table]:count()<1){
+        AlreadyClaimed[WhitelistName,table]=table()
+    }
+    function number hasClaimedGift(Person:entity){
+        if(Person:isPlayer()){
+            local HasClaimed=AlreadyClaimed[WhitelistName,table]:exists(Person:steamID())
+            if(HasClaimed){
+                return 1
+            }else {
+                return 0
+            }
+        }
+    }
+    function void sayEnjoy(Player:entity){
+        local Text="Greetings "+Player:name()+"! I hope you enjoy "+owner():name()+"'s Gift of $"+Amount+" . Make sure to invite your friends and have a nice day."
+        local Language="en-us"
+        entity():streamStart(Channel,("http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+Language+"&client=tw-ob"),1)
+        timer("shush",10000)
+    }
+    setName("Press E to Claim a One-Time Gift from "+owner():name()+" of $"+Amount)
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if ( useEntClk():inUse() ) {
+    local Person = useEntClk():inUseBy()
+    People=AlreadyClaimed[WhitelistName,table]
+    if(!hasClaimedGift(Person)){
+        AlreadyClaimed[WhitelistName,table][Person:steamID(),number]=1
+        moneyGive(Person,Amount)
+        sayEnjoy(Person)
+    }
+}
+if ( clk("shush") ) {
+    streamStop(Channel)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

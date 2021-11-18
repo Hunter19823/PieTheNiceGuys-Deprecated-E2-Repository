@@ -1,0 +1,53 @@
+@persist [Counter,Speed] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+            printTable(findToTable())
+        }
+    }
+    Speed=1000
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer("truck1",Speed)
+}
+if(clk("truck1")){P=propSpawn("models/hunter/plates/tri2x1.mdl",entity():pos()+vec(37.2192,123.9819,101.4583),ang(-89.9999,-164.7999,180),1) P:setColor(88,98,127) P:parentTo(Parent) timer("truck2",Speed)}	
+if(clk("truck2")){P=propSpawn("models/hunter/plates/plate075x075.mdl",entity():pos()+vec(32.8687,138.0609,49.2125),ang(89.9999,-164.7999,180),1) P:parentTo(Parent) timer("truck3",Speed)}	
+if(clk("truck3")){P=propSpawn("models/hunter/plates/plate150.mdl",entity():pos()+vec(38.1948,119.9421,103.8314),ang(-0.0129,-164.7574,63.6439),1) P:parentTo(Parent) timer("truck4",Speed)}	
+if(clk("truck4")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",entity():pos()+vec(34.0137,1.1439,30.8994),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck5",Speed)}	
+if(clk("truck5")){P=propSpawn("models/hunter/blocks/cube05x2x05.mdl",entity():pos()+vec(-44.1743,66.1948,90.4233),ang(0,-164.8,-90),1) P:parentTo(Parent) timer("truck6",Speed)}	
+if(clk("truck6")){P=propSpawn("models/hunter/blocks/cube1x4x05.mdl",entity():pos()+vec(-22.2056,-14.0919,89.1395),ang(89.9999,15.2,180),1) P:setAlpha(242) P:setColor(36,36,36) P:parentTo(Parent) timer("truck7",Speed)}	
+if(clk("truck7")){P=propSpawn("models/hunter/blocks/cube05x2x025.mdl",entity():pos()+vec(48.8032,-96.9586,25.0386),ang(0,-74.8,0),1) P:parentTo(Parent) timer("truck8",Speed)}	
+if(clk("truck8")){P=propSpawn("models/nateswheel/nateswheel.mdl",entity():pos()+vec(-63.7617,55.7378,29.5979),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck9",Speed)}	
+if(clk("truck9")){P=propSpawn("models/hunter/blocks/cube05x2x025.mdl",entity():pos()+vec(7.7393,97.6794,142.3312),ang(0,105.2001,0),1) P:parentTo(Parent) timer("truck10",Speed)}	
+if(clk("truck10")){P=propSpawn("models/hunter/blocks/cube1x2x1.mdl",entity():pos()+vec(-7.7969,112.3269,43.6608),ang(0,105.2001,0),1) P:parentTo(Parent) timer("truck11",Speed)}	
+if(clk("truck11")){P=propSpawn("models/hunter/blocks/cube2x2x05.mdl",entity():pos()+vec(45.0254,-81.9407,90.0854),ang(89.9999,105.1999,180),1) P:parentTo(Parent) timer("truck12",Speed)}	
+if(clk("truck12")){P=propSpawn("models/hunter/plates/tri2x1.mdl",entity():pos()+vec(-6.7598,112.0331,101.4583),ang(-89.9999,-164.7999,180),1) P:parentTo(Parent) timer("truck13",Speed)}	
+if(clk("truck13")){P=propSpawn("models/hunter/plates/plate150.mdl",entity():pos()+vec(-50.8984,95.6647,103.8524),ang(-0.0129,-164.7574,63.6439),1) P:parentTo(Parent) timer("truck14",Speed)}	
+if(clk("truck14")){P=propSpawn("models/hunter/blocks/cube05x2x025.mdl",entity():pos()+vec(-13.9268,91.7931,142.3312),ang(0,105.2001,0),1) P:parentTo(Parent) timer("truck15",Speed)}	
+if(clk("truck15")){P=propSpawn("models/nateswheel/nateswheel.mdl",entity():pos()+vec(-27.5454,-77.5608,31.4648),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck16",Speed)}
+if(clk("truck16")){P=propSpawn("models/hunter/plates/plate1x4.mdl",entity():pos()+vec(-51.2939,-21.7373,125.9392),ang(30,-164.7999,0.0001),1) P:parentTo(Parent) timer("truck17",Speed)}	
+if(clk("truck17")){P=propSpawn("models/hunter/blocks/cube1x4x05.mdl",entity():pos()+vec(-22.4336,-14.1539,124.5096),ang(89.9999,15.2,180),1) P:parentTo(Parent) timer("truck18",Speed)}	
+if(clk("truck18")){P=propSpawn("models/hunter/plates/plate1x4.mdl",entity():pos()+vec(-35.7422,-17.5118,58.5984),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck19",Speed)}	
+if(clk("truck19")){P=propSpawn("models/hunter/blocks/cube1x4x05.mdl",entity():pos()+vec(-22.4336,-14.1539,42.6895),ang(89.9999,15.1999,180),1) P:parentTo(Parent) timer("truck20",Speed)}	
+if(clk("truck20")){P=propSpawn("models/hunter/plates/tri2x1.mdl",entity():pos()+vec(-49.606,100.3921,101.4583),ang(-89.9999,-164.7999,180),1) P:setColor(88,98,127) P:parentTo(Parent) timer("truck21",Speed)}	
+if(clk("truck21")){P=propSpawn("models/hunter/blocks/cube05x2x05.mdl",entity():pos()+vec(-0.751,-94.5353,90.4233),ang(0,-164.8,-90),1) P:parentTo(Parent) timer("truck22",Speed)}	
+if(clk("truck22")){P=propSpawn("models/hunter/plates/plate2x2.mdl",entity():pos()+vec(-6.582,107.9104,104.5563),ang(63.5395,105.2001,0.0001),1) P:setColor(88,98,127) P:parentTo(Parent) timer("truck23",Speed)}	
+if(clk("truck23")){P=propSpawn("models/hunter/blocks/cube1x2x1.mdl",entity():pos()+vec(-9.6655,119.2047,43.6608),ang(0,105.2001,0),1) P:parentTo(Parent) timer("truck24",Speed)}	
+if(clk("truck24")){P=propSpawn("models/hunter/blocks/cube2x2x05.mdl",entity():pos()+vec(1.5146,78.2054,90.0855),ang(89.9999,105.1998,180),1) P:parentTo(Parent) timer("truck25",Speed)}	
+if(clk("truck25")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",entity():pos()+vec(34.0137,1.1439,136.4687),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck26",Speed)}	
+if(clk("truck26")){P=propSpawn("models/hunter/blocks/cube025x025x025.mdl",entity():pos()+vec(24.0591,150.1077,59.8618),ang(0,105.2001,0),1) P:setAlpha(171) P:setColor(242,255,151) P:parentTo(Parent) timer("truck27",Speed)}	
+if(clk("truck27")){P=propSpawn("models/hunter/plates/plate025x025.mdl",entity():pos()+vec(-54.2852,127.9426,49.7085),ang(0,105.2001,0),1) P:setAlpha(213) P:setColor(255,70,19) P:parentTo(Parent) timer("truck28",Speed)}	
+if(clk("truck28")){P=propSpawn("models/props_wasteland/prison_heater001a.mdl",entity():pos()+vec(0.1064,139.7948,50.4104),ang(0,105.2001,-90),1) P:parentTo(Parent) timer("truck29",Speed)}	
+if(clk("truck29")){P=propSpawn("models/props_wasteland/prison_heater001a.mdl",entity():pos()+vec(-29.6099,131.7212,52.9142),ang(0,105.2001,90.0001),1) P:parentTo(Parent) timer("truck30",Speed)}	
+if(clk("truck30")){P=propSpawn("models/hunter/plates/plate025x025.mdl",entity():pos()+vec(24.0981,149.2388,49.7085),ang(0,105.2001,0),1) P:setAlpha(213) P:setColor(255,70,19) P:parentTo(Parent) timer("truck31",Speed)}	
+if(clk("truck31")){P=propSpawn("models/hunter/blocks/cube025x025x025.mdl",entity():pos()+vec(-54.6138,128.7328,59.8618),ang(0,105.2001,0),1) P:setAlpha(171) P:setColor(242,255,151) P:parentTo(Parent) timer("truck32",Speed)}	
+if(clk("truck32")){P=propSpawn("models/nateswheel/nateswheel.mdl",entity():pos()+vec(102.4585,-43.3599,29.8619),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck33",Speed)}	
+if(clk("truck33")){P=propSpawn("models/nateswheel/nateswheel.mdl",entity():pos()+vec(67.9795,90.644,27.8431),ang(0,-164.7999,0),1) P:parentTo(Parent) timer("truck34",Speed)}	
+if(clk("truck34")){P=propSpawn("models/hunter/blocks/cube2x4x05.mdl",entity():pos()+vec(68.4219,10.4924,90.1404),ang(89.9999,15.2,180),1) P:parentTo(Parent) timer("truck35",Speed)}	

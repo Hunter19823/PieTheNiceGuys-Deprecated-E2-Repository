@@ -1,0 +1,362 @@
+@name Create Pathway
+@persist T:table Counter PointA:vector AngleA:angle Visible:array IsCustom CustomID Scale:vector
+@inputs PointB:vector AngleB:angle Target:entity Buyer:entity
+@trigger Target
+if(first()){
+    Scale=vec(1)
+    #noDuplications()
+    function vector entity:moveVector(Vec:vector){
+        return (This:pos()+Vec)
+    }
+    function angle entity:moveAngle(Ang:angle){
+        return (This:angles()+Ang)
+    }
+    function void entity:translate(Position:vector,Angle:angle){
+        #This:tele(Position)
+        This:setAng(Angle)
+        This:propManipulate(Position,Angle,1,gravity(),0)
+        holoPos(0,Position+vec(0,0,This:height()))
+    }
+    function number entity:isHome(){
+        return This:pos():distance(PointB)<T["MarginOfError",number]
+    }
+    FirstRun=1
+    timer("CreateDrone",5)
+    if(!(->PointB && ->AngleB && ->Target && ->Buyer)){
+        findIncludePlayerProps(owner())
+        findByClass("gmod_wire_expression2")
+        findClearWhiteList()
+        findSortByDistance(entity():pos())
+        local E2=find()
+        if(E2:isValid()){
+            if(E2:owner()==owner() && E2:getName()=="Shipment Drone"){
+                entity():createWire(E2,"PointB","PosB")
+                entity():createWire(E2,"AngleB","AngB")
+                entity():createWire(E2,"Buyer","Buyer")
+                entity():createWire(E2,"Target","Target")
+            }elseif(findCount()>1){
+                E2=findResult(2)
+                if(E2:isValid()){
+                    if(E2:owner()==owner() && E2:getName()=="Shipment Drone"){
+                        entity():createWire(E2,"PointB","PosB")
+                        entity():createWire(E2,"AngleB","AngB")
+                        entity():createWire(E2,"Buyer","Buyer")
+                        entity():createWire(E2,"Target","Target")
+                    }
+                }
+            }
+        }
+    }
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(clk("Personalize")){
+    Visible=players()
+    local Lookup = invert(Visible)
+    Visible:removeEntity(Lookup[Buyer:toString(),number])
+    local Invisible=array(Buyer,owner())
+    Visible:removeEntity(Lookup[owner():toString(),number])
+    holoVisible(-2,Visible,0)
+    holoVisible(-3,Visible,0)
+    holoVisible(-2,Invisible,1)
+    holoVisible(-3,Invisible,1)
+}
+if(clk("CreateDrone")){
+    holoCreate(0)
+    holoCreate(-1)
+    holoEntity(-1):noDraw(1)
+    holoEntity(0):noDraw(1)
+    local TPos=holoEntity(0):pos()
+    if(0){
+        #Air Balloon
+        holoCreate(1,TPos+vec(0,0,0)*Scale, vec(0.25)*Scale, ang(0,0,0), vec(255), "models/balloons/hot_airballoon_basket.mdl")
+        holoParent(1,0)
+        holoCreate(2,TPos+vec(0,0,0)*Scale, vec(0.25)*Scale, ang(0,0,0), vec(255), "models/balloons/hot_airballoon.mdl")
+        holoParent(2,0)
+    }
+    if(0){
+        IsCustom=1
+        CustomID=1
+        #Chess Board?
+        timer("chess1",100)
+    }
+    if(0){
+        IsCustom=1
+        CustomID=2
+        #Taco Truck?
+        timer("taco1",100)
+    }
+    if(0){
+        IsCustom=1
+        CustomID=3
+        #a fucking Speeder?
+        timer("speeder1",100)
+    }
+    if(0){
+        #Rocket
+        holoCreate(1,TPos+vec(0,0,0)*Scale, vec(0.25)*Scale, ang(0,0,0), vec(255), "models/props_phx/rocket1.mdl")
+        holoParent(1,0)
+    }
+    if(0){
+        #Jet
+        holoCreate(1,TPos+vec(0,0,50)*Scale, vec(0.2)*Scale, ang(0,0,0), vec(255), "models/xqm/jetbody3_s5.mdl")
+        holoParent(1,0)
+    }
+    if(0){
+        #Train
+        holoCreate(1,TPos+vec(0,0,0)*Scale, vec(3)*Scale, ang(0,0,0), vec(255), "models/quarterlife/fsd-overrun-toy.mdl")
+        holoParent(1,0)
+    }
+    if(0){
+        #Quad Copter
+        holoCreate(1,TPos+vec(36.014544934082,-42.49661015625,0.11435)*Scale,vec(1)*Scale,ang(0,-90,0),vec(255,255,255),"models/maxofs2d/hover_propeller.mdl")
+        holoCreate(2,TPos+vec(-1.066755065918,-5.1377101562503,9.71245)*Scale,vec(1)*Scale,ang(0,135,0),vec(255,255,255),"models/mechanics/solid_steel/box_beam_8.mdl")
+        holoCreate(3,TPos+vec(-1.066755065918,-5.1377101562503,9.71245)*Scale,vec(1)*Scale,ang(0,45,0),vec(255,255,255),"models/mechanics/solid_steel/box_beam_8.mdl")
+        holoCreate(4,TPos+vec(37.891144934082,33.53908984375,0.083650000000006)*Scale,vec(1)*Scale,ang(0,-135,0),vec(255,255,255),"models/maxofs2d/hover_propeller.mdl")
+        holoCreate(5,TPos+vec(-36.582555065918,30.47608984375,0.17914999999999)*Scale,vec(1)*Scale,ang(0,90,0),vec(255,255,255),"models/maxofs2d/hover_propeller.mdl")
+        holoCreate(6,TPos+vec(-39.610655065918,-42.78611015625,0.34705)*Scale,vec(1)*Scale,ang(0,135,0),vec(255,255,255),"models/maxofs2d/hover_propeller.mdl")
+        holoParent(1,0)
+        holoParent(2,0)
+        holoParent(3,0)
+        holoParent(4,0)
+        holoParent(5,0)
+        holoParent(6,0)
+    }
+    
+    
+    if(1){
+        holoCreate(-2,TPos+vec(-1.066755065918,-5.1377101562503,9.71245)*Scale,vec(1)*Scale,ang(0,135,0),vec(255,0,0),"models/mechanics/solid_steel/box_beam_8.mdl")
+        holoCreate(-3,TPos+vec(-1.066755065918,-5.1377101562503,9.71245)*Scale,vec(1)*Scale,ang(0,45,0),vec(255,0,0),"models/mechanics/solid_steel/box_beam_8.mdl")
+        holoParent(-2,-1)
+        holoParent(-3,-1)
+        holoVisible(-2,players(),0)
+        holoVisible(-3,players(),0)
+    }
+}
+if(IsCustom){
+if(CustomID==1){
+if(clk("chess1")){
+local TPos=holoEntity(0):pos()
+holoCreate(1,TPos+vec(-79.393139648437,-115.47168359375,-0.0046509277343887)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(1,0)	
+holoCreate(2,TPos+vec(-114.42513964844,-114.09818359375,-0.044550927734377)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_rook.mdl")
+holoParent(2,0)
+holoCreate(3,TPos+vec(-81.043539648437,116.38871640625,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(3,0)
+holoCreate(4,TPos+vec(-81.275539648437,84.62061640625,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(4,0)
+holoCreate(5,TPos+vec(-113.12833964844,49.29881640625,0.0005490722656134)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_bishop.mdl")
+holoParent(5,0)
+holoCreate(6,TPos+vec(-111.13243964844,18.32621640625,0.0005490722656134)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_queen.mdl")
+holoParent(6,0)
+holoCreate(7,TPos+vec(-80.655239648438,-81.67338359375,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(7,0)
+holoCreate(8,TPos+vec(-112.09993964844,-16.92188359375,0.00044907226563851)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_king.mdl")
+holoParent(8,0)
+holoCreate(9,TPos+vec(-110.16763964844,-80.21138359375,-0.25365092773438)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_knight.mdl")
+holoParent(9,0)
+holoCreate(10,TPos+vec(-109.47793964844,-50.68508359375,0.00044907226563851)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_bishop.mdl")
+holoParent(10,0)
+timer("chess2",100)
+}
+if(clk("chess2")){
+local TPos=holoEntity(0):pos()
+holoCreate(11,TPos+vec(-82.136939648437,15.59911640625,0.04354907226562)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(11,0)
+holoCreate(12,TPos+vec(-82.698339648437,-49.07668359375,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(12,0)
+holoCreate(13,TPos+vec(-81.909639648437,-18.10838359375,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(13,0)
+holoCreate(14,TPos+vec(-114.58163964844,81.49021640625,0.043349072265613)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_knight.mdl")
+holoParent(14,0)
+holoCreate(15,TPos+vec(-114.47713964844,114.46481640625,2.1814490722656)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_rook.mdl")
+holoParent(15,0)
+timer("chess3",100)
+}
+if(clk("chess3")){
+local TPos=holoEntity(0):pos()
+holoCreate(16,TPos+vec(83.159060351562,-114.39938359375,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(16,0)
+holoCreate(17,TPos+vec(113.27226035156,-112.49418359375,0.00044907226563851)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_rook.mdl")
+holoParent(17,0)
+holoCreate(18,TPos+vec(1.1679603515624,-0.047883593750157,-20.280550927734)*Scale,vec(1)*Scale,ang(-90,-90,180),vec(255,255,255),"models/props_phx/games/chess/board.mdl")
+holoParent(18,0)
+holoCreate(19,TPos+vec(-78.484639648437,47.50971640625,-0.0045509277343854)*Scale,vec(1)*Scale,ang(0,0,0),vec(255,255,255),"models/props_phx/games/chess/black_pawn.mdl")
+holoParent(19,0)
+holoCreate(20,TPos+vec(82.218860351562,-49.87448359375,0.40104907226564)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(20,0)
+timer("chess4",100)
+}
+if(clk("chess4")){
+local TPos=holoEntity(0):pos()
+holoCreate(21,TPos+vec(82.204560351563,-14.29638359375,-0.50995092773437)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(21,0)
+holoCreate(22,TPos+vec(111.88246035156,-79.65578359375,0.00044907226563851)*Scale,vec(1)*Scale,ang(0,-180,0),vec(255,255,255),"models/props_phx/games/chess/white_knight.mdl")
+holoParent(22,0)
+holoCreate(23,TPos+vec(80.953160351562,-78.93948359375,-0.13355092773438)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(23,0)
+holoCreate(24,TPos+vec(81.567460351562,16.03171640625,-0.049550927734373)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(24,0)
+holoCreate(25,TPos+vec(80.356860351563,50.00241640625,-0.049550927734373)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(25,0)	
+timer("chess5",100)
+}
+if(clk("chess5")){
+local TPos=holoEntity(0):pos()
+holoCreate(26,TPos+vec(81.074260351563,81.21581640625,-0.049550927734373)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(26,0)	
+holoCreate(27,TPos+vec(112.16526035156,82.63471640625,0.0005490722656134)*Scale,vec(1)*Scale,ang(0,-180,0),vec(255,255,255),"models/props_phx/games/chess/white_knight.mdl")
+holoParent(27,0)	
+holoCreate(28,TPos+vec(79.067660351563,115.45651640625,0.060449072265612)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_pawn.mdl")
+holoParent(28,0)	
+holoCreate(29,TPos+vec(111.96676035156,116.51121640625,0.0005490722656134)*Scale,vec(1)*Scale,ang(0,-180,0),vec(255,255,255),"models/props_phx/games/chess/white_rook.mdl")
+holoParent(29,0)
+timer("chess6",100)
+}
+if(clk("chess6")){
+local TPos=holoEntity(0):pos()
+holoCreate(30,TPos+vec(112.31346035156,-14.62208359375,0.00044907226563851)*Scale,vec(1)*Scale,ang(0,-180,0),vec(255,255,255),"models/props_phx/games/chess/white_queen.mdl")
+holoParent(30,0)	
+holoCreate(31,TPos+vec(112.17656035156,-47.48188359375,0.00044907226563851)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_bishop.mdl")
+holoParent(31,0)	
+holoCreate(32,TPos+vec(113.26266035156,17.19481640625,0.0005490722656134)*Scale,vec(1)*Scale,ang(0,180,0),vec(255,255,255),"models/props_phx/games/chess/white_king.mdl")
+holoParent(32,0)	
+holoCreate(33,TPos+vec(112.93266035156,50.72751640625,0.0005490722656134)*Scale,vec(1)*Scale,ang(0,-180,0),vec(255,255,255),"models/props_phx/games/chess/white_bishop.mdl")
+holoParent(33,0)
+IsCustom=0
+}}
+if(CustomID==3){
+local Speed=0
+if(clk("speeder1")){holoCreate(1,entity():pos()+vec(-48.75,-67.98,32.45)*Scale,vec(1)*Scale,ang(-90,-90,180),vec(255,255,255),"models/props_trainstation/trashcan_indoor001b.mdl") holoMaterial(1,"cs_havana/lightbareon01") holoParent(1,0) timer("speeder3",Speed)}	
+if(clk("speeder3")){holoCreate(3,entity():pos()+vec(-7.38,10.8,26.5)*Scale,vec(5)*Scale,ang(0,88.65,0),vec(255,255,255),"models/props_lab/huladoll.mdl") holoParent(3,0) timer("speeder4",Speed)}	
+if(clk("speeder4")){holoCreate(4,entity():pos()+vec(33.23,-68.05,32.41)*Scale,vec(1)*Scale,ang(-90,-90,180),vec(255,255,255),"models/props_trainstation/trashcan_indoor001b.mdl") holoMaterial(4,"cs_havana/lightbareon01") holoParent(4,0) timer("speeder5",Speed)}	
+if(clk("speeder5")){holoCreate(5,entity():pos()+vec(-6.82,-5.82,9.14)*Scale,vec(1)*Scale,ang(0,90,0),vec(255,255,255),"models/xqm/coastertrain2seat.mdl") holoMaterial(5,"cs_havana/lightbareon01") holoParent(5,0) timer("speeder6",Speed)}	
+if(clk("speeder6")){holoCreate(6,entity():pos()+vec(-10.03,26.99,25.06)*Scale,vec(1)*Scale,ang(90,90,180),vec(255,255,255),"models/props_c17/playground_jungle_gym01a.mdl") holoMaterial(6,"cs_havana/lightbareon01") holoParent(6,0) timer("speeder7",Speed)}	
+if(clk("speeder7")){holoCreate(7,entity():pos()+vec(-6.07,-38.88,30.7)*Scale,vec(5)*Scale,ang(0.55,91.25,0),vec(255,255,255),"models/props_c17/doll01.mdl") holoParent(7,0) timer("speeder9",Speed)}
+if(clk("speeder9")){holoCreate(9,entity():pos()+vec(32.53,88.39,17.55)*Scale,vec(1)*Scale,ang(45,0,-90),vec(255,255,255),"models/props_interiors/furniture_lamp01a.mdl") holoMaterial(9,"cs_havana/lightbareon01") holoParent(9,0) timer("speeder10",Speed)}	
+if(clk("speeder10")){holoCreate(10,entity():pos()+vec(-45.45,90.45,17.7)*Scale,vec(1)*Scale,ang(45,180,90),vec(255,255,255),"models/props_interiors/furniture_lamp01a.mdl") holoMaterial(10,"cs_havana/lightbareon01") holoParent(10,0) timer("speeder11",Speed)}	
+if(clk("speeder11")){holoCreate(11,entity():pos()+vec(-46.57,74.78,32.89)*Scale,vec(1)*Scale,ang(45,-180,90),vec(255,255,255),"models/props_interiors/furniture_lamp01a.mdl") holoMaterial(11,"cs_havana/lightbareon01") holoParent(11,0) timer("speeder12",Speed)}	
+if(clk("speeder12")){holoCreate(12,entity():pos()+vec(32.66,72.07,32.88)*Scale,vec(1)*Scale,ang(45,0,-90),vec(255,255,255),"models/props_interiors/furniture_lamp01a.mdl") holoMaterial(12,"cs_havana/lightbareon01") holoParent(12,0) timer("speeder13",Speed)}
+if(clk("speeder13")){IsCustom=0}}
+if(CustomID==2){
+local Speed=0
+if(clk("taco1")){holoCreate(1,entity():pos()+vec(312.75,4.37,37.75)*Scale,vec(1)*Scale,ang(0,330,0),vec(0,0,0),"models/nova/airboat_seat.mdl") holoParent(1,0) timer("taco2",Speed)}	
+if(clk("taco2")){holoCreate(2,entity():pos()+vec(5.52,100.66,25.25)*Scale,vec(1)*Scale,ang(0,90,0),vec(225,255,0),"models/hunter/blocks/cube05x2x025.mdl") holoMaterial(2,"phoenix_storms/fender_white") holoParent(2,0) timer("taco3",Speed)}	
+if(clk("taco3")){holoCreate(3,entity():pos()+vec(52.7,85.33,90.63)*Scale,vec(1)*Scale,ang(0,0,-90),vec(0,255,63),"models/hunter/blocks/cube05x2x05.mdl") holoMaterial(3,"phoenix_storms/fender_white") holoParent(3,0) timer("taco4",Speed)}	
+if(clk("taco4")){holoCreate(4,entity():pos()+vec(74.11,61.92,31.67)*Scale,vec(1)*Scale,ang(0,0,0),vec(225,255,0),"models/nateswheel/nateswheel.mdl") holoMaterial(4,"phoenix_storms/fender_white") holoParent(4,0) timer("taco5",Speed)}	
+if(clk("taco5")){holoCreate(5,entity():pos()+vec(-60.31,63,30.07)*Scale,vec(1)*Scale,ang(0,0,0),vec(225,255,0),"models/nateswheel/nateswheel.mdl") holoMaterial(5,"phoenix_storms/fender_white") holoParent(5,0) timer("taco6",Speed)}	
+if(clk("taco6")){holoCreate(6,entity():pos()+vec(5.23,85.18,90.29)*Scale,vec(1)*Scale,ang(90,-90,180),vec(225,255,0),"models/hunter/blocks/cube2x2x05.mdl") holoMaterial(6,"phoenix_storms/fender_white") holoParent(6,0) timer("taco7",Speed)}	
+if(clk("taco7")){holoCreate(7,entity():pos()+vec(8.77,-69.73,100.24)*Scale,vec(1)*Scale,ang(90,90,180),vec(255,255,255),"models/hunter/plates/plate1x1.mdl") holoMaterial(7,"vgui/screens/vgui_overlay") holoParent(7,0) timer("taco8",Speed)}	
+if(clk("taco8")){holoCreate(8,entity():pos()+vec(5.27,-123.27,43.87)*Scale,vec(1)*Scale,ang(0,-90,0),vec(0,255,63),"models/hunter/blocks/cube1x2x1.mdl") holoMaterial(8,"phoenix_storms/fender_white") holoParent(8,0) timer("taco9",Speed)}	
+if(clk("taco9")){holoCreate(9,entity():pos()+vec(5.27,-116.15,43.87)*Scale,vec(1)*Scale,ang(0,-90,0),vec(0,255,63),"models/hunter/blocks/cube1x2x1.mdl") holoMaterial(9,"phoenix_storms/fender_white") holoParent(9,0) timer("taco10",Speed)}	
+if(clk("taco10")){holoCreate(10,entity():pos()+vec(5.23,-80.78,90.29)*Scale,vec(1)*Scale,ang(90,-90,180),vec(225,255,0),"models/hunter/blocks/cube2x2x05.mdl") holoMaterial(10,"phoenix_storms/fender_white") holoParent(10,0) timer("taco11",Speed)}
+if(clk("taco11")){holoCreate(11,entity():pos()+vec(52.55,2.07,124.72)*Scale,vec(1)*Scale,ang(90,180,180),vec(0,255,63),"models/hunter/blocks/cube1x4x05.mdl") holoMaterial(11,"phoenix_storms/fender_white") holoParent(11,0) timer("taco12",Speed)}	
+if(clk("taco12")){holoCreate(12,entity():pos()+vec(52.55,2.07,42.9)*Scale,vec(1)*Scale,ang(90,180,180),vec(0,255,63),"models/hunter/blocks/cube1x4x05.mdl") holoMaterial(12,"phoenix_storms/fender_white") holoParent(12,0) timer("taco13",Speed)}	
+if(clk("taco13")){holoCreate(13,entity():pos()+vec(21.23,-140.58,53.12)*Scale,vec(1)*Scale,ang(0,-90,90),vec(255,255,255),"models/props_wasteland/prison_heater001a.mdl") holoParent(13,0) timer("taco14",Speed)}	
+if(clk("taco14")){holoCreate(14,entity():pos()+vec(-9.56,-140.58,50.62)*Scale,vec(1)*Scale,ang(0,-90,-90),vec(255,255,255),"models/props_wasteland/prison_heater001a.mdl") holoParent(14,0) timer("taco15",Speed)}	
+if(clk("taco15")){holoCreate(15,entity():pos()+vec(-40.72,-130.32,49.42)*Scale,vec(1)*Scale,ang(90,0,180),vec(0,255,63),"models/hunter/plates/plate075x075.mdl") holoMaterial(15,"phoenix_storms/fender_white") holoParent(15,0) timer("taco16",Speed)}	
+if(clk("taco16")){holoCreate(16,entity():pos()+vec(-41.11,-111.44,104.04)*Scale,vec(1)*Scale,ang(-0.01,0.04,63.64),vec(225,255,0),"models/hunter/plates/plate150.mdl") holoMaterial(16,"phoenix_storms/fender_white") holoParent(16,0) timer("taco17",Speed)}	
+if(clk("taco17")){holoCreate(17,entity():pos()+vec(51.23,-111.37,104.06)*Scale,vec(1)*Scale,ang(-0.01,0.04,63.64),vec(225,255,0),"models/hunter/plates/plate150.mdl") holoMaterial(17,"phoenix_storms/fender_white") holoParent(17,0) timer("taco18",Speed)}	
+if(clk("taco18")){holoCreate(18,entity():pos()+vec(-35.38,-144.25,60.07)*Scale,vec(1)*Scale,ang(0,-90,0),vec(242,255,151),"models/hunter/blocks/cube025x025x025.mdl") holoParent(18,0) timer("taco19",Speed)}	
+if(clk("taco19")){holoCreate(19,entity():pos()+vec(46.14,-144.25,60.07)*Scale,vec(1)*Scale,ang(0,-90,0),vec(242,255,151),"models/hunter/blocks/cube025x025x025.mdl") holoParent(19,0) timer("taco20",Speed)}	
+if(clk("taco20")){holoCreate(20,entity():pos()+vec(-62.17,-75.35,28.05)*Scale,vec(1)*Scale,ang(0,0,0),vec(225,255,0),"models/nateswheel/nateswheel.mdl") holoMaterial(20,"phoenix_storms/fender_white") holoParent(20,0) timer("taco21",Speed)}	
+if(clk("taco21")){holoCreate(21,entity():pos()+vec(74.11,-76.21,29.81)*Scale,vec(1)*Scale,ang(0,0,0),vec(225,255,0),"models/nateswheel/nateswheel.mdl") holoMaterial(21,"phoenix_storms/fender_white") holoParent(21,0) timer("taco22",Speed)}	
+if(clk("taco22")){holoCreate(22,entity():pos()+vec(52.32,2.07,89.35)*Scale,vec(1)*Scale,ang(90,180,180),vec(225,255,0),"models/hunter/blocks/cube1x4x05.mdl") holoMaterial(22,"phoenix_storms/fender_white") holoParent(22,0) timer("taco23",Speed)}	
+if(clk("taco23")){holoCreate(23,entity():pos()+vec(48.74,-115.59,101.67)*Scale,vec(1)*Scale,ang(-90,0,180),vec(225,255,0),"models/hunter/plates/tri2x1.mdl") holoMaterial(23,"phoenix_storms/fender_white") holoParent(23,0) timer("taco24",Speed)}	
+if(clk("taco24")){holoCreate(24,entity():pos()+vec(-35.19,-143.4,49.92)*Scale,vec(1)*Scale,ang(0,-90,0),vec(255,70,19),"models/hunter/plates/plate025x025.mdl") holoParent(24,0) timer("taco25",Speed)}	
+if(clk("taco25")){holoCreate(25,entity():pos()+vec(16.57,-97.94,142.54)*Scale,vec(1)*Scale,ang(0,-90,0),vec(0,255,63),"models/hunter/blocks/cube05x2x025.mdl") holoParent(25,0) timer("taco26",Speed)}	
+if(clk("taco26")){holoCreate(26,entity():pos()+vec(-5.93,2.11,136.68)*Scale,vec(1)*Scale,ang(0,0,0),vec(0,255,63),"models/hunter/blocks/cube2x4x05.mdl") holoMaterial(26,"phoenix_storms/fender_white") holoParent(26,0) timer("taco27",Speed)}	
+if(clk("taco27")){holoCreate(27,entity():pos()+vec(-41.59,2.11,90.35)*Scale,vec(1)*Scale,ang(90,180,180),vec(0,255,63),"models/hunter/blocks/cube2x4x05.mdl") holoMaterial(27,"phoenix_storms/fender_white") holoParent(27,0) timer("taco28",Speed)}	
+if(clk("taco28")){holoCreate(28,entity():pos()+vec(-5.93,2.11,31.11)*Scale,vec(1)*Scale,ang(0,0,0),vec(0,255,63),"models/hunter/blocks/cube2x4x05.mdl") holoMaterial(28,"phoenix_storms/fender_white") holoParent(28,0) timer("taco29",Speed)}	
+if(clk("taco29")){holoCreate(29,entity():pos()+vec(46.04,-143.4,49.92)*Scale,vec(1)*Scale,ang(0,-90,0),vec(255,70,19),"models/hunter/plates/plate025x025.mdl") holoParent(29,0) timer("taco30",Speed)}	
+if(clk("taco30")){holoCreate(30,entity():pos()+vec(-5.89,-97.94,142.54)*Scale,vec(1)*Scale,ang(0,-90,0),vec(0,255,63),"models/hunter/blocks/cube05x2x025.mdl") holoParent(30,0) timer("taco31",Speed)}	
+if(clk("taco31")){holoCreate(31,entity():pos()+vec(-41.23,-115.59,101.67)*Scale,vec(1)*Scale,ang(-90,0,180),vec(225,255,0),"models/hunter/plates/tri2x1.mdl") holoMaterial(31,"phoenix_storms/fender_white") holoParent(31,0) timer("taco32",Speed)}	
+if(clk("taco32")){holoCreate(32,entity():pos()+vec(52.47,-81.16,90.63)*Scale,vec(1)*Scale,ang(0,0,-90),vec(0,255,63),"models/hunter/blocks/cube05x2x05.mdl") holoMaterial(32,"phoenix_storms/fender_white") holoParent(32,0) timer("taco33",Speed)}	
+if(clk("taco33")){holoCreate(33,entity():pos()+vec(66.28,1.82,58.81)*Scale,vec(1)*Scale,ang(0,0,0),vec(225,255,0),"models/hunter/plates/plate1x4.mdl") holoMaterial(33,"phoenix_storms/fender_white") holoParent(33,0) timer("taco34",Speed)}	
+if(clk("taco34")){holoCreate(34,entity():pos()+vec(82.39,1.82,126.15)*Scale,vec(1)*Scale,ang(30,0,0),vec(225,255,0),"models/hunter/plates/plate1x4.mdl") holoMaterial(34,"phoenix_storms/fender_white") holoParent(34,0) timer("taco35",Speed)}	
+if(clk("taco35")){holoCreate(35,entity():pos()+vec(5.25,-111.56,104.76)*Scale,vec(1)*Scale,ang(63.54,-90,0),vec(225,255,0),"models/hunter/plates/plate2x2.mdl") holoMaterial(35,"phoenix_storms/fender_white") holoParent(35,0) timer("taco36",Speed)}	
+if(clk("taco36")){holoCreate(36,entity():pos()+vec(4.34,-115.59,101.67)*Scale,vec(1)*Scale,ang(-90,0,180),vec(225,255,0),"models/hunter/plates/tri2x1.mdl") holoMaterial(36,"phoenix_storms/fender_white") holoParent(36,0) timer("taco37",Speed)}	
+if(clk("taco37")){IsCustom=0}}
+}
+if(->PointB && ->AngleB && ->Buyer && ->Target && Target:isValid()){
+if(Target:isValid() && ~Target){
+    FirstRun=0
+    PointA=Target:pos()
+    AngleA=Target:angles()
+    #holoCreate(1)
+    #holoModel(1,"models/maxofs2d/cube_tool.mdl")
+    T=table(
+    "Speed"=250,
+    "Steps"=25,#25
+    "FloatVector"=200,
+    "MarginOfError"=25
+    )
+    T["Entity",entity]=Target
+    timer("Personalize",0)
+    timer("CalculateVector",T["Speed",number])
+}}
+
+if(clk("CalculateVector")){
+    T["ChangeInDistance",vector]=(PointB-PointA)/T["Steps",number]
+    T["ChangeInDirection",angle]=(AngleB-AngleA)/T["Steps",number]
+    local FloatVector=vec(0,0,T["FloatVector",number]-T["ChangeInDistance",vector]:z())
+    T["PathPositions",array]=array(PointB,PointB+FloatVector/4,PointB+FloatVector/3,PointB+FloatVector/2,PointB+FloatVector/3*2,PointB+FloatVector/4*3,PointB+FloatVector)
+    T["PathAngles",array]=array(AngleB,AngleB,AngleB,AngleB,AngleB,AngleB)
+    timer("CalculateSteps",T["Speed",number])
+    Counter=0
+    print("P1 to P2: "+PointA:distance(PointB))
+    holoPos(-1,PointB)
+}
+if(clk("CalculateSteps")){
+    if(Counter<=T["Steps",number]){
+        T["PathPositions",array]:pushVector(PointB-T["ChangeInDistance",vector]*(Counter+1)+vec(0,0,T["FloatVector",number]))
+        T["PathAngles",array]:pushAngle(AngleB-T["ChangeInDirection",angle]*(Counter+1))
+        Counter++
+        timer("CalculateSteps",0)
+    }else{
+        local PointA=PointA
+        local FloatVector=vec(0,0,T["FloatVector",number])
+        T["PathPositions",array]:pushVector(PointA+FloatVector)
+        T["PathPositions",array]:pushVector(PointA+FloatVector/4*3)
+        T["PathPositions",array]:pushVector(PointA+FloatVector/3*2)
+        T["PathPositions",array]:pushVector(PointA+FloatVector/2)
+        T["PathPositions",array]:pushVector(PointA+FloatVector/3)
+        T["PathPositions",array]:pushVector(PointA+FloatVector/4)
+        T["PathPositions",array]:pushVector(PointA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        T["PathAngles",array]:pushAngle(AngleA)
+        timer("Move",T["Speed",number])
+        local Ang=PointB:toAngle(PointA)
+        holoAng(0,ang(0,Ang:yaw()+45,0))
+    }
+}
+if(clk("Move")){
+    if(Target:isHome()||!Target:isValid()){
+        print("Target has Reached it's destination")
+        timer("Return",1000)
+        holoPos(-1,entity():pos())
+        Target=noentity()
+    }else{
+        if(T["PathPositions",array]:count()>0){
+            Target:translate(T["PathPositions",array]:popVector(),T["PathAngles",array]:popAngle())
+        }else{
+            #Target:tele(PointB)
+            Target:propManipulate(PointB,AngleB,0,gravity(),0)
+        }
+        timer("Move",T["Speed",number])
+    }
+}
+if(clk("Return")){
+    holoPos(0,entity():pos())
+    holoAng(0,entity():angles())
+    holoVisible(-2,players(),0)
+    holoVisible(-3,players(),0)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

@@ -1,0 +1,331 @@
+@name Pies Attachable Music E2 v2
+@inputs [MusicPlayer]:entity
+@persist [Channel,Volume,Loop,LastPosition,CyclePlayList,RandomizedPlaylist] [CommandPrefix,LastPlayed]:string [PlayList,RemainingSongs]:table
+if(first()){
+    #Note: 1 usually stands for true/yes and 0 usually stands for false/no.
+    
+    #[
+    Command Prefix:
+    This is the phrase that goes before the command said in chat.
+    This could be useful if you have other e2s that use similar commands.
+    If you change what is inside the "" to something like: "e2" then
+    when you do commands like:
+    "stop"
+    you would instead do:
+    "e2stop"
+    ]#
+    CommandPrefix=""
+    
+    #This is the channel the music will play on.
+    Channel=6969
+    
+    #This is the volume the music will play at by defualt.
+    Volume=1
+    
+    #Should the YouTube Song Loop?
+    Loop=0
+    
+    #Do You want to have the playlist continue to play after you start it?
+    CyclePlayList=1
+    
+    if(CyclePlayList){
+        #Do you want the playlist to be randomized/scrambled?
+        RandomizedPlaylist=0
+    }
+    
+    #[
+        Setup:
+    Open up your Q menu and find where your expression 2 tool gun is
+    and look at the bottom of that tab. You should find the "wire" toolgun.
+    Select that, look at this e2 on the ground, then select 'MusicPlayer' in the inputs.
+    It Should be White if it is not yet connected but red if it is connected. Then
+    find the target entity you would like to play music on. It could be the e2 chip itself,
+    a prop you have in your base, hell even another e2! Once you've found that entity,
+    click on it. In chat it should say something like: 
+    "Pairing Music E2 to entity: models/expression 2/cpu_microchip.mdl"
+    
+    Commands:
+    
+        play YouTubeLink
+    Sends a request to a server to convert the youtube video into an MP3 file then plays
+    the music on the wired entity.
+    
+        play RawAudioLink
+    Plays the raw audio file onto the wired entity.
+    
+    
+        playlist Index
+    Plays the song at that index in the playlist below. If CyclePlayList is
+    on then the e2 will automatically play the next song in the playlist
+    (unless RandomizedPlaylist is enabled) once the song has ended. 
+    If the song is too long (Longer than 5 minutes) the e2 will auto-skip the song.
+    
+    
+        volume Number
+    This will change the volume of the music. 
+    0 being silent and 1 being loudest.
+    
+    
+        stop
+    This will stop all music playing.
+    
+    ]#
+    
+    
+    #Playlist Can be Generated Automatically using a youtube playlist.
+    #In order to generate a playlist, go to 
+    #https://get-video-from-playlist--classchanger.repl.co/?name=PlayList&url=
+    #And at the end of this url put the youtube playlist you want to convert.
+    #Just replace the current playlist with the output of that link.
+    #Example on how to get the playlist below: 
+    #https://get-video-from-playlist--classchanger.repl.co/?name=PlayList&url=https://www.youtube.com/playlist?list=PLVVOhIUAR8_cxY4GHTe1rkzpDGMCRUj-g
+    
+    
+    PlayList = table(
+    #[1: [Drumstep] - Tristam - The Vine [Monstercat Release] ]#1 = "https://www.youtube.com/watch/?v=ISO94EPI9x8",
+    #[2: [Drumstep] - Botnek & I See MONSTAS - Deeper Love (Xan Griffin Remix) [Monstercat EP Release] ]#2 = "https://www.youtube.com/watch/?v=dQX4pBkHhnU",
+    #[3: [Drumstep] - Pegboard Nerds & Grabbitz - All Alone [Monstercat Release] ]#3 = "https://www.youtube.com/watch/?v=_eEziNdIvD8",
+    #[4: [Drumstep] - Stonebank - Soldier [Monstercat Release] ]#4 = "https://www.youtube.com/watch/?v=mSU-TWxNjJA",
+    #[5: [Drumstep] - Muzzy - Junction Seven [Monstercat EP Release] ]#5 = "https://www.youtube.com/watch/?v=vBH0tDqGjts",
+    #[6: Madeon - Cut The Kid ]#6 = "https://www.youtube.com/watch/?v=Ih-izudb6Uo",
+    #[7: TheFatRat - Time Lapse ]#7 = "https://www.youtube.com/watch/?v=3fxq7kqyWO8",
+    #[8: [Drumstep] - Melano - Traveller [Monstercat Release] ]#8 = "https://www.youtube.com/watch/?v=mpQeKHrZGWU",
+    #[9: Panda Eyes & Teminite - High Score ]#9 = "https://www.youtube.com/watch/?v=O5_LSaVB8So",
+    #[10: [Glitch Hop / 110BPM] - Stephen Walking - Move [Monstercat Release] ]#10 = "https://www.youtube.com/watch/?v=VuSei2pDDlY",
+    #[11: FALLOUT 4 SPECIAL RAP | Dan Bull ]#11 = "https://www.youtube.com/watch/?v=tuQPfVZbMbg",
+    #[12: DESTINY EPIC RAP | Dan Bull ]#12 = "https://www.youtube.com/watch/?v=8hKewg9qEyk",
+    #[13: [Hard Dance] - Pegboard Nerds - Hero (feat. Elizaveta) [Monstercat Release] ]#13 = "https://www.youtube.com/watch/?v=5lLclBfKj48",
+    #[14: [Drumstep] - Pegboard Nerds - Try This [Monstercat Release] ]#14 = "https://www.youtube.com/watch/?v=ggqI-HH8yXc",
+    #[15: [Drumstep] - Excision & Pegboard Nerds - Bring The Madness (feat. Mayor Apeshit) [Monstercat] ]#15 = "https://www.youtube.com/watch/?v=8dZDdW7v4Q8",
+    #[16: [Drumstep] - Braken - To The Stars [Monstercat Release] ]#16 = "https://www.youtube.com/watch/?v=1dcXmkco5ko",
+    #[17: Pretty Rave Girl 2010 - S3RL ]#17 = "https://www.youtube.com/watch/?v=WaNwvukxz64",
+    #[18: e-dubble - Let Me Oh (Freestyle Friday #9) ]#18 = "https://www.youtube.com/watch/?v=taCRBFkUqdM",
+    #[19: CYNE - Jakob Ladder ]#19 = "https://www.youtube.com/watch/?v=ZWU7AcTdSAU",
+    #[20: e-dubble - "FWT" ]#20 = "https://www.youtube.com/watch/?v=KzkqgQRl5_c",
+    #[21: [House] - Rich Edwards - Where I'll Be Waiting (feat. Cozi Zuehlsdorff) [Monstercat Release] ]#21 = "https://www.youtube.com/watch/?v=ewBulJdtGlM",
+    #[22: [Tropical House] - Hyper Potions - Unbreakable (feat. Danyka Nadeau) [Monstercat Release] ]#22 = "https://www.youtube.com/watch/?v=T8fcbqDUwbU",
+    #[23: [Progressive House] - Laszlo - Home (feat. Richard Caddock) [Monstercat Release] ]#23 = "https://www.youtube.com/watch/?v=kPveq0RmjNU",
+    #[24: [Tropical House] - Project 46 - Signs (feat. Shantee) [Monstercat Release] ]#24 = "https://www.youtube.com/watch/?v=wS51p05ghDY",
+    #[25: Breathe Carolina - "Savages" (Lyric Video) ]#25 = "https://www.youtube.com/watch/?v=5zs0tY2CgFM",
+    #[26: [Trap] - Aero Chord - Surface [Monstercat Release] ]#26 = "https://www.youtube.com/watch/?v=BrCKvKXvN2c",
+    #[27: [Trap] - Pegboard Nerds - BADBOI [Monstercat FREE Release] ]#27 = "https://www.youtube.com/watch/?v=v372aagNItc",
+    #[28: [Trap] - Aero Chord - Boundless [Monstercat Release] ]#28 = "https://www.youtube.com/watch/?v=mNn34ErU6kM",
+    #[29: [Trap] - Snavs - Time [Monstercat Release] ]#29 = "https://www.youtube.com/watch/?v=UwbVx-XTubM",
+    #[30: [Trap] - Razihel - Legends (feat. TeamMate) [Monstercat Release] ]#30 = "https://www.youtube.com/watch/?v=v5a0YGaVS0I",
+    #[31: Grabbitz - Ballin' [Monstercat Official Music Video] ]#31 = "https://www.youtube.com/watch/?v=u0RFyn2-tu8",
+    #[32: Marshmello - Alone [Monstercat Official Music Video] ]#32 = "https://www.youtube.com/watch/?v=YnwsMEabmSo",
+    #[33: [Trap] - Noisestorm - Antihero [Monstercat Release] ]#33 = "https://www.youtube.com/watch/?v=RHt1wIAh1GU",
+    #[34: Dirty Audio - Gorilla Glue [Monstercat Release] ]#34 = "https://www.youtube.com/watch/?v=1rLvsC6T4YI",
+    #[35: [Trap] - Slippy - Restless (feat. Anna Yvette) [Monstercat EP Release] ]#35 = "https://www.youtube.com/watch/?v=LSw7K4RpTHo",
+    #[36: TheFatRat - Monody (feat. Laura Brehm) ]#36 = "https://www.youtube.com/watch/?v=B7xai5u_tnk",
+    #[37: TheFatRat - Unity ]#37 = "https://www.youtube.com/watch/?v=n8X9_MgEdCg",
+    #[38: TheFatRat - Windfall ]#38 = "https://www.youtube.com/watch/?v=jqkPqfOFmbY",
+    #[39: Cartoon - On & On (feat. Daniel Levi) [NCS Release] ]#39 = "https://www.youtube.com/watch/?v=K4DyBUG242c",
+    #[40: DEAF KEV - Invincible [NCS Release] ]#40 = "https://www.youtube.com/watch/?v=J2X5mJ3HDYE",
+    #[41: Disfigure - Blank [NCS Release] ]#41 = "https://www.youtube.com/watch/?v=p7ZsBPK656s",
+    #[42: Tobu - Infectious [NCS Release] ]#42 = "https://www.youtube.com/watch/?v=ux8-EbW6DUI",
+    #[43: Tobu - Candyland [NCS Release] ]#43 = "https://www.youtube.com/watch/?v=IIrCDAV3EgI",
+    #[44: TheFatRat - Xenogenesis ]#44 = "https://www.youtube.com/watch/?v=2Ax_EIb1zks",
+    #[45: TheFatRat - Never Be Alone (Tasty Release) ]#45 = "https://www.youtube.com/watch/?v=Ic-gZlPFTkQ",
+    #[46: floatinurboat - Spirit of Things [NCS Release] ]#46 = "https://www.youtube.com/watch/?v=LY1ik-Do_MU",
+    #[47: Warriyo - Mortals (feat. Laura Brehm) [NCS Release] ]#47 = "https://www.youtube.com/watch/?v=yJg-Y5byMMw",
+    #[48: Desmeon - Hellcat [NCS Release] ]#48 = "https://www.youtube.com/watch/?v=JSY6vBPunpY",
+    #[49: Cascada - Everytime We Touch (Official Video) ]#49 = "https://www.youtube.com/watch/?v=4G6QDNC4jPs",
+    #[50: [Electro] - Nitro Fun - Final Boss [Monstercat Release] ]#50 = "https://www.youtube.com/watch/?v=VGh5DV0D3wk",
+    #[51: [Dubstep] - Pegboard Nerds - Here It Comes [Monstercat Release] ]#51 = "https://www.youtube.com/watch/?v=rEL-HdWvLpM",
+    #[52: [Drumstep] - Tristam & Braken - Flight [Monstercat Release] ]#52 = "https://www.youtube.com/watch/?v=OVMuwa-HRCQ",
+    #[53: [Future Bass] - San Holo - New Sky [Monstercat EP Release] ]#53 = "https://www.youtube.com/watch/?v=xXIwAsnL-Vc",
+    #[54: [Trap] - Snavs - Into The Wild (feat. Sebastian Lind) [Monstercat Release] ]#54 = "https://www.youtube.com/watch/?v=RcXdR_uoTtw",
+    #[55: Lemaitre - Not Too Late ]#55 = "https://www.youtube.com/watch/?v=7NMf6K2wIqE",
+    #[56: Dance till You're Dead (FULL REMIX) [Bass Boosted] ]#56 = "https://www.youtube.com/watch/?v=K0tXhd7u56k",
+    #[57: Cade - Make You Feel Loved ]#57 = "https://www.youtube.com/watch/?v=LPmclUWF8XE",
+    #[58: Famba - Space (feat. Toito & KARLI) ]#58 = "https://www.youtube.com/watch/?v=TcFS8qxDo58",
+    #[59: Cheat Codes & Nicky Romero - Sober ]#59 = "https://www.youtube.com/watch/?v=2dJ7sipa468",
+    #[60: R3hab & Felix Cartal - Killing Time ]#60 = "https://www.youtube.com/watch/?v=qn9GixsDY5s",
+    #[61: [Glitch Hop or 110BPM] - Tristam - Till It's Over [Monstercat Release] ]#61 = "https://www.youtube.com/watch/?v=usXhiWE2Uc0",
+    #[62: [Hardcore] - Stonebank - Stronger (feat. EMEL) [Monstercat Release] ]#62 = "https://www.youtube.com/watch/?v=I1NuCWfYeYc",
+    #[63: TheFatRat - Fly Away feat. Anjulie ]#63 = "https://www.youtube.com/watch/?v=cMg8KaMdDYo",
+    #[64: K'NAAN - Wavin' Flag (Coca-Cola Celebration Mix) ]#64 = "https://www.youtube.com/watch/?v=WTJSt4wP2ME",
+    #[65: TheFatRat - No No No ]#65 = "https://www.youtube.com/watch/?v=d0uFvhCHWCo",
+    #[66: TheFatRat - Oblivion (feat. Lola Blanc) ]#66 = "https://www.youtube.com/watch/?v=Gc3tqnhmf5U",
+    #[67: Hit the Road Jack (Wolfgang Lohr & Maskarade Remix) ]#67 = "https://www.youtube.com/watch/?v=MPmD6hFaomk",
+    #[68: U Got That | FULL VERSION [MMV] ]#68 = "https://www.youtube.com/watch/?v=uuBETyA_yxc",
+    #[69: Aaron Smith - Dancin (KRONO Remix) ]#69 = "https://www.youtube.com/watch/?v=8pm_KoguqPM",
+    #[70: TARI - Swerve (feat. Nevve) ]#70 = "https://www.youtube.com/watch/?v=6ENxmO60T9k",
+    #[71: Dynoro & Gigi D'Agostino vs Guru Josh - Infinity In My Mind (Djs From Mars Remix) ]#71 = "https://www.youtube.com/watch/?v=hspFijCQ1Tw",
+    #[72: Ed Sheeran - Shape of You (it's different Remix) ]#72 = "https://www.youtube.com/watch/?v=7QgmPwa1u3U",
+    #[73: Jagwar Twin - Good Day ]#73 = "https://www.youtube.com/watch/?v=ygkDCdEsFXc",
+    #[74: Mickey Valen - Chills (feat. Joey Myron) ]#74 = "https://www.youtube.com/watch/?v=wDzbsnP5T7U",
+    #[75: Stamp On The Ground (New Music Video) ]#75 = "https://www.youtube.com/watch/?v=VW9wlPtDc50",
+    #[76: Bombs Away - Drunk Arcade [Official Video] ]#76 = "https://www.youtube.com/watch/?v=V2NgAWLe7x8",
+    #[77: Tribe Society - Kings ]#77 = "https://www.youtube.com/watch/?v=zU7co2-yn_Q",
+    #[78: Caravan Palace - Rock It For Me ]#78 = "https://www.youtube.com/watch/?v=fBGSJ3sbivI",
+    #[79: Avicii - Levels ]#79 = "https://www.youtube.com/watch/?v=_ovdm2yX4MA",
+    #[80: Avicii - Wake Me Up (Official Video) ]#80 = "https://www.youtube.com/watch/?v=IcrbM1l_BoI",
+    #[81: Avicii - The Nights ]#81 = "https://www.youtube.com/watch/?v=UtF6Jej8yb4",
+    #[82: Avicii - Waiting For Love ]#82 = "https://www.youtube.com/watch/?v=cHHLHGNpCSA",
+    #[83: Skrillex & Damian "Jr. Gong" Marley - Make It Bun Dem [OFFICIAL VIDEO] ]#83 = "https://www.youtube.com/watch/?v=BGpzGu9Yp6Y",
+    #[84: Charlie Puth - Betty Boop (but with a more fitting drop) ]#84 = "https://www.youtube.com/watch/?v=j7ZggaUbVlI",
+    #[85: Spirits - The Strumbellas (Lyrics) ]#85 = "https://www.youtube.com/watch/?v=Wpv-vGScrvU",
+    #[86: Marmalade - Macklemore feat. Lil Yachty LYRICS ]#86 = "https://www.youtube.com/watch/?v=0evKl8vjuGg",
+    #[87: MACKLEMORE & RYAN LEWIS - THRIFT SHOP FEAT. WANZ (OFFICIAL VIDEO) ]#87 = "https://www.youtube.com/watch/?v=QK8mJJJvaes",
+    #[88: Flamingosis - Sunset Park ]#88 = "https://www.youtube.com/watch/?v=odGExIQTxvg",
+    #[89: Miike Snow - Genghis Khan (Official Video) ]#89 = "https://www.youtube.com/watch/?v=P_SlAzsXa7E",
+    #[90: Panic! At The Disco - High Hopes (Official Video) ]#90 = "https://www.youtube.com/watch/?v=IPXIgEAGe4U",
+    #[91: Caravan Palace - Wonderland ]#91 = "https://www.youtube.com/watch/?v=vCXsRoyFRQE",
+    #[92: Otis Stacks - Little Pretty [Official Video] ]#92 = "https://www.youtube.com/watch/?v=MxLDkmgyoy0",
+    #[93: The Correspondents - Fear & Delight (Official Video) ]#93 = "https://www.youtube.com/watch/?v=ABS-mlep5rY",
+    #[94: INEXPLICABLE by The Correspondents ]#94 = "https://www.youtube.com/watch/?v=OcmBowQsVrg",
+    #[95: The Correspondents - What's Happened To Soho? ]#95 = "https://www.youtube.com/watch/?v=MZukiRrYROA",
+    #[96: Steam Powered Giraffe - Brass Goggles ]#96 = "https://www.youtube.com/watch/?v=dDRHx4cPgbE",
+    #[97: Otis Stacks (ft. Gift Of Gab) - Fashion Drunk [Official Video] ]#97 = "https://www.youtube.com/watch/?v=VjAKeduaURc",
+    #[98: "Shia LaBeouf" Live - Rob Cantor ]#98 = "https://www.youtube.com/watch/?v=o0u4M6vppCI",
+    #[99: Roundtable Rival - Lindsey Stirling ]#99 = "https://www.youtube.com/watch/?v=jvipPYFebWc",
+    #[100: Delta Heavy - White Flag (Official Video) ]#100 = "https://www.youtube.com/watch/?v=ebILIKHi9wo",
+    #[101: Fall Out Boy - Centuries (Official Music Video) ]#101 = "https://www.youtube.com/watch/?v=LBr7kECsjcQ",
+    #[102: Ain't No Rest for the Wicked ]#102 = "https://www.youtube.com/watch/?v=wfXupu60v-Q",
+    #[103: SIAMS "The Wolf" [Official Animated Music Video] ]#103 = "https://www.youtube.com/watch/?v=lX44CAz-JhU",
+    #[104: Nightcore - Rockefeller Street ]#104 = "https://www.youtube.com/watch/?v=hjGZLnja1o8",
+    #[105: Imagine Dragons - Zero (Lyrics)  ]#105 = "https://www.youtube.com/watch/?v=Zx5670LWOWI",
+    #[106: Dirty Heads - Vacation (Official Video) ]#106 = "https://www.youtube.com/watch/?v=7zok9co_8E4",
+    #[107: RIP E-Dubble | Best of the King ]#107 = "https://www.youtube.com/watch/?v=OBmG5uiWpYs",
+    #[108: e-dubble - Be A King ]#108 = "https://www.youtube.com/watch/?v=AYKYvVkhIYo",
+    #[109: e-dubble - What it Do ]#109 = "https://www.youtube.com/watch/?v=MlfzZHeHBUI",
+    #[110: e-dubble - Robots Can't Drink (Freestyle Friday #53) ]#110 = "https://www.youtube.com/watch/?v=AeurKtKCtiw",
+    #[111: e-dubble - Taking My Time (Freestyle Friday #40) ]#111 = "https://www.youtube.com/watch/?v=aMPr67Z24j8",
+    #[112: ElectroSWING || Jamie Berry Feat. Octavia Rose - Lost In the Rhythm ]#112 = "https://www.youtube.com/watch/?v=TYXHv97kbps",
+    #[113: ElectroSwing || Jamie Berry - Sweet Rascal ]#113 = "https://www.youtube.com/watch/?v=6ssoRXlOhqI",
+    #[114: [Electro/Trap/Hardstyle/DnB/Drumstep/Moombahton] - Karetus - Full Flavor [Free Download] ]#114 = "https://www.youtube.com/watch/?v=jx4CuNiTMcg")
+
+    RemainingSongs=table():add(PlayList)
+    runOnChat(1)
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}elseif(->MusicPlayer && ~MusicPlayer){
+    setName("Pies Attachable Music E2 (Connected)")
+    print("Pairing Music E2 to entity: "+MusicPlayer:model())
+}elseif(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    Command=LS[1,string]:sub(CommandPrefix:length()+1)
+    switch(Command:lower()){
+        case "play",
+            if(MusicPlayer:isValid()){
+                Song=LS[2,string]
+                if(Song!="" && Song:find("https")>0){
+                    streamStop(Channel)
+                    if(Song:find("youtube")>0){
+                        runOnHTTP(1)
+                        LastPlayed=Song
+                        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song)
+                        print("Sending request to server for conversion to MP3 format.")
+                    }else{
+                        MusicPlayer:streamStart(Channel,Song,Volume)
+                        print("Now playing MP3 from: "+Song)
+                        setName("Now playing MP3 from: "+Song)
+                    }
+                }else{
+                    print("The link you provided has been considered invalid: \""+Song+"\"<br>Make sure you aren't using a youtu.be link.")
+                }
+            }else{
+                print("Music Player has not been connected to E2 or has been disconnected. Make sure you wired the input to an entity properly and try again.")
+            }
+            break
+        case "playlist",
+            if(MusicPlayer:isValid()){
+                local SongIndex=LS[2,string]:toNumber()
+                if(PlayList:exists(SongIndex)){
+                    runOnHTTP(1)
+                    Song=PlayList[SongIndex,string]
+                    LastPlayed=Song
+                    httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song)
+                    print("Sending request to server to convert song \""+SongIndex+"\" to MP3 File Format. Url="+Song)
+                    if(CyclePlayList){
+                        LastPosition=SongIndex
+                    }
+                }
+            }else{
+                print("Music Player has not been connected to E2 or has been disconnected. Make sure you wired the input to an entity properly and try again.")
+            }
+            break
+        case "skip",
+            stoptimer("ContinuePlaylist")
+            timer("ContinuePlaylist",1000)
+            break
+        case "stop",
+            streamStop(Channel)
+            print("Stoping Stream.")
+            break
+        case "volume",
+            V=LS[2,string]:toNumber()
+            if(V>1 || V<0){
+                Volume=1
+                streamVolume(Channel,Volume)
+                print("Volume has been defaulted to 1.<br>Next time use a number between 0 and 1.")
+            }else{
+                Volume=V
+                streamVolume(Channel,V)
+                print("Volume has been set to "+V+".")
+            }
+            break
+    }
+}elseif(httpClk()){
+    runOnHTTP(0)
+    if(MusicPlayer:isValid()){
+        local Data=httpData()
+        local Dat=jsonDecode(Data)
+        if(!Dat["error",number]){
+            MusicPlayer:streamStart(Channel,Dat["file",string],Volume)
+            #print("Now Playing: "+Dat["title",string])
+            setName("Now Playing: "+Dat["title",string] +" ("+Dat["duration",number]+"s)")
+            if(Loop){
+                timer("Loop",Dat["duration",number]*1000)
+            }elseif(CyclePlayList){
+                stopAllTimers()
+                timer("ContinuePlaylist",Dat["duration",number]*1000)
+            }
+            exit()
+        }else{
+            printTable(Dat)
+            timer("ContinuePlaylist",5000)
+            #print("Error Report ^ Send to E2 Nerd Like Pie")
+        }
+    }else{
+        print("Music Player has not been connected to E2 or has been disconnected. Make sure you wired the input to an entity properly and try again.")
+    }
+}elseif(!MusicPlayer:isValid()){
+    setName("Pies Attachable Music E2 (Not Connected)")
+}elseif(clk("Loop")){
+    runOnHTTP(1)
+    httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+LastPlayed)
+}elseif(clk("ContinuePlaylist")){
+    if(CyclePlayList){
+        if(RandomizedPlaylist){
+            RemainingSongs:removeString(LastPosition)
+            LastPosition=ceil(random(0,RemainingSongs:count()))
+            runOnHTTP(1)
+            if(RemainingSongs:count()>0){
+                print("Song Finished, Now Requesting: "+RemainingSongs[LastPosition,string])
+                httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+ RemainingSongs[LastPosition,string])
+            }else{
+                RemainingSongs=table():add(PlayList)
+                LastPosition=ceil(random(0,RemainingSongs:count()))
+                Song=RemainingSongs[LastPosition,string]
+                print("PlayList Finished. Restarting PlayList at random song: "+Song)
+                httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song)
+            }
+        }else{
+            LastPosition++
+            runOnHTTP(1)
+            if(LastPosition<=PlayList:count()){
+                print("Song Finished, Now Requesting: "+PlayList[LastPosition,string])
+                httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+ PlayList[LastPosition,string])
+            }else{
+                print("PlayList Finished. Restarting PlayList at first song: "+PlayList[1,string])
+                LastPosition=1
+                httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+ PlayList[LastPosition,string])
+            }
+        }
+    }
+}
+
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/

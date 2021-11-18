@@ -1,0 +1,172 @@
+@name Gunshop Searching Tool
+@model models/props/cs_assault/ticketmachine.mdl
+@persist [Shipments,UsedEntities]:array [ShipmentList]:gtable [ShipmentString,IDList]:string [How_Many_Guns_Drugs_Weapons_Etc__Do_You_Get_When_You_Buy_A_Shipment,ProfitMargin,Spacing,ShouldFreeze]:number [TemporaryEntity]:entity
+if(first()){
+    How_Many_Guns_Drugs_Weapons_Etc__Do_You_Get_When_You_Buy_A_Shipment=10
+    ProfitMargin=1.05
+    Spacing=35
+    ShouldFreeze=1
+    ShipmentList=gTable(owner():steamID()+"'s shipment list",1)
+    ShipmentList:clear()
+    UsedEntities=array()
+    runOnChat(1)
+    timer("Search",1000)
+}
+if(clk("Search")){
+    findIncludePlayerProps(owner())
+    findExcludeEntities(UsedEntities)
+    findByClass("spawned_shipment")
+    Shipments=findToArray()
+    timer("sort",250)
+}
+if(clk("sort")){
+    if(Shipments:count()>0){
+        while(perf(90) & Shipments:count()>0){
+            local Gun=Shipments:popEntity()
+            RenamedGun=Gun:shipmentName()
+            RenamedGun=RenamedGun:lower()
+            RenamedGun=RenamedGun:replace(" ", "")
+            RenamedGun=RenamedGun:replace("_", "")
+            if(!ShipmentList[RenamedGun,table]:exists("created")){
+                ShipmentList[RenamedGun,table]=table("created"=1)
+                ShipmentList[RenamedGun,table]["IDs",array]=array()
+            }
+            ShipmentList[RenamedGun,table]["IDs",array]:pushNumber(Gun:id())
+            if(ShipmentString:find(RenamedGun)==0){
+                ShipmentString+=RenamedGun+" "
+            }
+            UsedEntities:pushEntity(Gun)
+            Gun:propManipulate(Gun:pos(),Gun:angles(),ShouldFreeze,0,ShouldFreeze)
+        }
+        timer(clkName(),1000)
+    }else{
+        setName("Currently Selling: "+ShipmentString)
+        print(ShipmentString)
+    }
+}
+if(clk("SortShipments")){
+    if(Shipments:count()>0){
+        Ship=Shipments:popEntity()
+        Ship:propManipulate(TemporaryEntity:toWorld(vec(Spacing,0,0)),TemporaryEntity:angles(),ShouldFreeze,0,ShouldFreeze)
+        TemporaryEntity=Ship
+        #holoCreate(Ship:id(),TemporaryEntity:toWorld(vec(0,0,50)),vec(0.75),TemporaryEntity:angles(),vec(255),Ship:shipmentModel())
+        #holoParent(Ship:id(),Ship)
+        #holoDisableShading(Ship:id(),1)
+        timer(clkName(),100)
+    }else{
+        print("Refreshing Stock...")
+        timer("Search",1000)
+    }
+}
+if(chatClk(lastSpoke())){
+    LS=lastSaid():lower():explode(" ")
+    switch(LS[1,string]){
+        case "/stock",
+            if(chatClk(owner())){
+                local Pos=ShipmentString:find(LS[2,string])
+                if(Pos>0){
+                    WeaponName=ShipmentString:sub(Pos,ShipmentString:find(" ",Pos)-1)
+                    printTable(ShipmentList[WeaponName,table])
+                }else{
+                    print("Couldn't find that shipment try one of these: \n"+ShipmentString)
+                }
+            }
+            break
+        case "/vape",
+        case "/vapes",
+        case "/drug",
+        case "/drugs",
+        case "/search",
+        case "/buygun",
+        case "/guns",
+        case "/gun",
+            local Pos=ShipmentString:find(LS[2,string])
+            if(Pos>0){
+                WeaponName=ShipmentString:sub(Pos,ShipmentString:find(" ",Pos)-1)
+                ShipmentID=ShipmentList[WeaponName,table]["IDs",array]:popNumber()
+                Shipment=entity(ShipmentID)
+                if(Shipment:owner()==owner() & Shipment:shipmentAmount()>0){
+                    if(Shipment:shipmentName():lower():find("single")<=0){
+                        Price=Shipment:shipmentPrice()/How_Many_Guns_Drugs_Weapons_Etc__Do_You_Get_When_You_Buy_A_Shipment * Shipment:shipmentAmount() * ProfitMargin
+                    }else{
+                        Price=Shipment:shipmentPrice() * Shipment:shipmentAmount() * ProfitMargin
+                    }
+                    
+                    Buyer=lastSpoke()
+                    moneyRequest(Buyer,Price,"Would you like to purchase "+Shipment:shipmentAmount()+" \""+Shipment:shipmentName()+"\" for $"+Price+"?")
+                    Buyer["ShipmentID",number]=ShipmentID
+                    print(Shipment:name():lower())
+                    print(Buyer:name()+" "+"Would you like to purchase "+Shipment:shipmentAmount()+" \""+Shipment:shipmentName()+"\" for $"+Price)
+                    if(ShipmentList[WeaponName,table]["IDs",array]:count()<1){
+                        ShipmentList[WeaponName,table]=table()
+                        S=ShipmentString:find(WeaponName)
+                        E=ShipmentString:find(" ",S)
+                        ShipmentString=ShipmentString:sub(1,S-1)+ShipmentString:sub(E+1)
+                        setName("Currently Selling: "+ShipmentString)
+                    }
+                }else{
+                    ShipmentList[WeaponName,table]["IDs",array]:pushNumber(ShipmentID)
+                }
+            }
+            break
+        case "/refresh",
+            if(chatClk(owner())){
+                reset()
+            }
+            break
+        case "/shipmentsize",
+            if(chatClk(owner())){
+                How_Many_Guns_Drugs_Weapons_Etc__Do_You_Get_When_You_Buy_A_Shipment=LS[2,string]:toNumber()
+                print("How_Many_Guns_Drugs_Weapons_Etc__Do_You_Get_When_You_Buy_A_Shipment has been set to: "+ How_Many_Guns_Drugs_Weapons_Etc__Do_You_Get_When_You_Buy_A_Shipment)
+            }
+            break
+        case "/profit",
+            if(chatClk(owner())){
+                ProfitMargin=LS[2,string]:toNumber()
+                print("ProfitMargin has been set to: %"+ (ProfitMargin-1)*100)
+            }
+            break
+        case "/sort",
+            if(chatClk(owner())){
+                findClearBlackList()
+                findIncludePlayerProps(owner())
+                findByClass("spawned_shipment")
+                ShouldFreeze=1-LS[2,string]:toNumber()
+                Shipments=findToArray()
+                TemporaryEntity=Shipments:popEntity()
+                TemporaryEntity:propManipulate(owner():toWorld(vec(Spacing,0,0)),owner():angles(),ShouldFreeze,0,ShouldFreeze)
+                #holoCreate(Ship:id(),owner():toWorld(vec(Spacing,0,50)),vec(1),TemporaryEntity:angles(),vec(255),TemporaryEntity:shipmentModel())
+                #holoParent(Ship:id(),Ship)
+                #holoDisableShading(Ship:id(),1)
+                timer("SortShipments",250)
+            }
+            break
+    }
+}
+if(moneyClk()){
+    Buyer=moneyClkPlayer()
+    Shipment=entity(Buyer["ShipmentID",number])
+    if(Shipment:owner()==owner() & Shipment:shipmentAmount()>0){
+        Shipment:propManipulate(Buyer:toWorld(vec(5,0,50)),Buyer:toWorld(ang(0,180,0)),1,0,0)
+        UsedEntities:pushEntity(Shipment)
+    }else{
+        print("Refunding "+Buyer:name()+" for $"+moneyClkAmount())
+        moneyGive(Buyer,moneyClkAmount())
+    }
+}elseif(moneyNoClk() | moneyTimeout()){
+    Buyer=moneyNoClkPlayer() == noentity() ? moneyTimeoutPlayer() : moneyNoClkPlayer()
+    local Gun=entity(Buyer["ShipmentID",number])
+    RenamedGun=Gun:shipmentName()
+    RenamedGun=RenamedGun:lower()
+    RenamedGun=RenamedGun:replace(" ", "")
+    RenamedGun=RenamedGun:replace("_", "")
+    if(!ShipmentList[RenamedGun,table]:exists("created")){
+        ShipmentList[RenamedGun,table]=table("created"=1)
+        ShipmentList[RenamedGun,table]["IDs",array]=array()
+    }
+    ShipmentList[RenamedGun,table]["IDs",array]:pushNumber(Gun:id())
+    if(ShipmentString:find(RenamedGun)==0){
+        ShipmentString+=RenamedGun+" "
+    }
+    setName("Currently Selling: "+ShipmentString)
+}

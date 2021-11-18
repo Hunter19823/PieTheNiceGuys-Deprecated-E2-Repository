@@ -1,0 +1,18 @@
+#propSpawn("models/props_genesys/shark_01.mdl",entity():pos(),entity():angles(),1) selfDestruct()
+#propSpawn("models/uc/props_unioncity/bankvault_door.mdl",entity():pos(),entity():angles(),1) selfDestruct()
+#propSpawn("models/tru/yacht_a.mdl",entity():pos(),entity():angles(),1) selfDestruct()
+#propSpawn("models/sligwolf/gokart/sw_gokart.mdl",entity():pos(),entity():angles(),1) selfDestruct()
+#propSpawn("models/props_urban/fountain001.mdl",entity():pos(),entity():angles(),1) selfDestruct()
+#propSpawn("models/props_phx/misc/soccerball.mdl",entity():pos(),entity():angles(),1) selfDestruct()
+
+#models/uc/props_unioncity/bankvault_door.mdl
+#models/props_genesys/shark_01.mdl
+#models/props_urban/fountain001.mdl
+#models/tru/yacht_a.mdl
+#models/sligwolf/gokart/sw_gokart.mdl
+#models/miskiestatue.mdl
+#models/uc/props_unioncity/bankvault_door.mdl
+#models/props_genesys/shark_01.mdl
+#models/piratecat_animals/piratecat_crocodile.mdl
+#models/exhibitionrp/moneyprinter/money_printer.mdl
+

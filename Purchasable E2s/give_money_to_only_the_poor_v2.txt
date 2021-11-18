@@ -1,0 +1,63 @@
+@name Give Money To Only the Poor v2
+@model models/bitminers2/bitminer_rack.mdl
+@persist AlreadyClaimed:gtable Amount Maximum Channel WhitelistName:string
+if(first()){
+    #The Maximum amount of money a player can have to be able to
+    #accept the money from this e2.
+    Maximum=1000000
+    
+    #The Amount of money given to any player with a balance below the Maximum.
+    Amount=1000
+    
+    #Channel the TTS voice plays on.
+    Channel=123
+    
+    #The Name of the GlobalTable Whitelist used to check if a player has already received
+    #cash or not.
+    WhitelistName="AlreadyClaimedPoorMoney"
+    
+    
+    
+    
+    runOnUse(1,entity())
+    AlreadyClaimed=gTable(owner():steamID()+"'s Global Tables",1)
+    #AlreadyClaimed[WhitelistName,table]:clear()
+    if(AlreadyClaimed[WhitelistName,table]:count()<1){
+        AlreadyClaimed[WhitelistName,table]=table()
+    }
+    function number hasClaimedGift(Person:entity){
+        if(Person:isPlayer()){
+            local HasClaimed=AlreadyClaimed[WhitelistName,table]:exists(Person:steamID())
+            if(HasClaimed){
+                return 1
+            }else {
+                return 0
+            }
+        }
+    }
+    function void sayEnjoy(Player:entity){
+        local Text="Greetings "+Player:name()+"! I hope you enjoy "+owner():name()+"'s Gift of $"+Amount+" . Make sure to invite your friends and have a nice day."
+        local Language="en-us"
+        entity():streamStart(Channel,("http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+Language+"&client=tw-ob"),1)
+        timer("shush",10000)
+    }
+    setName("Press E to Claim a Poor Person's Gift from "+owner():name()+" of $"+Amount)
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if ( useEntClk():inUse() ) {
+    local Person = useEntClk():inUseBy()
+    People=AlreadyClaimed[WhitelistName,table]
+    if(!hasClaimedGift(Person)){
+        AlreadyClaimed[WhitelistName,table][Person:steamID(),number]=1
+        if(Person:money()<Maximum){
+            moneyGive(Person,Amount)
+            sayEnjoy(Person)
+        }
+    }
+}
+if ( clk("shush") ) {
+    streamStop(Channel)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

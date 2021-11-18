@@ -1,0 +1,605 @@
+@name Pie's Hologram-Based Mine Sweeper
+@persist [Grid,ModelGrid,MaterialGrid,ColorGrid,ScaleGrid]:table [Rows,Columns,MineCount,TotalMineCount,CurrentRow,CurrentColumn,TotalTiles,Timer,Height,Width,Thickness,TileWidth,TileHeight,KeysMade,Spacer] [BombKey,FlagKey,ChatPrefix]:string [Participent]:entity [TileOrientation]:angle [Keys]:array
+if(first()){
+    #Changeable Variables
+    TotalMineCount=10
+    Columns=10
+    Rows=10
+    Timer=100
+    Spacer=0.5
+    ChatPrefix="."
+    
+    BombKey="B"
+    FlagKey="F"
+    
+    Height=250
+    Width=250
+    Thickness=1
+    
+    ModelGrid=table(
+        "Blank"="models/hunter/blocks/cube1x1x1.mdl",
+        "Bomb"="models/combine_helicopter/helicopter_bomb01.mdl",
+        "Flag"="models/props_c17/streetsign004e.mdl",
+        "0"="models/hunter/blocks/cube1x1x1.mdl",
+        "1"="models/hunter/blocks/cube1x1x1.mdl",
+        "2"="models/hunter/blocks/cube1x1x1.mdl",
+        "3"="models/hunter/blocks/cube1x1x1.mdl",
+        "4"="models/hunter/blocks/cube1x1x1.mdl",
+        "5"="models/hunter/blocks/cube1x1x1.mdl",
+        "6"="models/hunter/blocks/cube1x1x1.mdl",
+        "7"="models/hunter/blocks/cube1x1x1.mdl",
+        "8"="models/hunter/blocks/cube1x1x1.mdl"
+    )
+    MaterialGrid=table(
+        "Blank"="models/debug/debugwhite",
+        "Bomb"="",
+        "Flag"="",
+        "0"="models/debug/debugwhite",
+        "1"="models/debug/debugwhite",
+        "2"="models/debug/debugwhite",
+        "3"="models/debug/debugwhite",
+        "4"="models/debug/debugwhite",
+        "5"="models/debug/debugwhite",
+        "6"="models/debug/debugwhite",
+        "7"="models/debug/debugwhite",
+        "8"="models/debug/debugwhite"
+    )
+    ColorGrid=table(
+        "Blank"=vec(255),
+        "Bomb"=vec(255),
+        "Flag"=vec(255),
+        "0"=vec(0,255,0),
+        "1"=vec(0,0,255),
+        "2"=vec(0,128,0),
+        "3"=vec(255,0,0),
+        "4"=vec(0,0,128),
+        "5"=vec(128,0,0),
+        "6"=vec(0,128,128),
+        "7"=vec(0),
+        "8"=vec(128,128,128)
+    )
+    ScaleGrid=table(
+        "Blank"=1,
+        "Bomb"=1,
+        "Flag"=1,
+        "0"=9/9,
+        "1"=8/9,
+        "2"=7/9,
+        "3"=6/9,
+        "4"=5/9,
+        "5"=4/9,
+        "6"=3/9,
+        "7"=2/9,
+        "8"=1/9
+    )
+    Keys=array("8","7","6","5","4","3","2","1","0","Bomb","Flag","Blank")
+    
+    
+    
+    TileOrientation=ang(0,0,0)
+    
+    
+    Participent=owner()
+    
+    #Default Variables
+    TotalTiles=Rows*Columns
+    TileWidth=Width/Columns
+    TileHeight=Height/Rows
+    KeysMade=0
+    Grid=table(
+        "BombPositions"=table()
+    )
+    
+    MineCount=0
+    
+    
+    timer("SetupTable",1000)
+    #timer("Generate Bombs",1000)
+}
+if(clk("SetupTable")){
+    if(CurrentRow<Rows){
+        CurrentRow++
+        Grid["Row"+CurrentRow,array]=array("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","")
+        timer(clkName(),Timer)
+    }else{
+        #Finished Creating Grid Data
+        print("Finished Creating Grid Data")
+        timer("Generate Bombs",1000)
+    }
+}
+if(clk("Generate Bombs")){
+    if(MineCount<TotalMineCount){
+        #Generate Bomb Locations and place them
+        while(MineCount<TotalMineCount & perf(90)){
+            local Pos=ceil(random(TotalTiles))
+            while(Grid["BombPositions",table][Pos,number]!=0){
+                Pos=ceil(random(TotalTiles))
+            }
+            Grid["BombPositions",table][Pos,number]=1
+            if(Pos%Columns==0){
+                Grid["Row"+ceil(Pos/Columns),array][Columns,string]=BombKey
+            }else{
+                Grid["Row"+ceil(Pos/Columns),array][Pos%Columns,string]=BombKey
+            }
+            
+            MineCount++
+        }
+        timer(clkName(),Timer)
+    }else{
+        #Finished Generating Bomb Locations
+        print("Finished Generating Bombs<br>Now Generating Tiles")
+        #printTable(Grid)
+        CurrentColumn=0
+        CurrentRow=1
+        timer("SetupWorkspace",Timer)
+    }
+}
+if(clk("SetupWorkspace")){
+    if(holoCanCreate()){
+        if(CurrentColumn<Columns){
+            CurrentColumn++
+            if(Grid["Row"+CurrentRow,array][CurrentColumn,string]!=BombKey){
+                local TileValue=0
+                #Top Left
+                if(CurrentColumn>1 & CurrentRow>1){
+                    if(Grid["Row"+(CurrentRow-1),array][(CurrentColumn-1),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Top Middle
+                if(CurrentRow>1){
+                    if(Grid["Row"+(CurrentRow-1),array][(CurrentColumn+0),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Top Right
+                if(CurrentColumn<Columns & CurrentRow>1){
+                    if(Grid["Row"+(CurrentRow-1),array][(CurrentColumn+1),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Middle Left
+                if(CurrentColumn>1){
+                    if(Grid["Row"+(CurrentRow+0),array][(CurrentColumn-1),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Middle Right
+                if(CurrentColumn<Columns){
+                    if(Grid["Row"+(CurrentRow+0),array][(CurrentColumn+1),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Bottom Left
+                if(CurrentColumn>1 & CurrentRow<Rows){
+                    if(Grid["Row"+(CurrentRow+1),array][(CurrentColumn-1),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Bottom Middle
+                if(CurrentRow<Rows){
+                    if(Grid["Row"+(CurrentRow+1),array][(CurrentColumn+0),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                #Bottom Right
+                if(CurrentColumn<Columns & CurrentRow<Rows){
+                    if(Grid["Row"+(CurrentRow+1),array][(CurrentColumn+1),string]==BombKey){
+                        TileValue++
+                    }
+                }
+                if(TileValue==0){
+                    Grid["Row"+CurrentRow,array][CurrentColumn,string]="0"
+                }else{
+                    Grid["Row"+CurrentRow,array][CurrentColumn,string]=TileValue+""
+                }
+            }
+            HoloIndex=(CurrentRow-1)*Columns+CurrentColumn
+            holoCreate(HoloIndex,entity():toWorld(vec(Width/2 - (TileWidth*CurrentColumn-TileWidth/2),0,Height-(TileHeight*CurrentRow-TileHeight/2))),vec(1),TileOrientation,ColorGrid["Blank",vector],ModelGrid["Blank",string])
+            holoMaterial(HoloIndex,MaterialGrid["Blank",string])
+            holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid["Blank",number]-Spacer,Thickness,TileHeight*ScaleGrid["Blank",number]-Spacer))
+            holoParent(HoloIndex,entity())
+            holoDisableShading(HoloIndex,1)
+            timer(clkName(),Timer)
+        }else{
+            
+            CurrentColumn=0
+            CurrentRow++
+            if(CurrentRow<=Rows){
+                timer(clkName(),Timer)
+            }else{
+                #Finished
+                #printTable(Grid)
+                print("Finished Setting up Tiles")
+                timer("Visual Key",Timer)
+                timer("CreateDisplayGrid",Timer)
+                runOnChat(1)
+            }
+        }
+    }else{
+        timer(clkName(),Timer)
+    }
+}
+if(chatClk(owner()) || chatClk(Participent) || chatClk()){
+    LS=lastSaid():lower():explode(" ")
+    switch(LS[1,string]){
+        case ChatPrefix+"display",
+            if(chatClk(owner())){
+                timer("Reveal",Timer)
+            }
+            break
+        case ChatPrefix+"check",
+            X=LS[2,string]:toNumber()
+            if(X>0 & X<=Columns){
+                Y=LS[3,string]:toNumber()
+                if(Y>0 & Y<=Rows){
+                    Tile=Grid["Row"+Y,array][X,string]
+                    HoloIndex=(Y-1)*Columns+X
+                    if(Tile==BombKey){
+                        #effectSpawn("Explosion",lastSpoke():pos(),1)
+                        holoModel(HoloIndex,ModelGrid["Bomb",string])
+                        holoColor(HoloIndex,ColorGrid["Bomb",vector])
+                        holoMaterial(HoloIndex,MaterialGrid["Bomb",string])
+                        holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid["Bomb",number]-Spacer,Thickness,TileHeight*ScaleGrid["Bomb",number]-Spacer))
+                        print("Boom")
+                        CurrentColumn=0
+                        CurrentRow=1
+                        timer("Reveal",3*Timer)
+                    }else{
+                        holoModel(HoloIndex,ModelGrid[Tile,string])
+                        holoColor(HoloIndex,ColorGrid[Tile,vector])
+                        holoMaterial(HoloIndex,MaterialGrid[Tile,string])
+                        holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                        if(Tile=="0"){
+                            
+                            #Top Left
+                            if(X>1 & Y>1){
+                                local Index=((Y-1)-1)*Columns+(X-1)
+                                Tile=Grid["Row"+(Y-1),array][X-1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Top Middle
+                            if(Y>1){
+                                local Index=((Y-1)-1)*Columns+(X+0)
+                                Tile=Grid["Row"+(Y-1),array][X+0,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Top Right
+                            if(X<Columns & Y>1){
+                                local Index=((Y-1)-1)*Columns+(X+1)
+                                Tile=Grid["Row"+(Y-1),array][X+1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Middle Left
+                            if(X>1){
+                                local Index=((Y+0)-1)*Columns+(X-1)
+                                Tile=Grid["Row"+(Y+0),array][X-1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Middle Right
+                            if(X<Columns){
+                                local Index=((Y+0)-1)*Columns+(X+1)
+                                Tile=Grid["Row"+(Y+0),array][X+1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Bottom Left
+                            if(X>1 & Y<Rows){
+                                local Index=((Y+1)-1)*Columns+(X-1)
+                                Tile=Grid["Row"+(Y+1),array][X-1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Bottom Middle
+                            if(Y<Rows){
+                                local Index=((Y+1)-1)*Columns+(X+0)
+                                Tile=Grid["Row"+(Y+1),array][X+0,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Bottom Right
+                            if(X<Columns & Y<Rows){
+                                local Index=((Y+1)-1)*Columns+(X+1)
+                                Tile=Grid["Row"+(Y+1),array][X+1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            break
+        case ChatPrefix+"flag",
+            X=LS[2,string]:toNumber()
+            if(X>0 & X<=Columns){
+                Y=LS[3,string]:toNumber()
+                if(Y>0 & Y<=Rows){
+                    HoloIndex=(Y-1)*Columns+X
+                    holoModel(HoloIndex,ModelGrid["Flag",string])
+                    holoColor(HoloIndex,ColorGrid["Flag",vector])
+                    holoMaterial(HoloIndex,MaterialGrid["Flag",string])
+                    holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid["Flag",number]-Spacer,Thickness,TileHeight*ScaleGrid["Flag",number]-Spacer))
+                }else{
+                    print("Error: Invalid location '"+X+","+Y+"'. Please choose a valid Y value between 1 and "+Rows+" .")
+                }
+            }else{
+                print("Error: Invalid location '"+X+","+Y+"'. Please choose a valid X value between 1 and "+Columns+" .")
+            }
+            break
+        case ChatPrefix+"highlight",
+            X=LS[2,string]:toNumber()
+            if(X>0 & X<=Columns){
+                Y=LS[3,string]:toNumber()
+                if(Y>0 & Y<=Rows){
+                    HoloIndex=(Y-1)*Columns+X
+                    holoColor(HoloIndex,vec(255,255,0))
+                }else{
+                    print("Error: Invalid location '"+X+","+Y+"'. Please choose a valid Y value between 1 and "+Rows+" .")
+                }
+            }else{
+                print("Error: Invalid location '"+X+","+Y+"'. Please choose a valid X value between 1 and "+Columns+" .")
+            }
+            break
+        case ChatPrefix+"add",
+        case ChatPrefix+"coop",
+            if(chatClk(owner())){
+                Player=owner():aimEntity()
+                if(Player:isPlayer()){
+                    Participent=Player
+                    print("Added player '"+Participent:name()+"' to minesweeper whitelist.")
+                }else{
+                    print("Error: Owner not looking at player")
+                }
+            }
+            break
+        case ChatPrefix+"reset",
+            if(chatClk(owner())){
+                reset()
+            }
+            break
+        case ChatPrefix+"vc",
+        case ChatPrefix+"vcheck",
+            Player=lastSpoke()
+            PlanePos=entity():pos()
+            Normal=entity():right()
+            
+            local LineP1 = Player:shootPos()
+            local LineP2 = LineP1 + Player:eye()
+    
+            local X = Normal:dot(PlanePos - LineP1) / Normal:dot(LineP2 - LineP1)
+            Intersection=(LineP1 + X*(LineP2 - LineP1))
+            
+            LocalIntersect=entity():toLocal(Intersection)
+            LocalSquarePosition=floor(LocalIntersect/vec(TileWidth,Thickness,TileHeight))
+            
+            
+            X=Columns/2-LocalSquarePosition:x()
+            Y=Rows-LocalSquarePosition:z()
+            if(X>0 & X<=Columns & Y>0 & Y<=Columns){
+                Tile=Grid["Row"+Y,array][X,string]
+                    HoloIndex=(Y-1)*Columns+X
+                    if(Tile==BombKey){
+                        #effectSpawn("Explosion",lastSpoke():pos(),1)
+                        holoModel(HoloIndex,ModelGrid["Bomb",string])
+                        holoColor(HoloIndex,ColorGrid["Bomb",vector])
+                        holoMaterial(HoloIndex,MaterialGrid["Bomb",string])
+                        holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid["Bomb",number]-Spacer,Thickness,TileHeight*ScaleGrid["Bomb",number]-Spacer))
+                        print("Boom")
+                        CurrentColumn=0
+                        CurrentRow=1
+                        timer("Reveal",3*Timer)
+                    }else{
+                        holoModel(HoloIndex,ModelGrid[Tile,string])
+                        holoColor(HoloIndex,ColorGrid[Tile,vector])
+                        holoMaterial(HoloIndex,MaterialGrid[Tile,string])
+                        holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                        if(Tile=="0"){
+                            
+                            #Top Left
+                            if(X>1 & Y>1){
+                                local Index=((Y-1)-1)*Columns+(X-1)
+                                Tile=Grid["Row"+(Y-1),array][X-1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Top Middle
+                            if(Y>1){
+                                local Index=((Y-1)-1)*Columns+(X+0)
+                                Tile=Grid["Row"+(Y-1),array][X+0,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Top Right
+                            if(X<Columns & Y>1){
+                                local Index=((Y-1)-1)*Columns+(X+1)
+                                Tile=Grid["Row"+(Y-1),array][X+1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Middle Left
+                            if(X>1){
+                                local Index=((Y+0)-1)*Columns+(X-1)
+                                Tile=Grid["Row"+(Y+0),array][X-1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Middle Right
+                            if(X<Columns){
+                                local Index=((Y+0)-1)*Columns+(X+1)
+                                Tile=Grid["Row"+(Y+0),array][X+1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Bottom Left
+                            if(X>1 & Y<Rows){
+                                local Index=((Y+1)-1)*Columns+(X-1)
+                                Tile=Grid["Row"+(Y+1),array][X-1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Bottom Middle
+                            if(Y<Rows){
+                                local Index=((Y+1)-1)*Columns+(X+0)
+                                Tile=Grid["Row"+(Y+1),array][X+0,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                            #Bottom Right
+                            if(X<Columns & Y<Rows){
+                                local Index=((Y+1)-1)*Columns+(X+1)
+                                Tile=Grid["Row"+(Y+1),array][X+1,string]
+                                holoModel(Index,ModelGrid[Tile,string])
+                                holoColor(Index,ColorGrid[Tile,vector])
+                                holoMaterial(Index,MaterialGrid[Tile,string])
+                                holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+                                
+                            }
+                        }
+                    }
+            }
+            break
+        case ChatPrefix+"vf",
+        case ChatPrefix+"vflag",
+            Player=lastSpoke()
+            PlanePos=entity():pos()
+            Normal=entity():right()
+            
+            local LineP1 = Player:shootPos()
+            local LineP2 = LineP1 + Player:eye()
+    
+            local X = Normal:dot(PlanePos - LineP1) / Normal:dot(LineP2 - LineP1)
+            Intersection=(LineP1 + X*(LineP2 - LineP1))
+            
+            LocalIntersect=entity():toLocal(Intersection)
+            LocalSquarePosition=floor(LocalIntersect/vec(TileWidth,Thickness,TileHeight))
+            
+            
+            X=Columns/2-LocalSquarePosition:x()
+            Y=Rows-LocalSquarePosition:z()
+            if(X>0 & X<=Columns & Y>0 & Y<=Columns){
+                HoloIndex=(Y-1)*Columns+X
+                holoModel(HoloIndex,ModelGrid["Flag",string])
+                holoColor(HoloIndex,ColorGrid["Flag",vector])
+                holoMaterial(HoloIndex,MaterialGrid["Flag",string])
+                holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid["Flag",number]-Spacer,Thickness,TileHeight*ScaleGrid["Flag",number]-Spacer))
+            }
+            break
+        case ChatPrefix+"test",
+            Player=lastSpoke()
+            PlanePos=entity():pos()
+            Normal=entity():right()
+            
+            local LineP1 = Player:shootPos()
+            local LineP2 = LineP1 + Player:eye()
+    
+            local X = Normal:dot(PlanePos - LineP1) / Normal:dot(LineP2 - LineP1)
+            Intersection=(LineP1 + X*(LineP2 - LineP1))
+            
+            LocalIntersect=entity():toLocal(Intersection)
+            LocalSquarePosition=floor(LocalIntersect/vec(TileWidth,Thickness,TileHeight))
+            
+            
+            X=Columns/2-LocalSquarePosition:x()
+            Y=Rows-LocalSquarePosition:z()
+            
+            print(X,",",Y)
+            break
+    }
+}
+if(clk("Reveal")){
+    if(CurrentColumn<Columns){
+        CurrentColumn++
+        HoloIndex=(CurrentRow-1)*Columns+CurrentColumn
+        Tile=Grid["Row"+CurrentRow,array][CurrentColumn,string]
+        if(Tile==BombKey){
+            holoModel(HoloIndex,ModelGrid["Bomb",string])
+            holoColor(HoloIndex,ColorGrid["Bomb",vector])
+            holoMaterial(HoloIndex,MaterialGrid["Bomb",string])
+            holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid["Bomb",number]-Spacer,Thickness,TileHeight*ScaleGrid["Bomb",number]-Spacer))
+        }else{
+            holoModel(HoloIndex,ModelGrid[Tile,string])
+            holoColor(HoloIndex,ColorGrid[Tile,vector])
+            holoMaterial(HoloIndex,MaterialGrid[Tile,string])
+            holoScaleUnits(HoloIndex,vec(TileWidth*ScaleGrid[Tile,number]-Spacer,Thickness,TileHeight*ScaleGrid[Tile,number]-Spacer))
+        }
+        timer(clkName(),Timer)
+    }else{
+        CurrentColumn=0
+        CurrentRow++
+        if(CurrentRow<=Rows){
+            timer(clkName(),Timer)
+        }else{
+            #Finished
+            print("Finished Revealing Board")
+            
+        }
+    }
+}
+if(clk("Visual Key")){
+    if(KeysMade<12){
+        while(holoCanCreate() & KeysMade<12){
+            KeysMade++
+            local Key=Keys:popString()
+            local Index=KeysMade+TotalTiles
+            holoCreate(Index,entity():toWorld(vec(Width/2+2*TileWidth - KeysMade*TileWidth,0,Height+2*TileHeight)),vec(0),TileOrientation,ColorGrid[Key,vector],ModelGrid[Key,string])
+            holoMaterial(Index,MaterialGrid[Key,string])
+            holoScaleUnits(Index,vec(TileWidth*ScaleGrid[Key,number]-Spacer,Thickness,TileHeight*ScaleGrid[Key,number]-Spacer))
+            holoDisableShading(Index,1)
+            holoParent(Index,entity())
+            
+        }
+        timer(clkName(),Timer)
+    }else{
+        #Finished making virtual key.
+        print("Finished Creating Visual Key")
+    }
+}

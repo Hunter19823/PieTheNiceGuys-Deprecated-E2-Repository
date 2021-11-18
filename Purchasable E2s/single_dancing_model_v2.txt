@@ -1,0 +1,188 @@
+@name Single Dancing Model v2
+@persist [Model,Material]:string [Animation,Timer,Delay,Speed] P:entity
+if(first()){
+    #[
+        Animation:
+    This is the number used to identify which animation the e2
+    should play on the Hologram(s).
+    300-310 are *usually* the good ones. There are literally
+    hundreds of animations, and each one plays for a 
+    different length. So I suggest trying to play around with
+    the timer if you change the animation so that the animation 
+    doesn't T-Pose or glitch out often.
+    ]#
+    Animation=305
+    
+    #[
+        Model:
+    The Model Directory for the Hologram(s).
+    In order to get a model Directory you must hold C and right click a model in game.
+    Then Click copy model. It should look something like this: models/payday2/units/cop2_player.mdl
+    If You want your custom wardrobe model to show up then hold C, go to your wardrobe.
+    You should see the Workshop ID, Name, Path, and Hands?
+    Copy the Path. The path is what you want to use for this.
+    
+        Chat Commands:
+    .model modelDirectory
+    .copy
+    Look at a player/entity to copy that entity's model
+    
+    ]#
+    Model="models/player/combine_advisor_guard.mdl"
+    
+    
+    #[
+        Material:
+    The Material Directory for the Hologram(s)
+    In order to get a material Directory you must go to your Q menu and find a material
+    from the material gun. Right click the material you like and click copy "copy to clipboard".
+    It should look something like this: models/wireframe or phoenix_storms/stripes.
+    Leave the inside of the quotes Empty if you'd like to not have any additional material.
+    
+        Chat Command:
+    .material materialDirectory
+    
+    ]#
+    Material="models/wireframe"
+    
+    
+    #[
+        Timer:
+    Think of how we think of time. Days, Hours, minutes, seconds. Well computers are faster
+    than us and they work on a smaller time scale. They use miliseconds. 1,000 miliseconds
+    is equal to one second. Timer is the time that the e2 waits before repeating the dancing
+    animation. This timer is default to be 9500 miliseconds (9.5 Seconds) because the animation
+    305 is the slower dancing animation of the staff model. I figured out how long the animation
+    was through TRIAL and ERROR. If you change the Animation, you will most likely need to change
+    the Timer so it fits the animation you choose. Just play around with it until you think you
+    have it synced up.
+    
+        Chat Command:
+    .timer milisecondsBetweenEachAnimationReset
+    
+    ]#
+    Timer=9500
+    
+    
+    #[
+        Delay:
+    This is similar to Timer but not the same. If this is the Single Dancing Model E2 then you
+    can ignore this part. But if you have more than one model then you need to pay attention.
+    The delay is the delay between each 'echo' dancer. Meaning when first hologram starts to
+    dance, how long should it wait until the second starts? Then how long for the Third? Etc...
+    Default is 50 miliseconds 
+    
+        Chat Command:
+    .delay delayBetweenEachEchoDancer
+    
+    ]#
+    Delay=50
+    
+    
+    #[
+        Scale:
+    Scale is the multiplier that the hologram's model will be given. Choose a number
+    from -4 to 4. Any large is exessive and more than likely staff will ask you to remove your
+    e2 chip or shrink the size.
+    The Scale is also a multiplier. So 1 = 1x the size. 2= 2x the size. It can get very large
+    very quickly if you are not careful.
+    
+        Chat Command:
+    None.
+    
+    ]#
+    Scale=1
+    
+    #[
+        Speed:
+    Oh boy. Basically this is the rate at which an animation will play. Although there is
+    special times where it is not. If you are using a model that is not *natively on the server*
+    or in other words, is not a model that can be seen without any additional addons or wardrobe.
+    Then you have to set the Speed to '0.01' For some reason models not native to the server
+    play 100x faster than normal. So you have to make their animation much much slower. If you
+    are using a model from the server then you can just use the normal Speed of 1.
+    
+        Chat Command:
+    .speed numberOfHowFastTheAnimationGoes
+    
+    ]#
+    Speed=1
+    runOnChat(1)
+    holoCreate(1,entity():pos(),vec(Scale),entity():angles(),vec(255),Model)
+    
+    if(1){
+        P=propSpawn("models/hunter/blocks/cube1x150x1.mdl",entity():toWorld(vec(0,0,holoEntity(1):height()/2)),entity():angles()+ang(0,0,90),1)
+        P:setMaterial("Models/effects/vol_light001")
+        holoParent(1,P)
+    }
+    
+    timer("UpdateModels",Delay)
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(P:isValid()){
+if(clk("Dance")){
+    holoEntity(1):animate(Animation,Speed)
+    timer("Dance",Timer)
+    timer("EchoDance1",Delay)
+}
+if(clk("UpdateModels")){
+    holoModel(1,Model)
+    timer("UpdateMaterials",Delay)
+}
+if(clk("UpdateMaterials")){
+    holoMaterial(1,Material)
+    stoptimer("Dance")
+    timer("Dance",Delay)
+}
+}
+if(chatClk(owner())){
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case ".model",
+            Model=LS[2,string]
+            if(Model=="models/player/arctic.mdl"){
+                Animation=307
+            }else{
+                Animation=305
+            }
+            timer("UpdateModels",10)
+            break
+        case ".material",
+            Material=LS[2,string]
+            timer("UpdateMaterials",10)
+            break
+        case ".animate",
+            Animation=LS[2,string]:toNumber()
+            timer("UpdateModels",10)
+            break
+        case ".delay",
+            Delay=LS[2,string]:toNumber()
+            timer("UpdateModels",10)
+            break
+        case ".speed",
+            Speed=LS[2,string]:toNumber()
+            timer("UpdateModels",10)
+            break
+        case ".timer",
+            Timer=LS[2,string]:toNumber()
+            timer("UpdateModels",10)
+            break
+        case ".copy",
+            local P=owner():aimEntity()
+            if(P:isValid()){
+                Model=P:model()
+                if(Model=="models/player/arctic.mdl"){
+                    Animation=307
+                }else{
+                    Animation=305
+                }
+            }
+            timer("UpdateModels",10)
+            break
+        default,
+            break
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

@@ -1,0 +1,73 @@
+@name Shooting Range E2
+@persist Target:entity [Holo,Score,Counter,Timer,Clip] [Center,Center2]:vector  DV:vector [Shots]:array
+if(first()){
+    runOnMouseKey(1)
+    Target=propSpawn("models/props/cs_militia/haybale_target_03.mdl",entity():pos(),entity():angles(),1)
+    Center=entity():toWorld(vec(10,-13.5,30.5))
+    Center2=entity():toWorld(vec(10,-13,30.5+25.1))
+    entity():parentTo(Target)
+    holoCreate(0,Center,vec(0.01),ang(),vec(255),"models/XQM/Rails/trackball_1.mdl")
+    holoCreate(-1,Center2,vec(0.01),ang(),vec(255),"models/XQM/Rails/trackball_1.mdl")
+    holoParent(0,Target)
+    holoParent(-1,Target)
+    Timer=100
+}
+if(clMouseKeyPress("left")){
+    if(owner():aimEntity()==Target){
+        Center=entity():toWorld(vec(10,-13.5,30.5))
+        Center2=entity():toWorld(vec(10,-13,30.5+25.1))
+        if(owner():weapon():clip1()>0){
+            Clip=owner():weapon():clip1()
+            Holo++
+            Pos=owner():aimPos()
+            D1=Pos:distance(Center)
+            D2=Pos:distance(Center2)
+            if(D1>D2){
+                Shots:pushNumber(D1)
+                Math=D2/8.10
+                Color=vec(Math*255,255*(1-Math),0)
+                holoCreate(Holo,Pos,vec(0.01),ang(),Color,"models/XQM/Rails/trackball_1.mdl")
+                holoParent(Holo,Target)
+                Score+=Color:distance(vec(0,255,0))
+            }else{
+                Shots:pushNumber(D2)
+                Math=D1/8
+                Color=vec(Math*255,255*(1-Math),0)
+                holoCreate(Holo,Pos,vec(0.01),ang(),Color,"models/XQM/Rails/trackball_1.mdl")
+                holoParent(Holo,Target)
+                Score+=Color:distance(vec(0,255,0))
+            }
+            print("Shots Taken: "+Holo+"<br>Average Score: "+Score/Holo)
+            timer("Update",Timer)
+        }
+    }
+}
+if(clk("Update")){
+    Clip=owner():weapon():clip1()
+    if(Clip>0){
+        if(owner():keyAttack1()){
+            if(changed(Clip)){
+                Holo++
+                Pos=owner():aimPos()
+                D1=Pos:distance(Center)
+                D2=Pos:distance(Center2)
+                if(D1>D2){
+                    Shots:pushNumber(D1)
+                    Math=D2/8.10
+                    Color=vec(Math*255,255*(1-Math),0)
+                    holoCreate(Holo,Pos,vec(0.01),ang(),Color,"models/XQM/Rails/trackball_1.mdl")
+                    holoParent(Holo,Target)
+                    Score+=Color:distance(vec(0,255,0))
+                }else{
+                    Shots:pushNumber(D2)
+                    Math=D1/8
+                    Color=vec(Math*255,255*(1-Math),0)
+                    holoCreate(Holo,Pos,vec(0.01),ang(),Color,"models/XQM/Rails/trackball_1.mdl")
+                    holoParent(Holo,Target)
+                    Score+=Color:distance(vec(0,255,0))
+                }
+            }
+            timer(clkName(),Timer)
+        }
+    }
+}

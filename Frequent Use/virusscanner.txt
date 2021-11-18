@@ -1,0 +1,65 @@
+@name Pie's Virus Scanner
+@persist [RefreshRate,Range] [Players]:array
+if(first()){
+    Range=500
+    RefreshRate=1000
+    interval(RefreshRate)
+    holoCreate(1,owner():pos(),vec(0),ang(),vec(255),"models/hunter/tubes/tube2x2x05.mdl")
+    holoScaleUnits(1,vec(Range*2,Range*2,5))
+    holoParent(1,owner())
+    runOnDmg(1,owner())
+    runOnConnect(1)
+    timer("RemovePlayers",100)
+}
+if(connectClk() | clk("RemovePlayers")){
+    holoVisible(1,players(),0)
+    holoVisible(1,owner(),1)
+}
+if(clk()){
+    if(findCanQuery()){
+        findIncludeClass("player")
+        findInSphere(owner():pos(),Range)
+        
+        Players=findToArray()
+        timer("InfectedCheck",100)
+    }else{
+        interval(RefreshRate)
+    }
+}
+if(clk("InfectedCheck")){
+    if(Players:count()>0){
+        ChatMessage=""
+        while(Players:count()>0 & perf(90)){
+            Player=Players:popEntity()
+            if(Player:virus():toNumber()!=-1 & Player:virus():toNumber()!=0){
+                ChatMessage+=("Player \""+Player:name()+"\" has a virus")
+                ChatMessage+=("Virus Name: "+Player:virus():toNumber()+", Stage: "+Player:virusstage():toNumber())
+            }
+        }
+        if(ChatMessage){
+            print(ChatMessage)
+        }
+        timer(clkName(),0)
+    }else{
+        interval(RefreshRate)
+    }
+}
+if(dmgClk()){
+    Killer=dmgAttacker()
+    if(Killer==owner()){
+        if(dmgInflictor():isPlayer()){
+            Killer=dmgInflictor()
+        }
+    }
+    if(Killer!=owner()){
+        ID=random()
+        holoCreate(ID,Killer:toWorld(vec(0,0,110)),vec(5),ang(),vec(255,0,0)):remove(15)
+        holoParent(ID,Killer)
+        holoVisible(ID,players(),0)
+        holoVisible(ID,owner(),1)
+        holoMaterial(ID,"models/weapons/v_toolgun/screen_bg")
+    }
+    print(Killer:name()," just attacked you with ",dmgInflictor()," for ",dmgDamage()," health")
+}
+
+

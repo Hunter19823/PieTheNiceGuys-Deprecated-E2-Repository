@@ -1,0 +1,23 @@
+@persist [Speed]
+if(first()){
+    Speed=250
+    timer("r21",Speed)
+}
+if(clk("r21")){holoCreate(1,entity():pos()+vec(10.65,-0.33,7.91),vec(0.35),ang(0,90,0),vec(255,255,255),"models/hunter/blocks/cube05x05x05.mdl") holoAlpha(1,255) holoMaterial(1,"models/shiny") holoParent(1,entity()) timer("r24",Speed)}
+if(clk("r24")){holoCreate(4,entity():pos()+vec(1.76,16.29,28.49),vec(0.35),ang(0,90,-90),vec(255,255,255),"models/hunter/blocks/cube05x3x05.mdl") holoAlpha(4,255) holoMaterial(4,"models/shiny") holoParent(4,entity()) timer("r25",Speed)}
+if(clk("r25")){holoCreate(5,entity():pos()+vec(-2.35,16.29,28.49),vec(0.35),ang(0,90,-90),vec(255,255,255),"models/hunter/blocks/cube05x3x05.mdl") holoAlpha(5,255) holoMaterial(5,"models/shiny") holoParent(5,entity()) timer("r26",Speed)}
+if(clk("r26")){holoCreate(6,entity():pos()+vec(-0.17,16.5,6.43),vec(0.35),ang(0,90,0),vec(255,255,255),"models/xeon133/offroad/off-road-30.mdl") holoAlpha(6,255) holoParent(6,entity()) timer("r27",Speed)}
+if(clk("r27")){holoCreate(7,entity():pos()+vec(1.28,-0.34,58.24),vec(0.35),ang(15,180,0),vec(255,255,255),"models/hunter/misc/shell2x2a.mdl") holoAlpha(7,255) holoMaterial(7,"models/shiny") holoParent(7,entity()) timer("r28",Speed)}
+if(clk("r28")){holoCreate(8,entity():pos()+vec(-8.96,0.05,60.77),vec(0.35),ang(0,-176.87,0),vec(0,0,0),"models/xqm/cylinderx1big.mdl") holoAlpha(8,255) holoMaterial(8,"models/shiny") holoParent(8,entity()) timer("r29",Speed)}
+if(clk("r29")){holoCreate(9,entity():pos()+vec(-2.11,-15.71,28.66),vec(0.35),ang(0,180,-90),vec(255,255,255),"models/hunter/blocks/cube05x3x05.mdl") holoAlpha(9,255) holoMaterial(9,"models/shiny") holoParent(9,entity()) timer("r210",Speed)}
+if(clk("r210")){holoCreate(10,entity():pos()+vec(2,-15.71,28.66),vec(0.35),ang(0,180,-90),vec(255,255,255),"models/hunter/blocks/cube05x3x05.mdl") holoAlpha(10,255) holoMaterial(10,"models/shiny") holoParent(10,entity()) timer("r211",Speed)}
+if(clk("r211")){holoCreate(11,entity():pos()+vec(0.93,-0.35,58.8),vec(0.35),ang(-0.09,-1.14,0.04),vec(29,0,255),"models/hunter/misc/shell2x2x45.mdl") holoAlpha(11,255) holoMaterial(11,"models/shiny") holoParent(11,entity()) timer("r212",Speed)}
+if(clk("r212")){holoCreate(12,entity():pos()+vec(0.83,0.02,58.88),vec(0.35),ang(2.23,-130.84,5.19),vec(29,0,255),"models/hunter/misc/shell2x2x45.mdl") holoAlpha(12,255) holoMaterial(12,"models/shiny") holoParent(12,entity()) timer("r213",Speed)}
+if(clk("r213")){holoCreate(13,entity():pos()+vec(3.44,-0.25,48.42),vec(0.35),ang(-14.65,-1.22,-0.25),vec(29,0,255),"models/hunter/tubes/circle2x2c.mdl") holoAlpha(13,255) holoMaterial(13,"models/shiny") holoParent(13,entity()) timer("r214",Speed)}
+if(clk("r214")){holoCreate(14,entity():pos()+vec(4.37,-0.38,46.05),vec(0.35),ang(-10.82,-33.14,8.11),vec(29,0,255),"models/hunter/tubes/circle2x2d.mdl") holoAlpha(14,255) holoMaterial(14,"models/shiny") holoParent(14,entity()) timer("r215",Speed)}
+if(clk("r215")){holoCreate(15,entity():pos()+vec(-7.07,1.88,35.39),vec(0.35),ang(-0.22,-88,102.59),vec(29,0,255),"models/hunter/blocks/cube025x05x025.mdl") holoAlpha(15,255) holoMaterial(15,"models/shiny") holoParent(15,entity()) timer("r216",Speed)}
+if(clk("r216")){holoCreate(16,entity():pos()+vec(10,-0.34,25.94),vec(0.35),ang(15,180,180),vec(255,255,255),"models/hunter/misc/shell2x2a.mdl") holoAlpha(16,255) holoMaterial(16,"models/shiny") holoParent(16,entity()) timer("r217",Speed)}
+if(clk("r217")){holoCreate(17,entity():pos()+vec(5.6,-0.36,41.99),vec(0.35),ang(15,180,0),vec(255,255,255),"models/hunter/tubes/tube2x2x2.mdl") holoAlpha(17,255) holoMaterial(17,"models/shiny") holoParent(17,entity()) timer("r218",Speed)}
+if(clk("r218")){holoCreate(18,entity():pos()+vec(8.68,-0.34,6.16),vec(0.35),ang(0,88.36,0),vec(255,255,255),"models/xeon133/offroad/off-road-30.mdl") holoAlpha(18,255) holoParent(18,entity()) timer("r219",Speed)}
+if(clk("r219")){holoCreate(19,entity():pos()+vec(6.55,-0.33,7.91),vec(0.35),ang(0,90,0),vec(255,255,255),"models/hunter/blocks/cube05x05x05.mdl") holoAlpha(19,255) holoMaterial(19,"models/shiny") holoParent(19,entity()) timer("r220",Speed)}
+if(clk("r220")){holoCreate(20,entity():pos()+vec(0.06,-15.9,6.31),vec(0.35),ang(0,-90,0),vec(255,255,255),"models/xeon133/offroad/off-road-30.mdl") holoAlpha(20,255) holoParent(20,entity()) timer("r221",Speed)}

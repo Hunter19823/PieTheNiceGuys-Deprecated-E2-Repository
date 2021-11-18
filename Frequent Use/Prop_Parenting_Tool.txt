@@ -1,0 +1,27 @@
+@name Prop Parenting Tool
+@persist [Child]:entity [Selecting]
+if(first()){
+    Selecting=0
+    runOnKey(1)
+}
+if(clKeyPress(16)){
+    local E=owner():aimEntity()
+    if(Selecting){
+        if(E:isValid()){
+            Child:parentTo(E)
+            Child:setParent(E)
+            print("Successfully Parented")
+            Selecting=0
+        }else{
+            print("Prop Not Valid")
+        }
+    }else{
+        if(E:isValid()){
+            Child=E
+            print("Child Selected")
+            Selecting=1
+        }else{
+            print("Prop Not Valid")
+        }
+    }
+}

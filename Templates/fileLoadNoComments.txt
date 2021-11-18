@@ -1,0 +1,69 @@
+@name Pie's Sample Fileload
+@persist FileName:string LoadedData:table
+if(first()){
+    FileName="example/example.txt"
+
+    LoadedData=table(
+        "Name"=owner():name(),
+        "Model"=owner():model(),
+        "TimeStamp"=time("hour")+":"+time("min")+":"+time("sec")
+    )
+    
+    timer("LoadData",0)
+}
+
+if(clk("FileLoaded")){
+    print("File Data Has Been Loaded")
+    printTable(LoadedData)
+    
+    LoadedData["Model",string]=owner():model()
+    LoadedData["TimeStamp",string]=time("hour")+":"+time("min")+":"+time("sec")
+    
+    timer("SaveData",1000)
+}
+if(clk("SaveData")){
+    if(fileCanWrite()){
+        fileWrite(FileName,vonEncode(LoadedData))
+        print("Data Has been saved.")
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(clk("LoadData")){
+    if(fileCanLoad()){
+        runOnFile(1)
+        fileLoad(FileName)
+        print("File Data has begun loading...")
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(fileClk()){
+    switch(fileStatus()){
+        case _FILE_OK,
+            LoadedData=vonDecodeTable(fileRead())
+            print("File Data has finished loading successfully.")
+            timer("FileLoaded",0)
+            break
+        case _FILE_404,
+            #error("File returned a 404. Please contact Pie to get the proper data for this e2.")
+            if(!LoadedData){
+                LoadedData=table()
+            }
+            print("File Data has finished loading successfully.")
+            timer("SaveData",0)
+            break
+        case _FILE_UNKNOWN,
+            print("You definitely fucked up somewhere.")
+            error("Error Bad Formatting: You definitely put this segment of code in the wrong place. Probably because you removed the if(fileClk())")
+            break
+        case _FILE_TIMEOUT,
+            print("File timed out while loading. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+        case _FILE_TRANSFER_ERROR,
+            print("File Transfer Error. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+    }
+}

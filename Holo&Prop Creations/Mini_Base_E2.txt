@@ -1,0 +1,40 @@
+@persist [Counter,Speed] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    timer("bunker1",Speed)
+}
+if(clk("bunker1")){holoCreate(1,entity():pos()+vec(-0.56,57.36,35.2),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube4x8x025.mdl") holoMaterial(1,"models/debug/debugwhite") holoParent(1,entity()) timer("bunker2",Speed)}	
+if(clk("bunker2")){holoCreate(2,entity():pos()+vec(24.32,57.36,6.73),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube1x8x1.mdl") holoMaterial(2,"models/debug/debugwhite") holoParent(2,entity()) timer("bunker3",Speed)}	
+if(clk("bunker3")){holoCreate(3,entity():pos()+vec(24.32,57.36,29.61),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube1x8x1.mdl") holoMaterial(3,"models/debug/debugwhite") holoParent(3,entity()) timer("bunker4",Speed)}	
+if(clk("bunker4")){holoCreate(4,entity():pos()+vec(-24.3,57.36,7.05),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube1x8x1.mdl") holoMaterial(4,"models/debug/debugwhite") holoParent(4,entity()) timer("bunker5",Speed)}	
+if(clk("bunker5")){holoCreate(5,entity():pos()+vec(-24.3,57.36,29.93),vec(0.3),ang(0,0,0),vec(255,255,255),"models/hunter/blocks/cube1x8x1.mdl") holoMaterial(5,"models/debug/debugwhite") holoParent(5,entity()) timer("bunker6",Speed)}	
+if(clk("bunker6")){holoCreate(6,entity():pos()+vec(29.54,98.7,16.87),vec(0.3),ang(0,180,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(6,"models/debug/debugwhite") holoParent(6,entity()) timer("bunker7",Speed)}
+if(clk("bunker7")){holoCreate(7,entity():pos()+vec(29.54,67.49,16.87),vec(0.3),ang(0,180,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(7,"models/debug/debugwhite") holoParent(7,entity()) timer("bunker8",Speed)}
+if(clk("bunker8")){holoCreate(8,entity():pos()+vec(-29.38,98.7,18.5),vec(0.3),ang(0,0,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(8,"models/debug/debugwhite") holoParent(8,entity()) timer("bunker9",Speed)}
+if(clk("bunker9")){holoCreate(9,entity():pos()+vec(-29.38,67.49,18.5),vec(0.3),ang(0,0,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(9,"models/debug/debugwhite") holoParent(9,entity()) timer("bunker10",Speed)}
+if(clk("bunker10")){holoCreate(10,entity():pos()+vec(1.51,57.01,16.22),vec(0.3),ang(0,-90,0),vec(255,255,255),"models/props_c17/fence01a.mdl") holoMaterial(10,"models/debug/debugwhite") holoParent(10,entity()) timer("bunker11",Speed)}	
+if(clk("bunker11")){holoCreate(11,entity():pos()+vec(1.51,88.32,16.22),vec(0.3),ang(0,-90,0),vec(255,255,255),"models/props_c17/fence01a.mdl") holoMaterial(11,"models/debug/debugwhite") holoParent(11,entity()) timer("bunker12",Speed)}	
+if(clk("bunker12")){holoCreate(12,entity():pos()+vec(18.47,28.89,9.26),vec(0.3),ang(-90,0,180),vec(255,255,255),"models/hunter/blocks/cube05x4x025.mdl") holoMaterial(12,"models/debug/debugwhite") holoParent(12,entity()) timer("bunker13",Speed)}	
+if(clk("bunker13")){holoCreate(13,entity():pos()+vec(-18.3,28.89,9.26),vec(0.3),ang(-90,0,180),vec(255,255,255),"models/hunter/blocks/cube05x4x025.mdl") holoMaterial(13,"models/debug/debugwhite") holoParent(13,entity()) timer("bunker14",Speed)}	
+if(clk("bunker14")){holoCreate(14,entity():pos()+vec(-18.3,85.83,9.26),vec(0.3),ang(-90,0,180),vec(255,255,255),"models/hunter/blocks/cube05x4x025.mdl") holoMaterial(14,"models/debug/debugwhite") holoParent(14,entity()) timer("bunker15",Speed)}	
+if(clk("bunker15")){holoCreate(15,entity():pos()+vec(18.47,85.83,9.26),vec(0.3),ang(-90,0,180),vec(255,255,255),"models/hunter/blocks/cube05x4x025.mdl") holoMaterial(15,"models/debug/debugwhite") holoParent(15,entity()) timer("bunker16",Speed)}	
+if(clk("bunker16")){holoCreate(16,entity():pos()+vec(1.51,0.58,16.22),vec(0.3),ang(0,-90,0),vec(255,255,255),"models/props_c17/fence01a.mdl") holoMaterial(16,"vgui/screens/vgui_overlay") holoParent(16,entity()) timer("bunker17",Speed)}	
+if(clk("bunker17")){holoCreate(17,entity():pos()+vec(1.51,25.71,16.22),vec(0.3),ang(0,-90,0),vec(255,255,255),"models/props_c17/fence01a.mdl") holoMaterial(17,"models/debug/debugwhite") holoParent(17,entity()) timer("bunker18",Speed)}	
+if(clk("bunker18")){holoCreate(18,entity():pos()+vec(-29.38,17.54,18.5),vec(0.3),ang(0,0,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(18,"models/debug/debugwhite") holoParent(18,entity()) timer("bunker19",Speed)}
+if(clk("bunker19")){holoCreate(19,entity():pos()+vec(-29.38,36.27,18.5),vec(0.3),ang(0,0,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(19,"models/debug/debugwhite") holoParent(19,entity()) timer("bunker20",Speed)}
+if(clk("bunker20")){holoCreate(20,entity():pos()+vec(29.54,17.54,16.87),vec(0.3),ang(0,180,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(20,"models/debug/debugwhite") holoParent(20,entity()) timer("bunker21",Speed)}
+if(clk("bunker21")){holoCreate(21,entity():pos()+vec(29.54,36.27,16.87),vec(0.3),ang(0,180,-90),vec(255,255,255),"models/props_building_details/storefront_template001a_bars.mdl") holoMaterial(21,"models/debug/debugwhite") holoParent(21,entity()) timer("bunker22",Speed)}

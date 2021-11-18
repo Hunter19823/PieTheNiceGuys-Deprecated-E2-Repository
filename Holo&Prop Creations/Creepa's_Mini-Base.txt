@@ -1,0 +1,114 @@
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Counter=1
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=0
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+    timer("base1",Speed)
+    Chunk=1
+}
+if(Chunk==1){
+if(clk("base1")){holoCreate(1,entity():pos()+vec(74.32,140.58,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(1,"models/wireframe") holoParent(1,entity()) timer("base2",Speed)}
+if(clk("base2")){holoCreate(2,entity():pos()+vec(74.32,140.9,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(2,"models/wireframe") holoParent(2,entity()) timer("base3",Speed)}
+if(clk("base3")){holoCreate(3,entity():pos()+vec(74.32,141.22,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(3,"models/wireframe") holoParent(3,entity()) timer("base4",Speed)}
+if(clk("base4")){holoCreate(4,entity():pos()+vec(74.32,141.54,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(4,"models/wireframe") holoParent(4,entity()) timer("base5",Speed)}
+if(clk("base5")){holoCreate(5,entity():pos()+vec(74.32,141.85,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(5,"models/wireframe") holoParent(5,entity()) timer("base6",Speed)}
+if(clk("base6")){holoCreate(6,entity():pos()+vec(-156.92,-61.98,35.62),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube2x6x05.mdl") holoMaterial(6,"models/shiny") holoParent(6,entity()) timer("base7",Speed)}
+if(clk("base7")){holoCreate(7,entity():pos()+vec(-156.91,-45.07,56.6),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube1x2x05.mdl") holoMaterial(7,"models/shiny") holoParent(7,entity()) timer("base8",Speed)}
+if(clk("base8")){holoCreate(8,entity():pos()+vec(-156.88,-55.67,5.41),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube1x4x05.mdl") holoMaterial(8,"models/shiny") holoParent(8,entity()) timer("base9",Speed)}
+if(clk("base9")){holoCreate(9,entity():pos()+vec(-138.36,-46.07,47.31),vec(0.25),ang(90,180,180),vec(29,0,255),"models/props_wasteland/interior_fence003d.mdl") holoParent(9,entity()) timer("base10",Speed)}
+if(clk("base10")){holoCreate(10,entity():pos()+vec(-138.36,-46.07,46.15),vec(0.25),ang(90,180,180),vec(255,0,0),"models/props_wasteland/interior_fence003d.mdl") holoMaterial(10,"models/shiny") holoParent(10,entity()) timer("base11",Speed)}
+if(clk("base11")){holoCreate(11,entity():pos()+vec(-151.09,-45.98,52.08),vec(0.25),ang(90,180,180),vec(255,0,0),"models/hunter/blocks/cube1x2x05.mdl") holoParent(11,entity()) timer("base12",Speed)}
+if(clk("base12")){holoCreate(12,entity():pos()+vec(-105.77,-15.54,46.82),vec(0.25),ang(0,90,0),vec(63,0,127),"models/hunter/blocks/cube2x2x05.mdl") holoParent(12,entity()) timer("base13",Speed)}
+if(clk("base13")){holoCreate(13,entity():pos()+vec(-105.55,-15.59,46.82),vec(0.25),ang(0,90,0),vec(63,0,127),"models/hunter/blocks/cube2x2x05.mdl") holoParent(13,entity()) timer("base14",Speed)}
+if(clk("base14")){holoCreate(14,entity():pos()+vec(-123.54,-45.17,32.47),vec(0.25),ang(0,0,0),vec(255,0,0),"models/props_wasteland/interior_fence003d.mdl") holoMaterial(14,"models/shiny") holoParent(14,entity()) timer("base15",Speed)}
+if(clk("base15")){holoCreate(15,entity():pos()+vec(-134.43,-45.17,32.47),vec(0.25),ang(0,0,0),vec(255,0,0),"models/props_wasteland/interior_fence003d.mdl") holoMaterial(15,"models/shiny") holoParent(15,entity()) timer("base16",Speed)}
+if(clk("base16")){holoCreate(16,entity():pos()+vec(-148.68,-44.85,32.47),vec(0.25),ang(0,0,0),vec(255,0,0),"models/props_wasteland/interior_fence003d.mdl") holoMaterial(16,"models/shiny") holoParent(16,entity()) timer("base17",Speed)}
+if(clk("base17")){holoCreate(17,entity():pos()+vec(-137.45,-51.74,33.58),vec(0.25),ang(0,-90,90),vec(255,255,255),"models/props_wasteland/interior_fence002c.mdl") holoMaterial(17,"vgui/screens/vgui_overlay") holoParent(17,entity()) timer("base18",Speed)}
+if(clk("base18")){holoCreate(18,entity():pos()+vec(-137.45,-38.32,33.58),vec(0.25),ang(0,-90,90),vec(255,255,255),"models/props_wasteland/interior_fence002c.mdl") holoMaterial(18,"vgui/screens/vgui_overlay") holoParent(18,entity()) timer("base19",Speed)}
+if(clk("base19")){holoCreate(19,entity():pos()+vec(-137.45,-50.61,33.58),vec(0.25),ang(0,-90,90),vec(63,0,127),"models/props_wasteland/interior_fence002c.mdl") holoMaterial(19,"models/shiny") holoParent(19,entity()) timer("base20",Speed)}
+if(clk("base20")){holoCreate(20,entity():pos()+vec(-137.45,-39.49,33.58),vec(0.25),ang(0,-90,90),vec(63,0,127),"models/props_wasteland/interior_fence002c.mdl") holoMaterial(20,"models/shiny") holoParent(20,entity()) timer("base21",Speed) Chunk++}
+}elseif(Chunk==2){
+if(clk("base21")){holoCreate(21,entity():pos()+vec(-150.85,-62.21,35.62),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube2x6x05.mdl") holoMaterial(21,"models/shiny") holoParent(21,entity()) timer("base23",Speed)}
+if(clk("base23")){holoCreate(23,entity():pos()+vec(-160.28,-44.74,-14.07),vec(0.25),ang(0,180,0),vec(255,255,255),"models/props_c17/metalladder001.mdl") holoParent(23,entity()) timer("base24",Speed)}
+if(clk("base24")){holoCreate(24,entity():pos()+vec(-156.86,-62.21,59.11),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube2x6x05.mdl") holoMaterial(24,"models/shiny") holoParent(24,entity()) timer("base25",Speed)}
+if(clk("base25")){holoCreate(25,entity():pos()+vec(-124.06,18.41,1.12),vec(0.25),ang(0,0,0),vec(63,0,127),"models/hunter/blocks/cube6x6x2.mdl") holoMaterial(25,"models/shiny") holoParent(25,entity()) timer("base26",Speed)}
+if(clk("base26")){holoCreate(26,entity():pos()+vec(-156.73,-45.15,80.44),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube1x2x05.mdl") holoMaterial(26,"models/shiny") holoParent(26,entity()) timer("base27",Speed)}
+if(clk("base27")){holoCreate(27,entity():pos()+vec(-131.38,28.83,20.72),vec(0.25),ang(90,-90,180),vec(63,0,127),"models/hunter/blocks/cube2x2x1.mdl") holoMaterial(27,"models/shiny") holoParent(27,entity()) timer("base28",Speed)}
+if(clk("base28")){holoCreate(28,entity():pos()+vec(-140.28,28.83,20.72),vec(0.25),ang(90,-90,180),vec(63,0,127),"models/hunter/blocks/cube2x2x1.mdl") holoMaterial(28,"models/shiny") holoParent(28,entity()) timer("base29",Speed)}
+if(clk("base29")){holoCreate(29,entity():pos()+vec(-132.05,26.92,32.74),vec(0.25),ang(0,-89.83,0),vec(255,255,255),"models/props_lab/citizenradio.mdl") holoParent(29,entity()) timer("base30",Speed)}
+if(clk("base30")){holoCreate(30,entity():pos()+vec(-18.21,140.58,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(30,"models/wireframe") holoParent(30,entity()) timer("base31",Speed)}
+if(clk("base31")){holoCreate(31,entity():pos()+vec(-112.29,140.58,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(31,"models/wireframe") holoParent(31,entity()) timer("base32",Speed)}
+if(clk("base32")){holoCreate(32,entity():pos()+vec(-156.87,7.45,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(32,"models/shiny") holoParent(32,entity()) timer("base33",Speed)}
+if(clk("base33")){holoCreate(33,entity():pos()+vec(-156.81,95.07,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(33,"models/wireframe") holoParent(33,entity()) timer("base34",Speed)}
+if(clk("base34")){holoCreate(34,entity():pos()+vec(-150.86,8.47,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(34,"models/shiny") holoParent(34,entity()) timer("base35",Speed)}
+if(clk("base35")){holoCreate(35,entity():pos()+vec(-112.29,140.9,45.82),vec(0.25),ang(90,90,180),vec(30,30,30),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(35,"models/wireframe") holoParent(35,entity()) timer("base36",Speed)}
+if(clk("base36")){holoCreate(36,entity():pos()+vec(-112.29,141.22,45.82),vec(0.25),ang(90,90,180),vec(30,30,30),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(36,"models/wireframe") holoParent(36,entity()) timer("base37",Speed)}
+if(clk("base37")){holoCreate(37,entity():pos()+vec(-112.29,141.54,45.82),vec(0.25),ang(90,90,180),vec(30,30,30),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(37,"models/wireframe") holoParent(37,entity()) timer("base38",Speed)}
+if(clk("base38")){holoCreate(38,entity():pos()+vec(-122.78,132.55,0.05),vec(0.25),ang(0,0.18,0.01),vec(255,255,255),"models/zerochain/zmlab/zmlab_transportcrate.mdl") holoParent(38,entity()) timer("base39",Speed)}
+if(clk("base39")){holoCreate(39,entity():pos()+vec(-18.21,140.9,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(39,"models/wireframe") holoParent(39,entity()) timer("base40",Speed)}
+if(clk("base40")){holoCreate(40,entity():pos()+vec(-70.69,-76.48,7.16),vec(0.25),ang(0,-90,0),vec(63,0,127),"models/hunter/triangles/3x2x2.mdl") holoParent(40,entity()) timer("base41",Speed) Chunk++}
+}elseif(Chunk==3){
+if(clk("base41")){holoCreate(41,entity():pos()+vec(-91.47,-70.92,35.26),vec(0.25),ang(90,180,180),vec(145,145,145),"models/hunter/blocks/cube3x3x05.mdl") holoParent(41,entity()) timer("base42",Speed)}
+if(clk("base42")){holoCreate(42,entity():pos()+vec(-91.47,-70.92,35.12),vec(0.25),ang(90,180,180),vec(255,255,255),"models/hunter/blocks/cube3x3x05.mdl") holoParent(42,entity()) timer("base43",Speed)}
+if(clk("base43")){holoCreate(43,entity():pos()+vec(-83.85,-81.3,46.82),vec(0.25),ang(0,90,0),vec(63,0,127),"models/hunter/blocks/cube2x2x05.mdl") holoParent(43,entity()) timer("base44",Speed)}
+if(clk("base44")){holoCreate(44,entity():pos()+vec(-70.69,-5.33,7.16),vec(0.25),ang(0,-90,0),vec(63,0,127),"models/hunter/triangles/3x2x2.mdl") holoParent(44,entity()) timer("base45",Speed)}
+if(clk("base45")){holoCreate(45,entity():pos()+vec(-70.69,-29.04,7.16),vec(0.25),ang(0,-90,0),vec(63,0,127),"models/hunter/triangles/3x2x2.mdl") holoParent(45,entity()) timer("base46",Speed)}
+if(clk("base46")){holoCreate(46,entity():pos()+vec(-70.69,-52.76,7.16),vec(0.25),ang(0,-90,0),vec(63,0,127),"models/hunter/triangles/3x2x2.mdl") holoParent(46,entity()) timer("base47",Speed)}
+if(clk("base47")){holoCreate(47,entity():pos()+vec(-91.47,-0.01,35.26),vec(0.25),ang(90,180,180),vec(145,145,145),"models/hunter/blocks/cube3x3x05.mdl") holoParent(47,entity()) timer("base48",Speed)}
+if(clk("base48")){holoCreate(48,entity():pos()+vec(-91.61,-35.46,35.26),vec(0.25),ang(90,180,180),vec(255,255,255),"models/hunter/blocks/cube3x3x05.mdl") holoParent(48,entity()) timer("base49",Speed)}
+if(clk("base49")){holoCreate(49,entity():pos()+vec(-91.47,-0.01,35.12),vec(0.25),ang(90,180,180),vec(255,255,255),"models/hunter/blocks/cube3x3x05.mdl") holoParent(49,entity()) timer("base50",Speed)}
+if(clk("base50")){holoCreate(50,entity():pos()+vec(-91.61,-35.46,35.12),vec(0.25),ang(90,180,180),vec(255,255,255),"models/hunter/blocks/cube3x3x05.mdl") holoParent(50,entity()) timer("base51",Speed)}
+if(clk("base51")){holoCreate(51,entity():pos()+vec(-83.85,-59.38,46.82),vec(0.25),ang(0,90,0),vec(63,0,127),"models/hunter/blocks/cube2x2x05.mdl") holoParent(51,entity()) timer("base52",Speed)}
+if(clk("base52")){holoCreate(52,entity():pos()+vec(-83.85,-37.46,46.82),vec(0.25),ang(0,90,0),vec(63,0,127),"models/hunter/blocks/cube2x2x05.mdl") holoParent(52,entity()) timer("base53",Speed)}
+if(clk("base53")){holoCreate(53,entity():pos()+vec(-83.85,-15.54,46.82),vec(0.25),ang(0,90,0),vec(63,0,127),"models/hunter/blocks/cube2x2x05.mdl") holoParent(53,entity()) timer("base54",Speed)}
+if(clk("base54")){holoCreate(54,entity():pos()+vec(-91.61,-55.72,35.12),vec(0.25),ang(90,180,180),vec(127,0,255),"models/hunter/blocks/cube3x3x05.mdl") holoParent(54,entity()) timer("base55",Speed)}
+if(clk("base55")){holoCreate(55,entity():pos()+vec(-88.44,-15.22,27.47),vec(0.25),ang(0.24,-1.84,0.01),vec(255,255,255),"models/props_phx/rt_screen.mdl") holoParent(55,entity()) timer("base56",Speed)}
+if(clk("base56")){holoCreate(56,entity():pos()+vec(-112.39,-42.9,30.94),vec(0.25),ang(0,-2.16,0),vec(255,255,255),"models/props_c17/fence01a.mdl") holoMaterial(56,"vgui/screens/vgui_overlay") holoParent(56,entity()) timer("base57",Speed)}
+if(clk("base57")){holoCreate(57,entity():pos()+vec(-102.24,12.83,31.54),vec(0.25),ang(0,0,-45),vec(63,0,127),"models/hunter/blocks/cube1x4x025.mdl") holoMaterial(57,"models/shiny") holoParent(57,entity()) timer("base58",Speed)}
+if(clk("base58")){holoCreate(58,entity():pos()+vec(-91.41,25.28,35.33),vec(0.25),ang(90,180,180),vec(145,145,145),"models/hunter/blocks/cube3x3x05.mdl") holoParent(58,entity()) timer("base59",Speed)}
+if(clk("base59")){holoCreate(59,entity():pos()+vec(-70.69,42.12,7.16),vec(0.25),ang(0,-90,0),vec(63,0,127),"models/hunter/triangles/3x2x2.mdl") holoParent(59,entity()) timer("base60",Speed)}
+if(clk("base60")){holoCreate(60,entity():pos()+vec(-70.69,18.4,7.16),vec(0.25),ang(0,-90,0),vec(63,0,127),"models/hunter/triangles/3x2x2.mdl") holoParent(60,entity()) timer("base61",Speed) Chunk++}
+}elseif(Chunk==4){
+if(clk("base61")){holoCreate(61,entity():pos()+vec(-87.55,-0.09,27.4),vec(0.25),ang(0,-1.8,0),vec(255,255,255),"models/props_phx/rt_screen.mdl") holoParent(61,entity()) timer("base62",Speed)}
+if(clk("base62")){holoCreate(62,entity():pos()+vec(-18.21,141.22,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(62,"models/wireframe") holoParent(62,entity()) timer("base63",Speed)}
+if(clk("base63")){holoCreate(63,entity():pos()+vec(-18.21,141.54,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(63,"models/wireframe") holoParent(63,entity()) timer("base64",Speed)}
+if(clk("base64")){holoCreate(64,entity():pos()+vec(-18.21,141.85,45.82),vec(0.25),ang(90,90,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(64,"models/wireframe") holoParent(64,entity()) timer("base65",Speed)}
+if(clk("base65")){holoCreate(65,entity():pos()+vec(-112.29,141.86,45.82),vec(0.25),ang(90,90,180),vec(30,30,30),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(65,"models/wireframe") holoParent(65,entity()) timer("base66",Speed)}
+if(clk("base66")){holoCreate(66,entity():pos()+vec(-112.29,142.17,45.82),vec(0.25),ang(90,90,180),vec(30,30,30),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(66,"models/wireframe") holoParent(66,entity()) timer("base67",Speed)}
+if(clk("base67")){holoCreate(67,entity():pos()+vec(-112.29,142.49,45.82),vec(0.25),ang(90,90,180),vec(30,30,30),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(67,"models/wireframe") holoParent(67,entity()) timer("base68",Speed)}
+if(clk("base68")){holoCreate(68,entity():pos()+vec(-156.5,95.07,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(68,"models/wireframe") holoParent(68,entity()) timer("base69",Speed)}
+if(clk("base69")){holoCreate(69,entity():pos()+vec(-156.5,95.07,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(69,"models/wireframe") holoParent(69,entity()) timer("base70",Speed)}
+if(clk("base70")){holoCreate(70,entity():pos()+vec(-156.5,95.07,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(70,"models/wireframe") holoParent(70,entity()) timer("base71",Speed)}
+if(clk("base71")){holoCreate(71,entity():pos()+vec(-156.5,95.07,45.82),vec(0.25),ang(90,0,180),vec(63,0,127),"models/hunter/blocks/cube8x8x05.mdl") holoMaterial(71,"models/wireframe") holoParent(71,entity()) timer("base72",Speed)}
+if(clk("base72")){holoCreate(72,entity():pos()+vec(-156.86,-83.18,35.62),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube2x6x05.mdl") holoMaterial(72,"models/shiny") holoParent(72,entity()) timer("base73",Speed)}
+if(clk("base73")){holoCreate(73,entity():pos()+vec(-150.79,-84.84,35.62),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube2x6x05.mdl") holoMaterial(73,"models/shiny") holoParent(73,entity()) timer("base74",Speed)}
+if(clk("base74")){holoCreate(74,entity():pos()+vec(-156.8,-83.18,59.11),vec(0.25),ang(0,90,-90),vec(63,0,127),"models/hunter/blocks/cube2x6x05.mdl") holoParent(74,entity()) timer("base75",Speed)}
+if(clk("base75")){holoCreate(75,entity():pos()+vec(-124.06,-52.76,1.12),vec(0.25),ang(0,0,0),vec(63,0,127),"models/hunter/blocks/cube6x6x2.mdl") holoMaterial(75,"models/shiny") holoParent(75,entity()) timer("base76",Speed)}
+if(clk("base76")){holoCreate(76,entity():pos()+vec(37.61,62.62,11.88),vec(0.25),ang(90,90,180),vec(253,0,0),"models/props_phx/construct/metal_plate2x2.mdl") holoMaterial(76,"phoenix_storms/pack2/redlight") holoParent(76,entity()) timer("base77",Speed)}
+if(clk("base77")){holoCreate(77,entity():pos()+vec(26.5,68.19,11.91),vec(0.25),ang(0,90,-90),vec(253,0,0),"models/props_phx/construct/metal_plate1x2.mdl") holoMaterial(77,"phoenix_storms/pack2/redlight") holoParent(77,entity()) timer("base78",Speed)}
+if(clk("base78")){holoCreate(78,entity():pos()+vec(48.63,68.02,12.17),vec(0.25),ang(0,90,90),vec(253,0,0),"models/props_phx/construct/metal_plate1x2.mdl") holoMaterial(78,"phoenix_storms/pack2/redlight") holoParent(78,entity()) timer("base79",Speed)}
+if(clk("base79")){holoCreate(79,entity():pos()+vec(31.71,62.4,6),vec(0.25),ang(0,-90,0),vec(253,0,0),"models/props_phx/construct/metal_wire1x1x1.mdl") holoMaterial(79,"models/shadertest/envball_5") holoParent(79,entity()) timer("base80",Speed)}
+if(clk("base80")){holoCreate(80,entity():pos()+vec(-92.85,63.08,4.28),vec(0.25),ang(0,4.57,-0.16),vec(255,255,255),"models/zerochain/zmlab/zmlab_aluminiumbox.mdl") holoParent(80,entity()) timer("base81",Speed)}
+if(clk("base81")){holoCreate(81,entity():pos()+vec(-92.42,62.8,0.05),vec(0.25),ang(0,2.48,0.03),vec(255,255,255),"models/zerochain/zmlab/zmlab_aluminiumbox.mdl") holoParent(81,entity()) timer("base82",Speed)}
+if(clk("base82")){holoCreate(82,entity():pos()+vec(-92.97,62.78,8.47),vec(0.25),ang(-0.01,0.3,-0.32),vec(255,255,255),"models/zerochain/zmlab/zmlab_aluminiumbox.mdl") holoParent(82,entity()) timer("base83",Speed)}
+if(clk("base83")){holoCreate(83,entity():pos()+vec(37.56,68.29,11),vec(0.25),ang(-0.05,-90,0.06),vec(255,255,255),"models/props_phx/construct/metal_plate1x2.mdl") holoMaterial(83,"models/shadertest/envball_5") holoParent(83,entity()) timer("base84",Speed)}
+if(clk("base84")){holoCreate(84,entity():pos()+vec(43.47,62.4,6),vec(0.25),ang(0,-90,0),vec(255,255,255),"models/props_phx/construct/metal_wire1x1x1.mdl") holoMaterial(84,"models/shadertest/envball_5") holoParent(84,entity()) timer("base85",Speed)}
+if(clk("base85")){holoCreate(85,entity():pos()+vec(43.47,62.4,17.88),vec(0.25),ang(0,-90,0),vec(255,255,255),"models/props_phx/construct/metal_wire1x1x1.mdl") holoMaterial(85,"models/shadertest/envball_5") holoParent(85,entity()) timer("base86",Speed)}
+if(clk("base86")){holoCreate(86,entity():pos()+vec(31.72,62.28,17.88),vec(0.25),ang(0,-90,0),vec(253,0,0),"models/props_phx/construct/metal_wire1x1x1.mdl") holoMaterial(86,"models/shadertest/envball_5") holoParent(86,entity()) timer("base87",Speed)}
+if(clk("base87")){holoCreate(87,entity():pos()+vec(-38.35,129.53,3),vec(0.25),ang(0,-12.5,-89.78),vec(255,255,255),"models/zerochain/zmlab/zmlab_aluminiumbox.mdl") holoParent(87,entity()) timer("base88",Speed)}
+if(clk("base88")){holoCreate(88,entity():pos()+vec(-45.27,112.99,0.04),vec(0.25),ang(-0.09,89.15,0.02),vec(255,255,255),"models/zerochain/zmlab/zmlab_aluminiumbox.mdl") holoParent(88,entity()) timer("base89",Speed)}
+if(clk("base89")){holoCreate(89,entity():pos()+vec(-49.13,126.2,4.15),vec(0.25),ang(-0.15,138.73,179.99),vec(255,255,255),"models/zerochain/zmlab/zmlab_aluminiumbox.mdl") holoParent(89,entity()) timer("base90",Speed)}
+if(clk("base90")){holoCreate(90,entity():pos()+vec(-53.44,90.63,13.8),vec(0.25),ang(0,26.64,0),vec(255,255,255),"models/beer/wiremod/gate_e2.mdl") holoParent(90,entity()) timer("base91",Speed)}
+}

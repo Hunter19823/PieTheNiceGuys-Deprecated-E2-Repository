@@ -1,0 +1,146 @@
+@name Party Profit Profiler v2
+@inputs Emitter:wirelink
+@persist [TotalPlayers,Size,Speed,I] [Players,WhiteListed,Valid]:array [StartPos,Change,Current,TopLeft,BottomRight,TotalSize]:vector2
+if(first()){
+    #Place this E2 onto an EGP Emitter or EGP Screen and it will automatically wire together.
+    entity():createWire(entity():isWeldedTo(),"Emitter","wirelink")
+    Speed=1
+    if(->Emitter){
+        I=0
+        Valid=array()
+        timer("RemoveInvalid",1000)
+    }
+    
+    #Place Your Friends/Party Members/Gang Members/Competition's Name/SteamID/SteamID64
+    #Into the Quotation marks of the WhiteListed Array Below to add them to the list.
+    WhiteListed=array(
+    "Pie The Nice Guy",
+    owner():steamID(),
+    "76561198342631380",
+    "STEAM_0:0:63975326",
+    "STEAM_0:1:460155398",
+    "STEAM_0:0:459880050",
+    "STEAM_0:0:69862200",
+    "STEAM_0:0:11144748",
+    "STEAM_0:0:171735639",
+    "STEAM_0:1:160430249",
+    "STEAM_0:1:443409215",
+    "STEAM_0:0:460229270",
+    "STEAM_0:1:125678639",
+    "STEAM_0:0:55709034",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+    )
+    
+    
+    
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerBySteamID(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID64(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerByName(Person)
+                if (!(P:isPlayer())){          
+                    return noentity()
+                }
+            }
+        }
+        return P
+    }
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}
+if(->Emitter && ~Emitter){
+    I=0
+    Valid=array()
+    timer("RemoveInvalid",1000)
+}
+if(clk("CalculateLeaderBoard")){
+    #TopLeft=vec2(-256,-256)
+    TopLeft=vec2(0,0)
+    BottomRight=Emitter:egpSize()
+    TotalSize=vec2(abs(TopLeft:x())+abs(BottomRight:x()),abs(TopLeft:y())+abs(BottomRight:y()))
+    Players=array():add(Valid)
+    TotalPlayers=Players:count()
+    StartPos=vec2(20,0)+TopLeft
+    Size=floor((TotalSize:y())/(TotalPlayers))
+    Change=vec2(0,Size)
+    Current=StartPos-Change
+    timer("UpdatePlayers",1000)
+    Emitter:egpClear()
+    Emitter:egpBox(200,(BottomRight+TopLeft)/2,TotalSize+vec2(40,40))
+    Emitter:egpColor(200,vec(0))
+    Emitter:egpText(300,"Party Profit Profiler",StartPos-vec2(0,20))
+    Emitter:egpSize(300,20)
+    Emitter:egpText(150,"Last Updated: "+(time("hour"))+":"+(time("min")),StartPos-vec2(0,20)+vec2(TotalSize:x()/2,0))
+    Emitter:egpSize(150,20)
+}
+if(clk("UpdatePlayers")){
+    if(Players:count()>0){
+        User=Players:popEntity()
+        if(User:isPlayer()){
+            #User["Reset",number]=1
+            if(!User["FirstTime",number]){
+                User["Reset",number]=1
+                User["FirstTime",number]=1
+            }
+            if(User["Reset",number]){
+                User["StartingCash",number]=User:money()
+                User["Reset",number]=0
+            }
+            Bal=User:money()-User["StartingCash",number]
+            Percent=round(abs(Bal)/User["StartingCash",number],4)*100
+            local Index=TotalPlayers-Players:count()
+            Current=Current+Change
+            if(Bal>=round(User["StartingCash",number]/100,4)){
+                Emitter:egpText(Index,User:name()+" (+"+Bal+")(+"+Percent+"%)",Current)
+                Emitter:egpColor(Index,vec(0,255,0))
+            }elseif(Bal>=0){
+                Emitter:egpText(Index,User:name()+" (+"+Bal+")(+"+Percent+"%)",Current)
+                Emitter:egpColor(Index,vec(0,255,255))
+            }elseif(Bal>=round(User["StartingCash",number]/100,4)*-1){
+                Emitter:egpText(Index,User:name()+" ("+Bal+")(-"+Percent+"%)",Current)
+                Emitter:egpColor(Index,vec(0,255,255))
+            }else{
+                Emitter:egpText(Index,User:name()+" ("+Bal+")(-"+Percent+"%)",Current)
+                Emitter:egpColor(Index,vec(255,0,0))
+            }
+            Emitter:egpSize(Index,Size/4)
+        }
+        timer("UpdatePlayers",Speed)
+    }else{
+        I=0
+        Valid=array()
+        timer("Reset",1000*60*5)
+    }
+}
+if(clk("RemoveInvalid")){
+    I++
+    if(I<=WhiteListed:count()){
+        P=searchForPlayer(WhiteListed[I,string])
+        Reverse=invert(Valid)
+        if(P:isValid()){
+            if((Reverse[P:toString(),number]==0)){
+                Valid:pushEntity(P)
+            }
+        }
+        timer("RemoveInvalid",Speed)
+    }else{
+        setName("Party Profit Profiler" + Valid:count())
+        timer("CalculateLeaderBoard",100)
+    }
+}
+
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+
+if(clk("Reset")){
+    reset()
+}

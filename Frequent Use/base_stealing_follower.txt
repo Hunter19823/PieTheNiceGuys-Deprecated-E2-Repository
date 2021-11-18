@@ -1,0 +1,96 @@
+@persist [Props,SavedProps]:array [Player,FollowerTarget]:entity [ID] [Min,Max,TargetScale,Scale,Offset]:vector
+@persist [XSpeed,YSpeed,ZSpeed,RSpeed,GSpeed,BSpeed,XAmplitude,YAmplitude,ZAmplitude,ZOffset]
+if(first()){
+    function entity searchForPlayer(Person:string){local P= findPlayerByName(Person) if (!(P:isPlayer())){P=findPlayerBySteamID(Person) if (!(P:isPlayer())){P=findPlayerBySteamID64(Person) if (!(P:isPlayer())){print("Invalid Player")}}} return P}
+    Player=searchForPlayer("Silk")
+    findIncludePlayerProps(Player)
+    #findInSphere(entity():pos(),10000)
+    findByClass("prop_physics")
+    
+    #FollowerTarget=propSpawn("models/maxofs2d/hover_rings.mdl",1)
+    FollowerTarget=owner()
+    TargetScale=vec(14.622343063354,14.622400283813,20.591700077057)
+    Scale=vec(1)
+    ID=100
+    Props=findToArray()
+    if(Props:count()>0){
+        P=Props:popEntity()
+        Max=P:aabbWorldMax()
+        Min=P:aabbWorldMin()
+        SavedProps=Props:clone()
+        timer("Scale",100)
+    }else{
+        print(Player,Player:steamID()," has no props")
+    }
+}
+if(clk("Replicate")){
+    if(SavedProps:count()>0){
+        while(perf(90) & SavedProps:count()>0 & holoCanCreate()){
+            ID++
+            P=SavedProps:popEntity()
+            holoCreate(ID,entity():toWorld(entity():toLocal(P:pos())*Scale),vec(1),entity():toLocal(P:angles()),P:getColor(),P:model())
+            if(P:isValidPhysics()){
+                holoModel(ID,P:model(),P:getSkin())
+            }
+            holoScale(ID,Scale*vec(1))
+            holoAlpha(ID,P:getAlpha())
+            holoMaterial(ID,P:getMaterial())
+            holoEntity(ID):animate(P:getAnimation(),1)
+            
+            holoParent(ID,entity())
+        }
+        timer(clkName(),100)
+    }else{
+        entity():setPos(owner():toWorld(vec(25,0,25)))
+        print("Finished Creating")
+        timer("Follow",1000)
+    }
+}
+if(clk("Scale")){
+    if(Props:count()>0){
+        while(perf(90) & Props:count()>0 & holoCanCreate()){
+            P=Props:popEntity()
+            Max=maxVec(P:aabbWorldMax(),Max)
+            Min=minVec(P:aabbWorldMin(),Min)
+        }
+        timer(clkName(),100)
+    }else{
+        entity():setPos(((Max-Min)/2+Min):setZ(Min:z()))
+        Scale=TargetScale/(Max-Min)
+        timer("Replicate",1000)
+        print("Finished Scaling")
+    }
+}
+if(clk("Follow")){
+    Size=1
+    XSpeed=45
+    XAmplitude=50
+    YSpeed=45
+    YAmplitude=50
+    ZSpeed=15
+    ZAmplitude=25
+    ZOffset=50
+    RainbowSpeed=50
+    RSpeed=1
+    GSpeed=1.5
+    BSpeed=1.25
+    #ifdef entity:noDraw(number)
+    entity():noDraw(1)
+    #else
+    entity():propDraw(0)
+    #endif
+    interval(100)
+    print("Now Following")
+}
+if(clk()){
+    Time=systime()
+    Ang=Time%360
+    Angle=ang(0,Ang*180,0)
+    Position=toWorld(FollowerTarget:pos(),ang(),vec(cos(Ang*XSpeed)*XAmplitude,sin(Ang*YSpeed)*YAmplitude,cos(Ang*ZSpeed)*ZAmplitude+ZOffset),ang())
+    
+    
+    entity():setPos(Position)
+    entity():setAng(Angle)
+    interval(100)
+}
+

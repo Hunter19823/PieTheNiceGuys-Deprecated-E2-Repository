@@ -1,0 +1,111 @@
+@name Voice Recognition E2 (Sort Of)
+@persist [WantToRemove] [EntityToRemove]:entity
+if(first()){
+    runOnKeys(owner(),1)
+    function void entity:traceShot(Index) {
+        if(holoCanCreate()){
+            local Target=This:aimPos()
+            local EyePos=This:shootPos()+This:eye()
+            local EyeAng=This:eyeAngles()
+            holoCreate(Index,EyePos-((EyePos-Target)/2),vec(0.1),EyeAng,vec(255,0,0),"models/hunter/plates/plate8x8.mdl")
+            holoScaleUnits(Index,vec(EyePos:distance(Target),1,1))
+            holoDisableShading(Index,1)
+        }
+    }
+}
+if(keyClk(keyClk())==1){
+    if(keyClk():keyPressed("pad_0") && keyClkPressed()!="pad_0"){
+        switch(keyClkPressed()){
+            case "pad_1",
+                P=keyClk():aimEntity()
+                if(P:isValid()){
+                    print("Prop Model: "+P:model()+"<br>Owned By: "+P:owner():name()+"<br>Prop Type: "+P:type()+"<br>Owner Type: "+P:owner():type()+"<br>Owner Job: "+P:owner():team():teamName()+"<br>Owner SteamID: "+P:owner():steamID())
+                }
+                break
+            case "pad_2",
+                P=keyClk():aimEntity()
+                if(P:isPlayer()){
+                    print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+                    Text="Command Accepted. Player "+P:name() +" is a "+ P:team():teamName()+"."
+                    owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                }else {
+                    print("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "pad_3",
+                P=keyClk():aimEntity()
+                if(P:isPlayer()){
+                    print("Player "+P:name() +" has a total of $" + P:money() + ".")
+                    Text="Command Accepted. Player "+P:name() +" has a total of $" + P:money() + "."
+                    owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                } else {
+                    print("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "pad_4",
+                P=keyClk():aimEntity()
+                if(P:isPlayer()){
+                    Text="Command Accepted. Cloning Player "+P:name() +"."
+                    owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                    holoCreate(1,P:pos(),vec(1),P:angles(),P:getColor(),P:model())
+                    holoAlpha(1,P:getAlpha())
+                    holoMaterial(1,P:getMaterial())
+                    holoSkin(1,P:getSkin())
+                    holoEntity(1):animate(P:getAnimation(),1)
+                }
+                break
+            case "pad_5",
+                P=keyClk():aimEntity()
+                if(P:isPlayer()){
+                    Text="Command Accepted. Tracing Player "+P:name() +"'s Eyes."
+                    P:traceShot(1)
+                    owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                }
+                break
+            case "pad_6",
+                P=keyClk():aimEntity()
+                if(P:isPlayer()){
+                    Text="Command Accepted. Player "+P:name() +" currently has " +P:health()+" Health and "+P:armor()+" Armor."
+                    owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                print(Text)
+                break
+            case "pad_7",
+                S=keyClk():aimEntity()
+                if(S:isShipment()){
+                    Text="Command Accepted. This shipment of " + S:shipmentName() + " has a shipment price of $" + S:shipmentPrice()
+                    owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                }else{
+                    Text="Sorry, I couldn't find a shipment at that position."
+                }
+                print(Text)
+                break
+            case "pad_8",
+                P=owner()
+                holoCreate(2,P:pos(),vec(1),P:angles(),P:getColor(),P:model())
+                holoAlpha(2,P:getAlpha())
+                holoMaterial(2,P:getMaterial())
+                holoSkin(2,P:getSkin())
+                holoEntity(2):animate(P:getAnimation(),1)
+                holoEntity(2):streamStart(998,keyClk():lastSaid(),0.5)
+                print("Now Playing: "+keyClk():lastSaid())
+                break
+            case "pad_9",
+                streamStop(999)
+                streamStop(998)
+                Text="Command Accepted. Stopping all Streams."
+                owner():streamStart(999,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Text)+"&tl="+"en-us"+"&client=tw-ob",1)
+                break
+            case "0",
+                P=owner()
+                holoCreate(1,P:pos()+vec(0,0,P:height()/2),vec(0.25),ang(),vec(255),"models/bluesdoubleornothing/slots_1.mdl"):soundPlay(random(1000),0,"doubleornothing\\jackpot.mp3")
+                break
+            default,
+                break
+        }
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/

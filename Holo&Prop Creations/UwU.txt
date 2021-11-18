@@ -1,0 +1,84 @@
+@name UwU
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    Counter=1
+    Chunk=0
+    function void searchModel(Model:string){
+        findIncludePlayerProps(owner())
+        findByModel(Model)
+        findSortByDistance(entity():pos())
+        if(findToTable():count()<0){
+            Parent=entity()
+        }else{
+            Parent=find()
+        }
+    }
+    Speed=250
+    searchModel("models/maxofs2d/hover_rings.mdl")
+    timer(Counter+"",Speed)
+}
+if(Chunk==0){ if(clk("1")){ holoCreate(1,vec(-119.97,-2380.86,-175.36),vec(0.1),ang(1.01,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(1,vec(2.63,1,1)) holoMaterial(1,"phoenix_storms/stripes") timer("2",100)}
+if(clk("2")){ holoCreate(2,vec(-119.97,-2401.33,-170.41),vec(0.1),ang(-73.78,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(2,vec(1.75,1,1)) holoMaterial(2,"phoenix_storms/stripes") timer("3",100)}
+if(clk("3")){ holoCreate(3,vec(-119.97,-2400.58,-172.19),vec(0.1),ang(63.45,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(3,vec(1.88,1,1)) holoMaterial(3,"phoenix_storms/stripes") timer("4",100)}
+if(clk("4")){ holoCreate(4,vec(-119.97,-2401.52,-169.69),vec(0.1),ang(75.27,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(4,vec(2.26,1,1)) holoMaterial(4,"phoenix_storms/stripes") timer("5",100)}
+if(clk("5")){ holoCreate(5,vec(-119.97,-2400,-173.22),vec(0.1),ang(-47.57,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(5,vec(1.56,1,1)) holoMaterial(5,"phoenix_storms/stripes") timer("6",100)}
+if(clk("6")){ holoCreate(6,vec(-119.97,-2398.74,-174.14),vec(0.1),ang(-30.08,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(6,vec(1.22,1,1)) holoMaterial(6,"phoenix_storms/stripes") timer("7",100)}
+if(clk("7")){ holoCreate(7,vec(-119.97,-2396.58,-174.89),vec(0.1),ang(-11.55,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(7,vec(1.36,1,1)) holoMaterial(7,"phoenix_storms/stripes") timer("8",100)}
+if(clk("8")){ holoCreate(8,vec(-119.97,-2395.12,-174.95),vec(0.1),ang(-3.28,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(8,vec(1.62,1,1)) holoMaterial(8,"phoenix_storms/stripes") timer("9",100)}
+if(clk("9")){ holoCreate(9,vec(-119.97,-2393.7,-174.98),vec(0.1),ang(4.16,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(9,vec(1.51,1,1)) holoMaterial(9,"phoenix_storms/stripes") timer("10",100)}
+if(clk("10")){ holoCreate(10,vec(-119.97,-2392.4,-174.8),vec(0.1),ang(14.81,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(10,vec(1.74,1,1)) holoMaterial(10,"phoenix_storms/stripes") timer("11",100)}
+if(clk("11")){ holoCreate(11,vec(-119.97,-2391.01,-174.42),vec(0.1),ang(18.9,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(11,vec(1.53,1,1)) holoMaterial(11,"phoenix_storms/stripes") timer("12",100)}
+if(clk("12")){ holoCreate(12,vec(-119.97,-2389.22,-172.79),vec(0.1),ang(64.86,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(12,vec(1.85,1,1)) holoMaterial(12,"phoenix_storms/stripes") timer("13",100)}
+if(clk("13")){ holoCreate(13,vec(-119.97,-2388.58,-169.56),vec(0.1),ang(83.82,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(13,vec(4.83,1,1)) holoMaterial(13,"phoenix_storms/stripes") timer("14",100)}
+if(clk("14")){ holoCreate(14,vec(-119.97,-2387.24,-169.86),vec(0.1),ang(79.19,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(14,vec(5.8,1,1)) holoMaterial(14,"phoenix_storms/stripes") timer("15",100)}
+if(clk("15")){ holoCreate(15,vec(-119.97,-2385.92,-174.38),vec(0.1),ang(46.58,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(15,vec(1.86,1,1)) holoMaterial(15,"phoenix_storms/stripes") timer("16",100)}
+if(clk("16")){ holoCreate(16,vec(-119.97,-2386.41,-173.29),vec(0.1),ang(-70.64,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(16,vec(2.4,1,1)) holoMaterial(16,"phoenix_storms/stripes") timer("17",100)}
+if(clk("17")){ holoCreate(17,vec(-119.97,-2384.77,-174.66),vec(0.1),ang(-12.63,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(17,vec(2.54,1,1)) holoMaterial(17,"phoenix_storms/stripes") timer("18",100)}
+if(clk("18")){ holoCreate(18,vec(-119.97,-2383.13,-175.16),vec(0.1),ang(-7.9,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(18,vec(2.9,1,1)) holoMaterial(18,"phoenix_storms/stripes") timer("19",100)}
+if(clk("19")){ holoCreate(19,vec(-119.97,-2379.13,-175.12),vec(0.1),ang(14.7,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(19,vec(1.92,1,1)) holoMaterial(19,"phoenix_storms/stripes") timer("20",100)}
+if(clk("20")){ holoCreate(20,vec(-119.97,-2377.5,-174.45),vec(0.1),ang(30.9,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(20,vec(1.73,1,1)) holoMaterial(20,"phoenix_storms/stripes") timer("21",100) Chunk++}}
+if(Chunk==1){
+if(clk("21")){ holoCreate(21,vec(-119.97,-2375.69,-172.33),vec(0.1),ang(59.03,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(21,vec(3.52,1,1)) holoMaterial(21,"phoenix_storms/stripes") timer("22",100)}
+if(clk("22")){ holoCreate(22,vec(-119.97,-2373.65,-168.09),vec(0.1),ang(72.46,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(22,vec(1.76,1,1)) holoMaterial(22,"phoenix_storms/stripes") timer("23",100)}
+if(clk("23")){ holoCreate(23,vec(-119.97,-2374.46,-169.71),vec(0.1),ang(68.49,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(23,vec(3.28,1,1)) holoMaterial(23,"phoenix_storms/stripes") timer("24",100)}
+if(clk("24")){ holoCreate(24,vec(-119.97,-2373.7,-165.13),vec(0.1),ang(88.87,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(24,vec(5.53,1,1)) holoMaterial(24,"phoenix_storms/stripes") timer("25",100)}
+if(clk("25")){ holoCreate(25,vec(-119.97,-2373.76,-163.79),vec(0.1),ang(-90,0,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(25,vec(0.44,1,1)) holoMaterial(25,"phoenix_storms/stripes") timer("26",100)}
+if(clk("26")){ holoCreate(26,vec(-119.97,-2373.75,-164.87),vec(0.1),ang(-88.14,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(26,vec(0.57,1,1)) holoMaterial(26,"phoenix_storms/stripes") timer("27",100)}
+if(clk("27")){ holoCreate(27,vec(-119.97,-2373.7,-166.38),vec(0.1),ang(-86.51,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(27,vec(0.6,1,1)) holoMaterial(27,"phoenix_storms/stripes") timer("28",100)}
+if(clk("28")){ holoCreate(28,vec(-119.97,-2374,-168.15),vec(0.1),ang(-76.64,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(28,vec(0.55,1,1)) holoMaterial(28,"phoenix_storms/stripes") timer("29",100)}
+if(clk("29")){ holoCreate(29,vec(-119.97,-2374.72,-170.4),vec(0.1),ang(-61.35,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(29,vec(1.21,1,1)) holoMaterial(29,"phoenix_storms/stripes") timer("30",100)}
+if(clk("30")){ holoCreate(30,vec(-119.97,-2375.77,-172.07),vec(0.1),ang(-60.75,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(30,vec(0.84,1,1)) holoMaterial(30,"phoenix_storms/stripes") timer("31",100)}
+if(clk("31")){ holoCreate(31,vec(-119.97,-2376.65,-173.76),vec(0.1),ang(-50.85,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(31,vec(1.1,1,1)) holoMaterial(31,"phoenix_storms/stripes") timer("32",100)}
+if(clk("32")){ holoCreate(32,vec(-119.97,-2378.03,-174.74),vec(0.1),ang(-21.85,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(32,vec(0.86,1,1)) holoMaterial(32,"phoenix_storms/stripes") timer("33",100)}
+if(clk("33")){ holoCreate(33,vec(-119.97,-2380.19,-175.29),vec(0.1),ang(-0.87,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(33,vec(1.23,1,1)) holoMaterial(33,"phoenix_storms/stripes") timer("34",100)}
+if(clk("34")){ holoCreate(34,vec(-119.97,-2381.4,-175.27),vec(0.1),ang(0,0,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(34,vec(0,1,1)) holoMaterial(34,"phoenix_storms/stripes") timer("35",100)}
+if(clk("35")){ holoCreate(35,vec(-119.97,-2383.02,-175.02),vec(0.1),ang(14.04,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(35,vec(1.51,1,1)) holoMaterial(35,"phoenix_storms/stripes") timer("36",100)}
+if(clk("36")){ holoCreate(36,vec(-119.97,-2384.75,-174.71),vec(0.1),ang(5.5,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(36,vec(0.74,1,1)) holoMaterial(36,"phoenix_storms/stripes") timer("37",100)}
+if(clk("37")){ holoCreate(37,vec(-119.97,-2386.28,-173.9),vec(0.1),ang(62.38,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(37,vec(0.83,1,1)) holoMaterial(37,"phoenix_storms/stripes") timer("38",100)}
+if(clk("38")){ holoCreate(38,vec(-119.97,-2386.5,-172.83),vec(0.1),ang(77.7,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(38,vec(0.58,1,1)) holoMaterial(38,"phoenix_storms/stripes") timer("39",100)}
+if(clk("39")){ holoCreate(39,vec(-119.97,-2386.94,-172.21),vec(0.1),ang(66.49,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(39,vec(0.93,1,1)) holoMaterial(39,"phoenix_storms/stripes") timer("40",100) Chunk++}}
+if(Chunk==2){
+if(clk("40")){ holoCreate(40,vec(-119.97,-2387.28,-170.87),vec(0.1),ang(90,0,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(40,vec(0.55,1,1)) holoMaterial(40,"phoenix_storms/stripes") timer("41",100)}
+if(clk("41")){ holoCreate(41,vec(-119.97,-2387.44,-169.6),vec(0.1),ang(77.68,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(41,vec(0.83,1,1)) holoMaterial(41,"phoenix_storms/stripes") timer("42",100)}
+if(clk("42")){ holoCreate(42,vec(-119.97,-2387.72,-168.18),vec(0.1),ang(81.34,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(42,vec(1.17,1,1)) holoMaterial(42,"phoenix_storms/stripes") timer("43",100)}
+if(clk("43")){ holoCreate(43,vec(-119.97,-2387.83,-167.55),vec(0.1),ang(54.64,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(43,vec(0.64,1,1)) holoMaterial(43,"phoenix_storms/stripes") timer("44",100)}
+if(clk("44")){ holoCreate(44,vec(-119.97,-2388.29,-167.22),vec(0.1),ang(-59.84,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(44,vec(0.44,1,1)) holoMaterial(44,"phoenix_storms/stripes") timer("45",100)}
+if(clk("45")){ holoCreate(45,vec(-119.97,-2388.44,-167.77),vec(0.1),ang(-90,0,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(45,vec(0.33,1,1)) holoMaterial(45,"phoenix_storms/stripes") timer("46",100)}
+if(clk("46")){ holoCreate(46,vec(-119.97,-2388.81,-170.76),vec(0.1),ang(-80.62,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(46,vec(0.79,1,1)) holoMaterial(46,"phoenix_storms/stripes") timer("47",100)}
+if(clk("47")){ holoCreate(47,vec(-119.97,-2388.83,-172.03),vec(0.1),ang(-80.96,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(47,vec(0.55,1,1)) holoMaterial(47,"phoenix_storms/stripes") timer("48",100)}
+if(clk("48")){ holoCreate(48,vec(-119.97,-2389.93,-173.86),vec(0.1),ang(-38.7,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(48,vec(1.38,1,1)) holoMaterial(48,"phoenix_storms/stripes") timer("49",100)}
+if(clk("50")){ holoCreate(50,vec(-119.97,-2394.9,-174.97),vec(0.1),ang(0.09,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(50,vec(0.69,1,1)) holoMaterial(50,"phoenix_storms/stripes") timer("51",100)}
+if(clk("51")){ holoCreate(51,vec(-119.97,-2397.64,-174.58),vec(0.1),ang(20.68,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(51,vec(1.24,1,1)) holoMaterial(51,"phoenix_storms/stripes") timer("52",100)}
+if(clk("52")){ holoCreate(52,vec(-119.97,-2399.17,-173.88),vec(0.1),ang(31.95,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(52,vec(0.63,1,1)) holoMaterial(52,"phoenix_storms/stripes") timer("53",100)}
+if(clk("53")){ holoCreate(53,vec(-119.97,-2399.86,-173.16),vec(0.1),ang(53.36,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(53,vec(0.63,1,1)) holoMaterial(53,"phoenix_storms/stripes") timer("54",100)}
+if(clk("54")){ holoCreate(54,vec(-119.97,-2401.02,-171.3),vec(0.1),ang(68.35,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(54,vec(0.91,1,1)) holoMaterial(54,"phoenix_storms/stripes") timer("55",100)}
+if(clk("55")){ holoCreate(55,vec(-119.97,-2401.48,-169.45),vec(0.1),ang(90,0,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(55,vec(1.11,1,1)) holoMaterial(55,"phoenix_storms/stripes") timer("56",100)}
+if(clk("56")){ holoCreate(56,vec(-119.97,-2402.05,-165.83),vec(0.1),ang(82.61,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(56,vec(6.08,1,1)) holoMaterial(56,"phoenix_storms/stripes") timer("57",100)}
+if(clk("57")){ holoCreate(57,vec(-119.97,-2376.86,-141.6),vec(0.1),ang(-68.45,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(57,vec(18.44,1,1)) holoMaterial(57,"phoenix_storms/stripes") timer("58",100)}
+if(clk("58")){ holoCreate(58,vec(-119.97,-2369.07,-141.52),vec(0.1),ang(-64.49,-90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(58,vec(18.74,1,1)) holoMaterial(58,"phoenix_storms/stripes") timer("59",100)}
+if(clk("59")){ holoCreate(59,vec(-119.97,-2372.84,-150.03),vec(0.1),ang(-0.11,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(59,vec(15.3,1,1)) holoMaterial(59,"phoenix_storms/stripes") timer("60",100)}
+if(clk("60")){ holoCreate(60,vec(-119.97,-2402.32,-149.53),vec(0.1),ang(3.09,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(60,vec(15.56,1,1)) holoMaterial(60,"phoenix_storms/stripes") timer("61",100)}
+if(clk("61")){ holoCreate(61,vec(-119.97,-2397.95,-141.78),vec(0.1),ang(68.68,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(61,vec(17.74,1,1)) holoMaterial(61,"phoenix_storms/stripes") timer("62",100)}
+if(clk("62")){ holoCreate(62,vec(-119.97,-2405.6,-141.31),vec(0.1),ang(-60.42,90,0),vec(255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(62,vec(17.93,1,1)) holoMaterial(62,"phoenix_storms/stripes") timer("63",100)}
+}

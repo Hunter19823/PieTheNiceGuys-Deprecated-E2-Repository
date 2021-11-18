@@ -1,0 +1,282 @@
+@name Piedar v2
+@persist State Entities:table Time LastEntry:table Size Parent:entity Visible Scale Friends:array RunOnce Model:string UpdatePeopleTimer Thing
+if(first()){
+    #Time is the time between each calcultion.
+    Time=100
+    
+    
+    #Side is the radius of what Piedar can see.
+    Size=500
+    
+    
+    #UpdatePeopleTimer is how often the players update once the building is created.
+    UpdatePeopleTimer=750
+    
+    
+    #The scale of the holograms compared to the actual versions.
+    Scale=0.1
+    
+    #The Model Directory of the spinning circle in the center that spins the text screen.
+    #If you change this it can use other types of props nearby. E2s as well if done correctly.
+    Model="models/maxofs2d/hover_rings.mdl"
+    
+    
+    
+    
+    
+    #Ignore
+    State=-5
+    RunOnce=0
+    Thing=0
+    propSpawnUndo(1)
+    function table entity:convertToTable(){
+        local Table = table()
+        if(This!=noentity()){
+            Table=table(
+            "Valid"=This:isValid(),
+            "ValidProp"=This:isValidPhysics(),
+            "Model"=This:model(),
+            "Material"=This:getMaterial(),
+            "Color"=This:getColor(),
+            "TeamColor"=teamColor(This:team()),
+            "Color4"=This:getColor4(),
+            "Alpha"=This:getAlpha(),
+            "Skin"=This:getSkin(),
+            "SkinCount"=This:getSkinCount(),
+            "Angle"=This:angles(),
+            "Position"=This:pos(),
+            "Name"=This:name(),
+            "Inertia"=This:inertia(),
+            #"Gravity"=This:gravity(),
+            "Player"=This:isPlayer(),
+            "PlayerAimPos"=This:aimPos(),
+            "PlayerEyePos"=This:shootPos()+This:eye(),
+            "PlayerEyeAngles"=This:eyeAngles(),
+            "Owner"=This:owner(),
+            "Parent"=This:parent(),
+            "Driver"=This:driver(),
+            "BoundingBox"=This:boxSize(),
+            "BoneCount"=This:boneCount(),
+            "CreationID"=This:creationID(),
+            "ID"=This:id(),
+            "Passenger"=This:passenger(),
+            "Child"=This:children(),
+            "Ping"=This:ping(),
+            "E2Name"=This:getName(),
+            "Type"=This:type(),
+            "Deaths"=This:deaths(),
+            "Frags"=This:frags(),
+            "Health"=This:health(),
+            "Animation"=This:getAnimation(),
+            "Friends"=This:friends(),
+            "TimeConntect"=This:timeConnected(),
+            "Vehicle"=This:vehicle(),
+            "Tool"=This:tool(),
+            "Frags"=This:frags(),
+            "Physic"=This:isPhysics(),
+            #"UUID"=This:playerUniqueId(),
+            "SteamID"=This:steamID(),
+            "SteamID64"=This:steamID64(),
+            "Steam Friends"=This:steamFriends(),
+            "UserGroup"=This:getUserGroup(),
+            "ShipmentName"=This:shipmentName(),
+            "ShipmentModel"=This:shipmentModel(),
+            "ShipmentPrice"=This:shipmentPrice(),
+            "ShipmentAmount"=This:shipmentAmount(),
+            "ShipmentType"=This:shipmentType(),
+            "LastSaid"=This:lastSaid(),
+            "LastSaidTeam"=This:lastSaidTeam(),
+            "LastWhen"=This:lastSaidWhen(),
+            "Mass"=This:mass(),
+            "CPU"=This:cpuUsage(),
+            "OPS"=This:ops(),
+            "Money"=This:money(),
+            "Height"=This:height(),
+            "Team"=This:team(),
+            "PrimaryAmmoType"=This:weapon():primaryAmmoType(),
+            "SecondaryAmmoType"=This:weapon():secondaryAmmoType(),
+            "PrimaryAmmoCount"=This:ammoCount(This:weapon():primaryAmmoType()),
+            "SecondaryAmmoCount"=This:ammoCount(This:weapon():secondaryAmmoType()),
+            "WeaponInHand"=This:weapon(),
+            "NoCollide"=This:isNoCollideAll()
+            )
+            if(This:isPlayer()){
+                Table["Armor",number]=This:armor()
+            }
+        }
+        return Table
+    }
+    function void table:testEntry(Number){
+        setName(Number+"")
+        if(This[Number,entity]:isValid()){
+            local Table=This[Number,entity]:convertToTable()
+            LastEntry=Table
+        }elseif(Number<=This:count()){
+            
+        }else{
+            #print("Finished After: "+Number+" Cases.<br>"+holoRemainingSpawns())
+            stopAllTimers()
+            State=-2
+            RunOnce=1
+            Time=UpdatePeopleTimer
+            interval(Time)
+        }
+    }
+    function void table:holoReplica(Number,Size){
+        if(Size>0.5){Size=0.5}
+        if(This["Valid",number]){
+            local Model = This["Model",string]
+            local Material = This["Material",string]                                        if(Size>0.5){Size=0.5}
+            local Color = This["Color",vector]
+            local Alpha = This["Alpha",number]
+            local Position = This["Position",vector]
+            local ParentPos=Parent:toWorld(vec(0,0,-50))
+            local Relative = (ParentPos-Position)*-1
+            local Skin = This["Skin",number]
+            local Animation = This["Animation",number]
+            local Angle = This["Angle",angle]
+            local TeamColor = This["TeamColor",vector]
+            if(holoCanCreate()) {
+                if(Model!=""){
+                    holoCreate(Number,ParentPos+Relative*Size,vec(Size),Angle,Color,Model)
+                    holoAlpha(Number,Alpha)
+                    if(Material!=""){
+                        holoMaterial(Number,Material)
+                    }
+                    if(Animation!=-1){
+                        holoEntity(Number):animate(Animation,1)
+                    }
+                    if(This["Player",number]){
+                        holoPlayerColor(Number,TeamColor)
+                    }
+                    holoParent(Number,Parent)
+                    holoDisableShading(Number,1)
+                }
+            }
+        }
+    }
+    #if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+}else{
+    switch(State){
+        case -5,
+            Friends=owner():friends()
+            Friends:pushEntity(owner())
+            Friends:add(owner():steamFriends())
+            findIncludePlayerProps(owner())
+            findExcludeClass("gmod_wire_hologram")
+            State++
+            break
+        case -4,
+            if(Friends:count()>0){
+                local Friend=Friends:popEntity()
+                findIncludePlayer(Friend)
+                findIncludePlayerProps(Friend)
+            }else{
+                State++
+            }
+            break
+        case -3,
+            findByModel(Model)
+            if(findSortByDistance(entity():pos())==0){
+                Parent=propSpawn(Model,entity():toWorld(vec(0,0,50)),entity():angles(),1)
+            }else{
+                Ent=find()
+                if(Ent:pos():distance(entity():pos())>Size/5){
+                    Parent=propSpawn(Model,entity():toWorld(vec(0,0,50)),entity():angles(),1)
+                }else{
+                    Parent=Ent
+                }
+            }
+            #Parent:setNoCollideAll()
+            State++
+            break
+        case -2,
+            Friends=owner():friends()
+            Friends:add(owner():steamFriends())
+            Friends:pushEntity(owner())
+            findClearBlackList()
+            findClearWhiteList()
+            findIncludePlayerProps(owner())
+            findExcludeClass("gmod_wire_hologram")
+            State++
+            break
+        case -1,
+            if(Friends:count()>0){
+                local Friend=Friends:popEntity()
+                findIncludePlayer(Friend)
+                findIncludePlayerProps(Friend)
+                if(!(RunOnce==0)){
+                    findIncludeEntity(Friend)
+                }
+            }else{
+                State++
+            }
+            break
+        case 0,
+            local BR=entity():pos() - vec(Size)
+            local TL=entity():pos() + vec(Size)
+            if((RunOnce==0)){
+                findExcludeClass("light_spot")
+                findExcludeClass("hl2mp_ragdoll")
+                findExcludeClass("shadow_control")
+                findExcludeClass("env_tonemap_controller")
+                findExcludeClass("func_brush")
+                findExcludeClass("bm2_fuel")
+                findExcludeClass("manipulate_bone")
+                findExcludeClass("gmod_hands")
+                findExcludeClass("env_sprite")
+                findExcludeClass("env_soundscape")
+                findExcludeClass("mg_automata")
+                findExcludeClass("spawned_money")
+                findExcludeClass("spawned_weapon")
+                findExcludeClass("gmod_wire_hologram")
+                findExcludeClass("func_breakable_surf")
+                findExcludeClass("env_fog_controller")
+                findExcludeClass("env_sun")
+                findExcludeClass("ambient_generic")
+                findExcludeClass("wol_reel")
+                findExcludeClass("sammyservers_textscreen")
+                findExcludeClass("prop_door_rotating")
+                findExcludeClass("entity_blocker")
+                findExcludeClass("info_ladder_dismount")
+                findExcludeClass("rhandcuffsent")
+                findExcludeClass("bm2_power_lead")
+                findExcludeClass("bm2_extention_lead")
+                findExcludeClass("bm2_plug_1")
+                findExcludeClass("keyframe_rope")
+                findExcludeClass("func_door_rotating")
+                findExcludeClass("func_button")
+                findExcludeClass("func_door")
+                findInBox(BR,TL)
+            }else{
+                #findIncludeModel("models/player/combine_advisor_guard.mdl")
+                findByClass("player")
+            }
+            Entities=findToTable()
+            State++
+            break
+        default,
+            if(State%2==0){
+                if(!RunOnce && !LastEntry["Player",number]){
+                    LastEntry:holoReplica(State/2,Scale)
+                }else{
+                    LastEntry:holoReplica(LastEntry["ID",number]*100,Scale)
+                }
+                Thing=0
+            }else {
+                Entities:testEntry((State+1)/2)
+                Thing=1
+            }
+            State++
+            break
+    }
+    setName("Piedar: Holos Used: "+holoRemainingSpawns()+"/"+holoMaxAmount()+" total holos")
+}
+if(Thing){
+    interval(0)
+}else{
+    interval(Time)
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/
+

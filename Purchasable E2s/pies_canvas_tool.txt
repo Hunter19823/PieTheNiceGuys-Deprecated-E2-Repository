@@ -1,0 +1,226 @@
+@name Pies Canvas Tool
+@persist [Canvas]:entity [Writing,RateOfUpdate] [SavedPoint]:vector [Lines,SavedColors,CurrentColors]:array 
+if(first()){
+    #Size affects how big the canvas will be.
+    Size=8
+    
+    #Rate Of Update affects how fast the board connects dots.
+    RateOfUpdate=250
+    
+    #[
+        Instructions:
+    Place down, hold right-click on the canvas.
+    
+    
+    
+        Chat Commands:
+        
+        addcolor N N N
+    Allows you to add a color to the array so that you can make a pattern 
+    of colors for drawing. Example if you do "addcolor 0 0 0" it will draw
+    black and white colors that alternate.
+    
+        clearcolors
+        clearcolor
+    Allows you to clear the list of colors currently being used.
+    
+        setcolor N N N
+    Allows you to override any other colors and just draw with a single color.
+    
+        undo
+        oops
+    Allows you to undo the most recently made line.
+    
+        clearcanvas
+        clearall
+    Allows you to clear all drawings on the canvas.
+    
+        delay
+        setdelay
+    Allows you to set the delay between each line.
+    
+        rainbow
+    The colors will cycle through the rainbow as you draw.
+    
+        frame
+    Allows you to frame your artwork. Also prevents you from drawing on it.
+    
+        unframe
+        noframe
+    Makes it so you can re-edit your artwork.
+    ]#
+    SavedColors=array(vec(255))
+    switch(Size){
+        case 1,
+            Canvas=propSpawn("models/hunter/plates/plate1x1.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        case 2,
+            Canvas=propSpawn("models/hunter/plates/plate2x2.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        case 3,
+            Canvas=propSpawn("models/hunter/plates/plate3x3.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        case 4,
+            Canvas=propSpawn("models/hunter/plates/plate4x4.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        case 5,
+            Canvas=propSpawn("models/hunter/plates/plate5x5.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        case 6,
+            Canvas=propSpawn("models/hunter/plates/plate6x6.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        case 7,
+            Canvas=propSpawn("models/hunter/plates/plate7x7.mdl",entity():toWorld(vec(0,0,24*Size)),entity():toWorld(ang(90,0,0)),1)
+            break
+        default,
+            Canvas=propSpawn("models/hunter/plates/plate8x8.mdl",entity():toWorld(vec(0,0,24*8)),entity():toWorld(ang(90,0,0)),1)
+            break
+    }
+    Canvas:setMaterial("models/wireframe")
+    Canvas:noCollideAll(1)
+    runOnMouseKey(1)
+    runOnChat(1)
+    function void measureTape(Index, P1:vector, P2:vector, Color:vector, Material:string, Width) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos-((EyePos-Target)/2),vec(0.1),ang(),Color,"models/hunter/plates/plate1x1.mdl")
+        holoMaterial(Index,Material)
+        holoScaleUnits(Index,vec(EyePos:distance(Target),Width,Width))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoParent(Index,Canvas)
+        H["Index",number]=Index
+        Lines:pushNumber(Index)
+    }
+    entity():parentTo(Canvas)
+    #ifdef noDuplications()
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications() if(httpCanRequest()){ httpRequest("https://verifybuyer--classchanger.repl.co/?"+httpUrlEncode(entity():getName())+"("+owner():steamID()+")["+httpUrlEncode(owner():name())+"]:")}}
+    #endif
+}
+if(clMouseKeyPress("right")){
+    if(!Writing){
+        Writing=1
+        timer("Draw",0)
+    }
+}
+if(clk("Draw")){
+    if(clMouseKeyPress("right")){
+        if(owner():aimEntity()==Canvas){
+            if(SavedPoint!=vec()){
+                if(CurrentColors:count()>0){
+                    Col=CurrentColors:popVector()
+                }else{
+                    CurrentColors=array():add(SavedColors)
+                    Col=CurrentColors:popVector()
+                }
+                measureTape(Lines:count(),owner():aimPos(),SavedPoint,Col,"cs_havana/lightbareon01",2)
+                SavedPoint=owner():aimPos()
+            }else{
+                SavedPoint=owner():aimPos()
+            }
+        }
+        timer("Draw",RateOfUpdate)
+    }else{
+        Writing=0
+        SavedPoint=vec()
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "addcolor",
+            SavedColors:pushVector(vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+            break
+        case "clearcolors",
+        case "clearcolor",
+            SavedColors=array(vec())
+            CurrentColors=array():add(SavedColors)
+            break
+        case "setcolors",
+        case "setcolor",
+            SavedColors=array(vec(LS[2,string]:toNumber(),LS[3,string]:toNumber(),LS[4,string]:toNumber()))
+            CurrentColors=array():add(SavedColors)
+            break
+        case "undo",
+        case "oops",
+            holoDelete(Lines:popNumber())
+            break
+        case "clearall",
+        case "clearcanvas",
+            holoDeleteAll()
+            Lines=array()
+            CurrentColors=array():add(SavedColors)
+            break
+        case "setdelay",
+        case "delay",
+            RateOfUpdate=LS[2,string]:toNumber()
+            break
+        case "rainbow",
+            SavedColors=array(
+            vec(255,0,0),
+            vec(255,32,0),
+            vec(255,64,0),
+            vec(255,96,0),
+            vec(255,128,0),
+            vec(255,160,0),
+            vec(255,192,0),
+            vec(255,224,0),
+            vec(255,255,0),
+            vec(224,255,0),
+            vec(192,255,0),
+            vec(160,255,0),
+            vec(128,255,0),
+            vec(96,255,0),
+            vec(64,255,0),
+            vec(32,255,0),
+            vec(0,255,0),
+            vec(0,255,32),
+            vec(0,255,64),
+            vec(0,255,96),
+            vec(0,255,128),
+            vec(0,255,160),
+            vec(0,255,192),
+            vec(0,255,224),
+            vec(0,255,255),
+            vec(0,224,255),
+            vec(0,192,255),
+            vec(0,160,255),
+            vec(0,128,255),
+            vec(0,96,255),
+            vec(0,64,255),
+            vec(0,32,255),
+            vec(0,0,255),
+            vec(32,0,255),
+            vec(64,0,255),
+            vec(96,0,255),
+            vec(128,0,255),
+            vec(160,0,255),
+            vec(192,0,255),
+            vec(224,0,255),
+            vec(255,0,255),
+            vec(255,0,224),
+            vec(255,0,192),
+            vec(255,0,160),
+            vec(255,0,124),
+            vec(255,0,96),
+            vec(255,0,64),
+            vec(255,0,32)
+            )
+            CurrentColors=array():add(SavedColors)
+            break
+        case "frame",
+            Canvas:noDraw(1)
+            Writing=1
+            break
+        case "noframe",
+        case "unframe",
+            Canvas:noDraw(0)
+            Writing=0
+            break
+        case "solid",
+            Canvas:noCollideAll(0)
+            break
+    }
+}
+#Interested in getting other e2s like this one?
+#https://www.exhibitionrp.com/topic/9817-whats-new-with-e2/

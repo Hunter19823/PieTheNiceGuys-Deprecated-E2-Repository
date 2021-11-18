@@ -1,0 +1,125 @@
+@name Gingie's Base Spotlight (Updated by Pie)
+#(Updated by Pie The Nice Guy)
+@persist Mode:string DiscoDelay IsDiscoOn Color:vector
+if(first()){
+    DiscoDelay=1000
+    IsDiscoOn=0
+    X=150
+    Y=150
+    Z=150
+    #The Holo's
+    local EPos=entity():pos()
+    Color=vec(255)
+    holoCreate(1,EPos+vec(X,Y,Z),vec(1.5),ang(0,225,0),Color,"models/props/de_train/de_train_floodlights_01.mdl") 
+    holoCreate(2,EPos+vec(-X,Y,Z),vec(1.5),ang(0,-45,0),Color,"models/props/de_train/de_train_floodlights_01.mdl") 
+    holoCreate(3,EPos+vec(-X,-Y,Z),vec(1.5),ang(0,45,0),Color,"models/props/de_train/de_train_floodlights_01.mdl") 
+    holoCreate(4,EPos+vec(X,-Y,Z),vec(1.5),ang(0,145,0),Color,"models/props/de_train/de_train_floodlights_01.mdl") 
+    timer("lights",0)
+    runOnChat(1)
+}elseif(clk("lights")){
+    #Lights
+    local EPos=entity():pos()
+    holoEntity(1):setfLight(EPos+vec(X,Y,Z),Color,ang(0,225,0),"cs_havana/white",120,500,1)
+    holoEntity(2):setfLight(EPos+vec(-X,Y,Z),Color,ang(0,-45,0),"cs_havana/white",120,500,1)
+    holoEntity(3):setfLight(EPos+vec(-X,-Y,Z),Color,ang(0,45,0),"cs_havana/white",120,500,1)
+    holoEntity(4):setfLight(EPos+vec(X,-Y,Z),Color,ang(0,145,0),"cs_havana/white",120,500,1)
+    timer("parent",0)
+}elseif(clk("parent")){
+    holoParent(1,entity())
+    holoParent(2,entity())
+    holoParent(3,entity())
+    holoParent(4,entity())
+    #holoEntity(1):noDraw(1)
+    #holoEntity(2):noDraw(1)
+    #holoEntity(3):noDraw(1)
+    #holoEntity(4):noDraw(1)
+}elseif(clk("changeColor")){
+    if(Mode=="disco"){
+        IsDiscoOn=!IsDiscoOn
+        timer("discoMode",DiscoDelay)
+    }
+    elseif(Mode=="white"){
+        Color=vec(255)
+        IsDiscoOn=0
+    }
+    elseif(Mode=="red"){
+        Color=vec(255,0,0)
+        IsDiscoOn=0
+    }
+    elseif(Mode=="green"){
+        Color=vec(0,255,0)
+        IsDiscoOn=0
+    }
+    elseif(Mode=="blue"){
+        Color=vec(0,0,255)
+        IsDiscoOn=0
+    }elseif(Mode=="custom"){
+        IsDiscoOn=0
+    }
+    if(!IsDiscoOn){
+        holoEntity(1):fLightColor(Color)
+        holoEntity(2):fLightColor(Color)
+        holoEntity(3):fLightColor(Color)
+        holoEntity(4):fLightColor(Color)
+    }
+    Mode=""
+}
+if(chatClk(owner())){
+    local Command=lastSaid():explode(" ")[1,string]
+    if(Command==".size"){
+        S=lastSaid():sub(7):explode("x")
+        X=S[1,string]:toNumber()
+        Y=S[2,string]:toNumber()
+        Z=S[3,string]:toNumber()
+        local EPos=entity():pos()
+        
+        holoPos(1,EPos+vec(X,Y,Z))
+        holoPos(2,EPos+vec(-X,Y,Z))
+        holoPos(3,EPos+vec(-X,-Y,Z))
+        holoPos(4,EPos+vec(X,-Y,Z))
+        
+    }elseif(Command==".disco"){
+        Mode="disco"
+    }elseif(Command==".white"){
+        Mode="white"
+    }elseif(Command==".red"){
+        Mode="red"
+    }elseif(Command==".green"){
+        Mode="green"
+    }elseif(Command==".blue"){
+        Mode="blue"
+    }elseif(Command==".delay"){
+        local Delay=lastSaid():explode(" ")[2,string]:toNumber()
+        if(Delay>0){
+            DiscoDelay=Delay
+            printTable(invert(getTimers()))
+        }
+    }elseif(Command==".custom"){
+        if(lastSaid():find("#")>0){
+            local Hex=lastSaid():explode("#")[2,string]
+            local R=Hex:sub(1,2):toNumber(16)
+            local G=Hex:sub(3,4):toNumber(16)
+            local B=Hex:sub(5,6):toNumber(16)
+            Color=vec(R,G,B)
+        }else{
+            local Hex=lastSaid():explode(" ")[2,string]
+            local R=Hex:sub(1,2):toNumber(16)
+            local G=Hex:sub(3,4):toNumber(16)
+            local B=Hex:sub(5,6):toNumber(16)
+            Color=vec(R,G,B)
+        }
+    }else{
+        exit()
+    }
+    timer("changeColor",0)
+}elseif(clk("discoMode")){
+    if(IsDiscoOn){
+        local Color = hsv2rgb(abs(sin(curtime()*30)*800),1,1)
+        holoEntity(1):fLightColor(Color)
+        holoEntity(2):fLightColor(Color)
+        holoEntity(3):fLightColor(Color)
+        holoEntity(4):fLightColor(Color)
+        timer("discoMode",DiscoDelay)
+    }
+}
+#(Updated by Pie The Nice Guy)
