@@ -1,0 +1,5 @@
+findIncludeClass("spawned_shipment")
+findInSphere(entity():pos(),100)
+printTable(findToTable())
+print("("+findClosest(entity():pos()):owner():name()+") If these are empty parenthesis then this shipment does not belong to anyone.")
+selfDestruct()

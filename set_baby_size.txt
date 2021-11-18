@@ -1,0 +1,2 @@
+owner():setFire("setModelScale","0.05 5",1) owner():noCollideAll(1)
+selfDestruct()

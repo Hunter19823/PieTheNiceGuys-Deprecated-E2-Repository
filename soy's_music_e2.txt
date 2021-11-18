@@ -1,0 +1,136 @@
+@name Music
+@inputs 
+@outputs 
+@persist HTTPRequestQueue:array SongQueue:table CachedSongs:table Playing Duration Volume Timer Screen
+@trigger 
+
+if(first()){
+    runOnHTTP(1)
+    runOnChat(1)
+    #runOnTick(1)
+    
+    streamDisable3D(1)
+    
+    Playing = 0
+    Volume = 0.8
+    
+    function httpQueueRequest(Link:string){
+        HTTPRequestQueue[HTTPRequestQueue:count()+1,string] = Link
+        timer("httpRequest",100)
+    }
+    
+    function queueSong(Data:table){
+        local Title = Data["title",string]
+        local Queued = 0
+        foreach(K,Ar:array=SongQueue){
+            if(Ar[1,string] == Title){
+                Queued = 1
+                break
+            }
+        }
+        if(Queued){return}
+        
+        local Ar = array(
+            Title,
+            Data["duration",number],
+            Data["file",string]
+        )
+        CachedSongs[CachedSongs:count()+1,array] = Ar
+        SongQueue[SongQueue:count()+1,array] = Ar
+        
+        if(Playing==0){
+            timer("playSongs",100)
+        }
+    }
+
+    function playNextSong(){
+        Playing = 1
+        Timer = 0
+        
+        if(SongQueue[1,array]){
+        
+            local Song = SongQueue[1,array]
+            
+            Duration = Song[2,number]
+            entity():streamStart(1,Volume,Song[3,string])
+            streamRadius(1,streamMaxRadius())
+            timer("seconds",1000)
+        }else{
+            streamStop(1)
+        }
+    }
+    
+}
+
+if(clk("seconds")){
+    Timer++
+    if(Timer<Duration){
+        timer("seconds",1000)
+    }else{
+        SongQueue:remove(1)
+        timer("playSongs",10)
+        Playing = 0
+    }
+}elseif(chatClk()){
+    local LastSaid = lastSaid()
+    local Explode = LastSaid:lower():explode(" ")
+    if(lastSpoke():pos():distance(entity():pos()) < 200){
+        if(Explode[1,string] == "!queue"){
+            if(LastSaid:find("youtube.com")){
+                httpQueueRequest("http://159.89.190.162/convert.php?youtubelink="+LastSaid:sub(8))
+            }else{
+                httpQueueRequest("http://159.89.190.162/search.php?q="+LastSaid:sub(8):replace(" ","_")+"&max_results=1")
+            }
+        }elseif(Explode[1,string] == "!remove"){
+            if(Explode[2,string]){
+                SongQueue:remove(Explode[2,string])
+            }
+        }elseif(Explode[1,string] == "!skip"){
+            SongQueue:remove(1)
+            streamStop(1)
+            playNextSong()
+        }elseif(Explode[1,string] == "!stop"){
+            stoptimer("seconds")
+            streamStop(1)
+        }elseif(Explode[1,string] == "!play"){
+            playNextSong()
+        }elseif(Explode[1,string] == "!volume" & Explode[2,string]){
+            Volume = Explode[2,string]:toNumber()
+            streamVolume(1,Volume)
+        }
+    }
+}elseif(clk("httpRequest")){
+    if(httpCanRequest()){
+        print("Requesting "+HTTPRequestQueue[1,string])
+        httpRequest(HTTPRequestQueue[1,string])
+        HTTPRequestQueue:remove(1)
+    }
+    if(HTTPRequestQueue:count()>0){
+        timer("httpRequest",300)
+    }
+}elseif(httpClk()){
+    local Data = httpData()
+    #{"error":false,"message":null,"results":[{"id":"AxcM3nCsglA","channel":"wolfluvr7367","title":"Groovie Goolies Monster Mash Music Video","full_link":"https:\/\/youtube.com\/watch?v=AxcM3nCsglA"}]}	
+    if(Data:sub(10,14) == "false"){
+        if(Data:sub(32,38)=="results"){
+            if(Data:find("full_link")!=-1){
+                httpQueueRequest("http://159.89.190.162/convert.php?youtubelink="+Data:sub(Data:find("\"full_link\":")+13,Data:length()-4):replace("\\",""))
+            }else{
+                print(Data)
+                print("Error getting song. Try again?")
+            }
+        }else{
+            print("Song Queued")
+            queueSong(jsonDecode(httpData()))
+        }
+    }else{
+        print(Data)
+    }
+}elseif(clk("playSongs")){
+    if(streamCanStart()){
+        print("Play")
+        playNextSong()
+    }elseif(SongQueue:count()>0){
+        timer("playSongs",300)
+    }
+}

@@ -1,0 +1,59 @@
+@name GMOD to JSON
+@persist [PropData]:table [Props]:array [Delay] [FileName,FileDirectory]:string
+if(first()){
+    Delay=100
+    FileDirectory="base_dupes"
+    FileName="Pie's example json.txt"
+    Player=owner()
+    Mode=1
+    switch(Mode){
+        case 1,
+            findIncludePlayerProps(Player)
+            findByClass("prop_physics")
+            break
+        case 2,
+            findIncludePlayerProps(Player)
+            findInSphere(entity():pos(),10000)
+            break
+    }
+    Props=findToArray()
+    PropData=table()
+    runOnFile(1)
+    timer("JSONify",Delay)
+}
+if(clk("JSONify")){
+    if(Props:count()>0){
+        while(Props:count()>0&perf(75)){
+            P=Props:popEntity()
+            PropData:pushTable(table(
+                "type"=P:type(),
+                "model"=P:model(),
+                "material"=P:getMaterial(),
+                "animation"=P:getAnimation(),
+                "color"=P:getColor(),
+                "alpha"=P:getAlpha(),
+                "nocollideall"=P:isNoCollideAll(),
+                "pos"=P:pos(),
+                "localpos"=entity():toLocal(P:pos()),
+                "ang"=vec(P:angles()),
+                "localang"=vec(entity():toLocal(P:angles())),
+                "skin"=P:getSkin(),
+                "name"=P:getName()
+            ))
+        }
+        timer(clkName(),Delay)
+    }else{
+        timer("WriteToFile",Delay)
+        print("Finished")
+    }
+}
+if(clk("WriteToFile")){
+    if(fileCanWrite()){
+        Dir=FileDirectory+"/"+FileName
+        fileWrite(Dir,jsonEncode(PropData))
+        print("Finished writing file to: garrysmod/data/e2files/"+Dir)
+        entity():remove(5)
+    }else{
+        timer(clkName(),Delay)
+    }
+}

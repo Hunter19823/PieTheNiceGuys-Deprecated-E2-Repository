@@ -1,0 +1,90 @@
+@name Trap Mass RDMers/Admins
+@persist [Players,Clone]:array
+if(first()){
+    runOnChat(1)
+    
+    
+    function entity searchForPlayer(Name:string){
+        local P= findPlayerByName(Name)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Name)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Name)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        if(P:isPlayer()){
+            print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+        }
+        return P
+    }
+    
+    function void entity:trap(){
+        if(This){
+            This["T1",entity]=propSpawn("models/hunter/blocks/cube2x2x2.mdl",owner():pos()+vec(0,0,200),ang(),1)
+            This["T2",entity]=propSpawn("models/hunter/tubes/tube2x2x2.mdl",owner():pos()+vec(0,0,200),ang(),1)
+            This["T1",entity]:propDraw(0)
+            This["T1",entity]:propDraw(0)
+            This["T2",entity]:propDraw(0)
+            This["T2",entity]:propDraw(0)
+            timer(This:id()+";Part",1000)
+        }
+    }
+    
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "!trap",
+            P=searchForPlayer(lastSaid():sub(LS[1,string]:length()+2))
+            if(P){
+                Players:pushEntity(P)
+                Clone=Players:clone()
+                P:trap()
+            }
+            break
+    }
+    
+}
+if(clkName():find("Part")){
+    Param = clkName():explode(";")
+    P=entity(Param[1,string]:toNumber())
+    if(P:isPlayer()){
+        holoCreate(P:id()*10+1,P["T1",entity]:pos(),vec(0))
+        holoCreate(P:id()*10,P["T2",entity]:pos(),vec(0))
+        P["T1",entity]:parentTo(holoEntity(P:id()*10+1))
+        P["T2",entity]:parentTo(holoEntity(P:id()*10))
+        holoPos(P:id()*10+1,P:pos()+vec(0,0,P:height()/2))
+        holoParentAttachment(P:id()*10,P,"head")
+        holoPos(P:id()*10,P:pos()+vec(0,0,P:height()/4*3))
+        holoParentAttachment(P:id()*10+1,P,"head")
+        
+        #timer("Check",1000)
+    }else{
+        print("Player Doesn't Exist")
+    }
+}
+#[
+if(clk("Check")){
+    if(Clone:count()>0){
+        while(Clone:count()>0 & perf(40)){
+            P=Clone:popEntity()
+            if(P){
+                if(P["T1",entity] & P["T2",entity]){
+                    P["T1",entity]:setPos(P:pos()+vec(0,0,P:height()/2))
+                    P["T2",entity]:setPos(P:pos()+vec(0,0,P:height()/4*3))
+                    
+                }else{
+                    P:trap()
+                }
+            }
+        }
+        timer(clkName(),1000)
+    }else{
+        Clone=Players:clone()
+        timer(clkName(),1000)
+    }
+}
+]#

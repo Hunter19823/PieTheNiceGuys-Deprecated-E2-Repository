@@ -1,0 +1,5 @@
+@name Testing Global Music
+if(first()){
+    T=gTable("Public Music",1)
+    print(T["Pie's Music",table][3,string])
+}

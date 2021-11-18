@@ -1,0 +1,40 @@
+@name Rule Searcher
+@persist [Rules,Term,String]:string [Place] [ExplodedRules]:table [FixedRules]:array
+if(first()){
+    runOnChat(1)
+    runOnHTTP(1)
+    if(httpCanRequest()){
+        httpRequest("https://www.exhibitionrp.com/topic/5-darkrp-server-rules/")
+    }else{
+        print("Can't Request :(")
+    }
+}
+if(httpClk()){
+    Rules=httpData()
+    Pos=Rules:find("<div data-role='commentContent'")+136
+    Pos2=Rules:find("</div>",Pos)
+    Rules=Rules:sub(Pos,Pos2)
+    print(Rules)
+    timer("Explode Rules",1000)
+}
+if(clk("Explode Rules")){
+    ExplodedRules=Rules:gmatch("%b><")
+    timer("Print Rules",1000)
+}
+if(clk("Print Rules")){
+    print(ExplodedRules:count()+" lines")
+    timer("FixRules Loop",1000)
+}
+if(clk("FixRules Loop")){
+    while(perf(90) & ExplodedRules:count()>0){
+        Rule=ExplodedRules:popString()
+        if(Rule!="><"){
+            FixedRules:pushString(Rule)
+        }
+    }
+    if(ExplodedRules:count()>0){
+        timer(clkName(),100)
+    }else{
+        print("Actual Rules: " + FixedRules:count())
+    }
+}

@@ -1,0 +1,28 @@
+@name Vault Door Example
+
+@persist VaultDoor:entity
+
+if ( first() ) {
+    
+    Model = "models/freeman/vault/vault_door.mdl"
+    
+    Pos = entity():toWorld( vec(0,0,40) )
+    
+    Angle = entity():toWorld( ang(0,-90,0) ) 
+    
+    VaultDoor = propSpawn(Model,Pos,Angle,1)
+    
+    VaultDoor:setAlpha(0)
+    VaultDoor:noDraw(1)
+    
+    holoCreate(1,Pos,vec(1),Angle,vec(255),Model)
+    holoParent(1,VaultDoor)
+}
+if( VaultDoor:isNoCollideAll() ){
+    VaultDoor:animate(1,1)
+    holoEntity(1):animate(1,1)
+}else{
+    VaultDoor:animate(4,2)
+    holoEntity(1):animate(4,2)
+}
+interval(10)

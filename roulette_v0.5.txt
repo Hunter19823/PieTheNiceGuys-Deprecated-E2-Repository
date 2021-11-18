@@ -1,0 +1,27 @@
+@persist Max Cur Radius
+if(first()){
+    Max=6
+    Radius=100
+    function void pointToPoint(Index,P1:vector ,P2:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),vec(255,0,0),"models/hunter/plates/plate8x8.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,1)
+    }
+    holoCreate(1,entity():pos(),vec(0),entity():angles(),vec(255),"models/hunter/tubes/circle2x2.mdl")
+    holoScaleUnits(1,vec(Radius,Radius,1))
+    timer("Split",1000)
+}
+if(clk("Split")){
+    if(Cur<Max){
+        pointToPoint(Cur+2,holoEntity(1):pos(),holoEntity(1):toWorld(vec(cos(360/Max * Cur)*Radius/2,sin(360/Max * Cur)*Radius/2,0)))
+        Cur++
+        timer(clkName(),1000)
+    }else{
+        print("Finished")
+    }
+}

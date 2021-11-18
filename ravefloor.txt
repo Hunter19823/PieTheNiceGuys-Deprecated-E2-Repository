@@ -1,0 +1,116 @@
+@persist N ColorArray:array Radius
+@inputs Button:number
+if(first()){
+    Radius=1000
+    ColorArray=array(
+    vec(255,0,0),
+    vec(255,32,0),
+    vec(255,64,0),
+    vec(255,96,0),
+    vec(255,128,0),
+    vec(255,160,0),
+    vec(255,192,0),
+    vec(255,224,0),
+    vec(255,255,0),
+    vec(224,255,0),
+    vec(192,255,0),
+    vec(160,255,0),
+    vec(128,255,0),
+    vec(96,255,0),
+    vec(64,255,0),
+    vec(32,255,0),
+    vec(0,255,0),
+    vec(0,255,32),
+    vec(0,255,64),
+    vec(0,255,96),
+    vec(0,255,128),
+    vec(0,255,160),
+    vec(0,255,192),
+    vec(0,255,224),
+    vec(0,255,255),
+    vec(0,224,255),
+    vec(0,192,255),
+    vec(0,160,255),
+    vec(0,128,255),
+    vec(0,96,255),
+    vec(0,64,255),
+    vec(0,32,255),
+    vec(0,0,255),
+    vec(32,0,255),
+    vec(64,0,255),
+    vec(96,0,255),
+    vec(128,0,255),
+    vec(160,0,255),
+    vec(192,0,255),
+    vec(224,0,255),
+    vec(255,0,255),
+    vec(255,0,224),
+    vec(255,0,192),
+    vec(255,0,160),
+    vec(255,0,124),
+    vec(255,0,96),
+    vec(255,0,64),
+    vec(255,0,32)
+    )
+    function void pointToPoint(Index,P1:vector ,P2:vector , Color:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0),ang(),Color,"models/Mechanics/robotics/a4.mdl")
+        holoMaterial(Index,"cs_havana/lightbareon01")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,entity())
+        H:remove(1)
+    }
+    timer("Start",1000)
+}
+if(clk("Start")){
+    E=entity()
+    EPos=E:pos()
+    rangerHitEntities(0)
+    Ranger1=rangerOffset(1000,EPos,E:toLocal(ang()):forward())
+    rangerHitEntities(0)
+    Ranger2=rangerOffset(1000,EPos,E:toLocal(ang(0,90,0)):forward())
+    rangerHitEntities(0)
+    Ranger3=rangerOffset(1000,EPos,E:toLocal(ang(0,180,0)):forward())
+    rangerHitEntities(0)
+    Ranger4=rangerOffset(1000,EPos,E:toLocal(ang(0,270,0)):forward())
+    rangerHitEntities(0)
+    Ranger5=rangerOffset(1000,EPos,E:toLocal(ang()):up())
+    Radius=Ranger1:pos():distance(EPos)
+    Distance=Ranger2:pos():distance(EPos)
+    Radius=Radius>Distance? Distance : Radius
+    Distance=Ranger3:pos():distance(EPos)
+    Radius=Radius>Distance? Distance : Radius
+    Distance=Ranger4:pos():distance(EPos)
+    Radius=Radius>Distance? Distance : Radius
+    Distance=Ranger5:pos():distance(EPos)
+    
+    
+    holoCreate(1,E:toWorld(vec()),vec(Radius/100),E:toWorld(ang()),vec(255),"models/hunter/tubes/circle4x4.mdl"):noDraw(1)
+    holoCreate(2,E:toWorld(vec(0,0,Distance)),vec(Radius/100),E:toWorld(ang()),vec(255),"models/hunter/tubes/circle4x4.mdl"):noDraw(1)
+    holoParent(1,E)
+    holoParent(2,E)
+    N=3
+    timer("RandomBeam",10)
+}
+if(clk("RandomBeam")){
+    Angle1=ang(0,round(random(360)),0)
+    Angle2=ang(0,round(random(360)),0)
+    Distance1=round(random(Radius))
+    Distance2=round(Radius)
+    Ent1=holoEntity(1)
+    Ent2=holoEntity(2)
+    holoAng(1,Ent1:toWorld(Angle1))
+    holoAng(2,Ent2:toWorld(Angle2))
+    N++
+    Max=20
+    if(N>Max+3){
+        N=3
+    }
+    Color=ColorArray[ceil(random(ColorArray:count())),vector]
+    pointToPoint(N,Ent1:toWorld(vec(Distance1,0,0)),Ent2:toWorld(vec(Distance2,0,0)),Color)
+    timer("RandomBeam",250)
+}

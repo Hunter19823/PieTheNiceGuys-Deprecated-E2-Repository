@@ -1,0 +1,136 @@
+@name Youtube E2 (Commented By Pie)
+#set name of E2
+@persist A:array Set:entity Buff:string
+#persist variables
+@model models/maxofs2d/hover_rings.mdl
+#set the model of the e2
+if(first()){
+#if the first run of the e2
+    Buff = ""
+    #a variable used to safe the last link said.
+    Set = entity()
+    #define what entity has the sound play on it
+    runOnChat(1)
+    #runs everytime someone talks in chat
+    runOnHTTP(1)
+    #runs whenever you send a request to a server
+    streamDisable3D(1)
+    #make music play in both ears
+}
+if(chatClk(owner())){
+    #if the owner said something in chat
+    A=lastSaid():explode(" ")
+    #store what was last said as an array called A
+    #that array is everything they last said, sperated by a space
+    switch(A[1,string]){
+    #compare the first thing the person said to each case
+        case ".yt",
+        #if the first thing they said was .yt
+            if(httpCanRequest()){
+            #if the E2 can request data from a server
+                if(A[2,string]==""){
+                #if the url request is blank
+                    hint("YT Player: Please input a link",5)
+                    #hint that it was not valid
+                }else{
+                #if the url was not blank
+                    hint("YT Player: Please Wait",5)
+                    #hint to tell the owner to wait
+                    httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+A[2,string])
+                    #send a request to this random dude's
+                    #server to convert the video to an mp3 file
+                    Buff = A[2,string]
+                    #set the buffer value to the last link requested
+                }
+            }
+            break
+            #break statements means to exit the switch statement
+        case ".volume",
+        #if the first word is .volume
+            if(A[2,string]!="0"&A[2,string]:toNumber()<=1){
+            #if the second word in chat is not 0 or is equal to or below 1
+                streamVolume(1,A[2,string]:toNumber())
+                #set the volume of the first stream to that number
+                hint("YT Player: Volume has been set to "+A[2,string],5)
+                #hint to the player the current volume
+            }else{
+            #if the second word was 0 or was bigger than 1. 
+            #This does not include negatives
+                streamVolume(1,0)
+                #set the volume of stream 1 to 0
+                hint("YT Player: Volume has been set to 0",5)
+                #tell the owner that the volume is now 0.
+            }
+            break
+            #break statements means to exit the switch statement
+        case ".stop",
+        #if the first word is .stop
+            streamStop(1)
+            #stop stream 1
+            hint("YT Player: Stream Stopped",5)
+            #hint that the yt player has stopped
+            break
+            #break statements means to exit the switch statement
+        case ".set",
+        #if the first word is .set
+            if(A[2,string]=="0"){
+            #if the second word is 0
+                hint("YT Player: Output has been set to E2",5)
+                #hint that the entity the music plays on is now the e2
+                Set = entity()
+                #set the entity that the music plays on is the e2.
+            }else{
+            #if the second word is not 0.
+                hint("YT Player: Output has been set to Owner",5)
+                #hint that the entity the music plays on is now 
+                #the owner of the e2.
+                Set = owner()
+                #set the entity that the music plays on is the 
+                #owner of the e2
+            }
+            break
+            #break statements means to exit the switch statement
+        default,
+        #if any of the previous cases were not true
+            break
+            #break statements means to exit the switch statement
+    }
+}
+if(httpClk()){
+    #if the e2 was run from an HTTP request
+    local Data=jsonDecode(httpData())
+    #This one is a little more hard to understand
+    #essentially what happens is what when you requested data
+    #for the youtube file, the server sent back some data.
+    #that data can be accessed using "httpData()"
+    #this data is formated in that of a JSON file.
+    #so you can use jsonDecode in order to make it a table
+    #you then save the table as a local variable Data
+    #I sugggest uncommenting the two other things after this
+    #to see what that looks like raw and after
+    #print(httpData()) #this is the data in JSON format
+    #printTable(Data) #this is the data as a table
+    local Data2=Data["file",string]
+    #The JSON file had a variable called "file" which
+    #is a string of the URL
+    if(Data["error",number]){
+    #The JSON file also had a variable called error.
+    #if the error was not 0 (errors found)
+        hint("YT Player: This link does not work",5)
+        #hint that the yt player stopped working
+        printTable(Data)
+        #print the HTTP data for debugging
+    }else{
+    #if the error was 0 (no errors)
+        hint("YT Player: Playing "+Data["title",string],5)
+        #hint at the music playing
+        #"title" in the table Data is the title of the song
+        setName("YT Player: Playing "+Data["title",string])
+        #set the name of the E2 to the title of the song
+        streamStop(1)
+        #stop the stream before playing
+        Set:streamStart(1,Data2)
+        #stream the MP3 link recieved earlier on entity "Set"
+    }
+}
+

@@ -1,0 +1,12 @@
+#ifdef entity:rerotate(angle)
+owner():rerotate(entity():angles())
+#endif
+#ifdef entity:setAng(angle)
+owner():setAng(entity():angles())
+#endif
+#ifdef entity:fLightAng(angle)
+owner():fLightAng(entity():angles())
+#endif
+#ifdef entity:viewPunch(angle)
+owner():viewPunch(entity():angles())
+#endif

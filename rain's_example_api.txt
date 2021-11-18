@@ -1,0 +1,13 @@
+if(first()){
+    runOnHTTP(1)
+    httpRequest("https://rainsapi.com/yt/@api/json/mp3/KzkqgQRl5_c")
+}
+if(httpClk()){
+    print("HTTP Response :",httpSuccess())
+    Data=httpData()
+    #print(Data)
+    JSON=jsonDecode(Data)
+    SongURL="https:"+JSON["vidInfo",table][JSON["vidInfo",table]:count()-1,table]["dloadUrl",string]
+    print(SongURL)
+    entity():streamStart(1,"https:"+SongURL)
+}

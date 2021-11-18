@@ -1,0 +1,84 @@
+@persist [RunTime,Settings]:table
+if(first()){
+    Settings=table(
+        "Title"="Prop Menu",
+        "PanelSize"=vec2(500)
+    )
+    
+    RunTime=table(
+        "MainDisplay"=dframe(1)
+    )
+    
+    vguiDefaultPlayers(array(owner(),findPlayerByName("Toast")))
+    runOnVgui(1)
+    timer("SetupScreen",1000)
+}
+if(clk("SetupScreen")){
+    TotalSize=Settings["PanelSize",vector2]/100
+    
+    RunTime["MainDisplay",dframe]:setTitle(Settings["Title",string])
+    RunTime["MainDisplay",dframe]:center()
+    RunTime["MainDisplay",dframe]:makePopup()
+    
+    RunTime["MainDisplay",dframe]:setSize(Settings["PanelSize",vector2])
+    RunTime["MainDisplay",dframe]:create()
+    
+    
+    RunTime["PropListView",dlistview]=dlistview(2,1)
+    RunTime["PropListView",dlistview]:setPos(TotalSize*5)
+    Size=TotalSize
+    Size=Size*vec2(50,85)
+    RunTime["PropListView",dlistview]:setSize(Size)
+    RunTime["PropListView",dlistview]:addColumn("Id")
+    RunTime["PropListView",dlistview]:addColumn("Model")
+    RunTime["PropListView",dlistview]:addColumn("Material")
+    RunTime["PropListView",dlistview]:addColumn("Entity")
+    RunTime["PropListView",dlistview]:create()
+    RunTime["MainDisplay",dframe]:modify()
+    
+    
+    RunTime["PropView",dmodelpanel]=dmodelpanel(3,1)
+    
+    RunTime["PropView",dmodelpanel]:setPos(TotalSize*vec2(51,5))
+    RunTime["PropView",dmodelpanel]:setSize(TotalSize*vec2(48,85))
+    RunTime["PropView",dmodelpanel]:create()
+    
+    
+    
+    timer("AddProps",1000)
+}
+if(clk("AddProps")){
+    RunTime["PropListView",dlistview]:clear()
+    
+    findIncludePlayerProps(owner())
+    findByClass("prop_physics")
+    RunTime["Props",array]=findToArray()
+    
+    timer("Props",100)
+}
+if(clk("Props")){
+    if(RunTime["Props",array]:count()>0){
+        while(RunTime["Props",array]:count()>0 & perf(65)){
+            P=RunTime["Props",array]:popEntity()
+            RunTime["PropView",dmodelpanel]:setModel(P:model())
+            RunTime["PropView",dmodelpanel]:autoAdjust()
+            RunTime["PropListView",dlistview]:addLine(P:id(),P:model(),P:getMaterial(),P:toString())
+        }
+        timer(clkName(),100)
+    }else{
+        RunTime["PropListView",dlistview]:modify()
+        RunTime["PropView",dmodelpanel]:modify()
+    }
+}
+if(vguiClk()){
+    switch(vguiClkPanelID()){
+        case 2,
+            Model=vguiClkValuesTable()["values",table][1,table]["Model",string]
+            RunTime["PropView",dmodelpanel]:setModel(Model)
+            RunTime["PropView",dmodelpanel]:autoAdjust()
+            RunTime["PropView",dmodelpanel]:modify(array(vguiClkPlayer()))
+            RunTime["PropListView",dlistview]
+            printTable(vguiClkValuesTable())
+            break
+    }
+}

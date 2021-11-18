@@ -1,0 +1,55 @@
+@name Whoever Masterio is
+@persist [Counter,Radius,NumberOfModels] [Target]:entity
+if(first()){
+    runOnChat(1)
+    
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerBySteamID64(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerByName(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "stare",
+            P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                R=LS[3,string]:toNumber()
+                NumberOfModels=LS[4,string]:toNumber()
+                Target=P
+                Radius=R
+                interval(1000)
+            }
+            break
+    }
+}
+if(clk()){
+    if(Counter<=NumberOfModels){
+        RandomAngle=random(Target:getFOV()/2*-1,Target:getFOV()/2)
+        Pos=Target:toWorld(vec(cos(RandomAngle),sin(RandomAngle),0)*Radius)
+        Ang=Target:toWorld(ang(0,RandomAngle,0))
+        holoCreate(Counter,Pos,vec(-1),Ang+ang(180,0,0),vec(255),Target:model()):animate(3,1)
+        holoParent(Counter,Target)
+        holoVisible(Counter,players(),0)
+        holoVisible(Counter,owner(),1)
+        holoVisible(Counter,Target,1)
+        holoRenderFX(Counter,15)
+        holoEntity(Counter):remove(NumberOfModels-Counter)
+        Counter++
+        interval(1000)
+    }else{
+        Pos=Target:toWorld(vec(cos(RandomAngle),sin(RandomAngle),0)*Radius)
+        owner():effectSpawn("Explosion",Pos,1)
+        Counter=0
+    }
+    
+}

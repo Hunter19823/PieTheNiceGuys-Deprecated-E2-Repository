@@ -1,0 +1,20 @@
+@name Look Properties
+@persist E:entity
+if(first())
+{
+    runOnKeys(owner(),1)
+}
+if (keyClkPressed()=="f")
+{
+    E=owner():aimEntity()
+    if (E:isValid()){
+        print("Physics\n"+
+        "\nPersistant? "+E:isPersistent()+
+        "\nPhysics? "+E:isPersistent()+
+        "\nName: "+E:getName()+
+        "\nModel: "+E:model()+
+        "\nElasticity: "+E:propGetElasticity()+
+        "\nFriction: " + E:propGetFriction())
+        
+    }
+}

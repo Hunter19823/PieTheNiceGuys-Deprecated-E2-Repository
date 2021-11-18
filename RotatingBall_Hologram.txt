@@ -1,0 +1,28 @@
+@name 
+@inputs 
+@outputs 
+@persist B E:entity A:array
+@trigger 
+interval(100)
+if(first()){
+    holoCreate(1,entity():toWorld(vec(0,0,50)))
+    #holoCreate(2,entity():toWorld(vec(0,0,75)))
+    holoModel(1,"models/maxofs2d/hover_rings.mdl")
+    #Bones=holoEntity(1):bones()
+    #print(Bones:count())
+    #print(Bones[0,bone]:index())
+    #ParentTO=holoEntity(1):parent()
+    #print(ParentTO:name())
+    #holoParent(2,ParentTO)
+    local Size=vec(0.5)
+    holoBoneScale(1,0,Size)
+    holoBoneScale(1,1,Size)
+    holoBoneScale(1,2,Size*2)
+    holoBoneScale(1,3,Size/2)
+    holoBoneScale(1,4,Size)
+    holoBoneScale(1,5,Size/2)
+    holoBoneScale(1,6,Size)
+    holoBoneScale(1,7,Size)
+
+}
+

@@ -1,0 +1,33 @@
+@persist [FileName,URL,WriteData]:string Matches:array
+if(first()){
+    URL="https://www.youtube.com/watch?v=UJptun8sq0I"
+    FileName="server_response_actual.txt"
+    runOnHTTP(1)
+    runOnFile(1)
+    timer("CreateFile",500)
+}
+if(clk("CreateFile")){
+    if(fileCanWrite()){
+        print("Sending Request to "+URL)
+        httpRequest(URL)
+    }else{
+        print("Can't write to file yet")
+        timer(clkName(),1000)
+    }
+}
+if(clk("WriteFile")){
+    if(fileCanWrite()){
+        print("Writing data to "+FileName)
+        fileWrite(FileName,WriteData)
+    }
+}
+if(fileClk()){
+    print(fileStatus())
+}
+if(httpClk()){
+    WriteData=httpData()
+    Matches=WriteData:match("=\".*\"")
+    print("Data Received")
+    WriteData=Matches:concat("\n")
+    timer("WriteFile",1000)
+}

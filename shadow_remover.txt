@@ -1,0 +1,16 @@
+@name Shadow Remover
+@persist [WantToRemove] [EntityToRemove]:entity
+if(first()){
+    runOnKeys(owner(),1)
+}
+if(keyClk(keyClk())==1){
+    switch(keyClkPressed()){
+        case "f",
+            P=keyClk():aimEntity()
+            if(P:isValidPhysics()){
+                P:propShadow(0)
+            }
+            break
+    }
+}
+

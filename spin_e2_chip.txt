@@ -1,0 +1,31 @@
+@name Rotatinator
+@inputs E2:entity
+@persist [Timer,Speed,IsRunning]
+if(first()){
+    Timer=100
+    Speed=20
+    runOnChat(1)
+}
+if(->E2){
+    interval(Timer)
+    if(IsRunning){
+        Angle=curtime()*Speed%360
+        E2:setAng(ang(0,Angle,0))
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".start",
+            IsRunning=1
+            break
+        case ".stop",
+            IsRunning=0
+            break
+        case ".speed",
+            Speed = LS[2,string]:toNumber()
+            break
+        
+    }
+    
+}

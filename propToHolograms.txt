@@ -1,0 +1,481 @@
+@name Pies HoloCreation Tool
+@persist State Entities:table Time LastEntry:table Size Parent:entity Visible Scale Counter SpecialTerm:string ParentString:string
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    noDuplications()
+    State=0
+    Time=350
+    Size=650
+    Scale=0.25
+    Counter=0
+    SpecialTerm="base"
+    ParentString="entity()"
+    #holoCreate(-1,entity():pos()-vec(0,0,0.1),vec(Size*Scale/4,Size*Scale/4,0.02),ang(),vec(200,200,200))
+    #holoScaleUnits(-1,vec(Size/4,Size/4,0.02))
+    propSpawnUndo(1)
+    function void table:traceShot(Index) {
+        if(holoCanCreate()){
+            local Target=This["PlayerAimPos",vector]
+            local EyePos=This["PlayerEyePos",vector]
+            local EyeAng=This["PlayerEyeAngles",angle]
+            holoCreate(Index,EyePos-((EyePos-Target)/2),vec(0.1),EyeAng,vec(255,0,0),"models/hunter/plates/plate8x8.mdl")
+            holoScaleUnits(Index,vec(EyePos:distance(Target),1,1))
+            holoDisableShading(Index,1)
+            holoParent(Index,Parent)
+        }
+    }
+    function table entity:convertToTable(){
+        #[
+        local Table=table(
+        "Owner"=This:owner(),
+        "Type"=This:type(),
+        "E2Name"=This:getName())
+        ]#
+        local Table = table()
+        if(This!=noentity()){
+            Table=table(
+            "Valid"=This:isValid(),
+            "ValidProp"=This:isValidPhysics(),
+            "Model"=This:model(),
+            "Material"=This:getMaterial(),
+            "Color"=This:getColor(),
+            "TeamColor"=teamColor(This:team()),
+            "Color4"=This:getColor4(),
+            "Alpha"=This:getAlpha(),
+            "Skin"=This:getSkin(),
+            "SkinCount"=This:getSkinCount(),
+            "Angle"=This:angles(),
+            "Position"=This:pos(),
+            "Name"=This:name(),
+            "Inertia"=This:inertia(),
+            "Gravity"=This:gravity(),
+            "Player"=This:isPlayer(),
+            "PlayerAimPos"=This:aimPos(),
+            "PlayerEyePos"=This:shootPos()+This:eye(),
+            "PlayerEyeAngles"=This:eyeAngles(),
+            "Owner"=This:owner(),
+            "Parent"=This:parent(),
+            "Driver"=This:driver(),
+            "BoundingBox"=This:boxSize(),
+            "BoneCount"=This:boneCount(),
+            "CreationID"=This:creationID(),
+            "ID"=This:id(),
+            "Passenger"=This:passenger(),
+            "Child"=This:children(),
+            "Ping"=This:ping(),
+            "E2Name"=This:getName(),
+            "Type"=This:type(),
+            "Deaths"=This:deaths(),
+            "Frags"=This:frags(),
+            "Health"=This:health(),
+            "Animation"=This:getAnimation(),
+            "Friends"=This:friends(),
+            "TimeConntect"=This:timeConnected(),
+            "Vehicle"=This:vehicle(),
+            "Tool"=This:tool(),
+            "Frags"=This:frags(),
+            "Physic"=This:isPhysics(),
+            "UUID"=This:playerUniqueId(),
+            "SteamID"=This:steamID(),
+            "SteamID64"=This:steamID64(),
+            "Steam Friends"=This:steamFriends(),
+            "UserGroup"=This:getUserGroup(),
+            "ShipmentName"=This:shipmentName(),
+            "ShipmentModel"=This:shipmentModel(),
+            "ShipmentPrice"=This:shipmentPrice(),
+            "ShipmentAmount"=This:shipmentAmount(),
+            "ShipmentType"=This:shipmentType(),
+            "LastSaid"=This:lastSaid(),
+            "LastSaidTeam"=This:lastSaidTeam(),
+            "LastWhen"=This:lastSaidWhen(),
+            "Mass"=This:mass(),
+            "CPU"=This:cpuUsage(),
+            "OPS"=This:ops(),
+            "Money"=This:money(),
+            "Height"=This:height(),
+            "Team"=This:team(),
+            "PrimaryAmmoType"=This:weapon():primaryAmmoType(),
+            "SecondaryAmmoType"=This:weapon():secondaryAmmoType(),
+            "PrimaryAmmoCount"=This:ammoCount(This:weapon():primaryAmmoType()),
+            "SecondaryAmmoCount"=This:ammoCount(This:weapon():secondaryAmmoType()),
+            "WeaponInHand"=This:weapon(),
+            "This"=This,
+            "NoCollide"=This:isNoCollideAll()
+            )
+            if(This:isPlayer()){
+                Table["Armor",number]=This:armor()
+            }
+        }
+        return Table
+    }
+    function void table:testEntry(Number){
+        setName(Number+"")
+        if(This[Number,entity]:isValid()){
+            local Table=This[Number,entity]:convertToTable()
+            LastEntry=Table
+        }elseif(Number<=This:count()){
+            
+        }else{
+            print("Finished After: "+Number+" Cases.<br>"+holoRemainingSpawns())
+            stopAllTimers()
+            #timer("Reset",5000)
+            exit()
+        }
+    }
+    function void table:holoSave(Number){
+        if(This["Valid",number]){
+            local Model = This["Model",string]
+            local Material = This["Material",string]
+            local Color = This["Color",vector]
+            local Alpha = This["Alpha",number]
+            local Position = round(This["Position",vector],2)
+            local ParentPos=entity():pos()
+            local Relative = (ParentPos-Position)*-1
+            local Skin = This["Skin",number]
+            local Animation = This["Animation",number]
+            local Angle = round(This["Angle",angle],2)
+            local TeamColor = This["TeamColor",vector]
+            local FinPos=round(Relative*Scale,2)
+            local OutPut="if(clk(\""+SpecialTerm+Number+"\")){"
+            if(Model!=""){
+                OutPut+="holoCreate("+Number+",entity():pos()+vec("+FinPos:x()+","+FinPos:y()+","+FinPos:z()+"),vec("+Scale+"),ang("+Angle:pitch()+","+Angle:yaw()+","+Angle:roll()+"),vec("+Color:x()+","+Color:y()+","+Color:z()+"),\""+Model+"\") "
+                OutPut+="holoAlpha("+Number+","+Alpha+") "
+                if(Material!=""){
+                    OutPut+="holoMaterial("+Number+",\""+Material+"\") "
+                }
+                if(Skin!=0){
+                    OutPut+="holoSkin("+Number+","+Skin+") "
+                }
+                if(Animation!=0){
+                    OutPut+="holoEntity("+Number+"):animate("+Animation+",1) "
+                }
+                if(holoEntity(Number):height()!=This["Height",number]){
+                    #holoScale(Number,vec(This["Height",number]/holoEntity(Number):height()))
+                }
+                if(This["Player",number]){
+                    #holoPlayerColor(Number,TeamColor)
+                    #This:traceShot(holoRemainingSpawns())
+                }
+                OutPut+="holoParent("+Number+","+ParentString+") "
+                OutPut+="timer(\""+SpecialTerm+(Number+1)+"\",Speed)}"
+            }else{
+                print("#"+Model)
+            }
+            print(OutPut)
+            
+        }
+    }
+    function void table:holoCopy(Number){
+        if(This["Valid",number]){
+            local Model = This["Model",string]
+            local Material = This["Material",string]
+            local Color = This["Color",vector]
+            local Alpha = This["Alpha",number]
+            local Position = This["Position",vector]
+            local Skin = This["Skin",number]
+            local Animation = This["Animation",number]
+            local Angle = This["Angle",angle]
+            local TeamColor = This["TeamColor",vector]
+            if(holoCanCreate()){
+                if(Model!=""){
+                    holoCreate(Number,Position,vec(1),Angle,Color,Model)
+                    holoAlpha(Number,Alpha)
+                    if(Material!=""){
+                        holoMaterial(Number,Material)
+                    }
+                    if(Skin!=-1){
+                        holoSkin(Number,Skin)
+                    }
+                    if(Animation!=-1){
+                        holoEntity(Number):animate(Animation,1)
+                    }
+                    if(holoEntity(Number):height()!=This["Height",number]){
+                        holoScale(Number,vec(This["Height",number]/holoEntity(Number):height()))
+                    }
+                    if(This["Player",number]){
+                        holoPlayerColor(Number,TeamColor)
+                        #This:traceShot(holoRemainingSpawns())
+                    }
+                    holoParent(Number,Parent)
+                }
+            }
+        }
+    }
+    function void table:holoReplica(Number,Size){
+        if(This["Valid",number]){
+            local Model = This["Model",string]
+            local Material = This["Material",string]
+            local Color = This["Color",vector]
+            local Alpha = This["Alpha",number]
+            local Position = This["Position",vector]
+            local ParentPos=entity():pos()
+            local Relative = (ParentPos-Position)*-1
+            local Skin = This["Skin",number]
+            local Animation = This["Animation",number]
+            local Angle = This["Angle",angle]
+            local TeamColor = This["TeamColor",vector]
+            local FinPos=ParentPos+Relative*Size
+            if(holoCanCreate()) {
+                if(Model!=""){
+                    holoCreate(Number,FinPos,vec(1),Angle,Color,Model)
+                    holoAlpha(Number,Alpha)
+                    if(Material!=""){
+                        holoMaterial(Number,Material)
+                    }
+                    if(Skin!=-1){
+                        holoSkin(Number,Skin)
+                    }
+                    if(Animation!=-1){
+                        holoEntity(Number):animate(Animation,1)
+                    }
+                    holoScale(Number,vec(1*Size))
+                    if(This["Player",number]){
+                        holoPlayerColor(Number,TeamColor)
+                        #This:traceShot(holoRemainingSpawns())
+                    }
+                    holoParent(Number,Parent)
+                    holoDisableShading(Number,1)
+                }
+            }
+        }
+    }
+    function void table:propSpawnCode() {
+        if(This["Valid",number]){
+            local Model = This["Model",string]
+            local Material = This["Material",string]
+            local Color = This["Color",vector]
+            local Alpha = This["Alpha",number]
+            local Position = This["Position",vector]
+            local ParentPos = entity():pos()
+            local Relative = (ParentPos-Position)*-1
+            local Skin = This["Skin",number]
+            local Angle = round(This["Angle",angle],4)
+            local FinPos = round(Relative,4)
+            Counter++
+            local OutPut = "if(clk(\""+SpecialTerm+Counter+"\")){"
+            if(Model!=""){
+                OutPut+="P=propSpawn(\""+Model+"\",entity():pos()+vec("+FinPos:x()+","+FinPos:y()+","+FinPos:z()+"),ang("+Angle:pitch()+","+Angle:yaw()+","+Angle:roll()+"),1) "
+                if(Alpha!=255){
+                    OutPut+="P:setAlpha("+Alpha+") "
+                }
+                if(Color!=vec(255)){
+                    OutPut+="P:setColor("+Color:x()+","+Color:y()+","+Color:z()+") "
+                }
+                if(Material!=""){
+                    OutPut+="P:setMaterial(\""+Material+"\") "
+                }
+                if(Skin!=0){
+                    OutPut+="P:setSkin("+Skin+") "
+                }
+                if(This["NoCollide",number]!=0){
+                    OutPut+="P:noCollideAll("+This["NoCollide",number]+") "
+                }
+                OutPut+="P:parentTo("+ParentString+") "
+                OutPut+="timer(\""+SpecialTerm+(Counter+1)+"\",Speed)}"
+                print(OutPut)
+            }
+        }
+    }
+    function void table:propCopy(){
+        if(This["Valid",number]){
+            local Model = This["Model",string]
+            local Material = This["Material",string]
+            local Color = This["Color",vector]
+            local Alpha = This["Alpha",number]
+            local Position = This["Position",vector]
+            local Skin = This["Skin",number]
+            local Animation = This["Animation",number]
+            local Angle = This["Angle",angle]
+            if(propCanCreate() && propCanSpawn()){
+                if(Model!=""){
+                    local Prop=propSpawn(Model,Position,Angle,1)
+                    Prop:setAlpha(Alpha)
+                    Prop:setColor(Color)
+                    if(Material!=""){
+                        Prop:setMaterial(Material)
+                    }
+                    if(Skin!=-1){
+                        Prop:setSkin(Skin)
+                    }
+                    #Prop:noCollideAll(This["NoCollide",number])
+                    Prop:parentTo(Parent)
+                }
+            }
+        }
+    }
+    function void table:propUnDraw(NoDraw){
+        if(This["Valid",number]){
+            This["This",entity]:noDraw(NoDraw)
+        }
+    }
+    function void table:propParent(Ent:entity ){
+        if(This["Valid",number]){
+            This["This",entity]:parentTo(Ent)
+        }
+    }
+    timer("Parent",0)
+    #holoParent(-1,Parent)
+    #spawnExpression2(entity():pos()+vec(Size*2,0,0),entity():angles(),"models//expression 2/cpu_microchip.mdl")
+}elseif(clk("Reset")){
+    reset()
+}elseif(clk("Parent")){
+    findClearWhiteList()
+    findAllowPlayerProps(findPlayerBySteamID("STEAM_0:0:132057860"))
+    findByModel("models/maxofs2d/hover_rings.mdl")
+    if(findSortByDistance(entity():pos())==0){
+        Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+    }else{
+        if(find():pos():distance(entity():pos())>1000){
+            Parent=Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+        }else{
+            Parent=find()
+        }
+    }
+    Parent:setNoCollideAll()
+}else{
+    switch(State){
+        case 0,
+            local Blacklist=array(owner(),entity(),Parent)
+            findClearWhiteList()
+            findClearBlackList()#[
+            findExcludeEntities(Blacklist)
+            findExcludeModel("models/maxofs2d/hover_rings.mdl")
+            findExcludeModel("models/freeman/compact_printer.mdl")
+            findExcludeClass("bm2_bitminer_server")
+            findExcludeClass("bm2_bitminer_rack")
+            findExcludeClass("bm2_bitminer_1")
+            findExcludeClass("bm2_bitminer_2")
+            findExcludeClass("bm2_generator")
+            findExcludeClass("light_spot")
+            findExcludeClass("hl2mp_ragdoll")
+            findExcludeClass("shadow_control")
+            findExcludeClass("env_tonemap_controller")
+            findExcludeClass("func_brush")
+            findExcludeClass("bm2_fuel")
+            findExcludeClass("manipulate_bone")
+            findExcludeClass("gmod_hands")
+            findExcludeClass("env_sprite")
+            findExcludeClass("env_soundscape")
+            findExcludeClass("mg_automata")
+            findExcludeClass("spawned_money")
+            findExcludeClass("spawned_weapon")
+            findExcludeClass("gmod_wire_hologram")
+            findExcludeClass("func_breakable_surf")
+            findExcludeClass("env_fog_controller")
+            findExcludeClass("env_sun")
+            findExcludeClass("ambient_generic")
+            findExcludeClass("wol_reel")
+            findExcludeClass("sammyservers_textscreen")
+            findExcludeClass("prop_door_rotating")
+            findExcludeClass("entity_blocker")
+            findExcludeClass("info_ladder_dismount")
+            findExcludeClass("rhandcuffsent")
+            findExcludeClass("bm2_power_lead")
+            findExcludeClass("bm2_extention_lead")
+            findExcludeClass("bm2_plug_1")
+            findExcludeClass("keyframe_rope")
+            findExcludeClass("func_door_rotating")
+            findExcludeClass("func_button")
+            findExcludeClass("func_door")
+            findExcludeClass("player")
+            findExcludeClass("redsushi_slot")
+            findExcludeClass("double_or_nothing")
+            findExcludeClass("wheel_of_luck")
+            findExcludeClass("keypad")
+            findExcludeClass("zmlab_frezzingtray")
+            findExcludeClass("zmlab_frezzer")
+            findExcludeClass("zmlab_meth")
+            findExcludeClass("zmlab_methylamin")
+            findExcludeClass("zmlab_palette")
+            findExcludeClass("zmlab_combiner")
+            findExcludeClass("zmlab_filter")
+            findExcludeModel("models/maxofs2d/hover_rings.mdl")
+            findExcludeClass("rprotect_scanner")]#
+            findIncludeClass("player")
+            #findIncludeClass("prop_physics")
+            #findIncludeClass("redsushi_slot")
+            #findIncludeClass("func_useableladder")
+            #findIncludeClass("double_or_nothing")
+            #findIncludeClass("wheel_of_luck")
+            #findIncludeClass("gmod_wire_hologram")
+            #findIncludeClass("jail_wall")
+            #findIncludeClass(" ")
+            #findIncludeModel("models/freeman/compact_printer.mdl")
+            local BR=entity():pos() - vec(Size)
+            local TL=entity():pos() + vec(Size)
+            findInBox(BR,TL)
+            #findByClass("prop_physics")
+            #findByClass("gmod_wire_expression2")
+            Entities=findToTable()
+            printTable(findToTable())
+            break
+        default,
+            if(0){
+                if(State%2==0){
+                    printTable(LastEntry)
+                }else{
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(0){
+                if(State%2==0){
+                    LastEntry:propCopy()
+                }else{
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(0){
+                if(State%2==0){
+                    LastEntry:holoCopy(State/2)
+                }else{
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(1){
+                if(State%2==0){
+                    LastEntry:holoReplica(State/2,Scale)
+                }else {
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(0){
+                if(State%2==0){
+                    LastEntry:holoSave(State/2)
+                }else {
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(0){
+                if(State%2==0){
+                    LastEntry:propUnDraw(0)
+                }else {
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(0){
+                if(State%2==0){
+                    LastEntry:propParent(Parent)
+                }else {
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+            if(0){
+                if(State%2==0){
+                    LastEntry:propSpawnCode()
+                }else {
+                    Entities:testEntry((State+1)/2)
+                }
+                break
+            }
+    }
+    State++
+    setName(""+opcounter())
+}
+interval(Time)

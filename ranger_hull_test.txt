@@ -1,0 +1,30 @@
+@persist [Size]:vector [Distance]
+if(first()){
+    Distance=100
+    Size=vec(50,50,0)
+    Distance=100
+    entity():setPos(vec(-2000,-2000,-150))
+    rangerIgnoreWorld(1)
+    Ranger=rangerHull(Distance,Size)
+    if(Ranger:hit()){
+        printTable(Ranger:toTable())
+    }else{
+        print("Ranger Missed")
+    }
+    timer("Holos",100)
+}
+if(clk("Holos")){
+    holoCreate(1,entity():toWorld(Size/2),vec(0.25))
+    holoCreate(2,entity():toWorld(Size/2*-1),vec(0.25))
+    holoCreate(3,entity():toWorld(Size/2+vec(0,0,Distance)),vec(0.25))
+    holoCreate(4,entity():toWorld(Size/2*-1+vec(0,0,Distance)),vec(0.25))
+}
+#timer("Ranger",0)
+if(clk("Ranger")){
+    Ranger=rangerHull(Distance,Size)
+    if(Ranger:hit()){
+        printTable(Ranger:toTable())
+    }else{
+        print("Ranger Missed")
+    }
+}

@@ -1,0 +1,171 @@
+@name RDM Manager Lookup Tool
+@persist RDMManager:gtable CleanupTimer
+if(first()){
+    RDMManager=gTable("RDM Manager E2 Testing",1)
+    CleanupTimer=60
+    runOnChat(1)
+    
+    function entity pointToPoint(Index,P1:vector ,P2:vector , Color:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/plates/plate8x8.mdl")
+        holoRenderFX(Index,15)
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        return holoEntity(Index)
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".print",
+            printTable(RDMManager:toTable())
+            break
+        case ".clear",
+            holoDeleteAll(1)
+            break
+        case ".steamid",
+            if(!RDMManager[LS[2,string],table]){
+                print("That Table Entry does not exist")
+            }else{
+                switch(LS[3,string]:lower()){
+                    case "kil",
+                    case "kills",
+                    case "kils",
+                    case "kill",
+                        if(LS[4,string]:toNumber()>=0 & RDMManager[LS[2,string],table]["Kills",table]:count()>0 & LS[4,string]!=""){
+                            if(RDMManager[LS[2,string],table]["Kills",table]:exists(LS[4,string]:toNumber())){
+                                if(LS[5,string]:toNumber()>0){
+                                    Index=holoAmount()
+                                    Info=RDMManager[LS[2,string],table]["Kills",table][LS[4,string]:toNumber(),table]
+                                    holoCreate(Index,Info["VictimPos",vector],vec(1),Info["VictimAng",angle],vec(255),Info["VictimModel",string]):animate(Info["VictimAnimation",number])
+                                    pointToPoint(Index+1,Info["KillerEyePos",vector],Info["KillerLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                    holoCreate(Index+2,Info["KillerPos",vector],vec(1),Info["KillerAng",angle],vec(255),Info["KillerModel",string]):animate(Info["KillerAnimation",number])
+                                    pointToPoint(Index+3,Info["VictimEyePos",vector],Info["VictimLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                    holoEntity(Index):remove(CleanupTimer)
+                                    holoEntity(Index+2):remove(CleanupTimer)
+                                }else{
+                                    printTable(RDMManager[LS[2,string],table]["Kills",table][LS[4,string]:toNumber(),table])
+                                }
+                                
+                            }else{
+                                print("Out of index range")
+                            }
+                        }else{
+                            printTable(RDMManager[LS[2,string],table]["Kills",table])
+                            print("Kill Count: "+RDMManager[LS[2,string],table]["Kills",table]:count())
+                        }
+                        break
+                    case "deds",
+                    case "ded",
+                    case "died",
+                    case "deads",
+                    case "dead",
+                    case "die",
+                    case "deaths",
+                    case "death",
+                        if(LS[4,string]:toNumber()>=0 & RDMManager[LS[2,string],table]["Deaths",table]:count()>0 & LS[4,string]!=""){
+                            if(RDMManager[LS[2,string],table]["Deaths",table]:exists(LS[4,string]:toNumber())){
+                                if(LS[5,string]:toNumber()>0){
+                                    Index=holoAmount()
+                                    Info=RDMManager[LS[2,string],table]["Deaths",table][LS[4,string]:toNumber(),table]
+                                    holoCreate(Index,Info["VictimPos",vector],vec(1),Info["VictimAng",angle],vec(255),Info["VictimModel",string]):animate(Info["VictimAnimation",number])
+                                    pointToPoint(Index+1,Info["KillerEyePos",vector],Info["KillerLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                    holoCreate(Index+2,Info["KillerPos",vector],vec(1),Info["KillerAng",angle],vec(255),Info["KillerModel",string]):animate(Info["KillerAnimation",number])
+                                    pointToPoint(Index+3,Info["VictimEyePos",vector],Info["VictimLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                    holoEntity(Index):remove(CleanupTimer)
+                                    holoEntity(Index+2):remove(CleanupTimer)
+                                }else{
+                                    printTable(RDMManager[LS[2,string],table]["Deaths",table][LS[4,string]:toNumber(),table])
+                                }
+                            }else{
+                                print("Out of index range")
+                            }
+                        }else{
+                            printTable(RDMManager[LS[2,string],table]["Deaths",table])
+                            print("Death Count: "+RDMManager[LS[2,string],table]["Deaths",table]:count())
+                        }
+                        break
+                    default,
+                        printTable(RDMManager[LS[2,string],table])
+                        break
+                }
+            }
+            break
+        case ".name",
+            Player=findPlayerByName(LS[2,string])
+            if(Player:isPlayer()){
+                if(!RDMManager[Player:steamID(),table]){
+                    print("That Table Entry does not exist")
+                }else{
+                    switch(LS[3,string]:lower()){
+                        case "kil",
+                        case "kills",
+                        case "kils",
+                        case "kill",
+                            if(LS[4,string]:toNumber()>=0 & RDMManager[Player:steamID(),table]["Kills",table]:count()>0 & LS[4,string]!=""){
+                                if(RDMManager[Player:steamID(),table]["Kills",table]:exists(LS[4,string]:toNumber())){
+                                    if(LS[5,string]:toNumber()>0){
+                                        Index=holoAmount()
+                                        Info=RDMManager[Player:steamID(),table]["Kills",table][LS[4,string]:toNumber(),table]
+                                        holoCreate(Index,Info["VictimPos",vector],vec(1),Info["VictimAng",angle],vec(255),Info["VictimModel",string]):animate(Info["VictimAnimation",number])
+                                        pointToPoint(Index+1,Info["KillerEyePos",vector],Info["KillerLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                        holoCreate(Index+2,Info["KillerPos",vector],vec(1),Info["KillerAng",angle],vec(255),Info["KillerModel",string]):animate(Info["KillerAnimation",number])
+                                        pointToPoint(Index+3,Info["VictimEyePos",vector],Info["VictimLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                        holoEntity(Index):remove(CleanupTimer)
+                                        holoEntity(Index+2):remove(CleanupTimer)
+                                    }else{
+                                        printTable(RDMManager[Player:steamID(),table]["Kills",table][LS[4,string]:toNumber(),table])
+                                    }
+                                }else{
+                                    print("Out of index range")
+                                }
+                            }else{
+                                printTable(RDMManager[Player:steamID(),table]["Kills",table])
+                                print("Kill Count: "+RDMManager[Player:steamID(),table]["Kills",table]:count())
+                            }
+                            break
+                        case "deds",
+                        case "ded",
+                        case "died",
+                        case "deads",
+                        case "dead",
+                        case "die",
+                        case "deaths",
+                        case "death",
+                            if(LS[4,string]:toNumber()>=0 & RDMManager[Player:steamID(),table]["Deaths",table]:count()>0 & LS[4,string]!=""){
+                                if(RDMManager[Player:steamID(),table]["Deaths",table]:exists(LS[4,string]:toNumber())){
+                                    if(LS[5,string]:toNumber()>0){
+                                        Index=holoAmount()
+                                        Info=RDMManager[Player:steamID(),table]["Deaths",table][LS[4,string]:toNumber(),table]
+                                        holoCreate(Index,Info["VictimPos",vector],vec(1),Info["VictimAng",angle],vec(255),Info["VictimModel",string]):animate(Info["VictimAnimation",number])
+                                        pointToPoint(Index+1,Info["KillerEyePos",vector],Info["KillerLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                        holoCreate(Index+2,Info["KillerPos",vector],vec(1),Info["KillerAng",angle],vec(255),Info["KillerModel",string]):animate(Info["KillerAnimation",number])
+                                        pointToPoint(Index+3,Info["VictimEyePos",vector],Info["VictimLookPos",vector],vec(255,0,0)):remove(CleanupTimer)
+                                        holoEntity(Index):remove(CleanupTimer)
+                                        holoEntity(Index+2):remove(CleanupTimer)
+                                    }else{
+                                        printTable(RDMManager[Player:steamID(),table]["Deaths",table][LS[4,string]:toNumber(),table])
+                                    }
+                                }else{
+                                    print("Out of index range")
+                                }
+                            }else{
+                                printTable(RDMManager[Player:steamID(),table]["Deaths",table])
+                                print("Death Count: "+RDMManager[Player:steamID(),table]["Deaths",table]:count())
+                            }
+                            break
+                        default,
+                            printTable(RDMManager[Player:steamID(),table])
+                            break
+                    }
+                    
+                }
+            }
+            break
+        
+    }
+    
+}

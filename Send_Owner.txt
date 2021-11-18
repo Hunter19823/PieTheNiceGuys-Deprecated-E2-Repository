@@ -1,0 +1,75 @@
+@name Send Stuff
+@persist LastEnt:entity
+@outputs [Target,Buyer]:entity PosB:vector AngB:angle  
+if(first()){
+    runOnChat(1)
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+}
+if(chatClk(owner())){
+    local LS=lastSaid():explode(" ")
+    if(LS[1,string]=="flyto"){
+        local P=searchForPlayer(LS[2,string])
+        if(P:isValid()){
+            if(->Target>0 && ->AngB>0 && ->PosB>0){
+                PosB=P:pos()
+                AngB=P:angles()
+                Target=owner()
+                LastEnt=owner()
+                Buyer=P
+                timer("Reset",10000)
+            }else{
+                print("Not Wired Correctly")
+            }
+        }
+    }elseif(LS[1,string]=="home"){
+        E=LastEnt
+        local P=entity()
+        if(E:isValid() && P:isValid()){
+            if(->Target>0 && ->AngB>0 && ->PosB>0){
+                PosB=P:pos()
+                AngB=P:angles()
+                Target=owner()
+                timer("Reset",10000)
+            }else{
+                print("Not Wired Correctly")
+            }
+        }else{
+            if(!E:isValid()){
+                print("Aim Entity Invalid")
+            }
+        }
+    }elseif(LS[1,string]=="send"){
+        local E=owner():aimEntity()
+        local P=searchForPlayer(LS[2,string])
+        if(E:isValid() && P:isValid()){
+            if(->Target>0 && ->AngB>0 && ->PosB>0){
+                PosB=P:pos()
+                AngB=P:angles()
+                Target=E
+                LastEnt=E
+                timer("Reset",10000)
+            }else{
+                print("Not Wired Correctly")
+            }
+        }else{
+            if(!E:isValid()){
+                print("Aim Entity Invalid")
+            }
+        }
+    }
+}
+if(clk("Reset")){
+    Target=noentity()
+}

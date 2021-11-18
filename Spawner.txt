@@ -1,0 +1,16 @@
+@persist NumberOf Counter Model:string
+if(first()){
+    interval(1000)
+    Counter=0
+    NumberOf=1
+    Model="models/freeman/compact_printer.mdl"
+}
+if(clk()){
+    if(Counter>=NumberOf){
+        
+    }else{
+        interval(1000)
+        Counter++
+        spawnExpression2(entity():pos()+vec(0,0,25*Counter),entity():angles(),Model)
+    }
+}

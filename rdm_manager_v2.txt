@@ -1,0 +1,83 @@
+@name RDM Manager E2
+@persist [PlayerManager]:gtable [UUID]:string
+if(first()){
+    runOnDeath(1)
+    PlayerManager=gTable("RDM Manager E2 Testing",1)
+    
+    UUID=random(-9999,9999):toString()
+    print("RDM Manager UUID is "+UUID)
+    PlayerManager["ChipUUID",string]=UUID
+}
+if(deathClk()){
+    if(PlayerManager["ChipUUID",string]==UUID){
+            
+        DeadPerson=lastDeathVictim()
+        DPSID=DeadPerson:steamID()
+        Killer=lastDeathInflictor()
+        KilledWhen=time()
+        
+        if(!PlayerManager:toTable():exists(DPSID)){
+            PlayerManager[DPSID,table]=table(
+                "Kills"=table(),
+                "Deaths"=table()
+            )
+        }
+        PlayerManager[DPSID,table]["Deaths",table][PlayerManager[DPSID,table]["Deaths",table]:count(),table]=
+        table(
+            "KilledBy"=Killer,
+            "KilledAt"=KilledWhen,
+            "VictimPos"=DeadPerson:pos(),
+            "VictimAng"=DeadPerson:angles(),
+            "VictimModel"=DeadPerson:model(),
+            "VictimAnimation"=DeadPerson:getAnimation(),
+            "VictimEyePos"=DeadPerson:attachmentPos(1),
+            "VictimLookPos"=DeadPerson:aimPos(),
+            "KillerPos"=Killer:pos(),
+            "KillerAng"=Killer:angles(),
+            "KillerModel"=Killer:model(),
+            "KillerAnimation"=Killer:getAnimation(),
+            "KillerWeapon"=Killer:weapon(),
+            "KillerHealth"=Killer:health(),
+            "KillerArmor"=Killer:armor(),
+            "KillerEyePos"=Killer:attachmentPos(1),
+            "KillerLookPos"=Killer:aimPos()
+        )
+        #PlayerManager[DPSID,table]["LastDiedBy",entity]=Killer
+        #PlayerManager[DPSID,table]["LastDiedWhen",number]=KilledWhen
+        
+        if(Killer:isPlayer()){
+            KSID=Killer:steamID()
+            if(!PlayerManager:toTable():exists(KSID)){
+                PlayerManager[KSID,table]=table(
+                    "Kills"=table(),
+                    "Deaths"=table()
+                )
+            }
+            PlayerManager[KSID,table]["Kills",table][PlayerManager[KSID,table]["Kills",table]:count(),table]=
+            table(
+                "Victim"=DeadPerson,
+                "KilledAt"=KilledWhen,
+                "VictimPos"=DeadPerson:pos(),
+                "VictimAng"=DeadPerson:angles(),
+                "VictimModel"=DeadPerson:model(),
+                "VictimAnimation"=DeadPerson:getAnimation(),
+                "VictimEyePos"=DeadPerson:attachmentPos(1),
+                "VictimLookPos"=DeadPerson:aimPos(),
+                "KillerPos"=Killer:pos(),
+                "KillerAng"=Killer:angles(),
+                "KillerModel"=Killer:model(),
+                "KillerAnimation"=Killer:getAnimation(),
+                "KillerWeapon"=Killer:weapon(),
+                "KillerHealth"=Killer:health(),
+                "KillerArmor"=Killer:armor(),
+                "KillerEyePos"=Killer:attachmentPos(1),
+                "KillerLookPos"=Killer:aimPos()
+            )
+            #PlayerManager[KSID,table]["LastKill",entity]=DeadPerson
+            #PlayerManager[KSID,table]["LastKillWhen",number]=lastDeathTime()
+        }
+    }else{
+        print("Someone has placed down a new RDM manager. This RDM manager is now useless and will delete itself.")
+        entity():remove()
+    }
+}

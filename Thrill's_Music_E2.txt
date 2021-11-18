@@ -1,0 +1,254 @@
+###########################################################################################
+#
+#                    IsThrill's Personal Music E2
+#                   Obtain this E2 only from him. 
+#
+###########################################################################################
+@name Thrills Forbidden Music
+@persist [Songs,Pos]:array OwnerInArea Holo Ent:entity LastPlayed:string B SongNames:array
+
+if(first()){
+
+###########################################################################################
+#
+#                       A Given Music List
+#
+###########################################################################################
+    Songs=array(
+  "https://github.com/IsThrill/Music/blob/master/SIAM%C3%89S%20The%20Wolf%20%5BOfficial%20Animated%20Music%20Video%5D.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Xillions%20-%20Somebody%20Like%20Me.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Minecraft-Theme%20Song%20Extended%20for%2030%20Minutes%20(1).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/G-Eazy%20%26%20Halsey%20-%20Him%20%26%20I%20(Lyrics).mp3?raw=1",
+  "https://github.com//IsThrill/Music/blob/master/XXXTENTACION%20%26%20Lil%20Pump%20-%20Arms%20Around%20You%20(Lyrics)%20Ft.%20Maluma%20%26%20Swae%20Lee.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Blackbear%20-%20idfc%20%5BLYRICS%5D.mp3?raw=1",
+  "https://github.com//IsThrill/Music/blob/master/Alessia%20Cara%20-%20Here%20(Lucian%20Remix).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/ANIMALS%20-%20MAROON%205%20(LYRICS).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/9fd32e28b1063e459a906393951efa7bf156e59b/I'm%20Mr.%20Meeseeks%20(Rick%20and%20Morty%20remix%20song).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Ra%20da%20da%20da%20song%20tik%20tok%20musically%20(Betty%20Boop%20-%20Charlie%20Puth).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/iLOVEFRiDAY%20-%20Mia%20Khalifa%20(HIT%20OR%20MISS)%20(Lyrics).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/bitch%20lasagna.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/THE%20MUFFIN%20SONG%20(asdfmovie%20feat.%20Schmoyoho).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Frozen%20Let%20it%20go%20FUCK%20MY%20ASS.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/FitnessGram%2020-Meter%20PACER%20Test%20OFFICIAL%20AUDIO%20(Part%201).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/I%20wanna%20be%20tracer%20(original).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/I'm%20A%20New%20Soul%20-%20Jay%20Z%20ft.%20Yael%20Naim.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Joel%20Adams%20-%20Please%20Don't%20Go%20(Afterfab%20Remix).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Breakbot%20-%20Baby%20I'm%20Yours%20feat.%20Irfane%20(Official%20Video).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Goosebumps%20Theme.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Bandingo%20-%20Baby%20Powder%20(Official%20Music%20Video)%20INSTAGRAM%20bandingobaby.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Mining%20-%20Minecraft%20Parody%20of%20Drowning.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Peppermint%20(feat.%20Lexy)%20-%20Jack%20Stauber.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/%C3%91%CE%A3V%CE%A3R%20G%CE%A3%20U%24%CE%A3D%20%C3%98%20P%CE%A3%C3%98PL%CE%A3%20%D0%A6%CE%A3%D0%9B%D0%A3%D0%99%20%D0%9C%CE%A3%D0%9D%D0%AF.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Dance%20Till%20You're%20Dead%20(Full%20Remix).mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Simon%20-%20Take%20Some%20Risks.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/The%20Walking%20Dead%20Original%20Soundtrack%20-%20Theme%20Song%20HD.mp3?raw=1",
+  "https://github.com/IsThrill/Music/blob/master/Ship%20Wrek%20%26%20Zookeepers%20-%20Ark%20%5BNCS%20Release%5D.mp3?raw=1"
+
+)
+###########################################################################################
+#
+#                  A Given song Playlist With Names
+#
+###########################################################################################
+SongNames=array(
+ "1.The Wolf - This song goes to takeoff owo",
+ "2.Somebody Like Me",
+ "3.Minecraft Song",
+ "4.Him And I - Another song dedicated to takeoff owo",
+ "5.XXXTENTACION & Lil Pump - Arms Around You",
+ "6.Idfc",
+ "7.Here",
+ "8.Animals",
+ "9.Mr.Meeseeks",
+ "10.TikTok ra song",
+ "11.Hit or Miss",
+ "12.Bitch lasagna",
+ "13.Muffin Wants To Die",
+ "14.Frozen Fuk My ***",
+ "15.Fitness Gram Pacer",
+ "16.I want to be tracer",
+ "17.Im A New Soul",
+ "18.Please dont go",
+ "19.Baby im yours",
+ "20.Goosebumps",
+ "21.Baby powder",
+ "22.Minecraft Parady drowning",
+ "23.Peppermint",
+ "24.Never get use to people",
+ "25.Dance till u die",
+ "26.Take some risks TWD",
+ "27.The walking dead",
+ "28.Ship wrek NCS"
+)
+###########################################################################################
+#
+#                  A Bunch Of Code For The E2
+#
+###########################################################################################
+
+    #Makes the e2 run every tick of the server
+    runOnTick(1)
+    #Makes the e2 run whenever someone talks
+    runOnChat(1)
+    
+    entity():setAlpha(255)
+
+    holoCreate(1)
+    holoModel(1,"models/bm/nbasizeketball.mdl")
+    holoEntity(1):animate(164,1)
+    holoColor(1,vec(255,192,203))
+    
+    streamDisable3D(1)
+    
+    #Sets the entity for the hologram to follow to owner
+    Ent = owner()
+    
+    #Creates the function called playSong which takes a string
+    function playSong(String:string){
+        streamStop(1)
+        #Starts the song with said string
+        Ent:streamStart(1,String,1)
+        #Sets the last played var to the string so we can use it later
+        LastPlayed = String
+    }
+}
+local Time=curtime()
+local ScaleVar=0.8*abs(sin(Time*4*2))
+local AngVar=Time*5*40
+holoScale(1,vec(0.375,ScaleVar,ScaleVar))
+holoAng(1,ang(AngVar,AngVar,AngVar))
+holoPos(1,entity():pos()+vec(0,0,50+sin(Time*250)*15))
+#If the e2 ran due to someone talking and that someone was the owner of the e2 run the following
+if(chatClk(owner())){
+    
+    #This gets what was last said makes it all lower case and then splits it up wherever there's a space
+    local LS = lastSaid():lower():explode(" ")
+    
+    if(LS[1,string] == "!pos"){
+        
+        #Gets the 2nd thing said and make sit into a number 
+        local Num = LS[2,string]:toNumber()
+        
+        #Saves owner aim position
+        local Vec = owner():aimPos()
+        
+        #Sets The Pos array index number what ever we said to = owner aim position
+        Pos[Num,vector] = Vec
+        
+        #Print to our chat in colour which position we set
+        printColor(vec(0,255,0),"Set pos "+LS[2,string])
+        
+        #Creates a hologram with the id of what ever number we said at the position we saved.
+        holoCreate(Num,Vec)
+        
+    }elseif(LS[1,string] == "!holo"){
+    
+        #[
+        Creates the holo and sets Ent to be the holo. 
+        Also changed Holo between 1 and 0 to activate of disable the if statement below this chat stuff
+        ]#
+        
+        Holo = !Holo
+        if(Holo){
+            interval(1)
+            Ent = holoCreate(10)
+            holoScale(10,vec(0.5,0.5,0.5))
+          
+
+            holoModel(10,"models/freeman/exhibition_roleplay_logo_large.mdl")
+            timer("ownerinarea",1000)
+  
+            #Uses the playSong function with the LastPlayed var so it plays what was last played...
+            playSong(LastPlayed)
+        }else{
+            holoDelete(10)
+            Ent = owner()
+            playSong(LastPlayed)
+        }
+        
+    }elseif(LS[1,string]=="!song"){
+    
+        #Plays song from url
+        Url=LS[2,string]
+        print(Url)
+        
+        #Plays the song through playSong so it's saved as LastPlayed
+        playSong(Url)
+        
+        
+    }elseif(LS[1,string]=="!play"){
+    
+        #Plays one of your preset songs
+        Url2=LS[2,string]:toNumber()
+        print(Url2:toString())
+        setName("Now playing" +": " + SongNames[LS[2,string]:toNumber(),string])
+        
+        #Same as the one above -
+		      playSong(Songs[Url2,string])
+    
+        
+    }elseif(LS[1,string]=="!volume"){
+    
+        #Sets volume
+        Vol=(LS[2,string]):toNumber()
+        streamVolume(1,Vol)
+        print("Volume: "+Vol:toString())
+
+    }elseif(LS[1,string]=="!list"){
+    
+        #Silly
+    		  print("The song list is at bottom of e2")
+        
+    }elseif(LS[1,string]=="!stop"){
+    
+        #Guess
+        streamStop(1)
+    }
+}
+
+# If Holo is 1 run the following
+if(Holo){
+    #if the timer ownerinarea finishing made the code start this loop run the following
+    if(clk("ownerinarea")){
+        #Make the find only target you
+        findIncludeEntity(owner())
+        #Find within the two positions you set
+        findInBox(Pos[1,vector],Pos[2,vector])
+        #Check the amount of results you got. As you're only searching for yourself it's either 1 or 0
+        if(findToArray():count()){
+            OwnerInArea = 1
+        }else{
+            OwnerInArea = 0
+        }
+        #Starts a new timer to do this search again in 1000 miliseconds.
+        timer("ownerinarea",1000)
+    }
+    
+    #If ownerinarea is 1 set the target to owner and make the range/distance from you 100
+    if(OwnerInArea){
+        Target = owner()
+        Range = 100
+    }else{
+    #When you're not in the area setting the target to the e2 and range to 0 so it goes right on top of it.
+        Range = 0
+        Target = entity()
+    }
+    
+    #Gets and angle that looks at the target
+    Angle = (holoEntity(10):pos()-Target:pos()):toAngle():setPitch(0)
+    
+    #The ang(0,-180,0) turns the model around so forward is towards you.
+    #Depending on the model it might need a different angle
+    holoAng(10, Angle+ang(0,-180,0))
+    
+    #Gets the distance between the target and the hologram
+    Distance = Target:pos():distance(holoEntity(10):pos())
+    
+    #If the distance is bigger than the range it will move the hologram to
+    #it's own position + just forward of itself multiplied by a number to make it move further in that direction.
+    if(Distance > Range){
+        holoPos(10,holoEntity(10):pos()+holoEntity(10):forward()*Distance/20)
+    }
+    #Makes the hologram have the same Z axis as the target
+    holoPos(10,holoEntity(10):pos():setZ(Target:pos():z()))
+}

@@ -1,0 +1,32 @@
+@persist [Props]:array [Player]:entity [ID,Scale]
+if(first()){
+    Player=findPlayerByName("chunkle")
+    findIncludePlayerProps(Player)
+    findInSphere(entity():pos(),10000)
+    #findByClass("prop_physics")
+    Scale=0.1
+    ID=0
+    Props=findToArray()
+    timer("Replicate",100)
+}
+if(clk("Replicate")){
+    if(Props:count()>0){
+        while(perf(90) & Props:count()>0 & holoCanCreate()){
+            ID++
+            P=Props:popEntity()
+            holoCreate(ID,entity():toWorld(entity():toLocal(P:pos())*Scale),vec(1),entity():toLocal(P:angles()),P:getColor(),P:model())
+            if(P:isPhysics()){
+                holoModel(ID,P:model(),P:getSkin())
+            }
+            holoScale(ID,Scale*vec(1))
+            holoAlpha(ID,P:getAlpha())
+            holoMaterial(ID,P:getMaterial())
+            holoEntity(ID):animate(P:getAnimation(),1)
+            
+            holoParent(ID,entity())
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished")
+    }
+}

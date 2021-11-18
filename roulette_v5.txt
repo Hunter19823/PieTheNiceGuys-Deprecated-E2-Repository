@@ -1,0 +1,61 @@
+@name Roulette
+@inputs Start
+@persist Reward Time Cur Max Radius
+if(first()){
+    Chip=entity()
+
+    #Table
+    holoCreate(1)
+    holoModel(1,"models/hunter/plates/plate2x3.mdl")
+    
+    
+    #Wheel
+    Max=6
+    Radius=50
+    function void pointToPoint(Index,P1:vector ,P2:vector , Color:vector) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/plates/plate8x8.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),1,3))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,2)
+    }
+    holoCreate(2,entity():toWorld(vec(0,0,5)),vec(0),entity():angles(),vec(255),"models/hunter/tubes/circle2x2.mdl")
+    holoScaleUnits(2,vec(Radius,Radius,1))
+    timer("Split",1000)
+    
+    holoPos(1,Chip:toWorld(vec(20,45,1)))
+    
+    runOnChat(1)
+}
+
+if(chatClk(owner())){
+    Message=lastSaid()
+    CommandParameters=Message:explode(" ")
+    if(CommandParameters[1,string]:lower()=="/spin"){
+        Time=1000
+        timer("Spin",Time)
+    }
+}
+if(clk("Spin")){
+    holoAng(2,holoEntity(2):toWorld(ang(0,cos(curtime()*1)*360,0)))
+    Time-=10
+    if(Time>=0){
+        timer("Spin",50)
+    }else{
+        print("Finished")
+    }
+}
+if(clk("Split")){
+    if(Cur<Max){
+        Color=Cur%2==0 ? vec(255,0,0) : vec(0,255,0)
+        pointToPoint(Cur+100,holoEntity(2):pos(),holoEntity(2):toWorld(vec(cos(360/Max * Cur)*Radius/2,sin(360/Max * Cur)*Radius/2,0)),vec(0))
+        pointToPoint(Cur+10,holoEntity(2):toWorld(vec(cos(360/Max * (Cur+1))*Radius/2,sin(360/Max * (Cur+1))*Radius/2,0)),holoEntity(2):toWorld(vec(cos(360/Max * Cur)*Radius/2,sin(360/Max * Cur)*Radius/2,0)),Color)
+        Cur++
+        timer(clkName(),1000)
+    }else{
+        print("Finished")
+    }
+}

@@ -1,0 +1,39 @@
+@name Pie's Vault Door
+#[Inspired By IMCHRIS]#
+@persist Door:entity Material:string
+if(first()){
+    #[
+        Instructions:
+    Place it down and then make it a fading door.
+    Bam Done easy.
+    Completely legal as the vault is just a hologram.
+    ]#
+    Door=propSpawn("models/hunter/blocks/cube2x2x05.mdl",entity():toWorld(vec(0,0,50)),entity():toWorld(ang(90,90,0)),1)
+    entity():parentTo(Door)
+    holoCreate(1,entity():toWorld(vec(0,0,50)),vec(1),entity():toWorld(ang(0,-90,0)),vec(255),"models/freeman/vault/vault_door.mdl")
+    holoParent(1,Door)
+    Door:setAlpha(0)
+    Door:noDraw(1)
+    Door:propDraw(0)
+    interval(1000)
+}
+Material=Door:getMaterial()
+if(clk()){
+    if(changed(Material)){
+        if(holoEntity(1):getAnimation()==1){
+            holoEntity(1):animate(4,2)
+            soundStop(1)
+            Door:soundPlay(1,0,"doors\\gate_move1.wav")
+        }else{
+            holoEntity(1):animate(1,1)
+            soundStop(2)
+            Door:soundPlay(2,0,"doors\\door_metal_rusty_move1.wav")
+            timer("Stop",1000)
+        }
+    }
+    interval(250)
+}
+if(clk("Stop")){
+    soundStop(3)
+    Door:soundPlay(3,0,"doors\\door_metal_medium_open1.wav")
+}

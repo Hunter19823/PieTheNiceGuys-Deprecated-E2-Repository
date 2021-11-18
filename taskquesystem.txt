@@ -1,0 +1,197 @@
+@persist [TaskHolder]:table [DefaultWaitTimer,DefaultRetryTimer] [Prefix]:string
+if(first()){
+    DefaultWaitTimer=100
+    DefaultRetryTimer=1000
+    Prefix="."
+    
+    
+    TaskHolder=table(
+        "Que"=array(),
+        "QueData"=table()
+    )
+    function void queTask(Data:table){
+        local Que=TaskHolder["Que",array]:count()
+        TaskHolder["Que",array]:pushNumber(Que)
+        if(!Data:exists("Wait")){
+            Data["Wait",number]=DefaultWaitTimer
+        }
+        if(!Data:exists("Retry")){
+            Data["Retry",number]=DefaultWaitTimer
+        }
+        TaskHolder["QueData",table][Que,table]=Data
+        if(TaskHolder["Que",array]:count()==1){
+            timer("QueTick",Data["Wait",number])
+        }
+    }
+    
+    
+    function void spawnProp(Model:string,Pos:vector,Angle:angle,Color:vector,Material:string){
+        queTask(table(
+            "Type"="propspawn",
+            "Model"=Model,
+            "Pos"=Pos,
+            "Angle"=Angle,
+            "Color"=Color,
+            "Material"=Material,
+            "Wait"=1000
+        ))
+    }
+    function void spawnProp(Model:string,Pos:vector,Angle:angle,Color:vector){
+        queTask(table(
+            "Type"="propspawn",
+            "Model"=Model,
+            "Pos"=Pos,
+            "Angle"=Angle,
+            "Color"=Color,
+            "Material"="",
+            "Wait"=1000
+        ))
+    }
+    function void spawnProp(Model:string,Pos:vector,Angle:angle){
+        queTask(table(
+            "Type"="propspawn",
+            "Model"=Model,
+            "Pos"=Pos,
+            "Angle"=Angle,
+            "Color"=vec(255),
+            "Material"="",
+            "Wait"=1000
+        ))
+    }
+    function void spawnProp(Model:string,Pos:vector){
+        queTask(table(
+            "Type"="propspawn",
+            "Model"=Model,
+            "Pos"=Pos,
+            "Angle"=ang(),
+            "Color"=vec(255),
+            "Material"="",
+            "Wait"=1000
+        ))
+    }
+    
+    function void move(Entity:entity,Pos:vector,Angle:angle){
+        queTask(table(
+            "Type"="move",
+            "Entity"=Entity,
+            "Pos"=Pos,
+            "Angle"=Angle
+        ))
+    }
+    function void entity:move(Pos:vector,Angle:angle){
+        queTask(table(
+            "Type"="move",
+            "Entity"=This,
+            "Pos"=Pos,
+            "Angle"=Angle
+        ))
+    }
+    function void move(Entity:entity,Pos:vector){
+        queTask(table(
+            "Type"="move",
+            "Entity"=Entity,
+            "Pos"=Pos,
+            "Angle"=Entity:angles()
+        ))
+    }
+    function void entity:move(Pos:vector){
+        queTask(table(
+            "Type"="move",
+            "Entity"=This,
+            "Pos"=Pos,
+            "Angle"=This:angles()
+        ))
+    }
+    function void command(Command:string){
+        queTask(table(
+            "Type"="command",
+            "Command"=Command
+        ))
+    }
+    function void command(Command:string, Wait:number){
+        queTask(table(
+            "Type"="command",
+            "Command"=Command,
+            "Wait"=Wait
+        ))
+    }
+    
+    function void buyAndSend(Player:entity,Command:string,Class:string){
+        command(Command,1250)
+        queTask(table(
+            "Type"="buyAndSend",
+            "Class"=Class,
+            "Entity"=Player,
+            "Wait"=1000
+        ))
+    }
+    
+    timer("AddQue",1000)
+}
+if(clk("AddQue")){
+    
+    
+    
+}
+if(clk("QueTick")){
+    if(TaskHolder["Que",array]:count()>0){
+        Index=TaskHolder["Que",array]:popNumber()
+        Data=TaskHolder["QueData",table][Index,table]
+        ActivateRetry=0
+        switch(Data["Type",string]){
+            case "propspawn",
+                if(propCanCreate()){    
+                    P=propSpawn(Data["Model",string],Data["Pos",vector],Data["Angle",angle],1)
+                    P:setColor(Data["Color",vector])
+                    P:setMaterial(Data["Material",string])
+                }else{
+                    ActivateRetry=1
+                }
+                break
+            case "move",
+                Data["Entity",entity]:propManipulate(Data["Pos",vector],Data["Angle",angle],1,gravity(),0)
+                break
+            case "command",
+                if(!concmd(Data["Command",string])){
+                    print("Command Failed")
+                }else{
+                    print("Command Success")
+                }
+                break
+            case "buyAndSend",
+                findClearWhiteList()
+                findClearBlackList()
+                findIncludePlayerProps(owner())
+                findByClass(Data["Class",string])
+                P=find()
+                if(P){
+                    P:propManipulate(Data["Entity",entity]:toWorld(vec(10,0,15)),Data["Entity",entity]:toWorld(ang(0,180,0)),0,gravity(),0)
+                }else{
+                    ActivateRetry=1
+                }
+                break
+            default,
+                print("Invalid que type: "+Data["type",string])
+                break
+        }
+        if(Data["RepeatForever",number]){
+            queTask(Data)
+        }
+        if(ActivateRetry){
+            TaskHolder["Que",array]:pushNumber(Index)
+            timer(clkName(),Data["Retry",number])
+        }else{
+            timer(clkName(),Data["Wait",number])
+        }
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case Prefix+"buyandsend",
+            
+            break
+        case Prefix+"",
+            break
+    }
+}

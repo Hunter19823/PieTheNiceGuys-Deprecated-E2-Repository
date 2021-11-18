@@ -1,0 +1,2 @@
+propSpawn("models/freeman/compact_printer.mdl",entity():pos(),ang(),1):noDraw(1)
+selfDestruct()

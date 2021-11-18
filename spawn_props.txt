@@ -1,0 +1,72 @@
+@name Spawn ?
+@persist Props:array PropSizes:table I Locked
+if(first()){
+    Props=array(
+    "models/props_wasteland/controlroom_chair001a.mdl",
+    "models/props_junk/TrafficCone001a.mdl",
+    "models/props_junk/TrashBin01a.mdl",
+    "models/props_combine/breendesk.mdl",
+    "models/props_junk/gascan001a.mdl",
+    "models/props_c17/FurnitureDresser001a.mdl",
+    "models/props_junk/propane_tank001a.mdl",
+    "models/props_borealis/bluebarrel001.mdl",
+    "models/props_interiors/pot02a.mdl",
+    "models/props_c17/door01_left.mdl",
+    "models/props_c17/BriefCase001a.mdl",
+    "models/props_lab/monitor01a.mdl",
+    "models/props_junk/GlassBottle01a.mdl",
+    "models/props_c17/FurnitureSink001a.mdl",
+    "models/Gibs/HGIBS.mdl",
+    "models/props_c17/FurnitureWashingmachine001a.mdl",
+    "models/props_trainstation/trainstation_clock001.mdl",
+    "models/props_junk/watermelon01.mdl",
+    "models/props_interiors/VendingMachineSoda01a.mdl",
+    "models/props_c17/doll01.mdl",
+    "models/props_junk/PopCan01a.mdl",
+    "models/props_lab/binderredlabel.mdl",
+    "models/props_junk/bicycle01a.mdl",
+    "models/props_interiors/BathTub01a.mdl",
+    "models/props_junk/meathook001a.mdl"
+    )
+    PropSizes=table(
+    "models/props_wasteland/controlroom_chair001a.mdl"=vec(0,0,20),
+    "models/props_junk/TrafficCone001a.mdl"=vec(0,0,15),
+    "models/props_junk/TrashBin01a.mdl"=vec(0,0,20),
+    "models/props_combine/breendesk.mdl"=vec(),
+    "models/props_junk/gascan001a.mdl"=vec(0,0,15),
+    "models/props_c17/FurnitureDresser001a.mdl"=vec(0,0,40.9),
+    "models/props_junk/propane_tank001a.mdl"=vec(0,0,18.3),
+    "models/props_borealis/bluebarrel001.mdl"=vec(0,0,25.965),
+    "models/props_interiors/pot02a.mdl"=vec(0,0,2.9),
+    "models/props_c17/door01_left.mdl"=vec(0,16,54.25),
+    "models/props_c17/BriefCase001a.mdl"=vec(0,0,8.77),
+    "models/props_lab/monitor01a.mdl"=vec(0,0,13.37),
+    "models/props_junk/GlassBottle01a.mdl"=vec(0,0,6.77),
+    "models/props_c17/FurnitureSink001a.mdl"=vec(0,0,22.55),
+    "models/Gibs/HGIBS.mdl"=vec(0,0,3.365),
+    "models/props_c17/FurnitureWashingmachine001a.mdl"=vec(0,0,22.2),
+    "models/props_trainstation/trainstation_clock001.mdl"=vec(0,0,32.28125),
+    "models/props_junk/watermelon01.mdl"=vec(0,0,7.83),
+    "models/props_interiors/VendingMachineSoda01a.mdl"=vec(0,0,48.29),
+    "models/props_c17/doll01.mdl"=vec(0,0,8.4),
+    "models/props_junk/PopCan01a.mdl"=vec(0,0,3.68),
+    "models/props_lab/binderredlabel.mdl"=vec(),
+    "models/props_junk/bicycle01a.mdl"=vec(0,0,22.28),
+    "models/props_interiors/BathTub01a.mdl"=vec(0,0,9.64),
+    "models/props_junk/meathook001a.mdl"=vec(0,0,22.2)
+    )
+    runOnKey(1)
+}
+if(clKeyPressVel(64)){
+    Locked=!Locked
+}
+if(clKeyPressVel(16)){
+    if(!Locked){
+        Model=Props[ceil(random(Props:count())),string]
+        Relative=PropSizes[Model,vector]
+        P=propSpawn(Model,owner():aimPos()+Relative,ang(),1)
+        P:setKeyValue("rendermode",9)
+        P:setKeyValue("solid",0)
+        P:parentTo(entity())
+    }
+}

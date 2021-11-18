@@ -1,0 +1,4 @@
+local P=propSpawn("models/props_c17/FurnitureDrawer001a_Chunk05.mdl",entity():toWorld(vec(0,0,10)),entity():angles(),1)
+P:setHealth(10)
+
+

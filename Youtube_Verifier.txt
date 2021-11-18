@@ -1,0 +1,27 @@
+@name Youtube Verify
+@persist [Sec,Min,Hour]
+if(first()){
+    runOnChat(1)
+    Sec=1000
+    Min=Sec*60
+    Hour=Min*60
+    function string formatTime(Time){
+        Time*=1000
+        local Str=""
+        Str+=floor(Time/Hour)%60
+        Str+=":"
+        Str+=floor(Time/Min)%60
+        Str+=":"
+        Str+=floor(Time/Sec)%60
+        return Str
+    }
+}
+if(chatClk()){
+    local LS=lastSaid()
+    local SL=lastSpoke()
+    if(LS:find("http")){
+        if(LS:find("youtube") || LS:find("youtu.be")){
+            print(formatTime(systime())+" || "+SL:name()+": "+LS)
+        }
+    }
+}

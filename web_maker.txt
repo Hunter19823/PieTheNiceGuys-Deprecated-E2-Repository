@@ -1,0 +1,111 @@
+@name Web Maker
+@model models/freeman/compact_printer.mdl
+@persist LastRangerData:table I [ColorArray,ClonedArray]:array [MaxStrings,Prize]
+if(first()){
+    MaxStrings = 10
+    
+    Prize=1000*MaxStrings
+    ColorArray=array(
+    vec(255,0,0),
+    vec(255,32,0),
+    vec(255,64,0),
+    vec(255,96,0),
+    vec(255,128,0),
+    vec(255,160,0),
+    vec(255,192,0),
+    vec(255,224,0),
+    vec(255,255,0),
+    vec(224,255,0),
+    vec(192,255,0),
+    vec(160,255,0),
+    vec(128,255,0),
+    vec(96,255,0),
+    vec(64,255,0),
+    vec(32,255,0),
+    vec(0,255,0),
+    vec(0,255,32),
+    vec(0,255,64),
+    vec(0,255,96),
+    vec(0,255,128),
+    vec(0,255,160),
+    vec(0,255,192),
+    vec(0,255,224),
+    vec(0,255,255),
+    vec(0,224,255),
+    vec(0,192,255),
+    vec(0,160,255),
+    vec(0,128,255),
+    vec(0,96,255),
+    vec(0,64,255),
+    vec(0,32,255),
+    vec(0,0,255),
+    vec(32,0,255),
+    vec(64,0,255),
+    vec(96,0,255),
+    vec(128,0,255),
+    vec(160,0,255),
+    vec(192,0,255),
+    vec(224,0,255),
+    vec(255,0,255),
+    vec(255,0,224),
+    vec(255,0,192),
+    vec(255,0,160),
+    vec(255,0,124),
+    vec(255,0,96),
+    vec(255,0,64),
+    vec(255,0,32)
+    )
+    function void rectangle(Index, P1:vector, P2:vector) {
+        local Target=P2
+        local EyePos=P1
+        local Fraction = 1 - (Index)/holoMaxAmount()
+        if(ClonedArray:count()>0){
+            Color=ClonedArray:popVector()
+        }else{
+            ClonedArray=ColorArray:clone()
+            Color=ClonedArray:popVector()
+        }
+        local H=holoCreate(Index,EyePos,vec(0),ang(),Color,"models/hunter/blocks/cube4x4x2.mdl")
+        holoMaterial(Index,"models/debug/debugwhite")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),1*Fraction,1*Fraction))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        #holoParent(Index,entity())
+    }
+    
+    LastRangerData=owner():eyeTrace():toTable()
+    I=1
+    rectangle(I,LastRangerData["StartPos",vector],LastRangerData["HitPos",vector])
+    
+    timer("Bounce",1000)
+}
+if(clk("Bounce")){
+    if(I<MaxStrings){
+        while(I<MaxStrings & perf(75) & holoCanCreate()){
+            I++
+            LastRangerData = rangerOffset(5000,LastRangerData["HitPos",vector],LastRangerData["HitNormal",vector]+vec(random()*2-1,random()*2-1,random()*2-1)):toTable()
+            rectangle(I,LastRangerData["StartPos",vector],LastRangerData["HitPos",vector])
+        }
+        timer(clkName(),1000)
+    }else{
+        print("Finished")
+        Pos=toWorld(vec(-10,0,0),ang(),LastRangerData["HitPos",vector],LastRangerData["Normal",vector]:toAngle())
+        entity():setPos(Pos)
+        entity():setAlpha(0)
+        entity():setMaterial("")
+        setName("Press E to claim your prize!")
+        printTable(LastRangerData)
+        #ifdef runOnUse(number,entity)
+        runOnUse(1,entity())
+        #endif
+    }
+}
+#ifdef runOnUse(number,entity)
+if(useEntClk()){
+    Player=useEntClk():inUseBy()
+    print("Congrats to "+Player:name()+" for finding the printer and collecting $"+Prize)
+    moneyGive(Player,Prize)
+    selfDestruct()
+}
+#endif

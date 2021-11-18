@@ -1,0 +1,11 @@
+@persist Timer Spaceing
+if(first()){
+    Timer=1000
+    timer("T",Timer)
+}
+if(clk("T")){
+    Spaceing+=1
+    spawnExpression2(entity():toWorld(vec(10,10*Spaceing,0)),ang(),entity():model()):remoteSetCode(getCode())
+    timer(clkName(),Timer)
+    #entity():remove(1)
+}

@@ -1,0 +1,72 @@
+@outputs Fire
+@persist [User]:entity [Types,Entities]:array
+if(first()){
+    timer("User",100)
+}
+if(clk("Setup")){
+    if(findCanQuery()){
+        #"func_button","prop_door_rotating",
+        Types=array("loot_box")
+        findClearWhiteList()
+        findClearBlackList()
+        foreach(Index, Type:string = Types){
+            findIncludeClass(Type)
+        }
+        Range=1000
+        findInSphere(owner():pos(),Range)
+        findSortByDistance(owner():pos())
+        holoCreate(1,entity():pos(),vec(0),entity():angles(),vec(255),"models/hunter/tubes/tube4x4x025.mdl")
+        holoScaleUnits(1,vec(Range*2,Range*2,10))
+        holoVisible(1,players(),0)
+        holoVisible(1,owner(),1)
+        Entities=findToArray()
+        print("Entities Found: "+Entities:count())
+        timer("Use",100)
+    }else{
+        timer(clkName(),1000)
+    }
+}
+if(clk("Use")){
+    if(User){
+        if(Entities:count()>0){
+            E=Entities:popEntity()
+            User:propManipulate(E:pos(),E:angles(),1,gravity(),1)
+            print("Using "+E:type()+", Remaining: "+Entities:count())
+            timer("On",25)
+        }else{
+            print("Finished")
+            User:setPos(entity():toWorld(vec(0,0,10)))
+            selfDestruct()
+            User:propDraw(0)
+        }
+    }else{
+        print("User got removed")
+    }
+}
+if(clk("On")){
+    Fire=1
+    timer("Off",25)
+}
+if(clk("Off")){
+    Fire=0
+    timer("Use",25)
+}
+if(clk("User")){
+    if(findCanQuery()){
+        findIncludePlayerProps(owner())
+        findByClass("gmod_wire_user")
+        User=find()
+        if(User){
+            User:createWire(entity(),"Fire","Fire")
+            User:propDraw(0)
+            print("User Has been found and wired")
+            timer("Setup",100)
+        }else{
+            print("Did not find wire_user in search. Retrying in 10 seconds.")
+            timer(clkName(),10000)
+        }
+    }else{
+        timer(clkName(),1000)
+        
+    }
+}

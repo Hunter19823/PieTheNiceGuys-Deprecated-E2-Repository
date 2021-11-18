@@ -1,0 +1,16 @@
+@persist [Max,Counter,Amount,Delay] [Player]:entity
+if(first()){
+    Max=1000
+    Amount=1
+    Delay=1
+    Counter++
+    Player=findPlayerBySteamID("STEAM_0:1:102159100")
+    timer("GiveNext",Delay)
+}
+if(clk("GiveNext")){
+    if(Counter<=Max){
+        moneyGive(Player,Amount)
+        Counter++
+        timer("GiveNext",Delay)
+    }
+}

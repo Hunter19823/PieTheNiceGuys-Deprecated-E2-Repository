@@ -1,0 +1,106 @@
+@name Spectator Camera
+@persist TextScreen:entity Camera:entity Prop:entity Speed AngTurn
+if(first()){
+    findIncludePlayerProps(owner())
+    findByClass("sammyservers_textscreen")
+    TextScreen=find()
+    findByClass("gmod_cameraprop")
+    Camera=find()
+    Speed=100
+    AngTurn=15
+    timer("set",500)
+}
+if(clk("set")){
+    TextScreen:setKeyValue("origin",Camera:pos():x()+" "+Camera:pos():y()+" "+Camera:pos():z())
+    Prop=propSpawn("models/props_junk/PopCan01a.mdl",TextScreen:pos(),owner():angles(),1)
+    
+    TextScreen:setParent(Prop)
+    
+    Prop:parentTo(Camera)
+    Prop=Camera
+    
+    runOnKey(1)
+    
+    interval(500)
+}
+if(clk()){
+    Prop:setAng(owner():angles())
+    interval(500)
+    
+}
+switch(clLastKeyPress()){
+        case 45,
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(Speed,0,0)))
+            }
+            break
+        case 41,
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,Speed,0)))
+            }
+            break
+        case 43,
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,(Speed*-1),0)))
+            }
+            break
+        case 39,
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec((Speed*-1),0,0)))
+            }
+            break
+        case 38,
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,0,Speed)))
+            }
+            break
+        case 40,
+            if(Prop!=noentity()){
+                Prop:setPos(Prop:toWorld(vec(0,0,(Speed*-1))))
+            }
+            break
+        case 44,
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang(0,AngTurn,0)))
+            }
+            break
+        case 46,
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang(0,(AngTurn*-1),0)))
+            }
+            break
+        case 80,
+            if(Prop!=noentity()){
+                Prop:setPos(owner():aimPos())
+            }
+            break
+        case 42,
+            if(Prop!=noentity()){
+                Prop:setPos(round(Prop:pos()))
+                Prop:setAng(round(Prop:angles()))
+            }
+            break
+        case 51,
+            if(Prop!=noentity()){
+                Prop:setPos(owner():aimPos()+Prop:height())
+            }
+            break
+        case 50,
+            if(Prop!=noentity()){
+                Prop:setPos(owner():aimPos()+Prop:height()/2)
+            }
+            break
+        case 47,
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang(AngTurn,0,0)))
+            }
+            break
+        case 48,
+            if(Prop!=noentity()){
+                Prop:setAng(Prop:toWorld(ang((AngTurn*-1),0,0)))
+            }
+            break
+        default,
+            Update=0
+            break
+    }

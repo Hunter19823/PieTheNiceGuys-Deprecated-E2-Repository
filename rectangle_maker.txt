@@ -1,0 +1,38 @@
+@name Prop Ownership Checker
+@persist [WantToRemove] [EntityToRemove]:entity [P1,P2]:vector
+if(first()){
+    runOnKey(1)
+    
+    function void measureTape(Index, PointB:vector,PointA:vector,Color:vector) {
+        local Target=PointB
+        local EyePos=PointA
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/blocks/cube8x8x025.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,entity())
+        holoVisible(Index,players(),0)
+        holoVisible(Index,owner(),1)
+        holoVisible(Index,findPlayerBySteamID("STEAM_0:0:53485668"),1)
+    }
+    function createRectangle(Index,TopCorner:vector ,BottomCorner:vector,Color:vector){
+        local Mid=(TopCorner-BottomCorner)/2 + BottomCorner
+        holoCreate(Index,Mid,vec(1),ang(),Color,"models/hunter/blocks/cube4x4x4.mdl")
+        measureTape(Index+1000,TopCorner,BottomCorner,Color)
+        holoScaleUnits(Index,-1*abs(TopCorner-BottomCorner))
+        holoDisableShading(Index,1)
+        print("Top: "+TopCorner+"<br>Bottom: "+BottomCorner+"<br>Middle: "+Mid)
+        holoVisible(Index,players(),0)
+        holoVisible(Index,owner(),1)
+        holoVisible(Index,findPlayerBySteamID("STEAM_0:0:53485668"),1)
+    }
+}
+if(clKeyPress(16)){
+    Point=owner():aimPos()
+    if(P1==vec()){
+        P1=Point
+    }else{
+        createRectangle(1,P1,Point,vec(255,0,0))
+    }
+}

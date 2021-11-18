@@ -1,0 +1,87 @@
+@name Server Statistics
+@persist People:array Case [Table]:table [OverAllKD,OverAllCash,OverAllFrags,OverAllDeaths,OverAllPing,OverAllHealth,OverAllArmor,OverAllPlayers] Vehicle:entity
+@outputs LookUp:table
+if (first() || duped()){
+    Table=table()
+    LookUp=table()
+    findIncludeModel("models/sligwolf/gokart/sw_gokart.mdl")
+    findIncludePlayerProps("models/sligwolf/gokart/sw_gokart.mdl")
+    findInBox(entity():pos()-vec(100),entity():pos()+vec(100))
+    findSortByDistance(entity():pos())
+    Vehicle=find()
+    timer("GetVehicle",1000)
+    OverAllPing=0
+    OverAllPlayers=0
+    OverAllHealth=0
+    OverAllArmor=0
+    OverAllFrags=0
+    OverAllDeaths=0
+    OverAllCash=0
+    OverAllKD=0
+    runOnChat(1)
+}
+if (clk("GetVehicle")){
+    print(Vehicle:isValid())
+}
+if (clk("HudDraw")){
+    switch (Case){
+        case 0,
+            Table["NextTimer",string]="Pie"
+            Table["Number",number]=1
+            timer(Table["NextTimer",string],1000)
+            break
+    }
+}
+if (clk(Table["NextTimer",string])){
+    K=Table["Number",number]
+    V=players()[K,entity]
+    Size=egpScrSize(owner())
+    if (V:isValid()){
+        OverAllPing+=V:ping()
+        OverAllPlayers+=1
+        OverAllHealth+=V:health()
+        OverAllArmor+=V:armor()
+        OverAllFrags+=V:frags()
+        OverAllDeaths+=V:deaths()
+        OverAllCash+=V:money()
+        OverAllKD+=V:frags()/(V:deaths()==0? 1 : V:deaths())
+        #local Text= ""+V:frags()/(V:deaths()==0? 1 : V:deaths()) "= " + V:name()+" "
+        local Object=0>=10? 1 : K%10
+        #Hud:egpText(Object,Text,vec2(25,100+25*Object))
+        local Array=array(V,V:steamID(),V:steamID64(),V:money(),V:frags(),V:deaths()):concat("||||")
+        LookUp[V:name(),string]=Array
+        if (Object<10){
+            timer(Table["NextTimer",string],75)
+            Table["Number",number]=Table["Number",number]+1
+        }
+    }else{
+        #printTable(LookUp)
+        local Ping=OverAllPing/OverAllPlayers
+        local Health=OverAllHealth/OverAllPlayers
+        local Armor=OverAllArmor/OverAllPlayers
+        local Frags=OverAllFrags/OverAllPlayers
+        local Deaths=OverAllDeaths/OverAllPlayers
+        local Cash=OverAllCash/OverAllPlayers
+        local KD=OverAllKD/OverAllPlayers
+        Vehicle:printDriver("Average Ping: "+Ping +" Average Health: "+Health+" Average Armor: "+Armor+" Average Frags: "+Frags+" Average Deaths: "+Deaths+" ")
+        Vehicle:printDriver("Average Money: "+Cash+" Average K/D: "+KD)
+        OverAllPing=0
+        OverAllPlayers=0
+        OverAllHealth=0
+        OverAllArmor=0
+        OverAllFrags=0
+        OverAllDeaths=0
+        OverAllCash=0
+        OverAllKD=0
+    }
+}
+if (chatClk(lastSpoke()) && Vehicle:isVehicle()){
+    local LS=lastSpoke():lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case ".data",
+            timer(Table["HudDraw",string],250)
+            Table["Number",number]=1
+            Vehicle:printDriver("Estimated Time: " + players():count()/7.5 + " seconds. Please wait while this E2 gathers server info.")
+            break
+    }
+}

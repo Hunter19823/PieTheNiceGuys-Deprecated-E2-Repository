@@ -1,0 +1,234 @@
+@name Smooth angle Correcting
+@persist [Target,Current]:entity [Rotating,Speed,Turn] KeyTable:table [Forward,Backward,Left,Right,Up,Down]:string
+if(first()){
+    Forward="up"
+    Backward="down"
+    Left="left"
+    Right="right"
+    Up="g"
+    Down="h"
+    
+    Speed=10
+    Turn=45
+    
+    KeyTable=table()
+    Target=holoCreate(1,entity():toWorld(vec(0,0,50)),vec(1),ang(),vec(255),"models/maxofs2d/cube_tool.mdl")
+    Target:noDraw(1)
+    Current=holoCreate(2,entity():toWorld(vec(0,0,75)),vec(1),ang(0,90,0),vec(255),"models/maxofs2d/cube_tool.mdl")
+    runOnKeys(owner(),1)
+    timer("Rotate",100)
+}elseif(clk("Rotate")){
+    Rotating=1
+    ChangeAng=Current:toWorld(Current:toLocal(Target:angles())/2)
+    ChangePos=Current:toWorld(Current:toLocal(Target:pos())/2)
+    holoAng(2,ChangeAng)
+    holoPos(2,ChangePos)
+    if((Target:forward():dot(Current:forward())>=0.99619469809) & ChangePos:distance(Target:pos())<1){
+        Rotating=0
+        holoAng(2,Target:angles())
+        holoPos(2,Target:pos())
+    }else{
+        setName(entity():getName():toNumber()+1+"")
+        timer("Rotate",100)
+    }
+}elseif(keyClk(keyClk())){
+    switch(keyClk(keyClk())){
+        case 1,
+            switch(keyClkPressed()){
+                case Forward,
+                    KeyTable["Up",number]=1
+                    local Ang=0
+                    if((KeyTable["Left",number] & KeyTable["Right",number]) || (KeyTable["Down",number])){
+                        Ang=0
+                    }elseif(KeyTable["Left",number]){
+                        Ang=45
+                    }elseif(KeyTable["Right",number]){
+                        Ang=315
+                    }
+                    holoAng(1,holoEntity(1):angles():setYaw(Ang))
+                    KeyTable["Forward",number]=1
+                    timer("Forward",10)
+                    if(!Rotating){
+                        timer("Rotate",100)
+                    }
+                    break
+                case Left,
+                    KeyTable["Left",number]=1
+                    local Ang=90
+                    if((KeyTable["Up",number] & KeyTable["Down",number]) || (KeyTable["Right",number])){
+                        Ang=90
+                    }elseif(KeyTable["Up",number]){
+                        Ang=45
+                    }elseif(KeyTable["Down",number]){
+                        Ang=135
+                    }
+                    holoAng(1,holoEntity(1):angles():setYaw(Ang))
+                    
+                    KeyTable["Forward",number]=1
+                    timer("Forward",10)
+                    if(!Rotating){
+                        timer("Rotate",100)
+                    }
+                    break
+                case Backward,
+                    KeyTable["Down",number]=1
+                    local Ang=180
+                    if((KeyTable["Left",number] & KeyTable["Right",number]) || (KeyTable["Up",number])){
+                        Ang=180
+                    }elseif(KeyTable["Left",number]){
+                        Ang=135
+                    }elseif(KeyTable["Right",number]){
+                        Ang=225
+                    }
+                    holoAng(1,holoEntity(1):angles():setYaw(Ang))
+                    
+                    KeyTable["Forward",number]=1
+                    timer("Forward",10)
+                    if(!Rotating){
+                        timer("Rotate",100)
+                    }
+                    break
+                case Right,
+                    KeyTable["Right",number]=1
+                    local Ang=270
+                    if((KeyTable["Up",number] & KeyTable["Down",number]) || (KeyTable["Left",number])){
+                        Ang=270
+                    }elseif(KeyTable["Up",number]){
+                        Ang=315
+                    }elseif(KeyTable["Down",number]){
+                        Ang=225
+                    }
+                    holoAng(1,holoEntity(1):angles():setYaw(Ang))
+                    
+                    KeyTable["Forward",number]=1
+                    timer("Forward",10)
+                    if(!Rotating){
+                        timer("Rotate",100)
+                    }
+                    break
+                case Up,
+                    KeyTable["Upward",number]=1
+                    timer("Upward",10)
+                    break
+                case Down,
+                    KeyTable["Downward",number]=1
+                    timer("Downward",10)
+                    break
+                case "pad_5",
+                    KeyTable["Forward",number]=1
+                    timer("Forward",10)
+                    break
+                default,
+                    break
+            }
+            
+            break
+        case 0,
+        case -1,
+            switch(keyClkPressed()){
+                case Left,
+                    KeyTable["Left",number]=0
+                    if((!KeyTable["Left",number] & !KeyTable["Right",number] & !KeyTable["Up",number] & !KeyTable["Down",number])){
+                        KeyTable["Forward",number]=0
+                    }
+                    break
+                case Right,
+                    KeyTable["Right",number]=0
+                    if((!KeyTable["Left",number] & !KeyTable["Right",number] & !KeyTable["Up",number] & !KeyTable["Down",number])){
+                        KeyTable["Forward",number]=0
+                    }
+                    break
+                case Forward,
+                    KeyTable["Up",number]=0
+                    if((!KeyTable["Left",number] & !KeyTable["Right",number] & !KeyTable["Up",number] & !KeyTable["Down",number])){
+                        KeyTable["Forward",number]=0
+                    }
+                    break
+                case Backward,
+                    KeyTable["Down",number]=0
+                    if((!KeyTable["Left",number] & !KeyTable["Right",number] & !KeyTable["Up",number] & !KeyTable["Down",number])){
+                        KeyTable["Forward",number]=0
+                    }
+                    break
+                case Up,
+                    KeyTable["Upward",number]=0
+                    break
+                case Down,
+                    KeyTable["Downward",number]=0
+                    break
+                default,
+                    break
+            }
+            break
+        
+    }
+}else{
+    switch(clkName()){
+        case "Forward",
+            holoPos(1,holoEntity(1):toWorld(vec(Speed,0,0)))
+            if(KeyTable["Forward",number]){
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        case "Upward",
+            holoPos(1,holoEntity(1):toWorld(vec(0,0,Speed)))
+            if(KeyTable["Upward",number]){
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        case "Downward",
+            holoPos(1,holoEntity(1):toWorld(vec(0,0,Speed)))
+            if(KeyTable["Downward",number]){
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        case "Up",
+            if(KeyTable["Up",number]){
+                holoAng(1,holoEntity(1):toWorld(ang(Turn,0,0)))
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        case "Down",
+            if(KeyTable["Down",number]){
+                holoAng(1,holoEntity(1):toWorld(ang(-Turn,0,0)))
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        case "Left",
+            if(KeyTable["Left",number]){
+                holoAng(1,holoEntity(1):toWorld(ang(0,Turn,0)))
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        case "Right",
+            if(KeyTable["Right",number]){
+                holoAng(1,holoEntity(1):toWorld(ang(0,-Turn,0)))
+                timer(clkName(),100)
+            }
+            if(!Rotating){
+                timer("Rotate",100)
+            }
+            break
+        default,
+            exit()
+            break
+    }
+}

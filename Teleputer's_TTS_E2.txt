@@ -1,0 +1,150 @@
+@name TTS
+@persist Target:entity Amount Text:string
+if(first()){
+    runOnHTTP(1)
+    runOnChat(1)
+    holoCreate(1)
+    holoModel(1,"models/alyx.mdl")
+    holoEntity(1):animate(3,1)
+    holoAlpha(1,0)
+    streamDisable3D(1)
+    function void say(Stuff:string){
+        local Lang="en-us"
+        if(httpCanRequest()){
+            httpRequest("http://cc.suka.lol/"+"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Stuff)+"&tl="+Lang+"&client=tw-ob")
+        } else{
+            timer("Wait",500)
+        }
+    }
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+}elseif(chatClk(owner())){
+    local LS=lastSaid():explode(" ")
+    Target=noentity()
+    Amount=0
+    Text=""
+    switch(LS[1,string]){
+        case "say",
+            Text=lastSaid():explode("say ")[2,string]
+            break
+        case "bal",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a total of $" + P:money() + "."
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "ping",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a ping of " + P:ping() + " miliseconds."
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "info",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a steam id of " + P:steamID() + ". Posting ID in Chat"
+                print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "friends",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" has a total of " + P:steamFriends():count() + " steam friends on the server right now."
+                Target=owner()
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "status",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Query Matched. Player "+P:name() +" currently has " +P:health()+" Health and "+P:armor()+" Armor."
+                Target=owner()
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "give",
+            local P=searchForPlayer(LS[2,string])
+            Amount=LS[3,string]:toNumber()
+            if(P:isPlayer()){
+                Text="Query Matched. Giving Player "+P:name()+" $"+Amount+"."
+                moneyGive(P,Amount)
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "/pm",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Text="Player "+P:name()+" has one, new, message from "+owner():name()+" "
+                Text+=lastSaid():explode(LS[2,string])[2,string]
+                Target=P
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "/request",
+            local P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                Amount = LS[3,string]:toNumber()
+                Text="Hello Player "+P:name()+" "+owner():name() +" would like to request $"+Amount+" from you with this message attached: "
+                Text+=lastSaid():explode(LS[3,string])[2,string]
+                Target=P
+                timer("RequestMoney",7500)
+            } else {
+                Text=("Sorry, I couldn't find anyone who fits that description.")
+            }
+            break
+        case "credit",
+            Text="Hello. I am a Text To Speech E2 made by Pie The Nice Guy. The HTTP website was discovered by im chris. It was broken when he sent it to Pie so Teleputer gave him a working one."
+            Target=owner()
+            break
+        default,
+            break
+    }
+    if(Text!=""){
+        timer("Wait",0)
+        print("Message Sending")
+    }
+}elseif(httpClk()){
+    if(!(Target==noentity())){
+        holoPos(1,Target:toWorld(vec(50,0,0)))
+        holoAng(1,Target:angles()+ang(0,180,0))
+        holoAlpha(1,255)
+        holoEntity(1):streamStart(random(100,1000),httpData())
+    }else{
+        owner():streamStart(random(100,1000),httpData(),1)
+    }
+    print("Message Received")
+    timer("TurnOff",10000)
+}elseif(clk("TurnOff")){
+    holoAlpha(1,0)
+}elseif(clk("RequestMoney")){
+    moneyRequest(Target,Amount)
+}elseif(clk("Wait")){
+    if(httpCanRequest()){
+        if(Text!=""){
+            say(Text)
+        }
+    }else{
+        timer("Wait",100)
+    }
+}

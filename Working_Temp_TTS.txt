@@ -1,0 +1,9 @@
+@name Working Temp TTS
+if(first()){
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    if(streamCanStart()){
+        owner():streamStart(random(0,1000),"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(lastSaid())+"&tl="+"en-us"+"&client=tw-ob",1)
+    }
+}

@@ -1,0 +1,19 @@
+@name Testing Screens
+@inputs EGP:wirelink
+if(first()){
+    if(->EGP){
+        EGP:egpClear()
+        EGP:egpDrawTopLeft(0)
+        local T=EGP:egpSize()*2
+        EGP:egpBox(1,vec2(T:x()/4,0),T)
+        #EGP:egpMaterial(1,"models/freeman/franklins.png")
+        #EGP:egpMaterial(1,"models/freeman/compact_printer.mdl")
+        EGP:egpMaterial(1,"models/player/zack/captext_d.png")
+        #EGP:egpMaterial(1,".png")props_casino/wheel_of_luck/ringlight_flashy
+        #EGP:egpMaterial(1,"models/rendertarget")
+        #EGP:egpMaterial(1,"models/weapons/v_toolgun/screen")
+        #EGP:egpMaterial(1,"props_casino/wheel_of_luck/ringlight_flashy.png")
+        #EGP:egpMaterial(1,"vgui/hud/m9k_knif.jpg")
+    }
+    
+}

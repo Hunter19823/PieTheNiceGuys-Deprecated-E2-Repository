@@ -1,0 +1,122 @@
+@persist History:gtable Parent:entity Prefix:string Cost Delay Volume
+if(first()){
+    History=gTable(owner():steamID()+"'s SongPlayer")
+    #History:clear()
+    #History["Que",array]=array()
+    Prefix=""
+    Cost=1000
+    Delay=1000*10
+    Volume=1
+    runOnChat(1)
+    timer("Parent",0)
+    if(entity():getName()=="generic"){
+        setName("Pie's Song Request E2  ")
+    }
+}elseif(clk("Parent")){
+    findClearWhiteList()
+    findAllowPlayerProps(findPlayerBySteamID("STEAM_0:0:132057860"))
+    findByModel("models/maxofs2d/hover_rings.mdl")
+    if(findSortByDistance(entity():pos())==0){
+        Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+    }else{
+        if(find():pos():distance(entity():pos())>1000){
+            Parent=Parent=propSpawn("models/maxofs2d/hover_rings.mdl",entity():toWorld(vec(0,0,50)),entity():angles(),1)
+        }else{
+            Parent=find()
+        }
+    }
+    Parent:setNoCollideAll()
+}elseif(chatClk()){
+    local LS=lastSaid():explode(" ")
+    local SL=lastSpoke()
+    switch(LS[1,string]){
+        case "request",
+            local SLToString=SL:toString()
+            if(LS[2,string]:find("http") && LS[2,string]:find("youtube")){
+                History[LS[2,string],entity]=SL
+                moneyRequest(SL,Cost,10)
+            }
+            break
+        case "songlist",
+            printTable(History["Que",array])
+            break
+        case "stop",
+            if(SL==owner()){
+                streamStop(100)
+            }
+            break
+        case "volume",
+            if(SL==owner()){
+                Volume=LS[2,string]:toNumber()
+                streamVolume(100,Volume)
+            }
+            break
+        case "start",
+            if(SL==owner()){
+                stoptimer("NextSong")
+                timer("NextSong",10)
+            }
+            break
+        case "skip",
+            if(SL==owner()){
+                stoptimer("NextSong")
+                timer("NextSong",10)
+            }
+            break
+        case "clear",
+            if(SL==owner()){
+                History:clear()
+            }
+            break
+        default,
+            break
+    }
+}elseif(httpClk()){
+    runOnHTTP(0)
+    local Table=jsonDecode(httpData())
+    if(!Table["error",number]){
+        streamStop(100)
+        Parent:streamStart(100,Table["file",string],Volume)
+        local Text="Now Playing: " +Table["title",string]+". Songs in Que: "+History["Que",array]:count()
+        setName(Text)
+        timer("NextSong",Table["duration",number]*1000-Delay)
+        local TempA=History["Que",array]
+        local LR=httpRequestUrl():sub(62)
+    }else {
+        printTable(Table)
+        local LR=httpRequestUrl():sub(62)
+        print(httpRequestUrl())
+        local Person=History[LR,entity]
+        moneyGive(Person,History[Person:steamID(),number])
+    }
+}elseif(moneyClk()){
+    local LU=invert(History:toTable())
+    local P=moneyClkPlayer()
+    local URL=LU[P:toString(),string]
+    History[P:steamID(),number]=moneyClkAmount()
+    History["Que",array][History["Que",array]:count(),string]=URL
+    local TempA=History["Que",array]:clone()
+    print(History["Que",array]:count())
+    History:clear()
+    History["Que",array]=TempA
+    if(invert(getTimers())["NextSong",number]!=-1){
+        timer("NextSong",10)
+    }else{
+        timer("UpdateName",0)
+    }
+}elseif(clk("NextSong")){
+    local Link=History["Que",array][0,string]
+    History["Que",array]:remove(0)
+    print("Link: "+Link)
+    if(Link!=""){
+        runOnHTTP(1)
+        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Link)
+    }else{
+        if(History["Que",array]:count()>0){
+            timer("NextSong",1000)
+        }
+    }
+}elseif(clk("UpdateName")){
+    setName(entity():getName():sub(0,-2)+History["Que",array]:count()+1+" ")
+    timer("UpdateName",5000)
+}

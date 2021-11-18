@@ -1,0 +1,28 @@
+@persist [Max,Min,Current,Speed,Scale]:vector Radius 
+if(first()){
+    holoCreate(1)
+    Max=vec(5,5,5)
+    Min=vec(-5,-5,-5)
+    Current=vec(-5,0,-5)
+    Speed=vec(1)
+    Radius=100
+    Scale=vec(0.25,1,1)
+    interval(1000)
+}
+if(clk()){
+    if(Current:x()+Speed:x()>Max:x() | Current:x()+Speed:x()<Min:x()){
+        Speed=Speed:setX(-Speed:x())
+    }
+    if(Current:y()+Speed:y()>Max:y() | Current:y()+Speed:y()<Min:y()){
+        Speed=Speed:setY(-Speed:y())
+    }
+    if(Current:z()+Speed:z()>Max:z() | Current:z()+Speed:z()<Min:z()){
+        Speed=Speed:setZ(-Speed:z())
+    }
+    Current+=Speed
+    X=Current:x()
+    Y=Current:y()
+    Z=Current:z()
+    holoPos(1,entity():toWorld(vec(X*Scale:x()*X*X + 10*X,Y*Scale:y()*Y + 10,Z*Scale:z()*Z +50)))
+    interval(100)
+}

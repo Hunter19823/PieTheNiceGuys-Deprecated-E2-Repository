@@ -1,0 +1,36 @@
+@name Roulette
+@inputs Start
+@persist Reward Time
+if(first()){
+    Chip=entity()
+
+    #Table
+    holoCreate(1)
+    holoModel(1,"models/hunter/plates/plate2x3.mdl")
+    
+    
+    #Wheel
+    holoCreate(2)
+    holoModel(2,"models/props_phx/construct/metal_angle360.mdl")
+    holoScale(2,vec(0.5,0.5,1))
+    holoPos(2,Chip:pos()+vec(20,45,1))
+    
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    Message=lastSaid()
+    CommandParameters=Message:explode(" ")
+    if(CommandParameters[1,string]:lower()=="/spin"){
+        Time=1000
+        timer("Spin",Time)
+    }
+}
+if(clk("Spin")){
+    holoAng(2,holoEntity(2):toWorld(ang(0,cos(curtime()*1)*360,0)))
+    Time-=10
+    if(Time>=0){
+        timer("Spin",50)
+    }else{
+        print("Finished")
+    }
+}

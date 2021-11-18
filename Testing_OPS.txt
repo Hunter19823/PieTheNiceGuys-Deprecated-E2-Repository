@@ -1,0 +1,462 @@
+@name Pies New Building E2
+@persist [Prefix,Create,Delete,Move,Turn,Animate,Skin,Material,Model,Scale,ScaleUnits,BoneScale,Angle,Parent,UnParent,Prop,DeleteProp,Shader,Copy,Color,HoloParent,HoloUnParent,Control,LoopAnimation,Forward,Backward,Left,Right,Up,Down,TiltUp,TiltDown,Teleport]:string [MoveSpeed,TurnSpeed,CurrentController,Timer,Animation,HoloGram] [SavedProp,H]:entity
+@inputs EGP:wirelink
+if (first())
+{
+    #Setup The Expression to Run on these conditionals
+    runOnKeys(owner(),1)
+    #Run EveryTime The Owner Presses/Releases a Button
+    runOnChat(1)
+    #Run Everytime Someone Says something in chat.
+    
+    
+    
+    #Setup Commands
+    Prefix="/pie"
+    #Prefix you will use to call the commands.
+    #Ex: (Example prefix is !)
+    #!command
+    #The ! before the command is called the prefix.
+    #It tells the E2 that you are executing a command.
+    
+    Control="control"
+    #Control a certain Hologram
+    #Ex: (Example prefix is !)
+    #!control 1
+    #Keyboard controls now control hologram 1
+    
+    Create="create"
+    #Create a new Hologram
+    #Ex: (Example prefix is !)
+    #!create 1
+    #Creates hologram that will be identified/indexed as 1
+    
+    Delete="delete"
+    #Delete an existing Hologram
+    #Ex: (Example prefix is !)
+    #!delete 1
+    #Deletes hologram 1
+    
+    Move="move"
+    #Make the Hologram Move a Specified number of units 
+    #everytime it moves
+    #Ex: (Example prefix is !)
+    #!move 10
+    #Every movement made with controls will now move 10 units 
+    #each time
+    
+    Turn="turn"
+    #Make the Hologram Turn a Specified number of Degrees 
+    #everytime it moves
+    #Ex: (Example prefix is !)
+    #!turn 45
+    #Every turn or tilt made with controls will now turn 45 
+    #degrees each time on that axis
+    
+    Animate="animate"
+    #Animate the Hologram
+    #Ex: (Example prefix is !)
+    #!animate 1 3
+    #Set hologram 1's animation to 3 (For most player models 
+    #this is idle animation)
+    
+    Skin="skin"
+    #Skin the Hologram
+    #Ex: (Example prefix is !)
+    #!skin 1 3
+    #Set hologram 1's skin to skin 3 (if possible)
+    
+    Material="material"
+    #Materialize the Hologram (Add a material)
+    #Ex: (Example prefix is !)
+    #!material 1 models/rendertarget
+    #Set hologram 1's material to be render target (RT camera)
+    
+    Model="model"
+    #Change the model of the Hologram
+    #Ex: (Example prefix is !)
+    #!model 1 models/props_phx/misc/egg.mdl
+    #Sets hologram 1's model to an egg
+    
+    Scale="scale"
+    #Change the Scale of the Hologram
+    #Ex: (Example prefix is !)
+    #!scale 1 2 2 2
+    #Sets hologram 1's scale to 2x it's normal size
+    
+    ScaleUnits="scaleunits"
+    #Change the Scale of the Hologram to Exact Units
+    #Ex: (Example prefix is !)
+    #!scaleunits 1 100 100 100
+    #Sets hologram 1's size to fit 100x100x100 units
+    
+    BoneScale="bonescale"
+    #Change the Scale of the Hologram's Bones
+    #Ex: (Example prefix is !)
+    #!bonescale 1 3 2 2 2
+    #Sets hologram 1's 3rd bone to be a scale of 2x
+    
+    Angle="angle"
+    #Change the Angle of the Hologram
+    #Ex: (Example prefix is !)
+    #!angle 1 0 0 0
+    #Sets hologram 1's pitch, yaw, and roll to 0 0 0.
+    
+    Parent="pparent"
+    #Parent the Prop to the Hologram
+    #Ex: (Example prefix is !)
+    #!pparent
+    #Parents the last created prop to 
+    #whatever entity the player is looking at
+    
+    
+    UnParent="punparent"
+    #UnParent the Prop from the Hologram
+    #Ex: (Example prefix is !)
+    #!punparent
+    #Unparents the last created prop
+    
+    Prop="prop"
+    #Create a Prop of the Hologram
+    #Ex: (Example prefix is !)
+    #!prop 1
+    #Creates a prop based on hologram 1's model,position, 
+    #and angle.
+    
+    DeleteProp="delprop"
+    #Delete the Prop made by the Hologram
+    #Ex: (Example prefix is !)
+    #!delprop
+    #Deletes last created prop.
+    
+    Shader="shade"
+    #Enable/Disable the Shader of the Hologram
+    #Ex: (Example prefix is !)
+    #!shade 1 0
+    #Enable Hologram 1's shade (enabled by default)
+    #(1 to disable, 0 to enable).
+    
+    Copy="copy"
+    #Copy An Entity's Properties onto a Hologram
+    #Ex: (Example prefix is !)
+    #!copy 1
+    #Creates hologram 1 and hologram 1 copies the positon, angle
+    #model, color, material, animation, and alpha of whatever
+    #entity the owner is aiming at.
+    
+    Color="color"
+    #Change the RGB Color of the Hologram
+    #Ex: (Example prefix is !)
+    #!color 1 255 0 0
+    #Changes the RGB color of hologram 1 to be red dominent
+    
+    HoloParent="hparent"
+    #Parent the Hologram to another Entity
+    #Ex: (Example prefix is !)
+    #!hparent 1 2
+    #Parent hologram 1 to hologram 2
+    
+    HoloUnParent="hunparent"
+    #Unparent the Hologram to another Entity
+    #Ex: (Example prefix is !)
+    #!hunparent 1
+    #Remove hologram 1's parents
+    
+    LoopAnimation="loop"
+    #Loop an Animation for specific Hologram
+    #Caution: Experimental and could crash E2
+    #Ex: (Example prefix is !)
+    #!loop 1 305 9500
+    #Hologram 1's animation will be set to 305 and
+    #looped every 9.5 seconds.
+    
+    
+    #Controls
+    Forward="up"
+    #The KeyName for Moving Forward
+    Backward="down"
+    #The KeyName for Moving Backward
+    Left="left"
+    #The KeyName for Turning Left
+    Right="right"
+    #The KeyName for Turning Right
+    Up="pad_1"
+    #The KeyName for Moving Up
+    Down="pad_3"
+    #The KeyName for Moving Down
+    TiltUp="pad_7"
+    #The KeyName for Tilting Up
+    TiltDown="pad_9"
+    #The KeyName for Tilting Down
+    Teleport="rshift"
+    #The KeyName for teleporting the Hologram to You're AimPos
+
+    #Constants
+    MoveSpeed=5
+    #The Speed in which the Hologram Moves
+    TurnSpeed=15
+    #The Speed in which the Hologram Rotates
+    CurrentController=1
+    #Keeps the number of the Hologram being controlled
+    
+    #Ignore
+    H=holoEntity(CurrentController)
+    #Ignore
+}
+function vector getCords(AddPitch){
+    #Depending on your orientation it will calculate the 
+    #cordinate in MoveSpeed distance in front of you.
+    local Ent=holoEntity(CurrentController)
+    local Cords=Ent:pos()
+    local Pitch=Ent:angles():pitch()+AddPitch
+    local Yaw=Ent:angles():yaw()
+    local X=MoveSpeed * sin(Pitch) * real(comp(cos(Yaw)))
+    local Y=MoveSpeed * sin(Pitch) * sin(Yaw)
+    local Z=0
+    if (Pitch==0){
+        Z=MoveSpeed * imag(cos(comp(Pitch)))    
+    }
+    if (Pitch!=0){
+        Z=MoveSpeed * cos(Pitch)
+    }
+    return Cords + vec(X,Y,Z)
+}
+switch(1){
+    case chatClk(),
+        local Chat = lastSaid():explode(" ")
+        if (Chat[1,string]:sub(0,Prefix:length())==Prefix){
+            Default=0
+            switch(Chat[1,string]:sub(Prefix:length()+1)){
+                case Create,
+                    holoCreate(Chat[2,string]:toNumber(),entity():pos(),vec(1,1,1),entity():angles(),vec(255,255,255),"models/maxofs2d/cube_tool.mdl")
+                    CurrentController=Chat[2,string]:toNumber()
+                    H=holoEntity(CurrentController)
+                    break
+                case Delete,
+                    holoDelete(Chat[2,string]:toNumber())
+                    break
+                case Move,
+                    MoveSpeed=Chat[2,string]:toNumber()
+                    break
+                case Turn,
+                    TurnSpeed=Chat[2,string]:toNumber()
+                    break
+                case Animate,
+                    holoEntity(Chat[2,string]:toNumber()):animate(Chat[3,string]:toNumber(),1)
+                    break
+                case Skin,
+                    holoSkin(Chat[2,string]:toNumber(),Chat[3,string]:toNumber())
+                    break
+                case Material,
+                    holoMaterial(Chat[2,string]:toNumber(),Chat[3,string])
+                    break
+                case Model,
+                    holoModel(Chat[2,string]:toNumber(),Chat[3,string])
+                    break
+                case Scale,
+                    holoScale(Chat[2,string]:toNumber(),vec(Chat[3,string]:toNumber(),Chat[4,string]:toNumber(),Chat[5,string]:toNumber()))
+                    break
+                case ScaleUnits,
+                    holoScaleUnits(Chat[2,string]:toNumber(),vec(Chat[3,string]:toNumber(),Chat[4,string]:toNumber(),Chat[5,string]:toNumber()))
+                    break
+                case BoneScale,
+                    holoBoneScale(Chat[2,string]:toNumber(),Chat[3,string]:toNumber(),vec(Chat[4,string]:toNumber(),Chat[5,string]:toNumber(),Chat[6,string]:toNumber()))
+                    break
+                case Angle,
+                    holoAng(Chat[2,string]:toNumber(),ang(vec(Chat[3,string]:toNumber(),Chat[4,string]:toNumber(),Chat[5,string]:toNumber())))
+                    break
+                case Parent,
+                    if (SavedProp:isValid()){
+                        local LE = owner():aimEntity()
+                        if(LE:isValid()){
+                            SavedProp:parentTo(LE)
+                        }
+                    }
+                    break
+                case UnParent,
+                    SavedProp:unParent()
+                    break
+                case Prop,
+                    local E=holoEntity(Chat[2,string]:toNumber())
+                    SavedProp=propSpawn(E,E:pos(),E:angles(),1)
+                    break
+                case DeleteProp,
+                    SavedProp:propDelete()
+                    break
+                case Shader,
+                    holoDisableShading(Chat[2,string]:toNumber(),Chat[3,string]:toNumber())
+                    break
+                case Copy,
+                    local LE = owner():aimEntity()
+                    if(LE:isValid()){
+                        local HG=Chat[2,string]:toNumber()
+                        local Temp = holoCreate(HG,LE:pos(),vec(1,1,1),LE:angles(),LE:getColor(),LE:model())
+                        Temp:animate(LE:getAnimation(),1)
+                        holoSkin(HG,LE:getSkin())
+                        if (LE:getMaterial()!=""){
+                            holoMaterial(HG,LE:getMaterial())
+                        }
+                        holoAlpha(HG,LE:getAlpha())
+                    }
+                    CurrentController=Chat[2,string]:toNumber()
+                    H=holoEntity(CurrentController)
+                    break
+                case Color,
+                    holoColor(Chat[2,string]:toNumber(),vec(Chat[3,string]:toNumber(),Chat[4,string]:toNumber(),Chat[5,string]:toNumber()))
+                    break
+                case HoloParent,
+                    holoParent(Chat[2,string]:toNumber(),Chat[3,string]:toNumber())
+                    break
+                case HoloUnParent,
+                    holoUnparent(Chat[2,string]:toNumber())
+                    break
+                case Control,
+                    CurrentController=Chat[2,string]:toNumber()
+                    break
+                case LoopAnimation,
+                    HoloGram=Chat[2,string]:toNumber()
+                    Animation=Chat[3,string]:toNumber()
+                    Timer=Chat[4,string]:toNumber()
+                    timer("loopanimation",0)
+                    
+                    H=holoEntity(CurrentController)
+                    break
+                case "pinfo",
+                    E=owner():aimEntity()
+                    if(E:isPlayer()){
+                        H=E
+                    }
+                    break
+                default,
+                    Default=1
+                    break
+            }
+            if (Default==0){
+                interval(1000)
+            }
+        }
+        break
+    case keyClk(owner()),
+        local Ent=holoEntity(CurrentController)
+        Default=0
+        switch(keyClkPressed()){
+            case Forward,
+                holoPos(CurrentController,getCords(90))
+                break
+            case Backward,
+                holoPos(CurrentController,getCords(-90))
+                break
+            case Left,
+                holoAng(CurrentController,Ent:angles() + ang(0,TurnSpeed,0))
+                break
+            case Right,
+                holoAng(CurrentController,Ent:angles() - ang(0,TurnSpeed,0))
+                break
+            case TiltUp,
+                holoAng(CurrentController,Ent:angles() - ang(TurnSpeed,0,0))
+                break
+            case TiltDown,
+                holoAng(CurrentController,Ent:angles() + ang(TurnSpeed,0,0))
+                break
+            case Up,
+                holoPos(CurrentController,round(Ent:pos() + vec(0,0,MoveSpeed)))
+                break
+            case Down,
+                holoPos(CurrentController,round(Ent:pos() - vec(0,0,MoveSpeed)))
+                break
+            case Teleport,
+                holoPos(CurrentController,owner():aimPos())
+                break
+            default,
+                Default=1
+                break
+        }
+        if (Default==0){
+            interval(1000)
+            H=holoEntity(CurrentController)
+        }
+        break
+#    case keyClk(owner())*-1,
+#        break
+#    case tickClk(),
+#        break
+    case clk("loopanimation"),
+        holoEntity(HoloGram):animate(Animation)
+        timer("loopanimation",Timer)
+        break
+    case clk(),
+        if (EGP:entity():isValid()){
+            EGP:egpClear()
+            Stats="Currentently Controlling Model #: " + CurrentController
+            Spacing = 15
+            Sign=0
+            EGP:egpText(Sign+1,Stats,vec2(Spacing*Sign))
+            Sign+=1
+            Stats="Model: " + H:model()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Scale: " + holoScale(CurrentController)
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Scale Units: " + holoScaleUnits(CurrentController)
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Position: " + H:pos()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Angle: " + H:angles()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Material: " + H:getMaterial()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Frags: " + H:frags()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Money: " + H:money()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Health: " + H:health()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Armor: " + H:armor()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Animation: " + H:getAnimation()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Color: " + H:getColor()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Name: " + H:name()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Ping: " + H:ping()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Radius: " + H:radius()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Height: " + H:height()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Team: " + H:team()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Type: " + H:type()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Deaths: " + H:deaths()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+            Sign+=1
+            Stats="Weapon Ammo: " + H:weapon():primaryAmmoType()
+            EGP:egpText(Sign+1,Stats,vec2(0,Spacing*Sign))
+        }
+        break
+    default,
+        break
+}
+setName("Pie's New Holo-Building Tool, Last Operation Cost: "+opcounter():toString())
+#if (opcounter()>=500){
+#    print("OP Reached Half Limit! "+opcounter()+ "Chat?"+chatClk()+"Key?"+keyClk(owner())+"Animation?"+clk("loopanimation"))
+#}

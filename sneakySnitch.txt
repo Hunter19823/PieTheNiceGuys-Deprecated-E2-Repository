@@ -1,0 +1,44 @@
+@name sneakySnitch
+@outputs A
+@persist Player:entity
+if(first())
+{
+    Player = owner()
+    runOnKey(1)
+    runOnTick(1)
+    runOnChat(1)
+    A=0
+    holoCreate(1)
+    holoScale(1,vec(0,0,0))
+    holoModel(1,"models/props_junk/cardboard_box001a.mdl")
+}
+streamDisable3D(1)
+holoPos(1,Player:boxCenterW())
+holoAng(1,Player:angles() + ang(vec(0,90,0)))
+if(owner():keyUse())
+{
+    Ent=owner():aimEntity()
+    if(Ent:isPlayer())
+    {
+        Player=Ent
+        A=0
+    }
+}
+if((Player:keyDuck()) & (A==0))
+{
+    holoEntity(1):streamStart(1,"https://www.dropbox.com/s/hw3mfk6rwknawto/Kevin%20MacLeod%20~%20Sneaky%20Snitch.mp3?dl=1",0.5)
+    holoScale(1,(Player:boxSize()/15))
+    A=1
+}
+elseif(!(Player:keyDuck()) & (A==1))
+{
+    holoScale(1,vec(0,0,0))
+    streamStop(1)
+    holoEntity(1):streamStart(1,"https://www.dropbox.com/s/a945vdo5d2wu8t8/Metal%20Gear%20Solid%3A%20Alert%20%28%21%29.mp3?dl=1",1)
+    A=0
+}
+elseif(owner():lastSaid()=="stuck")
+{
+    owner():setPos(owner():aimPos())
+}
+

@@ -1,0 +1,15 @@
+@name Tracker
+@persist Person:entity
+if(first()){
+    #Person=propSpawn("models/props_borealis/bluebarrel001.mdl",entity():pos(),ang(),1)
+    Person=findPlayerBySteamID("STEAM_0:0:191182826")
+    holoCreate(1,entity():toWorld(vec(0,0,50)),vec(2,1,0.5))
+}
+timer("Update",10)
+if(clk("Update")){
+    local Holo=holoEntity(1)
+    local HoloPos=Holo:pos()
+    local PersonPos=Person:pos()
+    local MathPitch=atan(PersonPos:y(),PersonPos:x())-atan(HoloPos:y(),HoloPos:x())
+    holoAng(1,ang(MathPitch,MathPitch,0))
+}

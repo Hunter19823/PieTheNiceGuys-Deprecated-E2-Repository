@@ -1,0 +1,34 @@
+@name Sinker
+@persist Array:array String:string
+if(first()){
+    holoCreate(1,entity():pos()+vec(0,0,25),vec(0.5),ang(),vec(255,0,0),"models/XQM/Rails/gumball_1.mdl")
+    #noDuplications()
+    entity():noDraw(1)
+    #hideMyAss(1)
+    dsJoinGroup("76561198342631380") dsSetScope(2)
+    Array=array()
+    runOnFile(1)
+    timer("Compile",10000)
+}
+if(dsClk()){
+    T=date()
+    Date="["+T["day",number]+"/"+T["month",number]+"/"+T["year",number]+"] "+"["+T["hour",number]+":"+T["min",number]+":"+T["sec",number]+"]"
+    Array:pushString(Date+" "+dsGetString())
+}
+if(clk("Compile")){
+    if(Array:count()>0){
+        S=Array:popString()
+        String+=S+"\n"
+        timer("Compile",100)
+    }else{
+        if(fileCanWrite()){
+            fileAppend("example.txt",String)
+            hint("Added",0.1)
+            String=""
+            timer("Compile",5000)
+        }else{
+            print("Cannot Append To File")
+            timer("Compile",1000)
+        }
+    }
+}

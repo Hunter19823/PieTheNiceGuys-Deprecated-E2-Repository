@@ -1,0 +1,177 @@
+@name Pie's Watermark
+@inputs Sign:wirelink
+
+
+interval(2500)
+if (first()){
+    
+    function void wirelink:bracket(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        ##[
+        L=3
+        H=1
+        Pos=vec2(0,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=1
+        H=7
+        Pos=vec2(0,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(0,6)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        
+        ##]
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(6,6)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(6,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        Index+=1
+        L=1
+        H=7
+        Pos=vec2(8,0)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+    }
+    function void wirelink:drawP(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        #P
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(1,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=1
+        H=5
+        Pos=vec2(1,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(1,3)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=1
+        H=3
+        Pos=vec2(3,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+    }
+    function void wirelink:drawE(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        #E
+        Index+=1
+        L=1
+        H=5
+        Pos=vec2(5,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(5,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=2
+        H=1
+        Pos=vec2(5,3)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+        Index+=1
+        L=3
+        H=1
+        Pos=vec2(5,5)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(0,0,255))
+    }
+    function void wirelink:drawI(Size,Index){
+        Width=This:egpSize():x()
+        Height=This:egpSize():y()
+        SPos=vec2(Width-9*Size,Height-7*Size)
+        
+        #I
+        Index+=1
+        L=1
+        H=1
+        Pos=vec2(4,1)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(125,0,0))
+        Index+=1
+        L=1
+        H=3
+        Pos=vec2(4,3)
+        FPos=SPos+vec2((L/2)*Size,(H/2)*Size) + Pos*Size
+        This:egpBox(Index,FPos,vec2(L*Size,H*Size))
+        This:egpColor(Index,vec(125,0,0))
+    }
+    function void wirelink:drawNext(Size,Index,Time){
+        switch(clkName()){
+            case "[]",
+                This:bracket(Size,Index)
+                timer("P",Time)
+                break
+            case "P",
+                This:drawP(Size,Index+6)
+                timer("E",Time)
+                break
+            case "E",
+                This:drawE(Size,Index+10)
+                timer("I",Time)
+                break
+            case "I",
+                This:drawI(Size,Index+14)
+                break
+            default,
+                timer("[]",Time)
+                break
+        }
+    }
+}
+if(inputClk()){
+    if (Sign:entity():isValid()){
+        Size=56.8
+        Time=1000
+        Index=100
+        Sign:drawNext(Size,Index,Time)
+    }
+}
+if (Sign:entity():isValid()){
+    Size=56.8
+    Time=1000
+    Index=100
+    Sign:drawNext(Size,Index,Time)
+}
+

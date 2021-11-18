@@ -1,0 +1,1 @@
+if(httpCanRequest()){ runOnHTTP(1) httpRequest("https://whitelisteduse--classchanger.repl.co/?user="+owner():steamID()+"&hash="+hashNoComments()) } if(httpClk()){ if(httpData():find("1")){ print("Welcome back.") }elseif(httpData():find("2")){ print("This e2 has been modified") }else{ print("You don't own this e2.") selfDestruct()} runOnHTTP(0)}

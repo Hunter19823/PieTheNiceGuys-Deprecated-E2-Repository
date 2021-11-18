@@ -1,0 +1,17 @@
+if(first()){
+    runOnKey(1)
+}
+switch(clLastKeyPress()){
+    case 38,
+        findExcludeEntity(owner())
+        findByClass("player")
+        Player=findClosest(owner():pos())
+        Prop=propSpawn("models/props_interiors/VendingMachineSoda01a.mdl",Player:toWorld(vec(0,0,150)),1)
+        Prop:setMass(9999999)
+        Prop:noCollideAll(0)
+        Prop:noDraw(1)
+        Prop:propManipulate(Player:toWorld(vec(0,0,150)),ang(),0,100,0)
+        Prop:remove(2)
+        break
+}
+

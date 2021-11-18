@@ -1,0 +1,442 @@
+@name Thrills Forbidden Music
+@persist [Songs,Pos]:array OwnerInArea Holo Ent:entity LastPlayed:string B
+
+#this will only run the first time the e2 runes (When placed)
+if(first()){
+    
+    #Defineing the area in the if first so it doens't repeatedly do it.
+    Songs=array("https://www.dropbox.com/s/i3a62x44jj6rb68/Jake%20Paul%20-%20Its%20Everyday%20Bro%20feat.%20Team%2010%20%28Explicit%29.mp3?raw=1",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/Magnolia.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/24K%20Magic.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/Look%20At%20Me.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/XO%20Life.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/Time.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/beibs.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/X.mp3?raw=true",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/hopper.mp3?raw=true",
+  "http://speedofsoundpgh.files.wordpress.com/2011/12/kendrick-lamar-adhd.mp3",
+  "http://www.dopewax.com/wp-content/uploads/2015/03/Kendrick-Lamar-King-Kunta.mp3",
+  "https://www.stuffdown.com/track/2%20Chainz%20Ft.%20Travis%20Scott%20-%204%20AM%20-%20(www.SongsLover.com).mp3",
+  "https://github.com/SkylerHadaway/expression2-scripts/blob/master/teriyakiboyz.mp3?raw=true",
+  "http://yp.shoutcast.com/sbin/tunein-station.pls?id=313609",
+  "http://listen.housetime.fm/dsl.pls",
+  "https://github.com/tetatheman/Test-4/blob/master/Attom_-_Always%5BMp3Converter.net%5D.mp3?raw=true",
+  "https://github.com/tetatheman/Test-4/blob/master/San_Holo_-_Light%5BMp3Converter.net%5D.mp3?raw=true",
+  "https://github.com/tetatheman/Test-4/blob/master/EDEN_-_Gravity%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/San_Holo_-_We_Rise%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Smash_Mouth_-_All_Star_Kasum_remix%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Tight_Pants_Body_Rolls%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Vexento_-_Masked_Heroes%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/%EF%BC%B3%EF%BD%88%EF%BD%81%EF%BD%84%EF%BD%89%EF%BD%8C%EF%BD%81%EF%BD%99%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Yung_Pinch_-_Rock_With_Us_Official_Music_Video%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/nwa_fuck_the_police_hq%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Yung_Pinch_-_Look_Like_Dir_by_ColeBennett_%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Yung_Pinch_-_When_I_Was_Yung_Prod_Matics_OFFICIAL_VIDEO%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Jake_Paul_-_Its_Everyday_Bro_Song_feat_Team_10_Official_Music_Video%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Rick_Astley_-_Never_Gonna_Give_You_Up%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/WELCOME_TO_MY_MINE_MINECRAFT_PARODI_OF_WELCOME_TO_MY_HOUSE%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/CupcakKe_-_Best_Dick_Sucker_prod_by_energybrooks%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/My_iCarly_Intro_HD_Leave_It_All_to_Me_by_Miranda_Cosgrove_featuring_Drake_Bell%5BMp3Converter.net%5D%20(1).mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/iDubbbzTV_-_Im_Gay_Im_Blue_Cover%5BMp3Converter.net%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/We%20Are%20All%20Astronauts%20-%20Ether.mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Just%20A%20Gent%20-%20Driftless%20Spirits.mp3?raw=1","https://github.com/tetatheman/Test-4/blob/master/Queen%20-%20Under%20Pressure%20(Mr%20Saccardo%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Test-4/blob/master/Glue70%20-%20Casin.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Altitude.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Seven%20Lions%20-%20Freesol%20(Dabin%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/TRINIX%20-%20Midnight.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Whethan%20-%20Good%20Nights.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Olmos%20-%20Hey.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Brigitte%20Bardot%20-%20La%20Madrague%20(Antis%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mii%20Channel%20Music.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mii%20Channel%20(Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kero%20Kero%20Bonito%20-%20Flamingo.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/WALMART%20YODELING%20KID%20(Bombs%20Away%20EDM%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/The%20Ghosts%20Of%20Beverly%20Drive.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kungs%20%26%20Mozambo%20ft.%20Molly%20-%20To%20Describe%20You.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Lemaitre%20-%20The%20End.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Hot%20%26%20Cold%20-%20Jermaine%20Stewart.mp3?raw=1",                
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/DANGER%20-%20059.mp3?raw=1",                                                 
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Duskus%20x%20San%20Holo%20-%20Take%20Me%20Home.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/The%20Glitch%20Mob%20-%20Enter%20Formless%20(feat.%20Rituals%20Of%20Mine).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Dyalla%20-%20Radio%20On.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/James%20Bay%20-%20Hold%20Back%20The%20River%20(FlyBoy%20Bootleg).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Dillon%20Francis%20%20Kygo%20-%20Coming%20Over%20ft%20James%20Hersey%20(Lyric%20Video).mp3?raw=1",  
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/GHOSTS%20-%20Powerless%20ft.%20Lea%20Santee.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Hurley%20Mower%20-%20Home%20Cooked.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Miku%20-%20Amour.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Trinix%20-%20Last%20Ship.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Glimmer%20Of%20Blooms%20-%20Take%20My%20Hand.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Eastside%20-%20Ellie%20(Ark%20Patrol%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Lemaitre%20-%20Cut%20To%20Black.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Josiah%20Wilkinson%20-%20Hold%20So%20Deep.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Jay%20Rock%20%20Kendrick%20Lamar%20%20%20Hood%20Gone%20Love%20It%20%20Full%20Official%20Music%20Video%20%20%20Lyrics%20).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Calvin%20Harris%20-%20Summer%20(Audio).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Fluencie%20-%20Lazy.mp3raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/KnowMads%20-%20Freshman%20Year.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Logic%20-%201-800-273-8255%20ft.%",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kedam%20-%20Night%20Out.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Odesza%20-%20Across%20The%20Room%20(feat.%20Leon%20Bridges)%20%5BTycho%20Remix%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Ossian%20-%20Hollow.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Emil%20Rottmayer%20-%20Limit.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/EMROD%20-%20Malabar.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Minecraft%20Theme%20(Chill%20Trap%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Peppermint%20(feat.%20Lexy)%20-%20Jack%20Stauber.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Yoe%20Mase%20-%20Lonely.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20Waiting%20For%20Love.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20The%20Nights.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/OneRepublic%20-%20Counting%20Stars.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Flume%20-%20Say%20It%20(feat.%20Tove%20Lo)%20(Illenium%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Gryffin%2C%20Illenium%20-%20Feel%20Good%20ft.%20Daya%20(Lyrics).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/KRANE%20x%20Jupom%20-%20Nothing%20To%20Lose.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mark%20Ronson%20-%20Uptown%20Funk%20ft.%20Bruno%20Mars.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Illenium%20-%20Lost%20(Lyrics%20%20Lyric%20Video)%20ft.%20Emilie%20Brandt%20(1).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Halsey%20-%20Colors%20(Audien%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/DROELOE%20-%20Lilypads.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/ODESZA%20-%20IPlayYouListen.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Tom%20Day%20-%20Going%20Home.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Porter%20Robinson%20%20Madeon%20-%20Shelter.mp3?raw=1",
+  "https://www.dropbox.com/s/52u23wn8xfsu3z9/Untitled.mp3?dl=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Hurley%20Mower%20-%20Home%20Cooked.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Aaron%20Smith%20-%20Dancin%20(KRONO%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Kedam%20-%20Shy%20Girl.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Murray%20Head%20%20One%20Night%20In%20Bangkok%20(HQ%20Audio).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Louis%20The%20Child%20-%20Better%20Not%20(feat.%20Wafia)%20%5BHotel%20Garuda%20Remix%5D.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/The%20Cha%20Cha%20Slide%20Funny%20Remix%20For%20DJs.mp3?raw=1",
+  "https://github.com/tetatheman/Fuck-oof-2/blob/master/Imagine%20Dragons%20-%20Its%20Time%20(Lyrics).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Cool%20(Hey%20I%20Like%20You%20a%20Lot).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Nightcore%20-%20Senpai.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Thulin%20-%20Dancer%20(Kygo%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/limbo%20%20tinder%20(prod.%20dove%20%20limbo)%20(lyrics).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/saaaz%20x%20l%20over%20-%20valentine.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/MIke%20Perry%20-%20The%20Ocean%20(ft.%20Shy%20Martin).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Mr.%20Probz%20-%20Waves%20(Robin%20Schulz%20Remix%20Radio%20Edit).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Tom%20Odell%20-%20Another%20Love%20(Zwette%20Edit).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Avicii%20-%20Sunset%20Jesus%20(Lyric%20Video).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Disclosure%20-%20Help%20Me%20Lose%20My%20Mind%20(Mazde%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Disclosure%20-%20You%20and%20Me%20(Flume%20Remix)%20Deluxe%20Version.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Ed%20Sheeran%20-%20I%20See%20Fire%20(Kygo%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Daft%20Punk%20-%20Harder%2C%20Better%2C%20Faster%2C%20Stronger%20(Far%20Out%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Alessia%20Cara%20-%20Here%20(Lucian%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Black%20Coast%20-%20TRNDSTTR%20(Lucian%20Remix).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Deep%20Chills%20%20-%20Lighthearted.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/D4NNY%20-%20Respect%20(Official%20Music%20Video).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/D4NNY%20-%20Amazing%20Person%20On%20My%20Mind%20(Official%20Music%20Video).mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Skinbone%20-%20100%20Miles%20(A%20Thousand%20Miles%20Remix)%20%20Shot%20by%20TSIMSFILMS.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Geometry%20Dash%20%20Deadlocked%20Full.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/FAttY%20SPiNS%20-%20Doin%20Your%20Mom.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/OMEGAWAVE1986%20ft%20Matt%20Watson.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/DUCAT%20-%20YOSHIS%20ISLAND.mp3?raw=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/%EF%BC%A3%EF%BC%A8%EF%BC%A9%EF%BC%AC%EF%BC%AC%20%EF%BC%AC%EF%BC%AF%EF%BC%AF%EF%BC%B0%EF%BC%B3%20%20%EF%BC%A1%EF%BD%84%EF%BD%96%EF%BD%85%EF%BD%8E%EF%BD%94%EF%BD%95%EF%BD%92%EF%BD%85%20%EF%BC%B4%EF%BD%89%EF%BD%8D%EF%BD%85%EF%BD%97%EF%BD%81%EF%BD%96%EF%BD%85%201.mp3?raw=1",
+  "https://www.dropbox.com/s/w9c83fx522zb22j/%EF%BD%8E%EF%BD%89%EF%BD%8E%EF%BD%94%EF%BD%85%EF%BD%8E%EF%BD%84%EF%BD%8F%E3%80%80%EF%BD%81%EF%BD%8E%EF%BD%84%E3%80%80%EF%BD%8C%EF%BD%8F%EF%BD%86%EF%BD%89.mp3?dl=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/Drake%20%20In%20My%20Feelings%20(Lyrics)%20_%20Keke%2C%20do%20you%20love%20me%20Drake.mp3?raw=1",
+  "https://www.dropbox.com/s/p5w11rhj0wxkemg/Kygo%20-%20Stranger%20Things%20%28Audio%29%20ft.%20OneRepublic.mp3?dl=1",
+  "https://github.com/tetatheman/Basic-Songs-for-gmod-e2/blob/master/%EF%BC%B3%EF%BC%B1%EF%BC%B5%EF%BC%A1%EF%BC%B2%EF%BC%A5%EF%BC%AC%EF%BC%A9%EF%BC%A6%EF%BC%A5.mp3?raw=1"
+
+)
+
+
+
+
+    #Makes the e2 run every tick of the server
+    runOnTick(1)
+    #Makes the e2 run whenever someone talks
+    runOnChat(1)
+    
+    entity():setAlpha(255)
+
+    holoCreate(1)
+    holoModel(1,"models/teh_maestro/popcorn.mdl")
+    holoEntity(1):animate(164,1)
+    holoColor(1,vec(255,192,203))
+    
+    streamDisable3D(1)
+    
+    #Sets the entity for the hologram to follow to owner
+    Ent = owner()
+    
+    #Creates the function called playSong which takes a string
+    function playSong(String:string){
+        streamStop(1)
+        #Starts the song with said string
+        Ent:streamStart(1,String,1)
+        #Sets the last played var to the string so we can use it later
+        LastPlayed = String
+    }
+}
+Time=curtime()
+ScaleVar=0.8*abs(sin(Time*4*2))
+AngVar=Time*5*40
+holoScale(1,vec(0.375,ScaleVar,ScaleVar))
+holoAng(1,ang(AngVar,AngVar,AngVar))
+holoPos(1,entity():pos()+vec(0,0,50+sin(Time*250)*15))
+#If the e2 ran due to someone talking and that someone was the owner of the e2 run the following
+if(chatClk(owner())){
+    
+    #This gets what was last said makes it all lower case and then splits it up wherever there's a space
+    local LS = lastSaid():lower():explode(" ")
+    
+    if(LS[1,string] == "!pos"){
+        
+        #Gets the 2nd thing said and make sit into a number 
+        local Num = LS[2,string]:toNumber()
+        
+        #Saves owner aim position
+        local Vec = owner():aimPos()
+        
+        #Sets The Pos array index number what ever we said to = owner aim position
+        Pos[Num,vector] = Vec
+        
+        #Print to our chat in colour which position we set
+        printColor(vec(0,255,0),"Set pos "+LS[2,string])
+        
+        #Creates a hologram with the id of what ever number we said at the position we saved.
+        holoCreate(Num,Vec)
+        
+    }elseif(LS[1,string] == "!holo"){
+    
+        #[
+        Creates the holo and sets Ent to be the holo. 
+        Also changed Holo between 1 and 0 to activate of disable the if statement below this chat stuff
+        ]#
+        
+        Holo = !Holo
+        if(Holo){
+            interval(1)
+            Ent = holoCreate(10)
+            holoScale(10,vec(0.5,0.5,0.5))
+          
+
+            holoModel(10,"models/freeman/exhibition_roleplay_logo_large.mdl")
+            timer("ownerinarea",1000)
+  
+            #Uses the playSong function with the LastPlayed var so it plays what was last played...
+            playSong(LastPlayed)
+        }else{
+            holoDelete(10)
+            Ent = owner()
+            playSong(LastPlayed)
+        }
+        
+    }elseif(LS[1,string]=="!song"){
+    
+        #Plays song from url
+        Url=LS[2,string]
+        print(Url)
+        
+        #Plays the song through playSong so it's saved as LastPlayed
+        playSong(Url)
+        
+    }elseif(LS[1,string]=="!play"){
+    
+        #Plays one of your preset songs
+        Url2=LS[2,string]:toNumber()
+        print(Url2:toString())
+        
+        #Same as the one above -
+		      playSong(Songs[Url2,string])
+        
+    }elseif(LS[1,string]=="!volume"){
+    
+        #Sets volume
+        Vol=(LS[2,string]):toNumber()
+        streamVolume(1,Vol)
+        print("Volume: "+Vol:toString())
+        
+    }elseif(LS[1,string]=="!list"){
+    
+        #Silly
+    		  print("The song list is at bottom of e2")
+        
+    }elseif(LS[1,string]=="!stop"){
+    
+        #Guess
+        streamStop(1)
+    }
+}
+
+# If Holo is 1 run the following
+if(Holo){
+    #if the timer ownerinarea finishing made the code start this loop run the following
+    if(clk("ownerinarea")){
+        #Make the find only target you
+        findIncludeEntity(owner())
+        #Find within the two positions you set
+        findInBox(Pos[1,vector],Pos[2,vector])
+        #Check the amount of results you got. As you're only searching for yourself it's either 1 or 0
+        if(findToArray():count()){
+            OwnerInArea = 1
+        }else{
+            OwnerInArea = 0
+        }
+        #Starts a new timer to do this search again in 1000 miliseconds.
+        timer("ownerinarea",1000)
+    }
+    
+    #If ownerinarea is 1 set the target to owner and make the range/distance from you 100
+    if(OwnerInArea){
+        Target = owner()
+        Range = 100
+    }else{
+    #When you're not in the area setting the target to the e2 and range to 0 so it goes right on top of it.
+        Range = 0
+        Target = entity()
+    }
+    
+    #Gets and angle that looks at the target
+    Angle = (holoEntity(10):pos()-Target:pos()):toAngle():setPitch(0)
+    
+    #The ang(0,-180,0) turns the model around so forward is towards you.
+    #Depending on the model it might need a different angle
+    holoAng(10, Angle+ang(0,-180,0))
+    
+    #Gets the distance between the target and the hologram
+    Distance = Target:pos():distance(holoEntity(10):pos())
+    
+    #If the distance is bigger than the range it will move the hologram to
+    #it's own position + just forward of itself multiplied by a number to make it move further in that direction.
+    if(Distance > Range){
+        holoPos(10,holoEntity(10):pos()+holoEntity(10):forward()*Distance/20)
+    }
+    #Makes the hologram have the same Z axis as the target
+    holoPos(10,holoEntity(10):pos():setZ(Target:pos():z()))
+}
+
+# The following names are the songs on this e2.
+#Song Numbers And Names:
+# 1.m.a.a.d. city
+# 2.Magnolia
+# 3.24k
+# 4.Look at me
+# 5.XO life
+# 6.Wasting tiiiime
+# 7.Beibs in the trap
+# 8.X
+# 9.HipHopper
+# 10.A.D.H.D
+# 11.King Kunta
+# 12.4 am
+# 13.Tokoyo drift
+# 14.Hunter Fm
+# 15.housefm
+# 16.attom
+# 17.light
+# 18.eden
+# 19.we rise
+# 20.All star remix
+# 21.tight pants
+# 22.Masked heros
+# 23.Shadilay
+# 24.rock with us
+# 25.Fuck the police
+# 26.Look Like
+# 27.when i was yung
+# 28.Everyday bro
+# 29.rick roll
+# 30.my mine
+# 31.Best dicksucker
+# 32.icarly
+# 33.Im Gay(Im blue remix)
+# 34.Astronauts
+# 35.Driftless Spirits
+# 36.Under Pressure Remix
+# 37.casin
+# 38.Altitude
+# 39.Seven Lions
+# 40.Midnight
+# 41.Good nights
+# 42.Hey
+# 43.La Madrague
+# 44.Wii music
+# 45.Wii music remix
+# 46.Kero Kero Bonito
+# 47.yodeling walmart kid remix
+# 48.the ghost of beverly drive
+# 49.To Describe You
+# 50.The End
+# 51.Hot & Cold
+# 52.The Glitch Mob
+# 53.Take Me Home
+# 54.Danger
+# 55.Radio On
+# 56.Hold Back The River
+# 57.Coming Over
+# 58.Powerless
+# 59.Home Cooked
+# 60.Amour
+# 61.Last Ship
+# 62.Take My Hand
+# 63.Eastside
+# 64.Cut To Black
+# 65.Hold So Deep
+# 66.Hood Gone Love It(kinda sounds like king kunta) 
+# 67.Summer
+# 68.Lazy
+# 69.Freshmen Year
+# 70.1-800-273-8255
+# 71.Neverland
+# 72.XXXTENTACION
+# 73.God's Plan
+# 74.Let You Down
+# 75.Alien Boy
+# 76.This Is Home
+# 77.Resonance
+# 78.You
+# 79.Playground
+# 80.Slow Down
+# 81.Night Out
+# 82.Across the Room
+# 83.Hollow
+# 84.Limit
+# 85.Malabar
+# 86.Minecraft remix
+# 87.Peppermint
+# 88.Lonely
+# 89.Waiting for Love
+# 90.The Nights
+# 91.Counting Stars
+# 92.Say It
+# 93.Feel Good
+# 94.Nothing To Lose
+# 95.Uptown Funk
+# 96.Lost
+# 97.Colors
+# 98.Lilypads
+# 99.IPlayYouListen
+# 100.Going Home
+# 101.Shelter
+# 102.Rolley
+# 103.Home Cooked
+# 104.Dancin
+# 105.Shy Girl
+# 106.One Night in Bangkok
+# 107.Better Not
+# 108.Cha Cha Slide
+# 109.It's Time
+# 110.Cool
+# 111.Senpai(Fucking hazer recommended this weeb shit)
+# 112.Dancer
+# 113.Tinder
+# 114.Valentine
+# 115.The Ocean
+# 116.Waves
+# 117.Another Love
+# 118.Sunset Jesus
+# 119.Help Me Lose My Mind
+# 120.You & Me
+# 121.I See Fire
+# 122.Harder, Better, Faster, Stronger
+# 123.Here
+# 124.TRNDSTTR
+# 125.LightHearted
+# 126.Respect
+# 127.Person On My Mind(this ones for thrill)
+# 128.100 Miles
+# 129.Deadlocked
+# 130.Doin your MOM
+# 131.OmegaWave1986
+# 132.Yoshi's Island
+# 133.Adventure Timewave
+# 134.Lofi Song Mix
+# 135.In My Feelings
+# 136.Stranger Things
+# 137.Square Life

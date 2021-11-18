@@ -1,0 +1,84 @@
+@persist [Person]:entity [LP1,LP2,LP3,LPP1,LPP2,LPP3]:vector
+if(first()){
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    
+    function void pointToPoint(Index,P1:vector ,P2:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),vec(255,0,0),"models/hunter/plates/plate8x8.mdl")
+        holoRenderFX(Index,15)
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,1)
+        holoVisible(Index,players(),0)
+        holoVisible(Index,owner(),1)
+    }
+    function void pointToPoint(Index,P1:vector ,P2:vector , Color:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/plates/plate8x8.mdl")
+        holoRenderFX(Index,15)
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,1)
+        holoVisible(Index,players(),0)
+        holoVisible(Index,owner(),1)
+    }
+    
+    Person=searchForPlayer("Pie")
+    runOnTick(1)
+}
+if(changed(Person:weapon():clip1())){
+    if(Person:aimEntity()){
+        P=Person:aimEntity()
+        if(P:isPlayer()){
+            
+            local N=holoAmount()
+            holoCreate(N,P:pos(),vec(1),P:angles(),vec(255),P:model()):animate(P:getAnimation())
+            holoVisible(N,players(),0)
+            holoVisible(N,owner(),1)
+            holoAlpha(N,150)
+            
+            N=holoAmount()
+            holoCreate(N,Person:pos(),vec(1),Person:angles(),vec(255),Person:model()):animate(P:getAnimation())
+            holoVisible(N,players(),0)
+            holoVisible(N,owner(),1)
+            holoAlpha(N,150)
+            
+            N=holoAmount()
+            pointToPoint(N,Person:attachmentPos(1),Person:aimPos())
+            
+            N=holoAmount()
+            pointToPoint(N,LPP1,LP1,vec(255,255,0))
+            
+            N=holoAmount()
+            pointToPoint(N,LPP2,LP2,vec(0,255,0))
+            
+            N=holoAmount()
+            pointToPoint(N,LPP3,LP3,vec(0,0,255))
+            
+        }
+    }
+}
+LP3=LP2
+LP2=LP1
+LP1=Person:aimPos()
+LPP3=LPP2
+LPP2=LPP1
+LPP1=Person:attachmentPos(1)

@@ -1,0 +1,8 @@
+#[
+T=gTable(owner():steamID()+"'s Lottery System",1)
+P=findPlayerByName("serverMoney")
+N=T[P:steamID(),table]["RemainingTickets",number]
+T[P:steamID(),table]["RemainingTickets",number]=0
+moneyGive(P,N*5000-997)
+]#
+
