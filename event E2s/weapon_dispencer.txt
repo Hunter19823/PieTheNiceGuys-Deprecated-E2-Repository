@@ -1,0 +1,18 @@
+@name Weapon Dispencer
+@inputs Dispencer:entity
+@persist [EC,TR,BL]:entity [Guns]:array [Size]
+if(first() && owner():isAdmin()){
+    Size=500
+    holoCreate(1)
+    holoScaleUnits(1,-vec(Size*2,Size*2,Size*2))
+    holoParent(1,entity())
+    holoVisible(1,players(),0)
+    holoVisible(1,owner(),1)
+}elseif(useEntClk():inUse()){
+    if(Guns:count()>0){
+        G=Guns:popEntity()
+        G:teleport(useEntClk():inUseBy():pos())
+    }
+}elseif(->Dispencer && ~Dispencer){
+    runOnUse(1,Dispencer)
+}

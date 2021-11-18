@@ -1,0 +1,99 @@
+@name Jugger-Shark Event
+@persist Effect:string [Health,Time,Move] Partner:entity Speed Scale Camera:entity S:entity Person:entity
+if(first()){
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    #noDuplications()
+    Health=100000
+    #timer("Entrace",1000)
+    Partner=findPlayerBySteamID("STEAM_0:0:191182826")
+    runOnKey(1)
+    Speed=100
+    Time=250
+    Scale=1
+    Move=1
+}
+if(clk("Start")){
+    S=propSpawn("models/props_c17/FurnitureWashingmachine001a.mdl",Camera:pos(),Camera:angles()-ang(0,90,0),1)
+    S:setParent(Camera)
+    S:noCollideAll(1)
+    S:noDraw(1)
+    S:set("SetHealth",Health)
+    S:set("AddOutput","OnTakeDamage !self:RemoveHealth:1")
+    #Camera:streamStart(1,"https://www.dropbox.com/s/fdol59bd0jvyw0u/Baby%20Shark%20Dance%20%7C%20Sing%20and%20Dance%20%7C%2060%20Minutes%20Non%20Stop.mp3?dl=1",1)
+    timer("Update",0)
+    timer("Move",100)
+    Move=1
+}elseif(clk("Move")){
+    if(Move){
+        if(Camera:isValid() & S:isValid()){
+            Camera:setPos(Camera:toWorld(vec(Speed,0,0)))
+            if(Camera:isValid()){
+                Person=findClosest(S:boxMax()+Camera:pos())
+                timer("Check",0)
+            }
+        }
+        timer("Move",250)
+    }
+}elseif(clk("Check")){
+    BL=S:boxMin()
+    TR=S:boxMax()
+    Inside=inrange(Person:pos()+vec(0,0,Person:height()/3*2),BL+Camera:pos(),TR+Camera:pos())
+    if(Inside){
+        Person:set("SetHealth",Person:health()-100)
+        print("Chomped "+Person:name())
+    }
+}elseif(clk("Update")){
+    findIncludeClass("player")
+    findInSphere(Camera:pos(),1000)
+    timer("Update",1000)
+}else{
+    if(clKeyPress(16)){#f
+            C=owner():aimEntity()
+            if(C:model()=="models/dav0r/camera.mdl"){
+                Camera=C
+                print("Camera Found")
+                timer("Start",1000)
+            }
+    }
+    if(clKeyPress(79)){#lshift
+            Camera:setPos(Camera:toWorld(vec(0,0,-Speed)))
+    }
+    if(clKeyPress(9999)){#space
+            Camera:setPos(Camera:toWorld(vec(0,0,Speed)))
+    }
+    if(clKeyPress(22)){#l
+            Camera:setPos(owner():aimPos())
+    }
+    if(clKeyPress(18)){#h
+            Camera:setPos(vec(-2837,-3562,12192))
+    }
+    if(clKeyPress(50)){#pad plus
+            Speed+=5
+            print("Speed: "+Speed)
+    }
+    if(clKeyPress(49)){#pad minus
+            Speed-=5
+            print("Speed: "+Speed)
+    }
+    if(clKeyPress(21)){ #k
+            if(Move){
+                stoptimer("Move")
+                Move=0
+            }else{
+                timer("Move",250)
+                Move=1
+            }
+    }
+    if(clKeyPress(89)){ #left
+            Camera:setAng(Camera:angles()+ang(0,15,0))
+    }
+    if(clKeyPress(91)){#right
+            Camera:setAng(Camera:angles()+ang(0,-15,0))
+    }
+    if(clKeyPress(90)){#down
+            Camera:setAng(Camera:angles()+ang(5,0,0))
+    }
+    if(clKeyPress(88)){#up
+            Camera:setAng(Camera:angles()+ang(-5,0,0))
+    }
+}

@@ -1,0 +1,301 @@
+@name Pie's 5-second Gameshow.
+@persist [ChatCommands,DPanelData]:table [Prefix]:string [Updates,TimeLimit,TotalFrames] [Contestant]:entity
+if(first()){
+    Updates=25
+    TimeLimit=5 * 1000
+    
+    Prefix="."
+    ChatCommands=table(
+        "help"=Prefix+"help",
+        "Ask a player a question"=Prefix+"ask",
+        "Get info about current question"=Prefix+"info",
+        "List all Questions"=Prefix+"list",
+        "Change Question"=Prefix+"change",
+        "Random Question"=Prefix+"random",
+        ""=Prefix+"",
+        ""=Prefix+""
+    )
+    
+ 
+    
+    
+    
+    
+    
+    DPanelData=table(
+        "DFrameTitle"="Pie's 5 second questions",
+        "SetupPlayer"=owner(),
+        "CurrentQuestion"="gigabyte",
+        
+        
+        "CachedQuestions"=table(
+            
+            #[
+            "sample"=table(
+                "Question"="This is an example question.",
+                "PossibleAnswers"=array(
+                    "Option",
+                    "Another Option",
+                    "How about this Option",
+                    "What about this Option",
+                    "I know you want this option",
+                    "Actually it is this option"
+                ),
+                "ActualAnswer"=6,
+                "WinnerPrize"=10000
+            ),
+            ]#
+            "population"=table(
+                "Question"="Which country has the highest population",
+                "PossibleAnswers"=array(
+                    "Mexico",
+                    "Brazil",
+                    "India",
+                    "Pakistan",
+                    "China",
+                    "Russia",
+                    "Nigeria",
+                    "Indonesia",
+                    "Bangladesh",
+                    "United States"
+                ),
+                "ActualAnswer"=5,
+                "WinnerPrize"=50000
+            ),
+            
+            "gold"=table(
+                "Question"="What is the Atomic Number of Gold (Au)",
+                "PossibleAnswers"=array(
+                    "54",
+                    "23",
+                    "68",
+                    "104",
+                    "32",
+                    "10",
+                    "79",
+                    "85",
+                    "64",
+                    "72"
+                ),
+                "ActualAnswer"=7,
+                "WinnerPrize"=50000
+            ),
+            
+            
+            "gigabyte"=table(
+                "Question"="How many bytes are in a gigabyte",
+                "PossibleAnswers"=array(
+                    "4 Bytes",
+                    "1,024 Bytes",
+                    "1,073,741,824 Bytes",
+                    "1,048,576 Bytes",
+                    "8 Bytes"
+                ),
+                "ActualAnswer"=3,
+                "WinnerPrize"=50000
+            ),
+            
+            "gmod"=table(
+                "Question"="What year did GMOD come out",
+                "PossibleAnswers"=array(
+                    "2001",
+                    "2005",
+                    "2002",
+                    "2004",
+                    "2006"
+                ),
+                "ActualAnswer"=4,
+                "WinnerPrize"=5000
+            )
+            
+        
+        )
+        
+    )
+    TotalFrames=0
+    
+    
+    
+    
+    Questionz=DPanelData["CachedQuestions",table]:keys()
+    DPanelData["CurrentQuestion",string]=Questionz[ceil(random()*Questionz:count()),string]
+    
+    
+    function entity searchForPlayer(Name:string){
+        local P= findPlayerByName(Name)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Name)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Name)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    runOnChat(1)
+    runOnVgui(1)
+    
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ChatCommands["help",string],
+            printTable(ChatCommands)
+            break
+        case ChatCommands["Ask a player a question",string],
+            Contestant=searchForPlayer(LS[2,string])
+            if(!Contestant:isPlayer() || LS[2,string]==""){
+                Contestant=owner()
+            }
+            QuestionTable=DPanelData["CachedQuestions",table][DPanelData["CurrentQuestion",string],table]
+            DPanelData["SetupPlayer",entity] = Contestant
+            DPanelData["SetupAnswers",array] = QuestionTable["PossibleAnswers",array]
+            DPanelData["SetupPrize",number] = QuestionTable["WinnerPrize",number]
+            DPanelData["SetupAnswer",number] =  QuestionTable["ActualAnswer",number]
+            DPanelData["SetupQuestion",string] = QuestionTable["Question",string]
+            print("Now prompting "+Contestant:name()+" the question \""+QuestionTable["Question",string]+"\" for $"+DPanelData["SetupPrize",number]+"!")
+            timer("Setup",1000)
+            break
+        case ChatCommands["Get info about current question",string],
+            printTable(DPanelData["CachedQuestions",table][DPanelData["CurrentQuestion",string],table])
+            break
+        case ChatCommands["List all Questions",string],
+            print(DPanelData["CachedQuestions",table]:keys())
+            break
+        case ChatCommands["Change Question",string],
+            Index=LS[2,string]
+            if(DPanelData["CachedQuestions",table]:exists(Index)){
+                DPanelData["CurrentQuestion",string]=Index
+                print("Current Question changed to: "+Index)
+            }else{
+                print("Invalid Question. Please select from one of these questions: ",DPanelData["CachedQuestions",table]:keys())
+            }
+            break
+        case ChatCommands["Random Question",string],
+            Questionz=DPanelData["CachedQuestions",table]:keys()
+            DPanelData["CurrentQuestion",string]=Questionz[ceil(random()*Questionz:count()),string]
+            print("Current Question changed to: "+DPanelData["CurrentQuestion",string])
+            break
+    }
+}
+if(clk("Setup")){
+    Player=DPanelData["SetupPlayer",entity]
+    DPanelData["SetupQuestion",string]
+    
+    PlayerInfo=DPanelData[Player:steamID(),table]=table()
+    PlayerInfo["PlayerEntity",entity]=Player
+    PlayerInfo["ScreenSize",vector2]=egpScrSize(Player)
+    PlayerInfo["PanelSize",vector2]=vec2(PlayerInfo["ScreenSize",vector2]:x()/4,PlayerInfo["ScreenSize",vector2]:y()/4)
+    PlayerInfo["Center",vector2] = PlayerInfo["PanelSize",vector2]/2
+    PlayerInfo["FrameCounter",number] = TotalFrames
+    PlayerInfo["PrizeMoney",number] = DPanelData["SetupPrize",number]
+    
+    
+    
+    PlayerInfo["DFrame",dframe]=dframe(TotalFrames) TotalFrames++
+    PlayerInfo["DFrame",dframe]:addPlayer(Player)
+    if(Player!=owner()){
+        PlayerInfo["DFrame",dframe]:removePlayer(owner())
+    }
+    PlayerInfo["DFrame",dframe]:setSize(PlayerInfo["PanelSize",vector2])
+    PlayerInfo["DFrame",dframe]:showCloseButton(1)
+    PlayerInfo["DFrame",dframe]:setTitle(DPanelData["DFrameTitle",string]+" for $"+PlayerInfo["PrizeMoney",number])
+    PlayerInfo["DFrame",dframe]:center()
+    PlayerInfo["DFrame",dframe]:enableMouseInput(1)
+    PlayerInfo["DFrame",dframe]:create()
+    
+    
+    
+    PlayerInfo["PossibleAnswers",dcombobox]=dcombobox(TotalFrames,PlayerInfo["DFrame",dframe]) TotalFrames++
+    Size=PlayerInfo["PanelSize",vector2]/4
+    PlayerInfo["PossibleAnswers",dcombobox]:addPlayer(Player)
+    if(Player!=owner()){
+        PlayerInfo["PossibleAnswers",dcombobox]:removePlayer(owner())
+    }
+    PlayerInfo["PossibleAnswers",dcombobox]:setPos(PlayerInfo["Center",vector2]-Size/2)
+    PlayerInfo["PossibleAnswers",dcombobox]:setSize(Size)
+    PlayerInfo["PossibleAnswers",dcombobox]:setText("Click to choose answer")
+    Alphabet=array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z")
+    foreach(Index, Answer:string = DPanelData["SetupAnswers",array]){
+        PlayerInfo["PossibleAnswers",dcombobox]:addChoice(Alphabet[Index,string]+": "+Answer,Index)
+    }
+    PlayerInfo["ActualAnswer",number]=DPanelData["SetupAnswer",number]
+    PlayerInfo["PossibleAnswers",dcombobox]:create()
+    
+    
+    
+    PlayerInfo["Question",dlabel]=dlabel(TotalFrames,PlayerInfo["DFrame",dframe]) TotalFrames++
+    PlayerInfo["Question",dlabel]:addPlayer(Player)
+    if(Player!=owner()){
+        PlayerInfo["Question",dlabel]:removePlayer(owner())
+    }
+    PlayerInfo["Question",dlabel]:setText(DPanelData["SetupQuestion",string]+"?")
+    Size=PlayerInfo["PanelSize",vector2]/2
+    PlayerInfo["Question",dlabel]:setPos(PlayerInfo["PanelSize",vector2]:x()/2-Size:x()/2,Size:y()/4)
+    PlayerInfo["Question",dlabel]:setSize(Size)
+    PlayerInfo["Question",dlabel]:setAutoStretchVertical(1)
+    PlayerInfo["Question",dlabel]:setFont("",20)
+    PlayerInfo["Question",dlabel]:setWrap(1)
+    PlayerInfo["Question",dlabel]:create()
+    
+    
+    
+    PlayerInfo["Progress",dlabel]=dlabel(TotalFrames,PlayerInfo["DFrame",dframe]) TotalFrames++
+    PlayerInfo["Progress",dlabel]:addPlayer(Player)
+    if(Player!=owner()){
+        PlayerInfo["Progress",dlabel]:removePlayer(owner())
+    }
+    Size=(PlayerInfo["PanelSize",vector2]/4):setX( PlayerInfo["PanelSize",vector2]:x()/4*3 )
+    PlayerInfo["MaxSize",vector2]=Size
+    PlayerInfo["Progress",dlabel]:setPos(PlayerInfo["Center",vector2]-Size/2+vec2(0,Size:y()))
+    PlayerInfo["Progress",dlabel]:setSize(Size)
+    PlayerInfo["Progress",dlabel]:setText("")
+    PlayerInfo["Progress",dlabel]:setDrawOutlinedRect(vec(0,255,0))
+    PlayerInfo["Progress",dlabel]:create()
+    
+    
+    
+    
+    PlayerInfo["Counter",number]=0
+    timer(Player:steamID()+"||",2500)
+}
+if(clkName():find("||")){
+    ClkInfo=clkName():explode("||")
+    PlayerInfo=DPanelData[ClkInfo[1,string],table]
+    if(PlayerInfo["Counter",number]<Updates & PlayerInfo["DFrame",dframe]:isVisible(PlayerInfo["PlayerEntity",entity])){
+        Size=(PlayerInfo["MaxSize",vector2]/Updates*(Updates-PlayerInfo["Counter",number])):setY(PlayerInfo["MaxSize",vector2]:y())
+        PlayerInfo["Progress",dlabel]:setSize(Size)
+        PlayerInfo["Progress",dlabel]:setPos(PlayerInfo["Center",vector2]-Size/2+vec2(0,Size:y()))
+        PlayerInfo["Progress",dlabel]:setDrawOutlinedRect((vec(0,255,0)-vec(255,0,0))/Updates*(Updates-PlayerInfo["Counter",number]))
+        PlayerInfo["Progress",dlabel]:modify()
+        PlayerInfo["Counter",number]=PlayerInfo["Counter",number]+1
+        timer(clkName(),TimeLimit/Updates)
+    }else{
+        PlayerInfo=DPanelData[ClkInfo[1,string],table]
+        if(PlayerInfo["DFrame",dframe]:isVisible(PlayerInfo["PlayerEntity",entity])){
+            Choice=PlayerInfo["PossibleAnswers",dcombobox]:getValueID(PlayerInfo["PlayerEntity",entity]):toNumber()
+            print("Player has chosen: "+PlayerInfo["PossibleAnswers",dcombobox]:getValue(PlayerInfo["PlayerEntity",entity])+" ("+Choice+")")
+            print("The actual answer was: "+PlayerInfo["ActualAnswer",number])
+            if(Choice==PlayerInfo["ActualAnswer",number]){
+                print("Congradulations to ",PlayerInfo["PlayerEntity",entity]:name(),"!")
+                moneyGive(PlayerInfo["PlayerEntity",entity],PlayerInfo["PrizeMoney",number])
+                
+            }else{
+                print("Awwww sorry to ",PlayerInfo["PlayerEntity",entity]:name(),", that wasn't the correct answer.")
+            }
+            PlayerInfo["DFrame",dframe]:closePlayer(PlayerInfo["PlayerEntity",entity])
+            PlayerInfo["DFrame",dframe]:removePlayer(PlayerInfo["PlayerEntity",entity])
+            PlayerInfo["DFrame",dframe]:closeAll()
+            
+        }else{
+            print("Player exited the panel")
+            PlayerInfo["DFrame",dframe]:closePlayer(PlayerInfo["PlayerEntity",entity])
+            PlayerInfo["DFrame",dframe]:removePlayer(PlayerInfo["PlayerEntity",entity])
+            PlayerInfo["DFrame",dframe]:closeAll()
+        }
+        DPanelData[ClkInfo[1,string],table]=table()
+        
+    }
+}

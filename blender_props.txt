@@ -1,0 +1,31 @@
+@name Blender Props
+@persist Prop1:entity Prop2:entity Prop3:entity Prop4:entity E:entity
+if(first()){
+    Model="models/hunter/blocks/cube2x2x2.mdl"
+    E=entity()
+    Prop1=propSpawn(Model,E:toWorld(vec(50,50,75)),1)
+    #Prop2=propSpawn(Model,E:toWorld(vec(-50,-50,75)),1)
+    #Prop3=propSpawn(Model,E:toWorld(vec(50,50,350)),1)
+    #Prop4=propSpawn(Model,E:toWorld(vec(-50,-50,350)),1)
+    Prop1:propManipulate(Prop1:pos(),ang(),0,0,0)
+    #Prop2:propManipulate(Prop2:pos(),ang(),0,0,0)
+    #Prop3:propManipulate(Prop3:pos(),ang(),0,0,0)
+    #Prop4:propManipulate(Prop4:pos(),ang(),0,0,0)
+    Prop1:noDraw(0)
+    #Prop2:noDraw(1)
+    #Prop3:noDraw(1)
+    #Prop4:noDraw(1)
+    timer("Move",1000)
+}
+if(clk("Move")){
+    Speed=1000000
+    Vec=vec(Speed*round(random(-1,1)),Speed*round(random(-1,1)),Speed*round(random(-1,1)))
+    Prop1:propSetVelocity(Vec)
+    Vec=vec(Speed*round(random(-1,1)),Speed*round(random(-1,1)),Speed*round(random(-1,1)))
+    #Prop2:propSetVelocity(Vec)
+    Vec=vec(Speed*round(random(-1,1)),Speed*round(random(-1,1)),Speed*round(random(-1,1)))
+    #Prop3:propSetVelocity(Vec)
+    Vec=vec(Speed*round(random(-1,1)),Speed*round(random(-1,1)),Speed*round(random(-1,1)))
+    #Prop4:propSetVelocity(Vec)
+    timer(clkName(),250)
+}

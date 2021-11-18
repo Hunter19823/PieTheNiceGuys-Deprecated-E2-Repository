@@ -1,0 +1,32 @@
+@persist WL:gtable
+if(first()){
+    runOnChat(1)
+    WL=gTable(owner():steamID()+"'s Global Tables",1)
+    function entity searchForPlayer(Name:string){
+        local P= findPlayerByName(Name)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Name)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Name)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        if(P:isPlayer()){
+            print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+        }
+        return P
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case "check",
+            P=searchForPlayer(LS[2,string])
+            if(P:isPlayer()){
+                print(WL["AlreadyClaimedMoney",table]:exists(P:steamID()))
+            }
+            break
+    }
+}

@@ -1,0 +1,17 @@
+if(first()){
+    owner():setRenderMode(10)
+    owner():set("Alpha",0)
+    runOnKeys(owner(),1)
+}
+if(keyClk(keyClk())==1){
+    switch(keyClkPressed()){
+        case "pad_5",
+            owner():set("Alpha",0)
+            break
+        case "pad_6",
+            owner():set("Alpha",255)
+            break
+        default,
+            break
+    }
+}

@@ -1,0 +1,60 @@
+@name UpdatedHungerGames
+@persist [Top,Bottom]:vector [Percentage] [Players]:array
+if(first()){
+    function void measureTape(Index, PointB:vector,PointA:vector,Color:vector) {
+        local Target=PointB
+        local EyePos=PointA
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/blocks/cube8x8x025.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,entity())
+    }
+    function createRectangle(Index,TopCorner:vector ,BottomCorner:vector,Color:vector){
+        local Mid=(TopCorner-BottomCorner)/2 + BottomCorner
+        holoCreate(Index,Mid,vec(1),ang(),Color,"models/hunter/blocks/cube8x8x8.mdl")
+        #measureTape(Index+1000,TopCorner,BottomCorner,Color)
+        holoScaleUnits(Index,-1*abs(TopCorner-BottomCorner))
+        holoDisableShading(Index,1)
+    }
+    Percentage=100
+    Top=entity():toLocal(vec(16000,16000,15000))
+    Bottom=entity():toLocal(vec(-1000,-100,9000))
+    createRectangle(1,entity():toWorld(Top),entity():toWorld(Bottom),vec(255,0,0))
+    timer("GetPeople",50)
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    if(LS[1,string]=="size"){
+        Percentage=LS[2,string]:toNumber()
+        createRectangle(2,entity():toWorld((Top*Percentage*0.01):setZ(Top:z())),entity():toWorld((Bottom*Percentage*0.01):setZ(Bottom:z())),vec(0,255,0))
+    }
+}
+if(clk("GetPeople")){
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findIncludeClass("player")
+    NewPos1=entity():toWorld(Top)
+    NewPos2=entity():toWorld(Bottom)
+    findInBox(NewPos1,NewPos2)
+    Players=findToArray()
+    timer("Loop",1000)
+}
+if(clk("Loop")){
+    if(Players:count()>0){
+        NewPos1=entity():toWorld((Top*Percentage*0.01):setZ(Top:z()))
+        NewPos2=entity():toWorld((Bottom*Percentage*0.01):setZ(Bottom:z()))
+        while(perf(90) & Players:count()>0){
+            Player=Players:popEntity()
+            InRange=inrange(Player:pos(),NewPos2,NewPos1)
+            if(!InRange){
+                Player:setHealth(-1000000)
+            }
+        }
+        timer(clkName(),0)
+    }else{
+        timer("GetPeople",1000)
+    }
+}
+

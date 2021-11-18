@@ -1,0 +1,60 @@
+@name Auto Door For PD 4.0
+
+@persist [AllowedPlayers]:table
+@persist [Distance,DistanceFromDoor,Loaded,I,Update]
+@persist [DoorEntity]:array
+@persist [Closest]:entity
+
+if(first()){
+    Distance=100
+    Update=1000
+    timer("Check",1000)
+    runOnChat(1)
+    AllowedPlayers=table()
+}
+if(clk("Check")){
+    while(perf(10)){
+        I=(I+1)%players():count()+1
+        local Player=players()[I,entity]
+        local Check=(Player:team():teamName()):explode(" ")
+        switch(Check[1,string]){
+            case "Police",
+            case "S.W.A.T",
+            case "Mayor",
+            case "Juggernaut",   
+            case "Secret",
+                if(!AllowedPlayers:exists(Player:steamID())){
+                    print("Added "+Player:name())
+                    AllowedPlayers[Player:steamID(),number]=1
+                }
+                foreach(K,Door:entity = DoorEntity){
+                    if(Player:pos():distance(Door:pos()) <= Distance){
+                        Door:noCollideAll(1)
+                        timer(Player:steamID()+" "+K,Update)
+                    }
+                }
+                break
+            default,
+                if(AllowedPlayers:exists(Player:steamID())){
+                    print("Removed "+Player:name())
+                    AllowedPlayers:remove(Player:steamID())
+                }
+                break
+        }
+    }
+    timer(clkName(),100)
+}
+if(clkName():find("STEAM")){
+    Parameters = clkName():explode(" ")
+    Player = findPlayerBySteamID(Parameters[1,string])
+    Door = DoorEntity[Parameters[2,string]:toNumber(),entity]
+    if(Player:pos():distance(Door:pos()) > Distance){
+        Door:noCollideAll(0)
+    }else{
+        timer(clkName(),Update)
+    }
+}
+if(chatClk(owner())){
+    
+}
+

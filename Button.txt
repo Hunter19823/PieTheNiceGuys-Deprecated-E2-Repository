@@ -1,0 +1,13 @@
+@name Pie's Attempt at Making EGPs
+@inputs Screen:wirelink
+if (first()){
+    interval(1000)
+}
+if(clk() && Screen:entity():isValid()){
+    Screen:egpClear()
+    Size=Screen:egpSize()
+    Width=Size:x()
+    Height=Size:y()
+    Screen:egpRoundedBox(1,vec2(0,Height/3),vec2(Width/3,Height/3*2))
+}
+interval(1000)

@@ -1,0 +1,63 @@
+@persist DFrame:dframe [ChatCommands,DPanelData]:table [Prefix]:string
+if(first()){
+    Player=owner()
+    
+    ScreenSize=egpScrSize(Player)
+    PanelSize=vec2(ScreenSize:x()/4,ScreenSize:y()/3*2)
+    Center=PanelSize/2
+    
+    DFrame=dframe(0)
+    DFrame:addPlayer(Player)
+    DFrame:setSize(PanelSize)
+    DFrame:showCloseButton(1)
+    DFrame:setTitle("Test Title")
+    DFrame:center()
+    DFrame:create()
+    
+    
+    DButton=dbutton(1,DFrame)
+    DButton:addPlayer(Player)
+    DButton:setText("Click Me")
+    DButton:setTextColor(vec(255,0,0),vec(0,255,0),vec(0,0,255),vec(255,0,255))
+    
+    DButton:setPos(Center-vec2(100,35)/2)
+    DButton:setSize(100,35)
+    DButton:create()
+    
+    runOnVgui(1)
+    
+    
+    
+    
+    Prefix="."
+    ChatCommands=table(
+        "help"=Prefix+"help",
+        ""=Prefix+"",
+        ""=Prefix+"",
+        ""=Prefix+"",
+        ""=Prefix+"",
+        ""=Prefix+"",
+        ""=Prefix+"",
+        ""=Prefix+""
+        
+    
+    )
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ChatCommands["help",string],
+            printTable(ChatCommands)
+            break
+        case ChatCommands["help",string],
+            
+            break
+    }
+}
+if(vguiClk()){
+    print(vguiClkPanelID())
+    print(vguiClkPlayer())
+    print(vguiClkValues())
+    printTable(vguiClkValuesTable())
+}
+print("E2 executed")

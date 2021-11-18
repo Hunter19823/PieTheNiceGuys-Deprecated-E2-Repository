@@ -1,0 +1,33 @@
+@name This was Made on a Phone
+@persist Holos
+if(first()){
+    runOnKeys(owner(),1)
+    Holos=0
+    function void entity:traceShot(Index) {
+        local H=holoCreate(Index)
+        local Target=This:aimPos()
+        local EyePos=This:shootPos()
+        holoModel(Index,"models/hunter/plates/plate8x8.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),2,2))
+        holoAng(Index,This:eyeAngles())
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoColor(Index,vec(255,0,0))
+    }
+    function void entity:holoClone(Index){
+        E=holoCreate(Index,This:pos(),vec(1),This:angles(),This:getColor())
+        holoModel(Index,This:model())
+        E:animate(This:getAnimation(),1)
+    }
+}
+if(keyClkPressed()=="f" && keyClk(keyClk())==1){
+    local T=owner():aimEntity()
+    if(T:isPlayer()){
+        T:traceShot(Holos)
+        T:holoClone(300-Holos)
+        Holos+=1
+    } else {
+        print("Not Looking at Player")
+    }
+    
+}

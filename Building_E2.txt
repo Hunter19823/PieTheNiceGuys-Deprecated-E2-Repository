@@ -1,0 +1,1024 @@
+@name Pies Utility E2
+@persist P:table Clone:table
+@inputs EGP:wirelink
+if (first())
+{
+    #Setup The Expression to Run on these conditionals
+    runOnKeys(owner(),1)
+    #Run EveryTime The Owner Presses/Releases a Button
+    runOnChat(1)
+    #Run Everytime Someone Says something in chat.
+    
+    P=table(
+    #Setup Commands
+    "Prefix"="",
+    #Prefix you will use to call the commands.
+    #Ex: (Example prefix is !)
+    #!command
+    #The ! before the command is called the prefix.
+    #It tells the E2 that you are executing a command.
+    
+    "Control"="control",
+    #[
+    Command:
+    control
+    --------
+    Description: 
+    The keyboard controls will now control selected hologram
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    --------
+    Ex: (Example prefix is !)
+    !control hologramNumber
+    --------
+    !control 1
+    The Keyboard now controls hologram 1
+    ]#
+    
+    "Create"="create",
+    #[
+    Command:
+    create
+    --------
+    Description: 
+    Creates a new Hologram
+    
+    What is a hologram?
+    https://github.com/wiremod/wire/wiki/Expression-2#3D_Holograms
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    --------
+    Ex: (Example prefix is !)
+    !create hologramNumber
+    --------
+    !create 1
+    Creates hologram that will be identified/indexed as 1
+    --------
+    ]#
+    
+    "Delete"="delete",
+    #[
+    Command:
+    delete
+    --------
+    Description: 
+    Deletes an existing Hologram
+    
+    What is a hologram?
+    https://github.com/wiremod/wire/wiki/Expression-2#3D_Holograms
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    --------
+    Ex: (Example prefix is !)
+    !delete hologramNumber
+    --------
+    !delete 1
+    Deletes hologram 1
+    ]#
+    
+    "Move"="move",
+    #[
+    Command:
+    move
+    --------
+    Description:
+    Make the Hologram Move a Specified number of units 
+    everytime it moves
+    
+    What is a Garrys Mod unit?
+    https://github.com/wiremod/wire/wiki/Expression-2#Unit_Conversion
+    --------    
+    Parameters:
+    unitsToMoveHolograms: the number of units to travel on movement
+    --------
+    Ex: (Example prefix is !)
+    !move unitsToMoveHolograms
+    --------
+    !move 10
+    Every turn made with keyboard controls will now move 10 units 
+    each time
+    --------
+    ]
+    
+    "Turn"="turn",
+    #[
+    Command:
+    turn
+    --------
+    Description: 
+    Make the Hologram Turn a Specified number of Degrees
+    --------
+    Parameters:
+    angleUnitsToTurnHolograms: the number of degrees to turn.
+    --------
+    Ex: (Example prefix is !)
+    !turn angleUnitsToTurnHolograms
+    --------
+    !turn 45
+    Every turn or tilt made with controls will now turn 45 
+    degrees each time on that angle
+    ]#
+    
+    "Animate"="animate",
+    #[
+    Command:
+    animate
+    --------    
+    Description: 
+    Animate a Hologram
+    
+    Side Note:
+    Setting Animation can cost a lot of the tick quota. This more than likely will crash the E2.
+    Use with Caution.
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    animationNumber: the number used to specify which animation to execute
+    --------
+    Ex: (Example prefix is !)
+    !animate hologramNumber animationNumber
+    --------
+    !animate 1 3
+    Set hologram 1's animation to 3 (For most player models 
+    this is idle animation)
+    --------
+    ]#
+    
+    "Skin"="skin",
+    #[
+    Command:
+    skin
+    --------
+    Description: 
+    Changes the skin of a hologram
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    skinNumber: the number of the skin
+    --------
+    Ex: (Example prefix is !)
+    !skin hologramNumber skinNumber
+    --------
+    !skin 1 3
+    Set hologram 1's skin to skin 3 (if possible)
+    ]#
+    
+    "Material"="material",
+    #[
+    Command:
+    material
+    --------
+    Description: 
+    Materialize a Hologram (Adds a material)
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    materialModelDirectory: the material's model directory
+    --------
+    Ex: (Example prefix is !)
+    !material hologramNumber materialModelDirectory
+    --------
+    !material 1 models/rendertarget
+    Set hologram 1's material to be render target (RT camera)
+    --------
+    ]#
+    
+    "Model"="model",
+    #[
+    Command:
+    model
+    --------
+    Description: 
+    Changes the model of a Hologram
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    modelDirectory: the directory of a model
+    --------
+    Ex: (Example prefix is !)
+    !model hologramNumber modelDirectory
+    --------
+    !model 1 models/props_phx/misc/egg.mdl
+    Sets hologram 1's model to an egg
+    --------
+    ]#
+    
+    "Scale"="scale",
+    #[
+    Command:
+    scale
+    --------
+    Description: 
+    Changes the Scale of a Hologram
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Change the Scale of the Hologram
+    #Ex: (Example prefix is !)
+    #!scale hologramNumber xScaleNumber yScaleNumber zScaleNumber
+    #
+    #!scale 1 2 2 2
+    #Sets hologram 1's scale to 2x it's normal size
+    
+    "ScaleUnits"="scaleunits",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Change the Scale of the Hologram to Exact Units
+    #Ex: (Example prefix is !)
+    #!scaleunits hologramNumber xScaleUnits yScaleUnit zScaleUnit
+    #
+    #!scaleunits 1 100 100 100
+    #Sets hologram 1's size to fit 100x100x100 units
+    
+    "BoneScale"="bonescale",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Change the Scale of the Hologram's Bones
+    #Ex: (Example prefix is !)
+    #!bonescale hologramNumber boneNumber xScaleUnits yScaleUnit zScaleUnit
+    #
+    #!bonescale 1 3 2 2 2
+    #Sets hologram 1's 3rd bone to be a scale of 2x
+    
+    "Angle"="angle",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Change the Angle of the Hologram
+    #Ex: (Example prefix is !)
+    #!angle hologramNumber  pitch yaw roll
+    #
+    #!angle 1 0 0 0
+    #Sets hologram 1's pitch, yaw, and roll to 0 0 0.
+    
+    "Parent"="pparent",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Parent the Prop to the Hologram
+    #Ex: (Example prefix is !)
+    #
+    #!pparent
+    #Parents the last created prop to 
+    #whatever entity the player is looking at
+    
+    "UnParent"="punparent",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #UnParent the Prop from the Hologram
+    #Ex: (Example prefix is !)
+    #
+    #!punparent
+    #Unparents the last created prop
+    
+    "Prop"="prop",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Create a Prop of the Hologram
+    #Ex: (Example prefix is !)
+    #!prop hologramNumber
+    #
+    #!prop 1
+    #Creates a prop based on hologram 1's model,position, 
+    #and angle.
+    
+    "DeleteProp"="delprop",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Delete the Prop made by the Hologram
+    #Ex: (Example prefix is !)
+    #
+    #!delprop
+    #Deletes last created prop.
+    
+    "Shader"="shade",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Enable/Disable the Shader of the Hologram
+    #Ex: (Example prefix is !)
+    #!shade hologramNumber zeroOrOne
+    #
+    #!shade 1 0
+    #Enable Hologram 1's shade (enabled by default)
+    #(1 to disable, 0 to enable).
+    
+    "Copy"="copy",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Copy An Entity's Properties onto a Hologram
+    #Ex: (Example prefix is !)
+    #!copy hologramNumber
+    #
+    #!copy 1
+    #Creates hologram 1 and hologram 1 copies the positon, angle
+    #model, color, material, animation, and alpha of whatever
+    #entity the owner is aiming at.
+    
+    "Color"="color",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Change the RGB Color of the Hologram
+    #Ex: (Example prefix is !)
+    #!color hologramNumber red green blue
+    #
+    #!color 1 255 0 0
+    #Changes the RGB color of hologram 1 to be red dominant
+    
+    "HoloParent"="hparent",
+    #[
+    Command:
+    
+    --------
+    Description: 
+    
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Parent the Hologram to another Entity
+    #Ex: (Example prefix is !)
+    #!hparent hologramNumber childHologramNumber
+    #
+    #!hparent 1 2
+    #Parent hologram 1 to hologram 2
+    
+    "HoloUnParent"="hunparent",
+    #[
+    Command:
+    hunparent
+    --------
+    Description: 
+    Unparents a hologram
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    --------
+    Ex: (Example prefix is !)
+    --------
+    ]#
+    #Unparent the Hologram to another Entity
+    #Ex: (Example prefix is !)
+    #!hunparent hologramNumber
+    #
+    #!hunparent 1
+    #Remove hologram 1's parents
+    
+    "LoopAnimation"="loop",
+    #[
+    Command:
+    loop
+    --------
+    Description: 
+    Loop an Animation for specific Hologram
+    --------
+    Parameters:
+    hologramNumber: the number/identifier of the hologram being selected
+    animationNumber:
+    Time: the interval between every time the animation is run in miliseconds. (1000ms=1second)
+    --------
+    Ex: (Example prefix is !)
+    !loop hologramNumber animationNumber time
+    
+    !loop 1 305 9500
+    What Does it do?
+    Hologram 1's animation will be set to 305 and
+    looped every 9.5 seconds.
+    --------
+    ]#
+    
+    "Trace"="p",
+    
+    "Modify"="mod",
+    
+    "Own"="me",
+    
+    "Clone"="dupe",
+    
+    "TargetIt"="info",
+    
+    "Save"="save",
+    
+    "Load"="load",
+
+    "StopMusic"="stop",
+    
+    "PlayHolo"="str",
+    
+    "Volume"="volume",
+    
+    "Volume#"=1,
+    
+    "PlayExisting"="play",
+    
+    "GetCommand"="get",
+    
+    "PrintAnimation"="a",
+    
+    "Bring"="bring",
+    
+    "WhiteList"="whitelist",
+    
+    "KeyBoardControls"="keys",
+    
+    "RequestMoney"="request",
+    
+    "Donate"="donate",
+    
+    "GiveMoney"="give",
+    
+    "PrintTable"="table",
+    
+    "End"="kill",
+    
+    "UpdateSongs"="update",
+    
+    "GetMoney"="money",
+    
+    "Vanish"="vanish",
+    
+    "HoloTarget"="parenttar",
+    
+    "TeleportHere"="tele",
+
+    "StopTimers"="timestop",
+    
+    "3DStream"="3d",
+    
+    "PlayYoutube"="you",
+    
+    "PlayerColor"="pcolor",
+    
+    "TurnOffChat"="noChat",
+    
+    "CopyPlayer"="pcopy",
+
+    #Controls
+    "Forward"="pad_8",
+    #The KeyName for Moving Forward
+    "Backward"="pad_2",
+    #The KeyName for Moving Backward
+    "Left"="pad_4",
+    #The KeyName for Turning Left
+    "Right"="pad_6",
+    #The KeyName for Turning Right
+    "Up"="pad_1",
+    #The KeyName for Moving Up
+    "Down"="pad_3",
+    #The KeyName for Moving Down
+    "TiltUp"="pad_7",
+    #The KeyName for Tilting Up
+    "TiltDown"="pad_9",
+    #The KeyName for Tilting Down
+    "Teleport"="rshift",
+    #The KeyName for teleporting the Hologram to You're AimPos
+
+    #Constants
+    "MoveSpeed"=5,
+    #The Speed in which the Hologram Moves
+    "TurnSpeed"=15,
+    #The Speed in which the Hologram Rotates
+    "CurrentController"=1
+    #Keeps the number of the Hologram being controlled
+    
+    )
+    #Ignore
+    P["H",entity]=holoEntity(P["CurrentController",number])
+    #Ignore
+    
+    P["Chat",string]="enter"
+    
+    P["ToggleKey",string]="o"
+    
+    P["ToggleOn",number]=1
+    function void updateMusic(){
+        GT=gTable("Public Music",1)
+        SL=GT["Pie's Music",table]
+        SI=GT["Pie's Music Index",array]
+        P["MusicList",table]=SL
+        P["MusicNames",array]=SI
+    }
+    function vector entity:moveCords(Speed,Mult)
+    {   
+        return This:toWorld(vec(Speed*Mult,0,0))
+    }
+    function void entity:screen(Index){
+        This:setAng(ang(0,0,0))
+        holoCreate(Index,This:moveCords(50,-1)+vec(0,0,0),vec(0.02,0.5,0.5),This:angles(),vec(255),"models/props_phx/games/chess/board.mdl")
+        holoCreate(Index+1,This:moveCords(50.04,-1)+vec(0,0,0),vec(0.02,0.5,0.5),This:angles()+ang(0,180,0),vec(255),"models/props_phx/games/chess/board.mdl")
+        holoMaterial(Index,"models/rendertarget")
+        holoParent(Index,This)
+        holoMaterial(Index+1,"models/rendertarget")
+        holoParent(Index+1,This)
+        holoDisableShading(Index,1)
+        holoDisableShading(Index+1,1)
+        timer("Shader",1000)
+    }
+    function entity searchForPlayer(Name:string){
+        local P= findPlayerByName(Name)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Name)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Name)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    
+    function string parseLink(Type:string){
+        local Data=jsonDecode(httpData())
+        return Data[Type,string]
+    }
+    function vector getCords(Mult)
+    {   
+        return holoEntity(P["CurrentController",number]):toWorld(vec(P["MoveSpeed",number]*Mult,0,0))
+    }
+    function void entity:traceShot(Index) {
+        local H=holoCreate(Index)
+        local Target=This:aimPos()
+        local EyePos=This:shootPos()+This:eye()
+        holoModel(Index,"models/hunter/plates/plate8x8.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),1,1))
+        holoAng(Index,This:eyeAngles())
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoColor(Index,vec(255,0,0))
+    }
+    function vector entity:moveCords(Speed,Mult)
+    {   
+        return This:toWorld(vec(Speed*Mult,0,0))
+    }
+    function void entity:screen(Index){
+        This:setAng(ang(0,0,0))
+        holoCreate(Index,This:moveCords(50,-1)+vec(0,0,0),vec(0.02,0.5,0.5),This:angles(),vec(255),"models/props_phx/games/chess/board.mdl")
+        holoCreate(Index+1,This:moveCords(50.04,-1)+vec(0,0,0),vec(0.02,0.5,0.5),This:angles()+ang(0,180,0),vec(255),"models/props_phx/games/chess/board.mdl")
+        holoMaterial(Index,"models/rendertarget")
+        holoParent(Index,This)
+        holoMaterial(Index+1,"models/rendertarget")
+        holoParent(Index+1,This)
+        holoDisableShading(Index,1)
+        holoDisableShading(Index+1,1)
+        timer("Shader",1000)
+    }
+    function void entity:holoClone(Index){
+        local E=holoCreate(Index,This:pos(),vec(1),This:angles(),This:getColor())
+        holoModel(Index,This:model())
+        E:animate(This:getAnimation(),1)
+        if (E:getSkinCount()>0){
+            holoSkin(Index,E:getSkin())
+        }
+        if (E:getMaterial()!=""){
+            holoMaterial(Index,E:getMaterial())
+        }
+    }
+    timer("updateMusic",1000)
+    P["WhiteListed",array]=array(owner(),findPlayerBySteamID("STEAM_0:0:191182826"))
+    #streamDisable3D(1)
+    exit()
+}
+switch(1){
+    case chatClk(),
+        local Chat=lastSaid():explode(" ")
+        local Invert=invert(P["WhiteListed",array])
+        local Check=P["WhiteListed",array][Invert[lastSpoke():toString(),number],entity]
+        local Pre=P["Prefix",string]
+        local ONE=Chat[1,string]
+        local TWO=Chat[2,string]
+        local THREE=Chat[3,string]
+        local FOUR=Chat[4,string]
+        local FIVE=Chat[5,string]
+        if (ONE:sub(0,Pre:length())==Pre & Check){
+            switch(ONE:sub(Pre:length()+1)){
+                case P["Create",string],
+                    holoCreate(TWO:toNumber(),entity():pos(),vec(1,1,1),entity():angles(),vec(255,255,255),"models/maxofs2d/cube_tool.mdl")
+                    P["CurrentController",number]=TWO:toNumber()
+                    P["H",entity]=holoEntity(P["CurrentController",number])
+                    break
+                case P["Delete",string],
+                    holoDelete(TWO:toNumber())
+                    break
+                case P["Move",string],
+                    P["MoveSpeed",number]=TWO:toNumber()
+                    break
+                case P["Turn",string],
+                    P["TurnSpeed",number]=TWO:toNumber()
+                    break
+                case P["Animate",string],
+                    holoEntity(TWO:toNumber()):animate(THREE:toNumber(),1)
+                    break
+                case P["Skin",string],
+                    holoSkin(TWO:toNumber(),THREE:toNumber())
+                    break
+                case P["Material",string],
+                    holoMaterial(TWO:toNumber(),THREE)
+                    break
+                case P["Model",string],
+                    holoModel(TWO:toNumber(),THREE)
+                    break
+                case P["Scale",string],
+                    holoScale(TWO:toNumber(),vec(THREE:toNumber(),FOUR:toNumber(),FIVE:toNumber()))
+                    break
+                case P["ScaleUnits",string],
+                    holoScaleUnits(TWO:toNumber(),vec(THREE:toNumber(),FOUR:toNumber(),FIVE:toNumber()))
+                    break
+                case P["BoneScale",string],
+                    holoBoneScale(TWO:toNumber(),THREE:toNumber(),vec(FOUR:toNumber(),FIVE:toNumber(),Chat[6,string]:toNumber()))
+                    break
+                case P["Angle",string],
+                    holoAng(TWO:toNumber(),ang(vec(THREE:toNumber(),FOUR:toNumber(),FIVE:toNumber())))
+                    break
+                case P["Parent",string],
+                    if (P["SavedProp",entity]:isValid()){
+                        local LE = lastSpoke():aimEntity()
+                        if(LE:isValid()){
+                            P["SavedProp",entity]:parentTo(LE)
+                        }
+                    }
+                    break
+                case P["UnParent",string],
+                    P["SavedProp",entity]:unParent()
+                    break
+                case P["Prop",string],
+                    local E=holoEntity(TWO:toNumber())
+                    P["SavedProp",entity]=propSpawn(E,E:pos(),E:angles(),1)
+                    break
+                case P["DeleteProp",string],
+                    P["SavedProp",entity]:propDelete()
+                    break
+                case P["Shader",string],
+                    holoDisableShading(TWO:toNumber(),THREE:toNumber())
+                    break
+                case P["Copy",string],
+                    local LE = lastSpoke():aimEntity()
+                    if(LE:isValid()){
+                        LE:holoClone(TWO:toNumber())
+                    }
+                    P["CurrentController",number]=TWO:toNumber()
+                    P["H",entity]=holoEntity(P["CurrentController",number])
+                    break
+                case P["Color",string],
+                    holoColor(TWO:toNumber(),vec(THREE:toNumber(),FOUR:toNumber(),FIVE:toNumber()))
+                    break
+                case P["HoloParent",string],
+                    holoParent(TWO:toNumber(),THREE:toNumber())
+                    break
+                case P["HoloUnParent",string],
+                    holoUnparent(TWO:toNumber())
+                    break
+                case P["Control",string],
+                    P["CurrentController",number]=TWO:toNumber()
+                    break
+                case P["3DStream",string],
+                    streamDisable3D(TWO:toNumber())
+                    break
+                case P["KeyBoardControls",string],
+                    runOnKeys(lastSpoke(),TWO:toNumber())
+                    break
+                case P["LoopAnimation",string],
+                    P["HoloGram",number]=TWO:toNumber()
+                    P["Animation",number]=THREE:toNumber()
+                    P["Timer",number]=FOUR:toNumber()
+                    timer("loopanimation",0)
+                    P["H",entity]=holoEntity(P["CurrentController",number])
+                    break
+                case P["TargetIt",string],
+                    local E=owner():aimEntity()
+                    if(E:isValid()){
+                        P["H",entity]=E
+                    }
+                    break
+                case P["Own",string],
+                    P["H",entity]=owner()
+                    break
+                case P["Bring",string],
+                    local E=holoEntity(TWO:toNumber())
+                    E:setPos(lastSpoke():aimPos()+vec(0,0,E:height()/2))
+                    break
+                case P["StopTimers",string],
+                    stopAllTimers()
+                    break
+                case P["TeleportHere",string],
+                    local E=holoEntity(TWO:toNumber())
+                    E:setPos(lastSpoke():aimPos())
+                    break
+                case P["Clone",string],
+                    local Old=TWO:toNumber()
+                    local New=THREE:toNumber()
+                    holoCreate(New,lastSpoke():pos(),vec(1),holoEntity(Old):angles(),holoEntity(Old):getColor(),holoEntity(Old):model())
+                    holoEntity(New):animate(holoEntity(Old):getAnimation(),1)
+                    P["CurrentController",number]=THREE:toNumber()
+                    break
+                case P["Modify",string],
+                    P[TWO,string]=THREE
+                    break
+                case P["PlayYoutube",string],
+                    P["Hologram Number",number]=TWO:toNumber()
+                    P["Stream Number",number]=THREE:toNumber()
+                    runOnHTTP(1)
+                    P["Play Request",string]="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+FOUR
+                    httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+FOUR)
+                    break
+                case P["PlayHolo",string],
+                    streamStop(THREE:toNumber())
+                    holoEntity(TWO:toNumber()):streamStart(THREE:toNumber(),P["Volume#",number],FOUR)
+                    break
+                case P["StopMusic",string],
+                    streamStop(TWO:toNumber())
+                    break
+                case P["Volume",string],
+                    P["Volume#",number]=THREE:toNumber()
+                    streamVolume(TWO:toNumber(),P["Volume#",number])
+                    break
+                case P["PlayExisting",string],
+                    streamStop(THREE:toNumber())
+                    holoEntity(TWO:toNumber()):streamStart(THREE:toNumber(),P["Volume#",number],P["MusicList",table][FOUR:toNumber(),string])
+                    setName("Now Playing: "+FOUR+"->"+P["MusicNames",array][FOUR:toNumber(),string])
+                    break
+                case P["GetCommand",string],
+                    print("Command Syntax for: \""+TWO+"\" is "+ P[TWO,string])
+                    break
+                case P["WhiteList",string],
+                    P["WhiteListed",array][P["WhiteListed",array]:count()+1,entity]=owner():aimEntity()
+                    print(lastSpoke():aimEntity():name()+"Added to Whitelist")
+                    break
+                case P["PrintAnimation",string],
+                    local Ani=lastSpoke():aimEntity()
+                    if (Ani:isValid()){
+                        print("Animation #: "+Ani:getAnimation())
+                    }
+                    break
+                case P["RequestMoney",string],
+                    local Player=searchForPlayer(TWO)
+                    if(Player:isPlayer() & Player:isValid()){
+                        P["RequestingPlayer",entity]=Player
+                        P["MoneyAmount",number]=THREE:toNumber()
+                        timer("requestMoney",500)
+                    }
+                    break
+                case P["GiveMoney",string],
+                    local Player=searchForPlayer(TWO)
+                    if(Player:isPlayer() & Player:isValid() & lastSpoke()==owner()){
+                        moneyGive(Player,THREE:toNumber())
+                    }
+                    break
+                case P["PrintTable",string],
+                    P:remove("MusicList")
+                    P:remove("MusicNames")
+                    timer("printClone",5000)
+                    break
+                case P["End",string],
+                    error("Pie Has Overwridden this E2 and caused it to Crash.")
+                    break
+                case P["UpdateSongs",string],
+                    timer("updateMusic",500)
+                    break
+                case P["GetMoney",string],
+                    local Player=searchForPlayer(TWO)
+                    if(Player:isPlayer() & Player:isValid()){
+                        print(Player:name()+" has $"+Player:money())
+                    }
+                    break
+                case P["Vanish",string],
+                    holoVisible(TWO:toNumber(),players(),THREE:toNumber())
+                    holoVisible(TWO:toNumber(),owner(),1)
+                    break
+                case P["HoloTarget",string],
+                    local Aim=lastSpoke():aimEntity()
+                    if(Aim:isValid()){
+                        holoParent(TWO:toNumber(),Aim)
+                        holoEntity(TWO:toNumber()):parentTo(Aim)
+                    }
+                    break
+                case P["TurnOffChat",string],
+                    runOnChat(0)
+                    break
+                case P["PlayerColor",string],
+                    holoPlayerColor(TWO:toNumber(),vec(THREE:toNumber(),FOUR:toNumber(),FIVE:toNumber()))
+                    break
+                case P["CopyPlayer",string],
+                    searchForPlayer(TWO):holoClone(THREE:toNumber())
+                    break
+                default,
+                    setName("Pies Utility E2, default run cost: "+opcounter())
+                    break
+            }
+            exit()
+        }elseif(ONE==Pre+P["Donate",string]){
+            P["RequestingPlayer",entity]=lastSpoke()
+            P["MoneyAmount",number]=TWO:toNumber()
+            timer("requestMoney",500)
+        }
+        exit()
+        break
+    case keyClk(keyClk()),
+        local Ent=holoEntity(P["CurrentController",number])
+        switch(keyClkPressed()){
+            case P["Forward",string],
+                holoPos(P["CurrentController",number],getCords(1))
+                break
+            case P["Backward",string],
+                holoPos(P["CurrentController",number],getCords(-1))
+                break
+            case P["Left",string],
+                holoAng(P["CurrentController",number],Ent:angles() + ang(0,P["TurnSpeed",number],0))
+                break
+            case P["Right",string],
+                holoAng(P["CurrentController",number],Ent:angles() - ang(0,P["TurnSpeed",number],0))
+                break
+            case P["TiltUp",string],
+                holoAng(P["CurrentController",number],Ent:angles() - ang(P["TurnSpeed",number],0,0))
+                break
+            case P["TiltDown",string],
+                holoAng(P["CurrentController",number],Ent:angles() + ang(P["TurnSpeed",number],0,0))
+                break
+            case P["Up",string],
+                holoPos(P["CurrentController",number],round(Ent:pos() + vec(0,0,P["MoveSpeed",number])))
+                break
+            case P["Down",string],
+                holoPos(P["CurrentController",number],round(Ent:pos() - vec(0,0,P["MoveSpeed",number])))
+                break
+            case P["Teleport",string],
+                holoPos(P["CurrentController",number],keyClk():aimPos())
+                break
+            case P["Trace",string],
+                local T=owner():aimEntity()
+                if(T:isPlayer()){
+                    T:traceShot(300-holoAmount())
+                    T:holoClone(300-holoAmount())
+                }
+                break
+            case "g",
+                local Prop = keyClk():aimEntity()
+                if(owner():trusts(Prop:owner())){
+                    P["Prop",entity]=Prop
+                    if(Prop:type()=="gmod_rtcameraprop"){
+                        print("Camera Detected")
+                        P["Prop",entity]:screen(299)
+                    } else{
+                        print(Prop:type())
+                    }
+                }
+                break
+            default,
+                break
+        }
+        exit()
+        break
+    case clk("loopanimation"),
+        holoEntity(P["HoloGram",number]):animate(P["Animation",number],1)
+        timer("loopanimation",P["Timer",number])
+        break
+    case clk("requestMoney"),
+        moneyRequest(P["RequestingPlayer",entity],P["MoneyAmount",number],"This Is Pie's Automatic Money Request System.")
+        break
+    case clk("updateMusic"),
+        updateMusic()
+        break
+    case clk("printClone"),
+        printTable(P)
+        timer("updateMusic",2500)
+        break
+    case httpClk(),
+        if(httpRequestUrl()==P["Play Request",string]){
+            runOnHTTP(0)
+            streamStop(P["Stream Number",number])
+            holoEntity(P["Hologram Number",number]):streamStart(P["Stream Number",number],P["Volume#",number],parseLink("file"))
+        }
+        break
+    default,
+        break
+}
+
+

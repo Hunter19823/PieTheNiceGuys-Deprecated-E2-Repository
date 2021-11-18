@@ -1,0 +1,40 @@
+@name Kind Of the Pill
+@persist Room:entity [Top,Bottom]:vector [ScoreBoard]:gtable [Frequency] [Score]:array
+if(first()){
+    Frequency=5
+    Round=1
+    ScoreBoard=gTable(owner():steamID()+"'s Score Table Round #"+Round,1)
+    Room=propSpawn("models/hunter/misc/lift2x2.mdl",entity():toWorld(vec(0,0,10)),1)
+    function createRectangle(Index,TopCorner:vector ,BottomCorner:vector,Color:vector){
+        local Mid=(TopCorner-BottomCorner)/2 + BottomCorner
+        holoCreate(Index,Mid,vec(1),ang(),Color,"models/hunter/blocks/cube4x4x4.mdl")
+        #measureTape(Index+1000,TopCorner,BottomCorner,Color)
+        holoScaleUnits(Index,-1*abs(TopCorner-BottomCorner))
+        holoDisableShading(Index,1)
+        print("Top: "+TopCorner+"<br>Bottom: "+BottomCorner+"<br>Middle: "+Mid)
+    }
+    Top=vec(12066.518554688,11431.357421875,14449.827148438)
+    Bottom=vec(11787.830078125,11860.931640625,14643.100585938)
+    Frequency*=1000
+    createRectangle(1,Top,Bottom,vec(255))
+    timer("Scoring",0)
+}
+if(clk("Scoring")){
+    findIncludeClass("player")
+    findInBox(Bottom,Top)
+    Score=findToArray()
+    timer("Add Score",0)
+}
+if(clk("Add Score")){
+    if(Score:count()>0){
+        while(perf(90) & Score:count()>0){
+            P=Score:popEntity()
+            PlayerScore=P:name()+" ("+P:steamID()+")"
+            ScoreBoard[PlayerScore,number]=ScoreBoard[PlayerScore,number]+1
+        }
+        timer(clkName(),0)
+    }else{
+        printTable(ScoreBoard:toTable())
+        timer("Scoring",Frequency)
+    }
+}

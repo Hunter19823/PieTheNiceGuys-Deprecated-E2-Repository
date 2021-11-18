@@ -1,0 +1,30 @@
+@name DoorBell
+@inputs Button:entity ButtonOutput:number Thing:entity
+@persist Sound:string
+if(first()){
+    Sound="ambient\\alarms\\train_horn_distant1.wav"
+    entity():createWire(entity():isWeldedTo(),"Button","Entity")
+    entity():createWire(entity():isWeldedTo(),"ButtonOutput","Out")
+    runOnChat(1)
+}elseif(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "/sound",
+            Sound=LS[2,string]
+            break
+        case "/stop",
+            reset()
+            break
+    }
+}elseif(ButtonOutput==1){
+    if(->Button){
+        if(->Thing){
+            Thing:soundPlay(random(0,1000),0,Sound)
+        }else{
+            Button:soundPlay(random(0,1000),0,Sound)
+        }
+    }else{
+        entity():soundPlay(random(0,1000),0,Sound)
+    }
+}
+

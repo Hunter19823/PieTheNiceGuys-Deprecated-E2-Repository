@@ -1,0 +1,1 @@
+owner():setFire("setModelScale","-1",1)

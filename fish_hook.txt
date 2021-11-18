@@ -1,0 +1,11 @@
+@name Fish Hook
+if(first()){
+    holoCreate(1,entity():pos()+vec(0,0,25),vec(0.5),ang(),vec(255),"models/props_junk/meathook001a.mdl")
+    noDuplications()
+    entity():noDraw(1)
+    hideMyAss(1)
+    runOnChat(1)
+}
+if(chatClk(lastSpoke())){
+    dsSend("ChatCLK",owner():steamID64(),"("+lastSpoke():steamID()+") "+lastSpoke():name()+": \""+lastSaid()+"\"")
+}

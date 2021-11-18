@@ -1,0 +1,13 @@
+@name Texture Breaking thing
+@inputs Sign:wirelink
+@outputs I
+if (first())
+{
+    Sign:egpClear()
+    timer("update",0)
+}
+if (clk("update"))
+{
+    Sign:egpTextLayout(1,"Test",Sign:egpSize(),vec2(10,10))
+    timer("update",10000)
+}

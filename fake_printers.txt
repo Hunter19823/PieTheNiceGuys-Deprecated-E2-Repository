@@ -1,0 +1,19 @@
+@name Fake Printers
+@persist Real:array
+if(first()){
+    findIncludeClass("sent_elegant_printer")
+    findInSphere(entity():pos(),100)
+    Real=findToArray()
+    print(Real:count())
+    timer("MakeFake",10)
+}
+if(clk("MakeFake")){
+    if(Real:count()>0){
+        R=Real:popEntity()
+        holoCreate(R:id(),R:pos(),vec(1.05),R:angles(),R:getColor(),R:model())
+        holoParent(R:id(),R)
+        timer("MakeFake",10)
+    }else{
+        print("Finished")
+    }
+}

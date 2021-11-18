@@ -1,0 +1,98 @@
+@persist [PickupTimer,WaitTimer] [ExpectedEntityType]:string [Generator1,Generator2,Shelf,PowerCombiner]:entity
+if(first()){
+    PickupTimer=1250
+    WaitTimer=3000
+    owner():setEyeAngles(ang())
+    print("Starting Process please stand still")
+    #ch_bitminer_power_cable
+    #ch_bitminer_power_cable_end
+    #ch_bitminer_shelf
+    #ch_bitminer_power_combiner
+    #ch_bitminer_power_rtg
+    #ch_bitminer_upgrade_cooling3
+    #ch_bitminer_upgrade_ups
+    #ch_bitminer_upgrade_miner
+    timer("BuyGenerators",1000)
+}
+if(clk("BuyGenerators")){
+    print("Please do not touch your mouse and keyboard while this process is underway")
+    owner():setEyeAngles(ang())
+    concmd("say /buynucleargenerator")
+    ExpectedEntityType="ch_bitminer_power_cable"
+    timer("TeleportGenerator",PickupTimer)
+}
+if(clk("TeleportGenerator")){
+    owner():setEyeAngles(ang())
+    findClearBlackList()
+    findClearWhiteList()
+    findIncludePlayerProps(owner())
+    findByClass("ch_bitminer_power_rtg")
+    switch(findToArray():count()){
+        case 1,
+            Generator1=find()
+            Generator1:propManipulate(owner():toWorld(vec(0,0,500)),ang(),1,0,0)
+            timer("BuyGenerators",WaitTimer)
+            break
+        case 2,
+            Generator1=findResult(1)
+            Generator2=findResult(2)
+            Generator1:propManipulate(owner():toWorld(vec(0,0,500)),ang(),1,0,0)
+            Generator2:propManipulate(owner():toWorld(vec(0,0,500)),ang(),1,0,0)
+            timer("TeleportPowerCombiner",WaitTimer)
+            break
+        case 0,
+            timer("BuyGenerators",WaitTimer)
+        default,
+            print("Error was not able to buy generator properly or found more than 2 generators.")
+            break
+    }
+}
+if(clk("BuyPowerCombiner")){
+    owner():setEyeAngles(ang())
+    concmd("say /buypowercombiner")
+    timer("TeleportPowerCombiner",PickupTimer)
+}
+if(clk("TeleportPowerCombiner")){
+    owner():setEyeAngles(ang())
+    findClearBlackList()
+    findClearWhiteList()
+    findIncludePlayerProps(owner())
+    findByClass("ch_bitminer_power_combiner")
+    switch(findToArray():count()){
+        case 1,
+        case 2,
+            PowerCombiner=find()
+            PowerCombiner:propManipulate(owner():toWorld(vec(0,0,500)),ang(),1,0,0)
+            timer("TeleportShelf",WaitTimer)
+            break
+        case 0,
+            timer("BuyPowerCombiner",WaitTimer)
+        default,
+            print("Error was not able to buy power combiner properly or found more than 1 power combiner.")
+            break
+    }
+}
+if(clk("BuyShelf")){
+    owner():setEyeAngles(ang())
+    concmd("say /buyminingshelf")
+    timer("TeleportShelf",PickupTimer)
+}
+if(clk("TeleportShelf")){
+    owner():setEyeAngles(ang())
+    findClearBlackList()
+    findClearWhiteList()
+    findIncludePlayerProps(owner())
+    findByClass("ch_bitminer_shelf")
+    switch(findToArray():count()){
+        case 1,
+            Shelf=find()
+            Shelf:propManipulate(owner():toWorld(vec(65,0,0)),ang(),1,0,0)
+            #timer("TeleportShelf",WaitTimer)
+            break
+        case 0,
+            timer("BuyShelf",WaitTimer)
+        default,
+            print("Error was not able to buy shelf properly or found more than 1 shelf.")
+            break
+    }
+}

@@ -1,0 +1,26 @@
+@name Shoot Me For Stats
+@model models/props/cs_militia/haybale_target_02.mdl
+@persist [Delay,TotalDmg,Shots]
+if(first()){
+    Delay=1000
+    runOnDmg(1,entity())
+    #timer("GetAverage",Delay)
+}
+if(dmgClk()){
+    TotalDmg+=dmgDamage()
+    Shots+=1
+    if(!timerRunning("GetAverage")){
+        timer("GetAverage",Delay)
+    }
+}
+if(clk("GetAverage")){
+    if(TotalDmg){
+        setName("Shoot me for Stats: Average DPSecond: "+round(TotalDmg/(Delay/1000),2)+" | Average DPShot: "+round(TotalDmg/Shots,2))
+        
+        TotalDmg=0
+        Shots=0
+        timer(clkName(),1000)
+    }
+}
+entity():setColor(vec(255))
+entity():setAlpha(255)

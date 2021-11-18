@@ -1,0 +1,79 @@
+@name Arena Builder v2
+@persist [Model]:string [Max,Min,OffSet,TotalSize]:vector [Size,I,WallWidths,Delay,Levels,Length,Height] [AngleOffset]:angle
+if(first()){
+    WallWidths=1
+    Delay=750
+    Levels=1
+    Model="models/hunter/blocks/cube6x8x2.mdl"
+    AngleOffset=ang(0,90,90)
+    P=propSpawn(Model,entity():pos(),ang(),0)
+    Max=P:aabbMax()
+    Min=P:aabbMin()
+    P:propDelete()
+    TotalSize=abs(Max)+abs(Min)
+    Height=TotalSize:x()
+    Length=TotalSize:y()/2
+    Size=WallWidths*Length
+    print("Props Needed: "+WallWidths*4*Levels)
+    print(Max)
+    print(Min)
+    local E=entity()
+    E["TopLeft",entity]=holoCreate(998,entity():toWorld(vec(Size,Size,Levels*Height)))
+    E["BottomRight",entity]=holoCreate(997,entity():toWorld(-1*vec(Size,Size,0)))
+    E["IsGuine",number]=1
+    timer("Layer",Delay)
+}
+if(clk("NextWallX")){
+    if(I<WallWidths){
+        P=propSpawn(Model,entity():toWorld(vec((WallWidths/2-I)*Length*2-Length,Size,0)+OffSet),entity():toWorld(ang(90,90,0)+AngleOffset),1)
+        P:parentTo(entity())
+        I++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWallY",Delay)
+    }
+}
+if(clk("NextWallY")){
+    if(I<WallWidths){
+        P=propSpawn(Model,entity():toWorld(vec(Size,(WallWidths/2-I)*Length*2-Length,0)+OffSet),entity():toWorld(ang(90,0,0)+AngleOffset),1)
+        P:parentTo(entity())
+        I++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWall-X",Delay)
+    }
+}
+if(clk("NextWall-X")){
+    if(I<WallWidths){
+        P=propSpawn(Model,entity():toWorld(-1*vec((WallWidths/2-I)*Length*2-Length,Size,0)+OffSet),entity():toWorld(ang(90,-90,0)+AngleOffset),1)
+        P:parentTo(entity())
+        I++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWall-Y",Delay)
+    }
+}
+if(clk("NextWall-Y")){
+    if(I<WallWidths){
+        P=propSpawn(Model,entity():toWorld(-1*vec(Size,(WallWidths/2-I)*Length*2-Length,0)+OffSet),entity():toWorld(ang(90,0,0)+AngleOffset),1)
+        P:parentTo(entity())
+        I++
+        timer(clkName(),Delay)
+    }else{
+        timer("Layer",Delay)
+    }
+}
+if(clk("Layer")){
+    if(Levels>=1){
+        print("Finished Layer: "+Levels)
+        Levels--
+        OffSet=vec(0,0,Height*Levels+Height/2)
+        I=0
+        timer("NextWallX",Delay)
+    }else{
+        print("Arena Finished")
+    }
+}

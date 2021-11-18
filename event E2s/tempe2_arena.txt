@@ -1,0 +1,76 @@
+@persist [Model]:string [Max,Min,OffSet]:vector [Size,I,PropsNeeded,Delay,Holos,Levels]
+if(first()){
+    holoDeleteAll()
+    Size=200
+    Delay=10
+    Levels=1
+    Model="models/hunter/blocks/cube8x8x1.mdl"
+    P=propSpawn(Model,entity():pos(),ang(),0)
+    Max=P:aabbMax()
+    Min=P:aabbMin()
+    printTable(table("Min"=Min,"Max"=Max,"Size"=Size))
+    P:propDelete()
+    PropsNeeded=ceil(Size/(Max:x()*1))
+    Size=PropsNeeded*Max:x()
+    holoCreate(998,entity():toWorld(vec(Size,Size,Levels*Max:x()*2)))
+    holoCreate(997,entity():toWorld(-1*vec(Size,Size,0)))
+    timer("Layer",Delay)
+}
+if(clk("NextWallX")){
+    if(I<PropsNeeded){
+        holoCreate(Holos,entity():toWorld(vec((PropsNeeded/2-I)*Max:x()*2-Max:x(),Size,0)+OffSet),vec(1),entity():toWorld(ang(90,90,0)),vec(255),Model)
+        holoParent(Holos,entity())
+        I++
+        Holos++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWallY",Delay)
+    }
+}
+if(clk("NextWallY")){
+    if(I<PropsNeeded){
+        holoCreate(Holos,entity():toWorld(vec(Size,(PropsNeeded/2-I)*Max:x()*2-Max:x(),0)+OffSet),vec(1),entity():toWorld(ang(90,0,0)),vec(255),Model)
+        holoParent(Holos,entity())
+        I++
+        Holos++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWall-X",Delay)
+    }
+}
+if(clk("NextWall-X")){
+    if(I<PropsNeeded){
+        holoCreate(Holos,entity():toWorld(-1*vec((PropsNeeded/2-I)*Max:x()*2-Max:x(),Size,0)+OffSet),vec(1),entity():toWorld(ang(90,-90,0)),vec(255),Model)
+        holoParent(Holos,entity())
+        I++
+        Holos++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWall-Y",Delay)
+    }
+}
+if(clk("NextWall-Y")){
+    if(I<PropsNeeded){
+        holoCreate(Holos,entity():toWorld(-1*vec(Size,(PropsNeeded/2-I)*Max:x()*2-Max:x(),0)+OffSet),vec(1),entity():toWorld(ang(90,0,0)),vec(255),Model)
+        holoParent(Holos,entity())
+        I++
+        Holos++
+        timer(clkName(),Delay)
+    }else{
+        timer("Layer",Delay)
+    }
+}
+if(clk("Layer")){
+    if(Levels>=1){
+        print("Finished Layer: "+Levels)
+        Levels--
+        OffSet=vec(0,0,Max:x()*Levels*2+Max:x())
+        I=0
+        timer("NextWallX",Delay)
+    }else{
+        setName("Props needed: "+(holoAmount()-2))
+    }
+}

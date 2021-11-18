@@ -1,0 +1,72 @@
+@name Updated Event.TPReturn
+@persist [HP,Size] [CurrPlayer]:entity [Players,Weapons]:array
+if(first()){
+    HP = 100 # This is what it sets their health to when they join the event
+    Size=300
+    entity():setPos(entity():pos()+vec(0,0,150)) 
+    entity():noCollideAll(1)
+    holoCreate(1,entity():pos()+vec(0,0,owner():height()/2))
+    holoScaleUnits(1,-vec(Size*2,Size*2,owner():height()))
+    holoParent(1,entity())
+    holoVisible(1,players(),0)
+    holoVisible(1,owner(),1)
+    runOnChat(1)
+    timer("DoAction",10000)
+}
+
+if(chatClk()){
+    LS = lastSaid():lower():explode(" ")
+    Txt = LS[1,string]:lower()
+    Pl = lastSpoke()
+    if(Txt == "!join"){
+            Pl["Return",vector] = Pl:pos()
+            Pl["HPRet",number] = Pl:health()
+            Pl:teleport(entity():pos()+vec(random(-1*Size,Size),random(-1*Size,Size),0))
+            Pl:setHealth(HP)
+            Players:pushEntity(Pl)
+    }
+    if(Txt == "!return"){
+            Pl:teleport(Pl["Return",vector])
+            Pl:setHealth(Pl["HPRet",number]>0 ? Pl["HPRet",number] : 100)
+    }
+}elseif(clk("DoAction")){
+    if(Players:count()>0){
+        if(findCanQuery()){
+            P=Players:popEntity()
+            CurrPlayer=P
+            findClearWhiteList()
+            findExcludeClass("weapon_physgun")
+            findExcludeClass("weapon_physcannon")
+            findExcludeClass("manipulate_bone")
+            findExcludeClass("prop_physics")
+            findExcludeClass("gmod_wire_hologram")
+            findExcludeClass("gmod_wire_expression2")
+            findExcludeClass("gmod_tool")
+            findExcludeClass("keys")
+            findInSphere(CurrPlayer:pos(),25)
+            Weapons=findToArray()
+            printTable(findToTable())
+            timer("StripPerson",500)
+        }else{
+            timer("DoAction",500)
+        }
+    }else{
+        timer("DoAction",5000)
+    }
+}elseif(clk("StripPerson")){
+    if(CurrPlayer:isPlayer()){
+        if(Weapons:count()>0){
+            while(perf(90) & Weapons:count()>0){
+                W=Weapons:popEntity()
+                if(W:isWeapon() & W:type()!="weapon_physgun" & W:type()!="weapon_physcannon" & W:type()!="manipulate_bone"){
+                    W:set("KillHierarchy",0)
+                }
+            }
+            timer("StripPerson",5)
+        }else{
+            timer("DoAction",10)
+        }
+    }else{
+        timer("DoAction",0)
+    }
+}

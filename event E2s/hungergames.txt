@@ -1,0 +1,86 @@
+@name Hunger Games
+@persist [GTable]:gtable [Radius,Time,TotalPlayers,Angle,I,PlayerHealth] [Center,Parent]:entity [TeamTable]:table [Players,Targets]:array
+if(first()){
+    PlayerHealth=500
+    runOnChat(1)
+}elseif(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "key",
+            GTable=gTable(LS[2,string],1)
+            printTable(GTable:toTable())
+            if(!(GTable:count()>0)){
+                print("Invalid Table/Key \""+LS[2,string]+"\"")
+            }
+            break
+        case "team",
+            printTable(GTable[LS[2,string]:toNumber(),table])
+            break
+        case "heal",
+            Health=LS[2,string]:toNumber()
+            if(Health!=0){
+                PlayerHealth=Health
+            }
+            timer("Heal",1000)
+            break
+        case "prep",
+            Parent=propSpawn("models/props_combine/breenglobe.mdl",1)
+            timer("CreateArena",1000)
+            print("Preparing to Start...")
+            break
+        case "start",
+            Parent:propDelete()
+            print("Preparing to Start...")
+            break
+    }
+}elseif(clk("CreateArena")){
+    Center=GTable["Center",entity]
+    Radius=GTable["Radius",number]-100
+    Time=curtime()
+    Angle=360/GTable["MaxTeams",number]
+    I=0
+    timer("Generate HideOut",1000)
+}elseif(clk("Generate HideOut")){
+    I++
+    if(I<=GTable["MaxTeams",number]){
+        P=propSpawn("models/hunter/tubes/tube4x4x8.mdl",Center:toWorld(vec(cos(Angle*I)*Radius,sin(Angle*I)*Radius,200)),entity():toWorld(ang(0,Angle*I+180,0)),1)
+        P:noDraw(1)
+        P:parentTo(Parent)
+        holoCreate(I,P:pos()-vec(0,0,P:height()/2 - 1),vec(1,1,0),ang(),vec(255),"models/hunter/tubes/tube4x4x8.mdl")
+        holoParent(I,P)
+        TeamTable=GTable[I,table]
+        TeamTable["Goal",entity]=P
+        Players=array():add(TeamTable["Members",array])
+        timer("BringPlayers",10)
+    }else{
+        print("Teams Should Be Ready")
+    }
+}elseif(clk("BringPlayers")){
+    if(Players:count()>0){
+        P=Players:popEntity()
+        Point=TeamTable["Goal",entity]:pos()+vec(0,0,70*Players:count())
+        P:tele(Point)
+        P:teleport(Point)
+        P:setHealth(PlayerHealth)
+        timer("BringPlayers",100)
+    }else{
+        timer("Generate HideOut",1000)
+    }
+}elseif(clk("Heal")){
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findIncludeClass("player")
+    findInBox(GTable["LeftCorner",vector],GTable["RightCorner",vector])
+    Targets=findToArray()
+    timer("HealPlayer",1000)
+    print("Healing "+Targets:count()+" players.")
+}elseif(clk("HealPlayer")){
+    if(Targets:count()>0){
+        P=Targets:popEntity()
+        if(P:isPlayer()){
+            P:setHealth(PlayerHealth)
+        }
+        timer("HealPlayer",100)
+    }else{
+        print("Finished Healing All Players In Arena")
+    }
+}

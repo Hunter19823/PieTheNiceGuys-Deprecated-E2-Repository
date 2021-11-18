@@ -1,0 +1,85 @@
+@name E2 Finder and Teleporter
+@persist State Entities:table Time LastEntry:table Toggle OPSLimit CPULimit
+if(first()){
+    State=0
+    Toggle=0
+    Time=100
+    OPSLimit=300
+    CPULimit=100
+    runOnChat(1)
+    propSpawnUndo(1)
+    function table entity:convertToTable(){
+        local Table=table(
+        "Owner"=This:owner(),
+        "Position"=This:pos(),
+        "E2Name"=This:getName(),
+        "CPU"=This:cpuUsage(),
+        "OPS"=This:ops()
+        )
+        return Table
+    }
+    function void table:testEntry(Number){
+        setName(Number+"")
+        if(This:exists(Number)){
+            local Table=This[Number,entity]:convertToTable()
+            LastEntry=Table
+        }else{
+            reset()
+            stopAllTimers()
+            State=0
+        }
+    }
+}elseif(chatClk(owner())){
+    local LS=owner():lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case ".tele",
+            #say .tele # to teleport to that E2 entry
+            owner():teleport(Entities[LS[2,string]:toNumber(),entity]:pos())
+            break
+        case ".toggle",
+            #Toggle E2 info
+            if(Toggle){
+                Toggle=0
+            }else{
+                Toggle=1
+            }
+            break
+        case ".get",
+            #get list of E2s.
+            printTable(Entities)
+            break
+        default,
+            break
+    }
+}elseif(chatClk()){
+    local Link=lastSaid():explode("youtu")
+    if(Link[2,string]!=""){
+        print(lastSpoke():name()+" said: <br>"+lastSaid())
+    }
+}else{
+    switch(State){
+        case 0,
+            local Blacklist=array(owner(),entity())
+            findExcludeEntities(Blacklist)
+            findByClass(entity():type())
+            Entities=findToTable()
+            break
+        default,
+            if(State%2==0){
+                if(Toggle){
+                    printTable(LastEntry)
+                }
+                if(LastEntry["OPS",number]>=OPSLimit || LastEntry["CPU",number]>=CPULimit){
+                    owner():teleport(LastEntry["Position",vector])
+                    printTable(LastEntry)
+                    owner():effectSpawn("Explosion",owner():pos(),vec(1),1)
+                    print("ALERT<br>ALERT<br>E2 Potentially Dangerous!<br>ALERT<br>ALERT")
+                }
+            }else{
+                Entities:testEntry((State+1)/2)
+            }
+            break
+    }
+    State++
+}
+interval(Time)

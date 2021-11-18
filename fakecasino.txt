@@ -1,0 +1,53 @@
+@name You Always Win Casino Machine
+@inputs Use:entity
+@persist Sounds:array [O]:entity T:table [Init]:entity
+if(->Use && ~Use){
+    T[Use:id(),entity]=Use
+    runOnUse(1,Use)
+}elseif(first()){
+    T=table()
+    NumOfMachines=10
+    P=propSpawn("models/bluesdoubleornothing/slots_1.mdl",entity():pos(),ang(),1)
+    runOnUse(1,P)
+    Init=P
+    O=owner()
+    T[P:id(),entity]=P
+    Sounds=array(
+    "doubleornothing\\x1.mp3",
+    "doubleornothing\\x2.mp3",
+    "doubleornothing\\x3.mp3",
+    "doubleornothing\\x4.mp3",
+    "doubleornothing\\x5.mp3",
+    "doubleornothing\\x6.mp3",
+    "doubleornothing\\x7.mp3",
+    "doubleornothing\\x8.mp3",
+    "doubleornothing\\x9.mp3",
+    "doubleornothing\\jackpot.mp3"
+    )
+}elseif(useEntClk():inUse()){
+    E=useEntClk()
+    Person=E:inUseBy()
+    if(Person["HasNot",number]==0){
+        E["Counter",number]=E["Counter",number]+1
+        if(E["Counter",number]<11){
+            R=random(0,9999)
+            holoCreate(R,Person:pos()+Person:height(),vec(0)):soundPlay(R,0,Sounds[E["Counter",number],string])
+            soundVolume(R,1)
+            Thing=E:inUseBy()
+            timer(useEntClk():id()+"",60000)
+        }else{
+            Person["HasNot",number]=1
+            moneyGive(Person,100000)
+        }
+    }
+}else{
+    Z=T[clkName(),entity]
+    Z:propDelete()
+    if(Init:isValid()){
+        Init:propDelete()
+    }
+    Z=propSpawn("models/bluesdoubleornothing/slots_1.mdl",entity():pos(),ang(),1)
+    Init=Z
+    holoDeleteAll()
+    runOnUse(1,Z)
+}

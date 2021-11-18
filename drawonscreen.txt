@@ -1,0 +1,57 @@
+@persist [X,Y,Spacing,UnitMarkerSpacing,Counter,Timer] [Size]:vector2
+@inputs EGPHud:wirelink
+if(first()){
+    Spacing=100
+    Timer=250
+    UnitMarkerSpacing=300
+    if(->EGPHud){
+        timer("Start",1000)
+    }else{
+        entity():createWire(entity():isWeldedTo(),"EGPHud","wirelink")
+        timer("Start",1000)
+    }
+}
+if(->EGPHud & ~EGPHud){
+    print("Wired Up and ready to go!")
+    timer("Start",1000)
+}
+if(clk("Start") & ->EGPHud){
+    Size=egpScrSize(owner())
+    EGPHud:egpClear()
+    print("Tick Marks: ", floor(Size/UnitMarkerSpacing) , "Dots: ", floor(Size/Spacing):x() * floor(Size/Spacing):y())
+    timer("Draw",1000)
+}else{
+    if((->EGPHud)){
+        
+    }else{
+        print("Failed To Attach to EGP Hud")
+    }
+}
+if(clk("Draw")){
+    if(X<=Size:x()){
+        while(perf(90) & X<=Size:x()){
+            if(Y<=Size:y()){
+                if(Y%UnitMarkerSpacing==0){
+                    EGPHud:egpText(Counter,"( "+X+" , "+Y+" )",vec2(X,Y))
+                    Counter++
+                }
+                EGPHud:egpCircle(Counter,vec2(X,Y),vec2(5))
+                Counter++
+                Y+=Spacing
+            }else {
+                Y=0
+                if(X%UnitMarkerSpacing==0){
+                    EGPHud:egpText(Counter,"( "+X+" , "+Y+" )",vec2(X,Y))
+                    Counter++
+                    EGPHud:egpCircle(Counter,vec2(X,Y),vec2(5))
+                    Counter++
+                }
+                X+=Spacing
+            }
+        }
+        timer(clkName(),Timer)
+    }else{
+        print(Counter)
+        print("Finished")
+    }
+}

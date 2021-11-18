@@ -1,0 +1,510 @@
+@name Pie's Dynamic EGP Gunshop
+
+@inputs EGP:wirelink
+@persist [RunTime,Settings]:table E:entity
+if(first()){
+    #Calculated by doing GunPrice * Profitmargin = Amount Charged.
+    ProfitMargin=1.05
+    
+    
+    E=entity()
+    Settings=table(
+        "GunDataFolder"="gunshop/data.txt",
+        "TopDisplayBoxColor"=vec(),
+        "TopDisplayBoxMaterial"="",
+        "TopDisplayTextHeader"="Pie's Interactive Dynamic EGP Gunshop ("+((ProfitMargin-1)*100)+"% Profit)",
+        "TopDisplayTextHeaderColor"=vec(30,144,255),
+        "TopDisplayTextBody"="Interested in buying a gun from anywhere on the go? Type /gun [GunName] for a shipment or /single [GunName] for a single gun. Below you may find the full list of guns. E to intract with the screen.",
+        "TopDisplayTextBodyColor"=vec(255),
+        "TopDisplayTextPageCounterText"="Page Number Placeholder",
+        "TopDisplayTextPageCounterColor"=vec(51,153,255),
+        "GunbackgroundColor"=vec(105,105,105),
+        "GunbackgroundMaterial"="",
+        "BackgroundColor"=vec(128,128,128),
+        "BackgroundMaterial"="",
+        "PreviousButtonColor"=vec(0,0,255),
+        "PreviousButtonMaterial"="",
+        "FirstButtonColor"=vec(0,64,255),
+        "FirstButtonMaterial"="",
+        "LastButtonColor"=vec(0,64,255),
+        "LastButtonMaterial"="",
+        "NextButtonColor"=vec(0,0,255),
+        "NextButtonMaterial"="",
+        "FitHolosToScale"=0,
+        "HoloPreviewScale"=vec(0.6),
+        "GunDescriptionColor"=vec(0,191,255),
+        "MouseColor"=vec(255,0,0),
+        "ProfitMargin"=ProfitMargin,
+        
+        "DebugMode"=0
+    )
+    runOnChat(1)
+    RunTime=table()
+    Weld=E:isWeldedTo()
+    if(Weld:model()=="models/bull/dynamicbutton.mdl"){
+        P=propSpawn("models/hunter/blocks/cube4x4x2.mdl",Weld:toWorld(vec(0,0,100)),Weld:toWorld(ang(0,90,0)),1)
+        P:noCollideAll(1)
+        #ifdef entity:noDraw(number)
+        P:noDraw(!Settings["DebugMode",number])
+        #else
+        P:propDraw(!Settings["DebugMode",number])
+        #endif
+        Weld:parentTo(P)
+        runOnUse(1,P)
+        #ifdef runOnDmg(number,entity)
+        runOnDmg(1,P)
+        #endif
+        P:setMaterial("models/wireframe")
+        Settings["OffsetAngle",angle]=ang(0,-90,0)
+        Settings["OffsetVector",vector]=vec(0,-12.5,0)
+    }else{
+        runOnUse(1,Weld)
+        #ifdef runOnDmg(number,entity)
+        runOnDmg(1,Weld)
+        #endif
+        Settings["OffsetAngle",angle]=ang(90,0,0)
+        Settings["OffsetVector",vector]=vec(0,0,25)
+    }
+    if(!->EGP){
+        E:createWire(Weld,"EGP","wirelink")
+    }
+    if(->EGP){
+        print("EGP Wired.")
+        EGP:egpClear()
+        #timer("LoadData",100)
+        timer("SetupScreen",100)
+    }else{
+        print("Error Trying to auto-Wire. Try placing on an EGPv3 screen!")
+    }
+    function number vector2:onButton(Index){
+        Max=EGP:egpPos(Index)+EGP:egpSize(Index)/2
+        Min=EGP:egpPos(Index)-EGP:egpSize(Index)/2
+        
+        return inrange(This,Min,Max)
+    }
+    
+    function number vector2:onWeapon(Number){
+        X=ceil(Number/3)
+        Y=Number<4 ? Number : Number-3
+        Min=Settings["EGPSize",vector2]*vec2(0.5*(X-1),2/8*Y)
+        Max=Min+Settings["EGPSize",vector2]*vec2(0.5,2/8)
+        
+        return inrange(This,Min,Max)
+    }
+    
+    function table getWeapon(Number){
+        GunIndex=(RunTime["Page",number]-1)*6+(Number)
+        if(RunTime["GunDataKey",array]:exists(GunIndex)){
+            return RunTime["GunData",table][RunTime["GunDataKey",array][GunIndex,string],table]
+        }else{
+            return table()
+        }
+    }
+}
+if(useEntClk():inUse() | dmgClk()){
+    if(perf(50)&!RunTime["Refreshing",number]){
+        #ifdef runOnDmg(number,entity)
+        if(dmgClk()){
+            Ent=dmgAttacker()
+        }else{
+            Ent=useEntClk():inUseBy()
+        }
+        #else
+        Ent=useEntClk():inUseBy()
+        #endif
+        SteamId=Ent:steamID()
+        Cursor=EGP:egpCursor(Ent)
+        switch(1){
+            case Cursor:onButton(RunTime["Previous",number]),
+                if(Settings["DebugMode",number]>0){
+                    hint("Previous Page",1)
+                }
+                timer("Previous",0)
+                break
+            case Cursor:onButton(RunTime["First",number]),
+                if(Settings["DebugMode",number]>0){
+                    hint("First Page",1)
+                }
+                timer("First",0)
+                break
+            case Cursor:onButton(RunTime["Last",number]),
+                if(Settings["DebugMode",number]>0){
+                    hint("Last Page",1)
+                }
+                timer("Last",0)
+                break
+            case Cursor:onButton(RunTime["Next",number]),
+                if(Settings["DebugMode",number]>0){
+                    hint("Next Page",1)
+                }
+                timer("Next",0)
+                break
+            case Cursor:onWeapon(1),
+                if(Settings["DebugMode",number]>0){
+                    hint("Weapon 1",1)
+                }
+                Gun=getWeapon(1)
+                if(Gun){
+                    if(Gun["Name",string]:lower():find("single")){
+                        concmd("say /sendsingle "+SteamId+","+Gun["Name",string])
+                    }else{
+                        concmd("say /sendshipment "+SteamId+","+Gun["Name",string])
+                    }
+                }
+                break
+            case Cursor:onWeapon(2),
+                if(Settings["DebugMode",number]>0){
+                    hint("Weapon 2",1)
+                }
+                Gun=getWeapon(2)
+                if(Gun){
+                    if(Gun["Name",string]:lower():find("single")){
+                        concmd("say /sendsingle "+SteamId+","+Gun["Name",string])
+                    }else{
+                        concmd("say /sendshipment "+SteamId+","+Gun["Name",string])
+                    }
+                }
+                break
+            case Cursor:onWeapon(3),
+                if(Settings["DebugMode",number]>0){
+                    hint("Weapon 3",1)
+                }
+                Gun=getWeapon(3)
+                if(Gun){
+                    if(Gun["Name",string]:lower():find("single")){
+                        concmd("say /sendsingle "+SteamId+","+Gun["Name",string])
+                    }else{
+                        concmd("say /sendshipment "+SteamId+","+Gun["Name",string])
+                    }
+                }
+                break
+            case Cursor:onWeapon(4),
+                if(Settings["DebugMode",number]>0){
+                    hint("Weapon 4",1)
+                }
+                Gun=getWeapon(4)
+                if(Gun){
+                    if(Gun["Name",string]:lower():find("single")){
+                        concmd("say /sendsingle "+SteamId+","+Gun["Name",string])
+                    }else{
+                        concmd("say /sendshipment "+SteamId+","+Gun["Name",string])
+                    }
+                }
+                break
+            case Cursor:onWeapon(5),
+                if(Settings["DebugMode",number]>0){
+                    hint("Weapon 5",1)
+                }
+                Gun=getWeapon(5)
+                if(Gun){
+                    if(Gun["Name",string]:lower():find("single")){
+                        concmd("say /sendsingle "+SteamId+","+Gun["Name",string])
+                    }else{
+                        concmd("say /sendshipment "+SteamId+","+Gun["Name",string])
+                    }
+                }
+                break
+            case Cursor:onWeapon(6),
+                if(Settings["DebugMode",number]>0){
+                    hint("Weapon 6",1)
+                }
+                Gun=getWeapon(6)
+                if(Gun){
+                    if(Gun["Name",string]:lower():find("single")){
+                        concmd("say /sendsingle "+SteamId+","+Gun["Name",string])
+                    }else{
+                        concmd("say /sendshipment "+SteamId+","+Gun["Name",string])
+                    }
+                }
+                break
+            default,
+                if(Settings["DebugMode",number]>0){
+                    hint("Default",1)
+                }
+                break
+        }
+    }else{
+        if(Settings["DebugMode",number]>0){
+            hint("Perf or in use",1)
+        }
+    }
+}
+if(clk("SetupScreen")){
+    print("Setting up EGP Screen...")
+    Settings["EGPSize",vector2]=EGP:egpSize()
+    timer("Background",100)
+    timer("TopDisplayBox",200)
+    timer("Buttons",300)
+    timer("ResetDescriptions",400)
+    
+}
+if(clk("Background")){
+    #Background
+    RunTime["I",number]=1
+    EGP:egpBox(RunTime["I",number],Settings["EGPSize",vector2]/2,Settings["EGPSize",vector2])
+    EGP:egpColor(RunTime["I",number],Settings["BackgroundColor",vector])
+    EGP:egpMaterial(RunTime["I",number],Settings["BackgroundMaterial",string])
+}
+if(clk("TopDisplayBox")){
+    #TopDisplayBox
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(0.5,3/32),Settings["EGPSize",vector2]*vec2(1,3/16))
+    EGP:egpColor(RunTime["I",number],Settings["TopDisplayBoxColor",vector])
+    EGP:egpMaterial(RunTime["I",number],Settings["TopDisplayBoxMaterial",string])
+    #TopDisplayTextHeader
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpText(RunTime["I",number],Settings["TopDisplayTextHeader",string],Settings["EGPSize",vector2]*vec2(0.5,1/64))
+    EGP:egpColor(RunTime["I",number],Settings["TopDisplayTextHeaderColor",vector])
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-1))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    #TopDisplayTextBody
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpTextLayout(RunTime["I",number],Settings["TopDisplayTextBody",string],Settings["EGPSize",vector2]*vec2(0,3/64),vec2(0.5,4/32))
+    EGP:egpColor(RunTime["I",number],Settings["TopDisplayTextBodyColor",vector])
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-2))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    #TopDisplayTextPageCounter
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpText(RunTime["I",number],Settings["TopDisplayTextPageCounterText",string],Settings["EGPSize",vector2]*vec2(0.5,5/32))
+    EGP:egpColor(RunTime["I",number],Settings["TopDisplayTextPageCounterColor",vector])
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-3))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    for(I=1,3){
+        RunTime["I",number]=RunTime["I",number]+1
+        EGP:egpRoundedBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(1/8,1/8 + 2/8*I),Settings["EGPSize",vector2]*vec2(7/32))
+        EGP:egpColor(RunTime["I",number],Settings["GunbackgroundColor",vector])
+        EGP:egpMaterial(RunTime["I",number],Settings["GunbackgroundMaterial",string])
+        RunTime["I",number]=RunTime["I",number]+1
+        EGP:egpRoundedBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(5/8,1/8 + 2/8*I),Settings["EGPSize",vector2]*vec2(7/32))
+        EGP:egpColor(RunTime["I",number],Settings["GunbackgroundColor",vector])
+        EGP:egpMaterial(RunTime["I",number],Settings["GunbackgroundMaterial",string])
+    }
+}
+if(clk("Buttons")){
+    #Previous Button
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpRoundedBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(1/8,7/32),Settings["EGPSize",vector2]*vec2(2/8,1/16))
+    EGP:egpColor(RunTime["I",number],Settings["PreviousButtonColor",vector])
+    EGP:egpMaterial(RunTime["I",number],Settings["PreviousButtonMaterial",string])
+    RunTime["Previous",number]=RunTime["I",number]
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpText(RunTime["I",number],"Previous Page",EGP:egpPos(RunTime["I",number]-1)-Settings["EGPSize",vector2]*vec2(0,1/64))
+    EGP:egpColor(RunTime["I",number],vec(255)-EGP:egpColor(RunTime["I",number]-1))
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-1))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    #First Button
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpRoundedBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(3/8,7/32),Settings["EGPSize",vector2]*vec2(2/8,1/16))
+    EGP:egpColor(RunTime["I",number],Settings["FirstButtonColor",vector])
+    EGP:egpMaterial(RunTime["I",number],Settings["FirstButtonMaterial",string])
+    RunTime["First",number]=RunTime["I",number]
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpText(RunTime["I",number],"First Page",EGP:egpPos(RunTime["I",number]-1)-Settings["EGPSize",vector2]*vec2(0,1/64))
+    EGP:egpColor(RunTime["I",number],vec(255)-EGP:egpColor(RunTime["I",number]-1))
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-1))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    #Last Button
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpRoundedBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(5/8,7/32),Settings["EGPSize",vector2]*vec2(2/8,1/16))
+    EGP:egpColor(RunTime["I",number],Settings["LastButtonColor",vector])
+    EGP:egpMaterial(RunTime["I",number],Settings["LastButtonMaterial",string])
+    RunTime["Last",number]=RunTime["I",number]
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpText(RunTime["I",number],"Last Page",EGP:egpPos(RunTime["I",number]-1)-Settings["EGPSize",vector2]*vec2(0,1/64))
+    EGP:egpColor(RunTime["I",number],vec(255)-EGP:egpColor(RunTime["I",number]-1))
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-1))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    #Next Button
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpRoundedBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(7/8,7/32),Settings["EGPSize",vector2]*vec2(2/8,1/16))
+    EGP:egpColor(RunTime["I",number],Settings["NextButtonColor",vector])
+    EGP:egpMaterial(RunTime["I",number],Settings["NextButtonMaterial",string])
+    RunTime["Next",number]=RunTime["I",number]
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpText(RunTime["I",number],"Next Page",EGP:egpPos(RunTime["I",number]-1)-Settings["EGPSize",vector2]*vec2(0,1/64))
+    EGP:egpColor(RunTime["I",number],vec(255)-EGP:egpColor(RunTime["I",number]-1))
+    EGP:egpSize(RunTime["I",number],EGP:egpSize(RunTime["I",number]-1))
+    EGP:egpAlign(RunTime["I",number],1)
+    
+    #Cursor
+    RunTime["I",number]=RunTime["I",number]+1
+    EGP:egpBox(RunTime["I",number],Settings["EGPSize",vector2]*vec2(0),Settings["EGPSize",vector2]*vec2(1/128))
+    EGP:egpColor(RunTime["I",number],Settings["MouseColor",vector])
+    EGP:egpParentToCursor(RunTime["I",number])
+}
+
+if(clk("ResetDescriptions")){
+    RunTime["I",number]=RunTime["I",number]+1
+    RunTime["StartI",number]=RunTime["I",number]
+    RunTime["Col",number]=1
+    RunTime["Row",number]=0
+    GT=gTable(owner():steamID()+"'s GunshopData",1)
+    if(!GT["HasLoaded",number]){
+        timer("LoadData",1000)
+    }else{
+        RunTime["GunData",table]=GT["GunData",table]
+        RunTime["GunDataKey",array]=RunTime["GunData",table]:keys()
+        if(Settings["DebugMode",number]>0){
+            printTable(RunTime["GunDataKey",array])
+        }
+        RunTime["Page",number]=1
+        RunTime["MaxPage",number]=ceil(RunTime["GunDataKey",array]:count()/6)
+        print("Found "+RunTime["GunData",table]:count()+" guns.")
+        timer("CreateDescriptions",100)
+    }
+    
+}
+
+
+if(clk("CreateDescriptions")){
+    RunTime["Refreshing",number]=1
+    if(RunTime["Col",number]<3){
+        if(RunTime["Row",number]<3){
+            while(perf(90) & RunTime["Row",number]<3 & holoCanCreate()){
+                RunTime["Row",number]=RunTime["Row",number]+1
+                X=RunTime["Col",number]
+                Y=RunTime["Row",number]
+                if(X==1){
+                    Index=RunTime["StartI",number]+Y
+                }else{
+                    Index=RunTime["StartI",number]+Y+3
+                }
+                
+                Scale=EGP:entity():toLocal(EGP:egpToWorld(Settings["EGPSize",vector2]*vec2(1/8 + (4/8)*(X-1),2/8 * Y + 1/8)))
+                HoloPos=EGP:entity():toWorld(Settings["OffsetVector",vector]+Scale)
+                HoloAng=EGP:entity():angles()+Settings["OffsetAngle",angle]
+                
+                GunIndex=(RunTime["Page",number]-1)*6+(Index-RunTime["StartI",number])
+                if(RunTime["GunDataKey",array]:exists(GunIndex)){
+                    Gun=RunTime["GunData",table][RunTime["GunDataKey",array][GunIndex,string],table]
+                    holoCreate(Index,HoloPos,vec(1),HoloAng,vec(255),Gun["Model",string])
+                    holoParent(Index,EGP:entity())
+                    Text="\nName: "+Gun["Name",string]+"\nPrice: $"+round(Gun["Price",number]*Settings["ProfitMargin",number])+"\nQuantity: "+Gun["Size",number]
+                }else{
+                    Text="\n\nEnd Of Selection"
+                    holoCreate(Index,HoloPos,vec(1),HoloAng,vec(255),"")
+                }
+                if(Settings["FitHolosToScale",number]){
+                    holoScaleUnits(Index,shiftR(vec(Settings["EGPSize",vector2]*1/16,5)))
+                }else{
+                    holoScale(Index,Settings["HoloPreviewScale",vector])
+                }
+                if(Settings["DebugMode",number]==2){
+                    printTable(Gun)
+                }
+                DescriptionPos=Settings["EGPSize",vector2]*vec2(2/8 + (4/8)*(X-1),2/8 * Y)
+                DescriptionSize=Settings["EGPSize",vector2]*vec2(2/8)
+                
+                EGP:egpTextLayout(Index,Text,DescriptionPos,DescriptionSize)
+                EGP:egpColor(Index,Settings["GunDescriptionColor",vector])
+                if(Settings["DebugMode",number]==2){
+                    print("Start I:",RunTime["StartI",number],"Index:",Index,"GunIndex:",GunIndex,"X/Y",X,Y,"HoloSize:",Scale,"DescriptionSize: ",DescriptionSize,"DescriptionPos: ",DescriptionPos)
+                }
+            }
+            timer(clkName(),0)
+        }else{
+            RunTime["Col",number]=RunTime["Col",number]+1
+            RunTime["Row",number]=0
+            EGP:egpSetText(5,"Page "+RunTime["Page",number]+"/"+RunTime["MaxPage",number])
+            timer(clkName(),0)
+        }
+    }else{
+        if(Settings["DebugMode",number]>0){
+            hint("Finished Setting Descriptions for page: "+RunTime["Page",number],2)
+        }
+        RunTime["StartI",number]=RunTime["I",number]
+        RunTime["Col",number]=1
+        RunTime["Row",number]=0
+        RunTime["Refreshing",number]=0
+    }
+}
+if(clk("Next")){
+    if(RunTime["Page",number]<RunTime["MaxPage",number]){
+        RunTime["Page",number]=RunTime["Page",number]+1
+        timer("CreateDescriptions",0)
+    }else{
+        if(Settings["DebugMode",number]==1){
+            print("Too far.")
+        }
+    }
+}
+if(clk("Previous")){
+    if(RunTime["Page",number]>1){
+        RunTime["Page",number]=RunTime["Page",number]-1
+        timer("CreateDescriptions",0)
+    }else{
+        if(Settings["DebugMode",number]==1){
+            print("Too far.")
+        }
+    }
+}
+if(clk("First")){
+    RunTime["Page",number]=1
+    timer("CreateDescriptions",0)
+}
+if(clk("Last")){
+    RunTime["Page",number]=RunTime["MaxPage",number]
+    timer("CreateDescriptions",0)
+}
+if(clk("LoadData")){
+    if(fileCanLoad()){
+        runOnFile(1)
+        print("Loading data from Steam/steamapps/common/GarrysMod/garrysmod/data/e2files/"+Settings["GunDataFolder",string])
+        fileLoad(Settings["GunDataFolder",string])
+    }else{
+        print("Could not load data. Retrying...")
+        timer("LoadData",1000)
+    }
+}
+if(fileClk()){
+    switch(fileStatus()){
+        case _FILE_OK,
+            GT=gTable(owner():steamID()+"'s GunshopData",1)
+            GT["HasLoaded",number]=1
+            RunTime["GunData",table]=vonDecodeTable(fileRead())
+            GT["GunData",table]=RunTime["GunData",table]
+            RunTime["GunDataKey",array]=RunTime["GunData",table]:keys()
+            printTable(RunTime["GunDataKey",array])
+            RunTime["Page",number]=1
+            RunTime["MaxPage",number]=ceil(RunTime["GunDataKey",array]:count()/6)
+            print("Found "+RunTime["GunData",table]:count()+" guns.")
+            timer("CreateDescriptions",100)
+            break
+        case _FILE_404,
+            error("File returned a 404. Please contact Pie to get the proper data for this e2.")
+            break
+        case _FILE_UNKNOWN,
+            error("File does not exist. Please contact Pie to get the proper data for this e2.")
+            break
+        case _FILE_TIMEOUT,
+            print("File timed out. Retrying in 5 seconds.")
+            timer("LoadData",5000)
+            break
+        case _FILE_TRANSFER_ERROR,
+            print("File Transfer Error")
+            break
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".next",
+            timer("Next",0)
+            break
+        case ".previous",
+            timer("Previous",0)
+            break
+        case ".first",
+            timer("First",0)
+            break
+        case ".last",
+            timer("Last",0)
+            break
+    }
+}

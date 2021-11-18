@@ -1,0 +1,213 @@
+@name Chess
+@persist Positions:table Board:entity Keys:array
+if(first()){
+    Positions=table(
+    "A1" = table("position"=vec(34,-33.5,7),"entity"=noentity()),
+    "A2" = table("position"=vec(24.5,-33.5,7),"entity"=noentity()),
+    "A3" = table("position"=vec(14.5,-33.5,7),"entity"=noentity()),
+    "A4" = table("position"=vec(5,-33.5,7),"entity"=noentity()),
+    "A5" = table("position"=vec(-5,-33.5,7),"entity"=noentity()),
+    "A6" = table("position"=vec(-14.5,-33.5,7),"entity"=noentity()),
+    "A7" = table("position"=vec(-24.5,-33.5,7),"entity"=noentity()),
+    "A8" = table("position"=vec(-34,-33.5,7),"entity"=noentity()),
+    "B1" = table("position"=vec(34,-23.5,7),"entity"=noentity()),
+    "B2" = table("position"=vec(24.5,-23.5,7),"entity"=noentity()),
+    "B3" = table("position"=vec(14.5,-23.5,7),"entity"=noentity()),
+    "B4" = table("position"=vec(5,-23.5,7),"entity"=noentity()),
+    "B5" = table("position"=vec(-5,-23.5,7),"entity"=noentity()),
+    "B6" = table("position"=vec(-14.5,-23.5,7),"entity"=noentity()),
+    "B7" = table("position"=vec(-24.5,-23.5,7),"entity"=noentity()),
+    "B8" = table("position"=vec(-34,-23.5,7),"entity"=noentity()),
+    "C1" = table("position"=vec(34,-14,7),"entity"=noentity()),
+    "C2" = table("position"=vec(24.5,-14,7),"entity"=noentity()),
+    "C3" = table("position"=vec(14.5,-14,7),"entity"=noentity()),
+    "C4" = table("position"=vec(5,-14,7),"entity"=noentity()),
+    "C5" = table("position"=vec(-5,-14,7),"entity"=noentity()),
+    "C5" = table("position"=vec(-14.5,-14,7),"entity"=noentity()),
+    "C6" = table("position"=vec(-14.5,-14,7),"entity"=noentity()),
+    "C7" = table("position"=vec(-24.5,-14,7),"entity"=noentity()),
+    "C8" = table("position"=vec(-34,-14,7),"entity"=noentity()),
+    "D1" = table("position"=vec(34,-4.5,7),"entity"=noentity()),
+    "D2" = table("position"=vec(24.5,-4.5,7),"entity"=noentity()),
+    "D3" = table("position"=vec(14.5,-4.5,7),"entity"=noentity()),
+    "D4" = table("position"=vec(5,-4.5,7),"entity"=noentity()),
+    "D5" = table("position"=vec(-5,-4.5,7),"entity"=noentity()),
+    "D6" = table("position"=vec(-14.5,-4.5,7),"entity"=noentity()),
+    "D7" = table("position"=vec(-24.5,-4.5,7),"entity"=noentity()),
+    "D8" = table("position"=vec(-34,-4.5,7),"entity"=noentity()),
+    "E1" = table("position"=vec(34,5,7),"entity"=noentity()),
+    "E2" = table("position"=vec(24.5,5,7),"entity"=noentity()),
+    "E3" = table("position"=vec(14.5,5,7),"entity"=noentity()),
+    "E4" = table("position"=vec(5,5,7),"entity"=noentity()),
+    "E5" = table("position"=vec(-5,5,7),"entity"=noentity()),
+    "E6" = table("position"=vec(-14.5,5,7),"entity"=noentity()),
+    "E7" = table("position"=vec(-24.4,5,7),"entity"=noentity()),
+    "E8" = table("position"=vec(-34,5,7),"entity"=noentity()),
+    "F1" = table("position"=vec(34,14.5,7),"entity"=noentity()),
+    "F2" = table("position"=vec(24.5,14.5,7),"entity"=noentity()),
+    "F3" = table("position"=vec(14.5,14.5,7),"entity"=noentity()),
+    "F4" = table("position"=vec(5,14.5,7),"entity"=noentity()),
+    "F5" = table("position"=vec(-5,14.5,7),"entity"=noentity()),
+    "F6" = table("position"=vec(-14.5,14.5,7),"entity"=noentity()),
+    "F7" = table("position"=vec(-24.5,14.5,7),"entity"=noentity()),
+    "F8" = table("position"=vec(-34,14.5,7),"entity"=noentity()),
+    "G1" = table("position"=vec(34,24.5,7),"entity"=noentity()),
+    "G2" = table("position"=vec(24.5,24.5,7),"entity"=noentity()),
+    "G3" = table("position"=vec(14.5,24.5,7),"entity"=noentity()),
+    "G4" = table("position"=vec(5,24.5,7),"entity"=noentity()),
+    "G5" = table("position"=vec(-5,24.5,7),"entity"=noentity()),
+    "G6" = table("position"=vec(-14.5,24.5,7),"entity"=noentity()),
+    "G7" = table("position"=vec(-24.5,24.5,7),"entity"=noentity()),
+    "G8" = table("position"=vec(-34,24.5,7),"entity"=noentity()),
+    "H1" = table("position"=vec(34,34.5,7),"entity"=noentity()),
+    "H2" = table("position"=vec(24.5,34.5,7),"entity"=noentity()),
+    "H3" = table("position"=vec(14.5,34.5,7),"entity"=noentity()),
+    "H4" = table("position"=vec(5,34.5,7),"entity"=noentity()),
+    "H5" = table("position"=vec(-5,34.5,7),"entity"=noentity()),
+    "H6" = table("position"=vec(-14.5,34.5,7),"entity"=noentity()),
+    "H7" = table("position"=vec(-24.5,34.5,7),"entity"=noentity()),
+    "H8" = table("position"=vec(-34,34.5,7),"entity"=noentity())
+    )
+    Board=propSpawn("models/props_phx/games/chess/board.mdl",entity():pos(),entity():toWorld(ang(-90,0,0)),1)
+    Board:parentTo(entity())
+    Keys=Positions:keys()
+    timer("Setup",100)
+}
+if(clk("Setup")){
+    if(Keys:count()>0){
+        Key=Keys:popString()
+        switch(Key:lower()){
+            case "a1",
+            case "h1",
+                #White Rook
+                Piece="models/props_phx/games/chess/white_rook.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "a8",
+            case "h8",
+                #Black Rook
+                Piece="models/props_phx/games/chess/black_rook.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "b1",
+            case "g1",
+                #White Knight
+                Piece="models/props_phx/games/chess/white_knight.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "b8",
+            case "g8",
+                #Black Knight
+                Piece="models/props_phx/games/chess/black_knight.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "c1",
+            case "f1",
+                #White Bishop
+                Piece="models/props_phx/games/chess/white_bishop.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "c8",
+            case "f8",
+                #Black Bishop
+                Piece="models/props_phx/games/chess/black_bishop.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "d1",
+                #White King
+                Piece="models/props_phx/games/chess/white_king.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "d8",
+                #Black King
+                Piece="models/props_phx/games/chess/black_king.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "e1",
+                #White Queen
+                Piece="models/props_phx/games/chess/white_queen.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "e8",
+                #Black Queen
+                Piece="models/props_phx/games/chess/black_queen.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "a2",
+            case "b2",
+            case "c2",
+            case "d2",
+            case "e2",
+            case "f2",
+            case "g2",
+            case "h2",
+                #White Pawn
+                Piece="models/props_phx/games/chess/white_pawn.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+            case "a7",
+            case "b7",
+            case "c7",
+            case "d7",
+            case "e7",
+            case "f7",
+            case "g7",
+            case "h7",
+                #Black Pawn
+                Piece="models/props_phx/games/chess/black_pawn.mdl"
+                P=propSpawn(Piece,entity():toWorld(Positions[Key,table]["position",vector]*3.25),entity():angles(),1)
+                Positions[Key,table]["entity",entity]=P
+                #P:parentTo(entity())
+                break
+        }
+        timer(clkName(),750)
+    }else{
+        runOnChat(1)
+        print("Finished")
+    }
+}
+if(chatClk(lastSpoke())){
+    if(lastSpoke():pos():distance(entity():pos())<1000){
+        Pos=lastSaid():upper():explode(" ")
+        if(Positions:exists(Pos[1,string]) & Positions:exists(Pos[2,string])){
+            ChessPiece=Positions[Pos[1,string],table]["entity",entity]
+            if(ChessPiece!=noentity()){
+                ChessPiece2=Positions[Pos[2,string],table]["entity",entity]
+                if(ChessPiece2==noentity()){
+                    Positions[Pos[1,string],table]["entity",entity]=noentity()
+                    ChessPiece:setPos(entity():toWorld(Positions[Pos[2,string],table]["position",vector]*3.25))
+                    Positions[Pos[2,string],table]["entity",entity]=ChessPiece
+                }else{
+                    if(ChessPiece:model():find("black")!=ChessPiece2:model():find("black")){
+                        Positions[Pos[1,string],table]["entity",entity]=noentity()
+                        ChessPiece:setPos(entity():toWorld(Positions[Pos[2,string],table]["position",vector]*3.25))
+                        Positions[Pos[2,string],table]["entity",entity]:propDelete()
+                        Positions[Pos[2,string],table]["entity",entity]=ChessPiece
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+@inputs EGP:wirelink
+if(first()){
+    entity():createWire(entity():isWeldedTo(),"EGP","wirelink")
+    runOnChat(1)
+    EGP:egpClear()
+    EGP:egpText(1,"Command: \".txt <Message>\"",EGP:egpSize()/2)
+    EGP:egpAlign(1,1)
+}
+if(chatClk(owner())){
+    local LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".txt",
+            local Txt=lastSaid():sub(5)
+            EGP:egpSetText(1,Txt)
+            EGP:egpSize(1,100-Txt:length()*2.1)
+            EGP:egpAlign(1,1)
+            break
+    }
+}

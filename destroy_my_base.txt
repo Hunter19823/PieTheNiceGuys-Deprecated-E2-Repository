@@ -1,0 +1,33 @@
+@name Destroy My Base
+@persist [Props]:array
+if(first()){
+    findIncludePlayerProps(owner())
+    findByClass("prop_physics")
+    Props=findToArray()
+    if(Props:count()>0){
+        timer("SetHealth",1000)
+    }
+}
+if(clk("SetHealth")){
+    if(Props:count()>0){
+        while(Props:count()>0 & perf(60)){
+            P=Props:popEntity()
+            P["Health",number] = P:mass()
+            runOnDmg(1,P)
+            print(P["Health",number])
+        }
+        timer(clkName(),100)
+    }else{
+        print("Finished")
+    }
+}
+if(dmgClk()){
+    P=dmgVictim()
+    
+    P["Health",number]=P["Health",number]-dmgDamage()
+    print(P["Health",number])
+    if(P["Health",number]<=0){
+        print(P:name()+" has been destroyed")
+        P:propBreak()
+    }
+}

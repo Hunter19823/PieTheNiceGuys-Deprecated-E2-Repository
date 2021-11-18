@@ -1,0 +1,14 @@
+@persist [Delay,Total,TotalMoney] [Players]:array
+if(first()){
+    Players=players()
+    timer("GiveNext",Delay)
+}
+if(clk("GiveNext")){
+    if(Players:count()>0){
+        Total++
+        TotalMoney+=Players:popEntity():money()
+        timer("GiveNext",Delay)
+    }else{
+        print(TotalMoney/Total)
+    }
+}

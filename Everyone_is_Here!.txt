@@ -1,0 +1,105 @@
+@name Everyone is Here!
+@model models/freeman/exhibition_roleplay_logo_large.mdl
+@persist [Counter,Speed,Chunk] Parent:entity
+if(first()){ if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+Chunk=0
+Counter=1
+function void searchModel(Model:string){findIncludePlayerProps(owner()) findByModel(Model) findSortByDistance(entity():pos()) if(findToTable():count()<0){Parent=entity()}else{Parent=find()}}
+Speed=1000
+entity():streamStart(20,"https://www.dropbox.com/s/5jp6pxhmffenl3d/Main%20Theme%20-%20Super%20Smash%20Bros.%20Brawl.mp3?dl=1",1)
+searchModel("models/maxofs2d/hover_rings.mdl") timer(Counter+"",Speed)}
+if(Chunk==0){ if(clk("1")){ holoCreate(1,vec(-1514.62,-510.13,-39.08),vec(0.1),ang(15.68,87.16,0),vec(255,255,255),"models/player/deadpool/deadpool.mdl") holoScaleUnits(1,vec(23.03,35,35)) holoMaterial(1,"") timer("2",Speed) }
+if(clk("2")){ holoCreate(2,vec(-1474.38,-513.97,-37.91),vec(0.1),ang(8.96,97.44,0),vec(255,255,255),"models/player/p2_chell.mdl") holoScaleUnits(2,vec(24.93,35,35)) holoMaterial(2,"") timer("3",Speed) }
+if(clk("3")){ holoCreate(3,vec(-1442.38,-772.43,-191.64),vec(0.1),ang(18.36,-35.71,0),vec(255,255,255),"models/player/charple.mdl") holoScaleUnits(3,vec(27.47,35,35)) holoMaterial(3,"") timer("4",Speed) }
+if(clk("4")){ holoCreate(4,vec(-1523.14,-509.24,-195.07),vec(0.1),ang(11.01,84.57,0),vec(255,255,255),"models/player/arctic.mdl") holoScaleUnits(4,vec(19.92,35,35)) holoMaterial(4,"") timer("5",Speed) }
+if(clk("5")){ holoCreate(5,vec(-1507.08,-510,-195.96),vec(0.1),ang(6.42,92.29,0),vec(255,255,255),"models/player/pd2_wolf_p.mdl") holoScaleUnits(5,vec(18.07,35,35)) holoMaterial(5,"") timer("6",Speed) }
+if(clk("6")){ holoCreate(6,vec(-1487.73,-510.17,-196.29),vec(0.1),ang(4.43,85.78,0),vec(255,255,255),"models/player/pd2_hoxton_p.mdl") holoScaleUnits(6,vec(17.7,35,35)) holoMaterial(6,"") timer("7",Speed) }
+if(clk("7")){ holoCreate(7,vec(-1470.62,-509.56,-196.42),vec(0.1),ang(3.31,85.38,0),vec(255,255,255),"models/player/pd2_dallas_p.mdl") holoScaleUnits(7,vec(18.91,35,35)) holoMaterial(7,"") timer("8",Speed) }
+if(clk("8")){ holoCreate(8,vec(-1452.34,-504.22,-194.88),vec(0.1),ang(3.75,63.02,0),vec(255,255,255),"models/player/pd2_chains_p.mdl") holoScaleUnits(8,vec(33.17,35,35)) holoMaterial(8,"") timer("9",Speed) }
+if(clk("9")){ holoCreate(9,vec(-1440.7,-524.68,-192.62),vec(0.1),ang(15.24,-1.55,0),vec(255,255,255),"models/payday2/units/cop4_player.mdl") holoScaleUnits(9,vec(25.44,35,35)) holoMaterial(9,"") timer("10",Speed) }
+if(clk("10")){ holoCreate(10,vec(-1435.68,-680.18,-194.56),vec(0.1),ang(4.65,-2.64,0),vec(255,255,255),"models/player/hitler/hitler.mdl") holoScaleUnits(10,vec(34.73,35,35)) holoMaterial(10,"") timer("11",Speed) }
+if(clk("11")){ holoCreate(11,vec(-1442.77,-555.45,-194.15),vec(0.1),ang(10.08,-2.66,0),vec(255,255,255),"models/fearless/don1.mdl") holoScaleUnits(11,vec(20.74,35,35)) holoMaterial(11,"") timer("12",Speed) }
+if(clk("12")){ holoCreate(12,vec(-1434.48,-601.83,-192.14),vec(0.1),ang(11.69,-0.63,0),vec(255,255,255),"models/player/soldier_stripped.mdl") holoScaleUnits(12,vec(37.77,35,35)) holoMaterial(12,"") timer("13",Speed) }
+if(clk("13")){ holoCreate(13,vec(-1435.47,-709.23,-195.97),vec(0.1),ang(0,7.41,0),vec(255,255,255),"models/player/zombie_classic.mdl") holoScaleUnits(13,vec(20.79,35,35)) holoMaterial(13,"") timer("14",Speed) }
+if(clk("14")){ holoCreate(14,vec(-1440.64,-740.68,-193.54),vec(0.1),ang(11.12,2.44,0),vec(255,255,255),"models/player/zack/zackhalloween.mdl") holoScaleUnits(14,vec(25.14,35,35)) holoMaterial(14,"") timer("15",Speed) }
+if(clk("15")){ holoCreate(15,vec(-1441.26,-745.16,-37.44),vec(0.1),ang(5.85,-12.01,0),vec(255,255,255),"models/player/hostage/hostage_01.mdl") holoScaleUnits(15,vec(28.93,35,35)) holoMaterial(15,"") timer("16",Speed) }
+if(clk("16")){ holoCreate(16,vec(-1423.87,-645.59,-195.97),vec(0.1),ang(0,-88.91,0),vec(255,255,255),"models/player/elvis_fix/t_leet.mdl") holoScaleUnits(16,vec(32.35,35,35)) holoMaterial(16,"") timer("17",Speed) }
+if(clk("17")){ holoCreate(17,vec(-1441.35,-709.63,-36.45),vec(0.1),ang(2,-3.91,0),vec(255,255,255),"models/player/group03/male_04.mdl") holoScaleUnits(17,vec(27.37,35,35)) holoMaterial(17,"") timer("18",Speed) }
+if(clk("18")){ holoCreate(18,vec(-1449.22,-666.45,-35.48),vec(0.1),ang(-3.85,5.96,0),vec(255,255,255),"models/player/swat.mdl") holoScaleUnits(18,vec(14.45,35,35)) holoMaterial(18,"") timer("19",Speed) }
+if(clk("19")){ holoCreate(19,vec(-1447.65,-632.3,-37.29),vec(0.1),ang(8.92,-2.43,0),vec(255,255,255),"models/eli.mdl") holoScaleUnits(19,vec(17,35,35)) holoMaterial(19,"") timer("20",Speed) }
+if(clk("20")){ holoCreate(20,vec(-1446.3,-608.78,-37.17),vec(0.1),ang(6.96,-10.14,0),vec(255,255,255),"models/player/cripz/slow_1.mdl") holoScaleUnits(20,vec(19.83,35,35)) holoMaterial(20,"") timer("21",Speed) Chunk++ }}
+if(Chunk==1){ if(clk("21")){ holoCreate(21,vec(-1445.32,-575.03,-36.16),vec(0.1),ang(0.93,3.24,0),vec(255,255,255),"models/code_gs/robber/robberplayer.mdl") holoScaleUnits(21,vec(23.21,35,35)) holoMaterial(21,"") timer("22",Speed) }
+if(clk("22")){ holoCreate(22,vec(-1444.18,-541.92,-31.07),vec(0.1),ang(-22.66,-3.02,0),vec(255,255,255),"models/player/dod_german.mdl") holoScaleUnits(22,vec(25.41,35,35)) holoMaterial(22,"") timer("23",Speed) }
+if(clk("23")){ holoCreate(23,vec(-1459.3,-777.58,-42.32),vec(0.1),ang(-20.47,-82.4,0),vec(255,255,255),"models/player/pbear/pbear.mdl") holoScaleUnits(23,vec(22.73,35,35)) holoMaterial(23,"") timer("24",Speed) }
+if(clk("24")){ holoCreate(24,vec(-1425.17,-647.33,-157.44),vec(0.1),ang(0,0,0),vec(255,255,255),"models/payday2/units/cop2_player.mdl") holoScaleUnits(24,vec(0,35,35)) holoMaterial(24,"") timer("25",Speed) }
+if(clk("25")){ holoCreate(25,vec(-1436.76,-715.89,-151.64),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/hvictim/hvictim_01.mdl") holoScaleUnits(25,vec(0,35,35)) holoMaterial(25,"") timer("26",Speed) }
+if(clk("26")){ holoCreate(26,vec(-1459.71,-776.01,-84.18),vec(0.1),ang(27.53,-75.89,0),vec(255,255,255),"models/slow_alien.mdl") holoScaleUnits(26,vec(20.87,35,35)) holoMaterial(26,"") timer("27",Speed) }
+if(clk("27")){ holoCreate(27,vec(-1459.31,-777.4,-124.19),vec(0.1),ang(30.93,-75.05,0),vec(255,255,255),"models/player/dewobedil/mortal_kombat/baby_default_p.mdl") holoScaleUnits(27,vec(25.02,35,35)) holoMaterial(27,"") timer("28",Speed) }
+if(clk("28")){ holoCreate(28,vec(-1472.02,-777.87,-162.11),vec(0.1),ang(27.77,-121.72,0),vec(255,255,255),"models/player/breen.mdl") holoScaleUnits(28,vec(28.8,35,35)) holoMaterial(28,"") timer("29",Speed) }
+if(clk("29")){ holoCreate(29,vec(-1439.27,-700.2,-157.08),vec(0.1),ang(0,0,0),vec(255,255,255),"models/jessev92/player/military/cod4_sniper.mdl") holoScaleUnits(29,vec(0,35,35)) holoMaterial(29,"") timer("30",Speed) }
+if(clk("30")){ holoCreate(30,vec(-1426.77,-635.06,-153.27),vec(0.1),ang(0,0,0),vec(255,255,255),"models/jessev92/player/military/cod4_sniper.mdl") holoScaleUnits(30,vec(0,35,35)) holoMaterial(30,"") timer("31",Speed) }
+if(clk("31")){ holoCreate(31,vec(-1423.5,-643.66,-126.2),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/hostage/hostage_01.mdl") holoScaleUnits(31,vec(0,35,35)) holoMaterial(31,"") timer("32",Speed) }
+if(clk("32")){ holoCreate(32,vec(-1449,-707.5,-195.97),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/hostage/hostage_01.mdl") holoScaleUnits(32,vec(0,35,35)) holoMaterial(32,"") timer("33",Speed) }
+if(clk("33")){ holoCreate(33,vec(-1452.97,-541.51,-190.87),vec(0.1),ang(0,0,0),vec(255,255,255),"models/playermodels/sterling/ethan_pm.mdl") holoScaleUnits(33,vec(0,35,35)) holoMaterial(33,"") timer("34",Speed) }
+if(clk("34")){ holoCreate(34,vec(-1452.97,-586.58,-193.77),vec(0.1),ang(0,0,0),vec(255,255,255),"models/playermodels/sterling/ethan_pm.mdl") holoScaleUnits(34,vec(0,35,35)) holoMaterial(34,"") timer("35",Speed) }
+if(clk("35")){ holoCreate(35,vec(-1452.97,-765.42,-73.69),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/donald_trump.mdl") holoScaleUnits(35,vec(0,35,35)) holoMaterial(35,"") timer("36",Speed) }
+if(clk("36")){ holoCreate(36,vec(-1452.97,-762.43,-158.56),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/donald_trump.mdl") holoScaleUnits(36,vec(0,35,35)) holoMaterial(36,"") timer("37",Speed) }
+if(clk("37")){ holoCreate(37,vec(-1452.97,-688.86,-160.77),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/donald_trump.mdl") holoScaleUnits(37,vec(0,35,35)) holoMaterial(37,"") timer("38",Speed) }
+if(clk("38")){ holoCreate(38,vec(-1452.97,-549.09,-103.64),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/barney.mdl") holoScaleUnits(38,vec(0,35,35)) holoMaterial(38,"") timer("39",Speed) }
+if(clk("39")){ holoCreate(39,vec(-1452.97,-548.68,-151.84),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/barney.mdl") holoScaleUnits(39,vec(0,35,35)) holoMaterial(39,"") timer("40",Speed) }
+if(clk("40")){ holoCreate(40,vec(-1452.97,-697.17,-134.95),vec(0.1),ang(0,0,0),vec(255,255,255),"models/kryptonite/thefloosh/thefloosh.mdl") holoScaleUnits(40,vec(0,35,35)) holoMaterial(40,"") timer("41",Speed) Chunk++ }}
+if(Chunk==2){ if(clk("41")){ holoCreate(41,vec(-1452.97,-697.07,-68.14),vec(0.1),ang(0,0,0),vec(255,255,255),"models/kryptonite/thefloosh/thefloosh.mdl") holoScaleUnits(41,vec(0,35,35)) holoMaterial(41,"") timer("42",Speed) }
+if(clk("42")){ holoCreate(42,vec(-1460.49,-771.01,-193.9),vec(0.1),ang(37.54,-95.1,0),vec(255,255,255),"models/kryptonite/thefloosh/thefloosh.mdl") holoScaleUnits(42,vec(10.08,35,35)) holoMaterial(42,"") timer("43",Speed) }
+if(clk("43")){ holoCreate(43,vec(-1452.97,-585.78,-97.89),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/hostage/hostage_02.mdl") holoScaleUnits(43,vec(0,35,35)) holoMaterial(43,"") timer("44",Speed) }
+if(clk("44")){ holoCreate(44,vec(-1452.97,-656.4,-195.21),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/group01/male_07.mdl") holoScaleUnits(44,vec(0,35,35)) holoMaterial(44,"") timer("45",Speed) }
+if(clk("45")){ holoCreate(45,vec(-1452.97,-589.48,-155.74),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/group01/male_07.mdl") holoScaleUnits(45,vec(0,35,35)) holoMaterial(45,"") timer("46",Speed) }
+if(clk("46")){ holoCreate(46,vec(-1452.97,-763.72,-193.74),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/odessa.mdl") holoScaleUnits(46,vec(0,35,35)) holoMaterial(46,"") timer("47",Speed) }
+if(clk("47")){ holoCreate(47,vec(-1452.97,-763.72,-119.23),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/odessa.mdl") holoScaleUnits(47,vec(0,35,35)) holoMaterial(47,"") timer("48",Speed) }
+if(clk("48")){ holoCreate(48,vec(-1452.97,-551.52,-62.93),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/combine_advisor_guard.mdl") holoScaleUnits(48,vec(0,35,35)) holoMaterial(48,"") timer("49",Speed) }
+if(clk("49")){ holoCreate(49,vec(-1452.97,-725.77,-86.43),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/combine_advisor_guard.mdl") holoScaleUnits(49,vec(0,35,35)) holoMaterial(49,"") timer("50",Speed) }
+if(clk("50")){ holoCreate(50,vec(-1452.97,-652.99,-120.61),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/corpse1.mdl") holoScaleUnits(50,vec(0,35,35)) holoMaterial(50,"") timer("51",Speed) }
+if(clk("51")){ holoCreate(51,vec(-1452.97,-583.77,-129.92),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/corpse1.mdl") holoScaleUnits(51,vec(0,35,35)) holoMaterial(51,"") timer("52",Speed) }
+if(clk("52")){ holoCreate(52,vec(-1452.97,-597.74,-75.57),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/leet.mdl") holoScaleUnits(52,vec(0,35,35)) holoMaterial(52,"") timer("53",Speed) }
+if(clk("53")){ holoCreate(53,vec(-1452.97,-644.89,-66.69),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/leet.mdl") holoScaleUnits(53,vec(0,35,35)) holoMaterial(53,"") timer("54",Speed) }
+if(clk("54")){ holoCreate(54,vec(-1452.97,-734.15,-160.66),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/kuma/taliban_rpg.mdl") holoScaleUnits(54,vec(0,35,35)) holoMaterial(54,"") timer("55",Speed) }
+if(clk("55")){ holoCreate(55,vec(-1452.97,-657.52,-166.39),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/kuma/taliban_rpg.mdl") holoScaleUnits(55,vec(0,35,35)) holoMaterial(55,"") timer("56",Speed) }
+if(clk("56")){ holoCreate(56,vec(-1452.97,-625.3,-108.23),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/monk.mdl") holoScaleUnits(56,vec(0,35,35)) holoMaterial(56,"") timer("57",Speed) }
+if(clk("57")){ holoCreate(57,vec(-1452.97,-721.54,-122.76),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/monk.mdl") holoScaleUnits(57,vec(0,35,35)) holoMaterial(57,"") timer("58",Speed) }
+if(clk("58")){ holoCreate(58,vec(-1452.97,-722.03,-189.29),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/gasmaskcitizen/gasmask_civi_01playermodel.mdl") holoScaleUnits(58,vec(0,35,35)) holoMaterial(58,"") timer("59",Speed) }
+if(clk("59")){ holoCreate(59,vec(-1452.97,-698.59,-187.14),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/gasmaskcitizen/gasmask_civi_01playermodel.mdl") holoScaleUnits(59,vec(0,35,35)) holoMaterial(59,"") timer("60",Speed) }
+if(clk("60")){ holoCreate(60,vec(-1452.97,-624.63,-147.45),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/phoenix.mdl") holoScaleUnits(60,vec(0,35,35)) holoMaterial(60,"") timer("61",Speed) Chunk++ }}
+if(Chunk==3){ if(clk("61")){ holoCreate(61,vec(-1452.97,-623.83,-190.29),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/phoenix.mdl") holoScaleUnits(61,vec(0,35,35)) holoMaterial(61,"") timer("62",Speed) }
+if(clk("62")){ holoCreate(62,vec(-1452.97,-672.71,-191.17),vec(0.1),ang(0,0,0),vec(255,255,255),"models/fearless/chef1.mdl") holoScaleUnits(62,vec(0,35,35)) holoMaterial(62,"") timer("63",Speed) }
+if(clk("63")){ holoCreate(63,vec(-1452.97,-719.76,-64.91),vec(0.1),ang(0,0,0),vec(255,255,255),"models/fearless/chef1.mdl") holoScaleUnits(63,vec(0,35,35)) holoMaterial(63,"") timer("64",Speed) }
+if(clk("64")){ holoCreate(64,vec(-1452.97,-751.85,-62.58),vec(0.1),ang(0,0,0),vec(255,255,255),"models/fearless/chef1.mdl") holoScaleUnits(64,vec(0,35,35)) holoMaterial(64,"") timer("65",Speed) }
+if(clk("65")){ holoCreate(65,vec(-1452.97,-675.48,-61.51),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/magnusson.mdl") holoScaleUnits(65,vec(0,35,35)) holoMaterial(65,"") timer("66",Speed) }
+if(clk("66")){ holoCreate(66,vec(-1452.97,-675.48,-99.84),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/magnusson.mdl") holoScaleUnits(66,vec(0,35,35)) holoMaterial(66,"") timer("67",Speed) }
+if(clk("67")){ holoCreate(67,vec(-1452.97,-674.29,-142.39),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/magnusson.mdl") holoScaleUnits(67,vec(0,35,35)) holoMaterial(67,"") timer("68",Speed) }
+if(clk("68")){ holoCreate(68,vec(-1452.97,-671.38,-68.29),vec(0.1),ang(1.43,-90,0),vec(255,255,255),"models/player/magnusson.mdl") holoScaleUnits(68,vec(0.15,35,35)) holoMaterial(68,"") timer("69",Speed) }
+if(clk("69")){ holoCreate(69,vec(-1452.97,-527.95,-193.85),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/magnusson.mdl") holoScaleUnits(69,vec(0,35,35)) holoMaterial(69,"") timer("70",Speed) }
+if(clk("70")){ holoCreate(70,vec(-1452.97,-571.43,-188.54),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/magnusson.mdl") holoScaleUnits(70,vec(0,35,35)) holoMaterial(70,"") timer("71",Speed) }
+if(clk("71")){ holoCreate(71,vec(-1452.97,-744.95,-101.63),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/eli.mdl") holoScaleUnits(71,vec(0,35,35)) holoMaterial(71,"") timer("72",Speed) }
+if(clk("72")){ holoCreate(72,vec(-1452.97,-747.27,-144.18),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/eli.mdl") holoScaleUnits(72,vec(0,35,35)) holoMaterial(72,"") timer("73",Speed) }
+if(clk("73")){ holoCreate(73,vec(-1452.97,-745.84,-184.62),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/eli.mdl") holoScaleUnits(73,vec(0,35,35)) holoMaterial(73,"") timer("74",Speed) }
+if(clk("74")){ holoCreate(74,vec(-1452.97,-613.73,-65.04),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/bloodz/slow_2.mdl") holoScaleUnits(74,vec(0,35,35)) holoMaterial(74,"") timer("75",Speed) }
+if(clk("75")){ holoCreate(75,vec(-1452.97,-681.66,-144.39),vec(0.1),ang(-0.28,90,0),vec(255,255,255),"models/player/bloodz/slow_2.mdl") holoScaleUnits(75,vec(0.08,35,35)) holoMaterial(75,"") timer("76",Speed) }
+if(clk("76")){ holoCreate(76,vec(-1452.97,-705.65,-102.83),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/bloodz/slow_2.mdl") holoScaleUnits(76,vec(0,35,35)) holoMaterial(76,"") timer("77",Speed) }
+if(clk("77")){ holoCreate(77,vec(-1452.97,-679.19,-102.98),vec(0.1),ang(-0.32,-90,0),vec(255,255,255),"models/player/bloodz/slow_2.mdl") holoScaleUnits(77,vec(0.15,35,35)) holoMaterial(77,"") timer("78",Speed) }
+if(clk("78")){ holoCreate(78,vec(-1452.97,-641.86,-103.18),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/bloodz/slow_2.mdl") holoScaleUnits(78,vec(0,35,35)) holoMaterial(78,"") timer("79",Speed) }
+if(clk("79")){ holoCreate(79,vec(-1452.97,-606.03,-149.04),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/bloodz/slow_2.mdl") holoScaleUnits(79,vec(0,35,35)) holoMaterial(79,"") timer("80",Speed) }
+if(clk("80")){ holoCreate(80,vec(-1452.97,-549.67,-92.22),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/skeleton.mdl") holoScaleUnits(80,vec(0,35,35)) holoMaterial(80,"") timer("81",Speed) Chunk++ }}
+if(Chunk==4){ if(clk("81")){ holoCreate(81,vec(-1452.97,-547.89,-131.12),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/skeleton.mdl") holoScaleUnits(81,vec(0,35,35)) holoMaterial(81,"") timer("82",Speed) }
+if(clk("82")){ holoCreate(82,vec(-1452.97,-553.1,-182.14),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/skeleton.mdl") holoScaleUnits(82,vec(0,35,35)) holoMaterial(82,"") timer("83",Speed) }
+if(clk("83")){ holoCreate(83,vec(-1452.97,-618.52,-153.35),vec(0.1),ang(36.22,-90,0),vec(255,255,255),"models/player/skeleton.mdl") holoScaleUnits(83,vec(0.53,35,35)) holoMaterial(83,"") timer("84",Speed) }
+if(clk("84")){ holoCreate(84,vec(-1452.97,-532.64,-76.79),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/spike/richboundless.mdl") holoScaleUnits(84,vec(0,35,35)) holoMaterial(84,"") timer("85",Speed) }
+if(clk("85")){ holoCreate(85,vec(-1452.97,-569.16,-76.98),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/spike/richboundless.mdl") holoScaleUnits(85,vec(0,35,35)) holoMaterial(85,"") timer("86",Speed) }
+if(clk("86")){ holoCreate(86,vec(-1452.97,-603.76,-112.54),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/spike/richboundless.mdl") holoScaleUnits(86,vec(0,35,35)) holoMaterial(86,"") timer("87",Speed) }
+if(clk("87")){ holoCreate(87,vec(-1452.97,-599.44,-184.72),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/dumbledore.mdl") holoScaleUnits(87,vec(0,35,35)) holoMaterial(87,"") timer("88",Speed) }
+if(clk("88")){ holoCreate(88,vec(-1452.97,-568.68,-114.14),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/dumbledore.mdl") holoScaleUnits(88,vec(0,35,35)) holoMaterial(88,"") timer("89",Speed) }
+if(clk("89")){ holoCreate(89,vec(-1452.97,-530.25,-110.19),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/dumbledore.mdl") holoScaleUnits(89,vec(0,35,35)) holoMaterial(89,"") timer("90",Speed) }
+if(clk("90")){ holoCreate(90,vec(-1452.97,-531.54,-160.85),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/dumbledore.mdl") holoScaleUnits(90,vec(0,35,35)) holoMaterial(90,"") timer("91",Speed) }
+if(clk("91")){ holoCreate(91,vec(-1452.97,-567.51,-160.14),vec(0.1),ang(0,0,0),vec(255,255,255),"models/player/dumbledore.mdl") holoScaleUnits(91,vec(0,35,35)) holoMaterial(91,"") timer("92",Speed) }
+if(clk("92")){ holoCreate(92,vec(-1243.85,-523.42,-197.33),vec(0.1),ang(-0.62,-175.33,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(92,vec(250.47,1,1)) holoMaterial(92,"cs_havana/lightbareon01") timer("93",Speed) }
+if(clk("93")){ holoCreate(93,vec(-1239.16,-331.62,-195.97),vec(0.1),ang(0,4.85,0),vec(0,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(93,vec(243.03,17,17)) holoMaterial(93,"cs_havana/lightbareon01") timer("94",Speed) }
+if(clk("94")){ holoCreate(94,vec(-1236.01,-456.69,-200.78),vec(0.1),ang(1.56,-176.86,0),vec(255,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(94,vec(234.4,17,17)) holoMaterial(94,"cs_havana/lightbareon01") timer("95",Speed) }
+if(clk("95")){ holoCreate(95,vec(-1238.35,-378.93,-197.6),vec(0.1),ang(-0.78,179.65,0),vec(255,255,255),"models/hunter/plates/plate8x8.mdl") holoScaleUnits(95,vec(238.66,17,17)) holoMaterial(95,"") timer("96",Speed) }}

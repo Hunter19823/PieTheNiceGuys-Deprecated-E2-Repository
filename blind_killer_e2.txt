@@ -1,0 +1,10 @@
+@name Blinder For Killer
+if(first()){
+    Target=findPlayerBySteamID("STEAM_0:0:191182826")
+    holoCreate(1,Target:pos()+vec(0,0,Target:height()-5),-vec(3),ang(),vec(255),"models/XQM/Rails/gumball_1.mdl")
+    holoParentAttachment(1,Target,"eyes")
+    holoAlpha(1,245)
+    holoRenderFX(1,3)
+    holoVisible(1,players(),0)
+    holoVisible(1,Target,1)
+}

@@ -1,0 +1,84 @@
+@name Strip Weapons E2
+@persist [EC,TR,BL,CurrPlayer]:entity [Players,Stuff]:array 
+if(first()){
+    Stage=1
+    timer("Search",1000)
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+        
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]) {
+        findExcludeEntity(Temp)
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",0)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findIncludeClass("player")
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findInBox(TR:pos()+vec(0,0,500),BL:pos())
+    Players=findToArray()
+    PlayerCount=Players:count()
+    printTable(findToTable())
+    if(Players:count()>1){
+        timer("DoAction",10)
+    }else{
+        print("Not Enough Players To Strip All Players")
+    }
+}elseif(clk("DoAction")){
+    if(Players:count()>0){
+        if(findCanQuery()){
+            P=Players:popEntity()
+            CurrPlayer=P
+            findClearWhiteList()
+            findExcludeClass("weapon_physgun")
+            findExcludeClass("weapon_physcannon")
+            findExcludeClass("manipulate_bone")
+            findExcludeClass("prop_physics")
+            findExcludeClass("gmod_wire_hologram")
+            findExcludeClass("gmod_wire_expression2")
+            findExcludeClass("gmod_tool")
+            findExcludeClass("keys")
+            findInSphere(CurrPlayer:pos(),25)
+            Stuff=findToArray()
+            printTable(findToTable())
+            timer("StripPerson",500)
+        }else{
+            timer("DoAction",500)
+        }
+    }else{
+        print("Finished Stripping Players")
+    }
+}elseif(clk("StripPerson")){
+    if(CurrPlayer:isPlayer()){
+        if(Stuff:count()>0){
+            W=Stuff:popEntity()
+            if(W:isWeapon() && W:type()!="weapon_physgun" && W:type()!="weapon_physcannon" && W:type()!="manipulate_bone"){
+                W:set("KillHierarchy",0)
+            }
+            timer("StripPerson",5)
+        }else{
+            print("Successfully Stripped: "+CurrPlayer:name())
+            timer("DoAction",10)
+        }
+    }else{
+        timer("DoAction",0)
+    }
+}

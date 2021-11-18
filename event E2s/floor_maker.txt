@@ -1,0 +1,51 @@
+@name Floor/Ceil Maker
+@persist [Columns,ColumnsSaved,Rows,RowsSaved,MakingCeiling,Height,Time] [SizeOfProp,TopRight]:vector [PropModel]:string
+if(first()){
+    Size=4000
+    Height=360
+    Time=500
+    PropModel="models/hunter/plates/plate8x8.mdl"
+    P=propSpawn(PropModel,entity():toWorld(vec()),1)
+    Min=P:boxMin()
+    Max=P:boxMax()
+    P:propDelete()
+    SizeOfProp=(floor(abs(Min)+abs(Max))-1)
+    Columns=ceil(Size/SizeOfProp:x())
+    ColumnsSaved=Columns
+    Rows=ceil(Size/SizeOfProp:y())
+    RowsSaved=Rows
+    TopRight=SizeOfProp/2
+    TopRight=TopRight:setX(TopRight:x()*(Columns-1))
+    TopRight=TopRight:setY(TopRight:y()*(Rows-1))
+    SizeOfProp:setZ(0)
+    print("Props Needed: "+RowsSaved*ColumnsSaved*2)
+    timer("StartBuild",Time)
+}
+if(clk("StartBuild")){
+    if(Columns>0){
+        if(Rows>0){
+            OffSet=vec(SizeOfProp:x()*(Columns-1),SizeOfProp:y()*(Rows-1),0)
+            P=propSpawn(PropModel,entity():toWorld(TopRight-OffSet),1)
+            P:parentTo(entity())
+            P:setKeyValue("rendermode",9)
+            P:setKeyValue("solid",0)
+            #print(Rows,"/",RowsSaved," ",Columns,"/",ColumnsSaved)
+            Columns--
+            timer(clkName(),Time)
+        }else{
+            if(MakingCeiling==0){
+                MakingCeiling=1
+                TopRight=TopRight:setZ(TopRight:z()+Height)
+                Rows=RowsSaved
+                Columns=ColumnsSaved
+                timer(clkName(),Time)
+            }else{
+                print("Finished")
+            }
+        }
+    }else{
+        Rows--
+        timer(clkName(),0)
+        Columns=ColumnsSaved
+    }
+}

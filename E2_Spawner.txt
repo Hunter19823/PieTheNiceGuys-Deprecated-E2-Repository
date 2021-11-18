@@ -1,0 +1,11 @@
+
+#[
+    Documentation and examples are available at:
+    https://github.com/wiremod/wire/wiki/Expression-2
+
+    Discord is available at https://discord.gg/cqJ45CT
+    Reddit is available at https://www.reddit.com/r/wiremod
+    Report any bugs you find here https://github.com/wiremod/wire/issues
+]#
+
+spawnExpression2(entity():pos(),entity():angles(),"models//expression 2/cpu_microchip.mdl")

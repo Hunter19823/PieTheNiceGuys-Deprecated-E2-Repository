@@ -1,0 +1,81 @@
+@name Pie's Moving Shop
+@persist [Shipment,Price,SellProp,GunPos]:array LastUsed ArraySize
+if (first()){
+    runOnChat(1)
+    print(maxquota())
+}
+if (chatClk(owner())){
+    LS=owner():lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "!s",
+            E=owner():aimEntity()
+            if(E:isShipment() & LS[2,string]:toNumber()>0){
+                Num=Shipment:count()+1
+                Shipment[Num,entity]=E
+                local S=Shipment[Num,entity]
+                Price[Num,number]=S:shipmentPrice()/10*S:shipmentAmount()*LS[2,string]:toNumber()
+                local Pos=S:pos()+vec(0,0,50)
+                S:setPos(entity():pos()+vec(0,0,10))
+                SellProp[Num,entity]=propSpawn(S:shipmentModel(),Pos,1)
+                print("Save "+Num+" Successfull: "+S:shipmentAmount()+"x "+S:shipmentName()+"s for: $" + Price[Num,number])
+                runOnUse(1,SellProp[Num,entity])
+            } else {
+                print("Error: Invalid Shipment")
+            }
+            break
+        case "!sell",
+            SellProp[LS[2,string]:toNumber(),entity]:setPos(GunPos[LS[3,string]:toNumber(),vector]+vec(0,0,10))
+            break
+        case "!get",
+            Shipment[LS[2,string]:toNumber(),entity]:setPos(owner():aimPos())
+            break
+        case "!set",
+            GunPos[LS[2,string]:toNumber(),vector]=owner():aimPos()
+            break
+        case "!pop",
+            Shipment:pop()
+            SellProp:pop()
+            Price:pop()
+            break
+        default,
+            break
+    }
+} else {
+    if(moneyClk()){
+        Pos=SellProp[LastUsed,entity]:pos()
+        SellProp[LastUsed,entity]:propDelete()
+        Shipment[LastUsed,entity]:setPos(Pos)
+        runOnUse(0,SellProp[LastUsed,entity])
+        Shipment:remove(LastUsed)
+        Price:remove(LastUsed)
+        SellProp:remove(LastUsed)
+    } elseif(moneyNoClk()){
+        print(moneyNoClkPlayer():name()+" Rejected Payment")
+    } elseif(useEntClk():inUse()){
+        E=useEntClk():inUseBy()
+        if(E:isPlayer()){
+            Checker=invert(SellProp)
+            local Num = Checker[useEntClk():toString(),number]
+            if(Shipment[Num,entity]:isValid()){
+                if(E:money()>=Price[Num,number]){
+                    local P=Price[Num,number]
+                    local S=Shipment[Num,entity]
+                    LastUsed=Num
+                    moneyRequest(E,P,S:shipmentAmount()+"x "+S:shipmentName()+"s for: $" + P)
+                    print("Requesting $" + P + " from "+E:name()+".")
+                } else{
+                    print(E:name() + " is too poor.")
+                }
+            } else{
+                Shipment:remove(Num)
+                Price:remove(Num)
+                SellProp:remove(Num)
+                print("Shipment Not Found")
+            }
+        } else{
+            print("Player Not Found")
+        }
+    }
+}
+#setName("Last OP Cost: "+opcounter())
+setName("Shipment Size: "+Shipment:count())

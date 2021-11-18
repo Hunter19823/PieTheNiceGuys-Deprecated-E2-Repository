@@ -1,0 +1,44 @@
+@persist [XSpeed,YSpeed,ZSpeed,RSpeed,GSpeed,BSpeed,XAmplitude,YAmplitude,ZAmplitude,ZOffset]
+if(first()){
+    Size=1
+    XSpeed=180
+    XAmplitude=50
+    YSpeed=180
+    YAmplitude=50
+    ZSpeed=90
+    ZAmplitude=25
+    ZOffset=50
+    RainbowSpeed=50
+    RSpeed=1
+    GSpeed=1.5
+    BSpeed=1.25
+    holoCreate(1,owner():pos(),vec(Size),ang(),vec(255),"models/maxofs2d/hover_rings.mdl")
+    holoBoneScale(1,0,vec(2))
+    holoBoneScale(1,1,vec(2))
+    holoBoneScale(1,2,vec(2))
+    holoCreate(2,owner():toWorld(vec(20*Size,0,0)),vec(Size/2),ang(),vec(255),"models/maxofs2d/hover_rings.mdl")
+    
+    holoCreate(3,owner():toWorld(vec(-20*Size,0,0)),vec(Size/2),ang(),vec(255),"models/maxofs2d/hover_rings.mdl")
+    holoCreate(4,owner():toWorld(vec(0,20*Size,0)),vec(Size/2),ang(),vec(255),"models/maxofs2d/hover_rings.mdl")
+    holoCreate(5,owner():toWorld(vec(0,-20*Size,0)),vec(Size/2),ang(),vec(255),"models/maxofs2d/hover_rings.mdl")
+    
+    holoParent(2,1)
+    holoParent(3,1)
+    holoParent(4,1)
+    holoParent(5,1)
+    
+    holoMaterial(1,"models/shiny")
+    interval(100)
+}
+if(clk()){
+    Time=systime()
+    Ang=Time%360
+    holoPos(1,owner():toWorld(vec(cos(Ang*XSpeed)*XAmplitude,sin(Ang*YSpeed)*YAmplitude,cos(Ang*ZSpeed)*ZAmplitude+ZOffset)))
+    holoAng(1,ang(Ang*45,Ang*180,0))
+    local Color=vec()
+    Color=hsv2rgb(Time%100*RSpeed%100,Time%100*GSpeed%100,Time%100*BSpeed%100)
+    print(vec(Time%100*RSpeed%100,Time%100*GSpeed%100,Time%100*BSpeed%100))
+    holoColor(1,Color)
+    interval(100)
+}
+ 

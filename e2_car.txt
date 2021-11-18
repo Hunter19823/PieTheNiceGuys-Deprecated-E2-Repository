@@ -1,0 +1,118 @@
+@name Pie's E2 Car
+@model models/freeman/compact_printer.mdl
+@persist [Car,Owner]:entity [SpeedLimit,TurnLimit,Speed,Turn,Height] Translate:table
+if(first()){
+    #Car=propSpawn("models/freeman/duffel_bag.mdl",entity():toWorld(vec(0,0,10)),0)
+    Car=entity()
+    Car:setPhysProp("gmod_ice",gravity())
+    Car:setMaterial("")
+    Owner=owner()
+    Car:setAlpha(0)
+    Ang=Car:forward():toAngle()
+    holoCreate(1,Car:pos(),vec(0.5),Ang,vec(255),"models/xqm/jetbody3.mdl")
+    
+    holoCreate(2,Car:toWorld(vec(0,110,0)),vec(0.25),Ang+ang(0,180,0),vec(255),"models/hunter/blocks/cube05x05x05.mdl")
+    holoMaterial(2,"models/player/slow/zeus_combine_v2/slow_fire")
+    holoScaleUnits(2,vec(10,100,10))
+    
+    holoCreate(3,Car:toWorld(vec(35,10,-5)),vec(2),Ang+ang(0,-90,0),vec(255),"models/weapons/w_missile.mdl")
+    holoCreate(4,Car:toWorld(vec(-35,10,-5)),vec(2),Ang+ang(0,-90,0),vec(255),"models/weapons/w_missile.mdl")
+    
+    holoCreate(5,Car:toWorld(vec(-2.5,-30,1)),vec(1),Ang+ang(0,180,0),vec(255),"models/props/de_tides/vending_turtle.mdl")
+    
+    holoParent(1,Car)
+    holoParent(2,Car)
+    holoParent(3,Car)
+    holoParent(4,Car)
+    holoParent(5,Car)
+    
+    
+    timer("Freeze",1000)
+    timer("Unfreeze",2000)
+    Car:setMass(1)
+    Height = 100
+    Speed = 100
+    Turn = 50
+    SpeedLimit = Speed*100
+    TurnLimit = Turn*2
+    runOnKey(1)
+    Translate=table(
+        33="w",
+        11="a",
+        29="s",
+        14="d"
+    )
+    entity():parentTo(Car)
+    
+    runOnTick(1)
+    interval(100) 
+}
+if(clk("Freeze")){
+    Car:propManipulate(Car:toWorld(vec(0,0,0)),ang(),1,gravity()/4,0)
+}
+if(clk("Unfreeze")){
+    Car:propManipulate(Car:toWorld(vec(0,0,0)),ang(),0,gravity()/4,0)
+    Car:noDraw(0)
+    Car:setAlpha(0)
+    timer("NoCollide",100)
+}
+if((clk() | tickClk()) & Owner:inVehicle()){
+    VelL=Car:velL()
+    Vel=Car:vel()
+    AVel=Car:angVel()
+    Mass=Car:mass()
+    if(Owner:keyPressed("w")){
+        if(VelL:y()>=-SpeedLimit){
+            Car:applyForce(Car:right()*Speed*Mass)
+        }
+    }elseif(Owner:keyPressed("s")){
+        if(VelL:y()<=SpeedLimit){
+            Car:applyForce(Car:right()*Speed*Mass*-1)
+        }
+    }else{
+        Car:applyForce(round(Vel:setZ(0)/2*-1)*Mass)
+    }
+    Car:applyForce(round(Vel/8*-1)*Mass)
+    
+    
+    if(Owner:keyPressed("a")){
+        if(AVel:yaw() <= TurnLimit){
+            Car:applyAngForce(ang(0,1,0)*Turn*Mass)
+        }
+    }elseif(Owner:keyPressed("d")){
+        if(AVel:yaw()>=-TurnLimit){
+            Car:applyAngForce(ang(0,1,0)*Turn*Mass*-1)
+        }
+    }else{
+        Car:applyAngForce(round(AVel/8*-7)*Mass)
+    }
+    Car:applyAngForce(round(AVel/8*-1)*Mass)
+    if(Owner:keyPressed("space")){
+        if(VelL:z()<=Speed){
+            Ranger=Ranger=rangerOffset(Height*2,Car:pos(),vec(0,0,-1))
+            if(Ranger:hit()){
+                Car:applyForce(vec(0,0,Speed*1)*Mass)
+            }
+            Car:setAng(Car:angles():setRoll(0):setPitch(0))
+        }
+    }
+    if(Owner:keyPressed("lshift")){
+        Car:setColor(vec(255))
+        Car:propManipulate(Car:pos(),ang(),0,gravity()/4,0)
+        Car:setAlpha(0)
+        
+    }
+    if(Owner:keyPressed("r")){
+        reset()
+    }
+    Ranger=rangerOffset(Height,Car:pos(),vec(0,0,-1))
+    Ranger2=rangerOffset(Height*0.50,Car:pos(),vec(0,0,-1))
+    if(Ranger2:hit() & Ranger:hit()){
+        Car:applyForce(vec(0,0,Height)*Car:mass())
+    }elseif(Ranger:hit()){
+        Car:applyForce(vec(0,0,40)*Car:mass())
+    }
+}else{
+    
+}
+

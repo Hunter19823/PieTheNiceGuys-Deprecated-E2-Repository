@@ -1,0 +1,137 @@
+@name Box Maker
+@persist [Size,I,N] [P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,Max,Min]:vector [Vectors,ColorArray,TempColors]:array [Material]:string
+if(first()){
+    Size=1000
+    #Material="matsys_regressiontest/background.vmt"
+    Material="models/shadertest/point_camera.vmt"
+    #P1=vec(-Size,Size,0)
+    #P2=vec(Size,Size,0)
+    #P3=vec(Size,-Size,0)
+    #P4=vec(-Size,-Size,0)
+    P5=vec(0,0,Size)
+    P6=vec(0,0,-Size)
+    P7=vec(Size,0,0)
+    P8=vec(-Size,0,0)
+    P9=vec(0,Size,0)
+    P10=vec(0,-Size,0)
+    
+    ColorArray=array(
+    vec(255,0,0),
+    vec(255,32,0),
+    vec(255,64,0),
+    vec(255,96,0),
+    vec(255,128,0),
+    vec(255,160,0),
+    vec(255,192,0),
+    vec(255,224,0),
+    vec(255,255,0),
+    vec(224,255,0),
+    vec(192,255,0),
+    vec(160,255,0),
+    vec(128,255,0),
+    vec(96,255,0),
+    vec(64,255,0),
+    vec(32,255,0),
+    vec(0,255,0),
+    vec(0,255,32),
+    vec(0,255,64),
+    vec(0,255,96),
+    vec(0,255,128),
+    vec(0,255,160),
+    vec(0,255,192),
+    vec(0,255,224),
+    vec(0,255,255),
+    vec(0,224,255),
+    vec(0,192,255),
+    vec(0,160,255),
+    vec(0,128,255),
+    vec(0,96,255),
+    vec(0,64,255),
+    vec(0,32,255),
+    vec(0,0,255),
+    vec(32,0,255),
+    vec(64,0,255),
+    vec(96,0,255),
+    vec(128,0,255),
+    vec(160,0,255),
+    vec(192,0,255),
+    vec(224,0,255),
+    vec(255,0,255),
+    vec(255,0,224),
+    vec(255,0,192),
+    vec(255,0,160),
+    vec(255,0,124),
+    vec(255,0,96),
+    vec(255,0,64),
+    vec(255,0,32)
+    )
+    TempColors=array():add(ColorArray)
+    holoCreate(1,entity():toWorld(P1))
+    holoCreate(2,entity():toWorld(P2))
+    holoCreate(3,entity():toWorld(P3))
+    holoCreate(4,entity():toWorld(P4))
+    holoCreate(5,entity():toWorld(P5))
+    holoCreate(6,entity():toWorld(P6))
+    holoCreate(7,entity():toWorld(P7))
+    holoCreate(8,entity():toWorld(P8))
+    holoCreate(9,entity():toWorld(P9))
+    holoCreate(10,entity():toWorld(P10))
+    Vectors=array(P1,P2,P3,P4,P5,P6,P7,P8,P9,P10)
+    V=entity():toWorld(Vectors[1,vector])
+    Off=rangerOffset(entity():pos(),V)
+    if(Off:hit()){
+        holoPos(I,Off:pos())
+        Max=Off:pos()
+        Min=Off:pos()
+    }else{
+        holoPos(I,V)
+        Max=V
+        Min=V
+    }
+    N=Vectors:count()
+    interval(100)
+}
+if(clk()){
+    I=1
+    I++
+    timer("Math",0)
+}
+if(clk("Math")){
+    if(I<=Vectors:count()){
+        N++
+        V=entity():toWorld(Vectors[I,vector])
+        Off=rangerOffset(entity():pos(),V)
+        if(Off:hit()){
+            holoCreate(N,Off:pos())
+            Max=maxVec(Off:pos(),Max)
+            Min=minVec(Off:pos(),Min)
+        }else{
+            holoCreate(N,V)
+            Max=maxVec(V,Max)
+            Min=minVec(V,Min)
+        }
+        I++
+        timer(clkName(),0)
+    }else{
+        holoCreate(I,Max-(Max-Min)/2,vec(0),ang(),vec(255),"models/hunter/blocks/cube2x2x2.mdl")
+        holoMaterial(I,Material)
+        entity():setPos(Max-(Max-Min)/2)
+        holoScaleUnits(I,-(Max-Min))
+        holoCreate(I+1,Max-(Max-Min)/2,vec(0),ang(),vec(255),"models/hunter/blocks/cube2x2x2.mdl")
+        holoMaterial(I+1,Material)
+        holoScaleUnits(I+1,(Max-Min))
+        
+        #interval(1000)
+        timer("color",500)
+    }
+}
+if(clk("color")){
+    if(TempColors:count()>0){
+        Color=TempColors:popVector()
+    }else{
+        TempColors=array():add(ColorArray)
+        Color=TempColors:popVector()
+    }
+    holoColor(11,Color)
+    timer("color",250)
+}

@@ -1,0 +1,79 @@
+@name Brask
+@inputs EGP:wirelink
+@persist [Set]:entity [Buff]:string  [Degrees,R]
+@model HGIBS
+if(first()){
+    runOnChat(1)
+    runOnHTTP(1)
+    streamDisable3D(1)
+    EGP:egpClear()
+    entity():setdLight(entity():toWorld(vec(0,0,0)),vec(0,0,0),10,300,0)
+}
+interval(100)
+Degrees++ 
+if(Degrees == 255){
+    Degrees = 0
+}
+entity():dLightColor(hsv2rgb(Degrees*10,1,1))
+if(chatClk(owner())){
+    A=lastSaid():explode(" ")
+    if(A[1,string]:sub(1,1)=="."){
+        switch(A[1,string]){
+            case ".yt",
+                if(httpCanRequest()){
+                    if(A[2,string]==""){
+                        print("YT Player: Please input a link")
+                    }else{
+                        print("YT Player: Please Wait")
+                        httpRequest("http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+A[2,string])
+                        Buff = A[2,string]
+                    }
+                }
+                break
+            case ".volume",
+                if(A[2,string]!="0"&A[2,string]:toNumber()<=1){
+                    streamVolume(1,A[2,string]:toNumber())
+                    print("YT Player: Volume has been set to "+A[2,string])
+                }else{
+                    streamVolume(1,0)
+                    print("YT Player: Volume has been set to 0")
+                }
+                break
+            case ".stop",
+                streamStop(1)
+                print("YT Player: Stream Stopped")
+                break
+            case ".set",
+                if(A[2,string]=="0"){
+                    print("YT Player: Output has been set to E2")
+                    Set = entity()
+                }else{
+                    print("YT Player: Output has been set to Owner")
+                    Set = owner()
+                }
+                break
+        }
+    }
+}
+if(httpClk()){
+    local Data=jsonDecode(httpData())
+    local Data2=Data["file",string]
+    local Title = Data["title", string]
+        if(Data2=="" || Data["error",number]){
+            print("YT Player: This link does not work. Printing Error Info...")
+            printTable(Data)
+        }else{
+            print("YT PLayer: Playing "+Buff)
+            streamStop(1)
+            entity():streamStart(1,Data2)
+            EGP:egpCircle(2,vec2(350, 186),vec2(300,300))
+          # EGP:egpColor(2,vec(255,0,0))
+            EGP:egpMaterial(2,"props_casino/wheel_of_luck/ringlight_flashy")
+            EGP:egpText(3,"Vezzy Has Big Gay",vec2(150, 50))
+            EGP:egpSize(3,60)
+            EGP:egpText(1,Title,vec2(150,200))
+            EGP:egpSize(1,40)
+            EGP:egpAlign(1,0)
+            EGP:egpAlign(3,0)
+        }
+    }

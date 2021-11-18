@@ -1,0 +1,53 @@
+@name Pie's EGP Screenshot
+@persist [StartPos]:vector [Orientation]:angle [Dimensions,AspectRatio,BoxSize]:vector2  [Distance,Remaining,Size]
+@inputs EGP:wirelink
+if(first()){
+    Size=5
+    entity():createWire(entity():isWeldedTo(),"EGP","wirelink")
+    if(->EGP){
+        AspectRatio=vec2(17,17)
+        
+        Dimensions=EGP:egpSize()
+        
+        BoxSize=Dimensions/AspectRatio
+        
+        runOnChat(1)
+    }
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case ".paint",
+            StartPos=lastSpoke():attachmentPos("eyes")
+            Orientation=lastSpoke():eyeAngles()
+            Distance=500
+            Remaining=AspectRatio:x()*AspectRatio:y()
+            EGP:egpClear()
+            holoDeleteAll(1)
+            rangerPersist(1)
+            rangerFilter(players())
+            timer("Draw",1000)
+            break
+    }
+}
+if(clk("Draw")){
+    if(Remaining>0){
+        while(Remaining>0 & perf(25)){
+            X=Remaining%(AspectRatio:x()) + 1
+            Y=18 - ceil(Remaining/AspectRatio:y())
+            Offset = AspectRatio/2*Size
+            
+            Ranger = rangerOffsetHull(Distance, toWorld(vec(0,X,Y)*Size - vec(0,Offset:x(),Offset:y()),ang(),StartPos,Orientation), Orientation:forward(),vec(Size))
+            
+            ID=EGP:egpNumObjects()+1
+            Color=vec(255)*(Ranger:fraction())
+            EGP:egpBox(ID,Dimensions - vec2(X,Y)*BoxSize-BoxSize/2,BoxSize)
+            EGP:egpColor(ID,Color)
+            if(holoCanCreate()){
+                holoCreate(ID,Ranger:pos(),vec(0.01),ang(),Color)
+            }
+            Remaining-=1
+        }
+        timer(clkName(),250)
+    }
+}

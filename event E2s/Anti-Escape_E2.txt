@@ -1,0 +1,45 @@
+@name Anti-Escape E2
+@persist [EC,TR,BL]:entity [OutOfBounds,SpawnPos]:array
+if(first()){
+    timer("Search",1000)
+    SpawnPos=array(
+    vec(797.91 , -873.75 , 9.64),
+    vec(1146.9 , -876.24 , 33.93),
+    vec(-19.09 , -870.16 , 49.44))
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        local Center=EC["Platform",entity]:pos()-vec(0,0,EC["Height",number])
+        TR=holoCreate(1,Center+vec(900,900,EC["Height",number]-5))
+        TR:parentTo(EC["Platform",entity])
+        BL=holoCreate(2,Center+vec(-900,-900,0))
+        BL:parentTo(EC["Platform",entity])
+        print("Boundaries Set")
+        timer("Check",0)
+    }
+}elseif(clk("Search")){
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsActual",number]){
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        timer("Corners",0)
+    }
+}
+if(clk("Check")){
+    findIncludeClass("player")
+    findInBox(TR:pos(),BL:pos())
+    OutOfBounds=findToArray()
+    print(OutOfBounds)
+    if(OutOfBounds:count()>0){
+        timer("RemoveAll",0)
+    }
+    timer("Check",550)
+}elseif(clk("RemoveAll")){
+    if(OutOfBounds:count()>0){
+        local P=OutOfBounds:popEntity()
+        P:teleport(SpawnPos[random(1,3),vector])
+        timer("RemoveAll",0)
+    }
+}

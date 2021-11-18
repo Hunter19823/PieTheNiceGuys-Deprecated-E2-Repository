@@ -1,0 +1,18 @@
+@name Check if Player Is Escaping Jail
+@persist [Top,Bottom,Center]:vector
+if(first()){
+    Top=vec(-7000,-8000,6500)
+    Bottom=vec(-12000,-15000,3000)
+    Center=vec(-9500,-11500,4750)
+    runOnChat(1)
+}
+LastSpoke=lastSpoke()
+if(chatClk(LastSpoke)){
+    InRange=inrange(LastSpoke:pos(),Bottom,Top)
+    if(InRange){
+        if(lastSaid():lower():find("!unstuck")){
+            holoCreate(1,LastSpoke:pos(),vec(1),LastSpoke:angles(),vec(255),LastSpoke:model())
+            print(LastSpoke:name()+" ("+LastSpoke:steamID()+") is using the !unstuck command in hell!<br> !goto "+LastSpoke:steamID())
+        }
+    }
+}

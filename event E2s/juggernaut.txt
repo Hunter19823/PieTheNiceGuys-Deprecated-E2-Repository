@@ -1,0 +1,49 @@
+@name Juggernaut
+@persist [EC,TR,BL,Juggernaut]:entity [Players,SpawnPos]:array [PlayerCount,Stage,Health] [Color]:vector
+if(first() && owner():isAdmin()){
+    Health=20000
+    Color=vec(255,0,0)
+    Stage=1
+    timer("Search",1000)
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+        
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]) {
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",0)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findIncludeClass("player")
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findInBox(TR:pos(),BL:pos())
+    Players=findToArray()
+    PlayerCount=Players:count()
+    printTable(findToTable())
+    if(Players:count()>2){
+        JuggerNaut=Players[random(1,Players:count()),entity]
+        JuggerNaut:setHealth(PlayerCount*1000)
+        JuggerNaut:set("color",Color:x()+" "+Color:y()+" "+Color:z())
+        print(JuggerNaut:name()+" is the Juggernaut! Health: "+JuggerNaut:health())
+    }else{
+        print("Not Enough Players To Execute Event")
+    }
+}

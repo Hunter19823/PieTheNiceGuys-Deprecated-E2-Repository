@@ -1,0 +1,17 @@
+@name Repeater
+@persist T:table
+if (first()){
+    Me=owner()
+    T=table()
+    T["Interval",number]=500
+    T["Previous",number]=Me:getAnimation()
+    holoCreate(1,Me:toWorld(vec(-100,0,0)),vec(1),Me:angles(),vec(255),Me:model())
+    holoParent(1,Me)
+}
+local Animation=owner():getAnimation()
+if(Animation!=T["Previous",number]){
+    T["Previous",number]=Animation
+    hint("Animation: "+Animation,7)
+    holoEntity(1):animate(Animation)
+}
+interval(T["Interval",number])

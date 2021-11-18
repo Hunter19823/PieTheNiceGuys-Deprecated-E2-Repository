@@ -1,0 +1,115 @@
+@name Infection
+@persist [EC,TR,BL,Winner]:entity [Players,SpawnPos]:array [PlayerCount,Stage] [SteamID]:string [Color]:vector
+if(first() && owner():isAdmin()){
+    Color=vec(255,0,0)
+    SteamID="STEAM_0:0:191182826"
+    Infected=findPlayerBySteamID(SteamID)
+    Infected:set("color",Color:x()+" "+Color:y()+" "+Color:z())
+    Stage=1
+    if(Infected:isPlayer()){
+        timer("Search",1000)
+        SpawnPos=array(
+        vec(797.91 , -873.75 , 9.64),
+        vec(1146.9 , -876.24 , 33.93),
+        vec(-19.09 , -870.16 , 49.44))
+    }
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("ClearColors",1000)
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+        
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]) {
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",0)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findIncludeClass("player")
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findInBox(TR:pos(),BL:pos())
+    Players=findToArray()
+    PlayerCount=Players:count()
+    if(Stage==1){
+        printTable(findToTable())
+    }
+    if(Players:count()>2){
+        timer("addTaggable",0)
+    }else{
+        print("Not Enough Players To Execute Event")
+    }
+}elseif(clk("addTaggable")){
+    if(Players:count()>0){
+        local P=Players:popEntity()
+        if(inrange(P:pos(),BL:pos(),TR:pos())){
+            P:setHealth(200)
+        }
+        if(P:getColor()!=Color){
+            if(Stage==1){
+                runOnUse(1,P)
+            }elseif(Stage==2){
+                Winner=P
+                print(P:name()+" Is a Winner! Color: "+P:getColor())
+                timer("ClearColors",1000)
+            }
+        }else{
+            PlayerCount--
+        }
+        timer("addTaggable",0)
+    }else{
+        print("Added Taggable Action To Each Player")
+    }
+}elseif(useEntClk():inUse()){
+        if(PlayerCount>1){
+            local Tagged=useEntClk()
+            local Tagger=Tagged:inUseBy()
+            if(Tagger:getColor()==Color){
+                PlayerCount--
+                runOnUse(0,Tagged)
+                Tagged:set("color",Color:x()+" "+Color:y()+" "+Color:z())
+                print(Tagged:name()+" has been tagged by "+Tagger:name()+". Remaining Players: "+PlayerCount)
+            }
+        }else{
+            Stage++
+            runOnUse(0,useEntClk())
+            timer("Check",1000)
+        }
+}elseif(clk("ClearColors")){
+    findClearWhiteList()
+    findIncludeClass("player")
+    findInBox(TR:pos(),BL:pos())
+    Players=findToArray()
+    timer("ResetColor",0)
+}elseif(clk("ResetColor")){
+    if(Players:count()>0){
+        local P=Players:popEntity()
+        runOnUse(1,P)
+        runOnUse(0,P)
+        if(P:steamID()!=SteamID || Stage==2){
+            P:set("color","255 255 255")
+            P:setHealth(100)
+        }
+        if(P!=Winner && Stage==2 && P:model()!="models/player/combine_advisor_guard.mdl"){
+            P:teleport(SpawnPos[random(1,3),vector])
+        }
+        timer("ResetColor",0)
+    }else{
+        print("All Colors have been made normal")
+    }
+}

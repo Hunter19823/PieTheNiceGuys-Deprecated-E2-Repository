@@ -1,0 +1,145 @@
+@name Laser Room
+@persist [Top,Bottom,Center,Size,LaserCross]:vector [Controller]:entity [Speed,Distance]
+if(first()){
+    Distance=10000
+    Speed=5
+    rangerHitEntities(1)
+    EPos=entity():toWorld(vec(0,0,10))
+    F=rangerOffset(Distance,EPos,entity():toWorld(ang(0,0,0)):forward())
+    B=rangerOffset(Distance,EPos,entity():toWorld(ang(0,180,0)):forward())
+    L=rangerOffset(Distance,EPos,entity():toWorld(ang(0,90,0)):forward())
+    R=rangerOffset(Distance,EPos,entity():toWorld(ang(0,270,0)):forward())
+    U=rangerOffset(Distance,EPos,entity():toWorld(ang(90,0,0)):forward())
+    D=rangerOffset(Distance,EPos,entity():toWorld(ang(270,0,0)):forward())
+    Top=maxVec(F:pos(),B:pos())
+    Bottom=minVec(F:pos(),B:pos())
+    Top=maxVec(Top,L:pos())
+    Bottom=minVec(Bottom,L:pos())
+    Top=maxVec(Top,R:pos())
+    Bottom=minVec(Bottom,R:pos())
+    Top=maxVec(Top,U:pos())
+    Bottom=minVec(Bottom,U:pos())
+    Top=maxVec(Top,D:pos())
+    Bottom=minVec(Bottom,D:pos())
+    Size=abs(Top)-abs(Bottom)
+    Center=Top-(Top-Bottom)/2
+    findExcludeClass("player")
+    findInBox(Top,Bottom)
+    rangerFilter(findToArray())
+    timer("Setup",1000)
+}
+if(clk("Setup")){
+    holoCreate(1,Top)
+    holoCreate(2,Bottom)
+    holoCreate(3,Center)
+    holoCreate(4,Center,vec(0),ang(),vec(255),"models/hunter/blocks/cube4x4x4.mdl")
+    holoScaleUnits(4,-(Top-Bottom)*1.005)
+    holoCreate(5,Center:setZ(Bottom:z()+10),vec(0),ang(),vec(255,0,0),"models/Mechanics/roboticslarge/a4.mdl")
+    holoScaleUnits(5,vec(Size:x()+10,2.5,2.5)*2.1)
+    
+    holoCreate(6,Center:setZ(Bottom:z()+10),vec(0),ang(0,90,0),vec(255,0,0),"models/Mechanics/roboticslarge/a4.mdl")
+    holoScaleUnits(6,vec(Size:y()+10,2.5,2.5)*2.1)
+    
+    LaserHeight=Center:setZ(Bottom:z()+35)
+    LaserCross=LaserHeight
+    Controller=owner()
+    timer("Move",5000)
+}
+if(entity():cpuUsage()< 850 & perf(90)){
+if(clk("Move")){
+    setName(entity():cpuUsage()*1000000+"")
+    Lazer=holoEntity(6):pos()
+    Look=Controller:aimPos()
+    Target=vec2(Look)
+    Laser=vec2(Lazer)
+    #print(Laser,Target)
+    X=0
+    Y=0
+    if(Target:x()>Laser:x()){
+        if(Laser:x()+Speed<Top:x()){
+            if(Target:x()-Laser:x()>=5){
+                X+=Speed
+            }else{
+                X=Target:x()-Laser:x()
+            }
+        }else{
+            if(inrange(Target,vec2(Top),vec2(Bottom))){
+                X=Target:x()-Laser:x()
+            }else{
+                X=Top:x()-Laser:x()
+            }
+        }
+    }elseif(Target:x()<Laser:x()){
+        if(Laser:x()-Speed>Bottom:x()){
+            if(Laser:x()-Target:x()>=5){
+                X-=Speed
+            }else{
+                X=Laser:x()-Target:x()
+            }
+        }else{
+            if(inrange(Target,vec2(Top),vec2(Bottom))){
+                X=Target:x()-Laser:x()
+            }else{
+                X=Bottom:x()-Laser:x()
+            }
+        }
+    }
+    if(Target:y()>Laser:y()){
+        if(Laser:y()+Speed<Top:y()){
+            if(Target:y()-Laser:y()>=5){
+                Y+=Speed
+            }else{
+                Y=Target:y()-Laser:y()
+            }
+        }else{
+            if(inrange(Target,vec2(Top),vec2(Bottom))){
+                Y=Target:y()-Laser:y()
+            }else{
+                Y=Top:y()-Laser:y()
+            }
+        }
+    }elseif(Target:y()<Laser:y()){
+        if(Laser:y()-Speed>Bottom:y()){
+            if(Laser:y()-Target:y()>=5){
+                Y-=Speed
+            }else{
+                Y-=Laser:y()-Target:y()
+            }
+        }else{
+            if(inrange(Target,vec2(Top),vec2(Bottom))){
+                Y=Target:y()-Laser:y()
+            }else{
+                Y=Bottom:y()-Laser:y()
+            }
+        }
+    }
+    LaserCross=LaserCross:setX(LaserCross:x()+X)
+    LaserCross=LaserCross:setY(LaserCross:y()+Y)
+    holoPos(5,LaserCross)
+    holoPos(6,LaserCross)
+    
+    F=rangerOffsetHull(Distance,LaserCross,ang():forward(),vec(5))
+    B=rangerOffsetHull(Distance,LaserCross,ang(0,180,0):forward(),vec(5))
+    L=rangerOffsetHull(Distance,LaserCross,ang(0,90,0):forward(),vec(5))
+    R=rangerOffsetHull(Distance,LaserCross,ang(0,270,0):forward(),vec(5))
+    if(F:entity():isPlayer() & F:entity():model()!="models/player/combine_advisor_guard.mdl"){
+        Controller:effectSpawn("Explosion",F:pos(),1)
+        F:entity():set("setHealth","-1")
+    }
+    if(B:entity():isPlayer() & B:entity():model()!="models/player/combine_advisor_guard.mdl"){
+        Controller:effectSpawn("Explosion",B:pos(),1)
+        B:entity():set("setHealth","-1")
+    }
+    if(L:entity():isPlayer() & L:entity():model()!="models/player/combine_advisor_guard.mdl"){
+        Controller:effectSpawn("Explosion",L:pos(),1)
+        L:entity():set("setHealth","-1")
+    }
+    if(R:entity():isPlayer() & R:entity():model()!="models/player/combine_advisor_guard.mdl"){
+        Controller:effectSpawn("Explosion",R:pos(),1)
+        R:entity():set("setHealth","-1")
+    }
+    timer(clkName(),0)
+}
+}else{
+    timer(clkName(),0)
+}

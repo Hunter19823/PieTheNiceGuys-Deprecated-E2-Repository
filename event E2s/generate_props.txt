@@ -1,0 +1,77 @@
+@name Generate Props
+@persist [EC,TR,BL]:entity [Props,PropsClone]:array [NumberOfProps,PropsSpawned,Size]
+if(first() && owner():isAdmin()){
+    NumberOfProps=100
+    Size=100
+    holoCreate(1)
+    holoScaleUnits(1,-vec(Size*2,Size*2,Size*2))
+    holoParent(1,entity())
+    holoVisible(1,players(),0)
+    holoVisible(1,owner(),1)
+    PropsSpawned=0
+    timer("Search",1000)
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+        
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]) {
+        #print("Searching")
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",0)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findIncludeClass("prop_physics")
+    local TopLeft=holoEntity(1):pos()+vec(Size)
+    local BottomRight=holoEntity(1):pos()-vec(Size)
+    findInBox(BottomRight,TopLeft)
+    Props=findToArray()
+    PropsClone=Props:clone()
+    printTable(findToTable())
+    if(NumberOfProps-PropsSpawned>0){
+        timer("GenerateProp",0)
+    }else{
+        print("No Props In Range")
+    }
+}elseif(clk("GenerateProp")){
+    if(PropsClone:count()>0){
+        if(NumberOfProps-PropsSpawned>0){
+            local TRV=TR:pos()
+            local BLV=BL:pos()
+            local Model=PropsClone:popEntity()
+            local RandomX=abs(TRV:x()-BLV:x())
+            local RandomY=abs(TRV:y()-BLV:y())
+            local Z=BLV:z()
+            local P=propSpawn(Model,vec(random(10,RandomX),random(10,RandomY),0)+BLV,ang(0,random(0,360),0),1)
+            PropsSpawned++
+            P:parentTo(entity())
+            if(inrange(P:pos(),BLV,TRV)){
+                print("Prop In Range")
+            }
+            timer("GenerateProp",1000)
+        }else{
+            print("Finished Spawning Props")
+        }
+    }else{
+        PropsClone=Props:clone()
+        timer("GenerateProp",1000)
+    }
+}
+setName("Props: "+PropsSpawned)

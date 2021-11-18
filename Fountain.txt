@@ -1,0 +1,29 @@
+@name  Fountain
+@persist T B
+if(first())
+{
+    runOnTick(1)
+    holoCreate(1)
+    holoModel(1,"models/hunter/misc/shell2x2a.mdl")
+    holoScale(1,vec(1.7,1.7,3.5))
+    holoMaterial(1,"models/effects/slimebubble_sheet")
+    holoCreate(2)
+    holoModel(2,"models/props_c17/fountain_01.mdl")
+    holoScale(2,vec(0.6,0.6,0.6))
+    holoColor(1,hsv2rgb(570,1,1))
+    holoParent(1,2)
+}
+interval(1)
+T++
+holoAng(1,ang(0,90+T,0))
+B+=100
+if(B>360){
+    B=1
+}
+holoColor(2,hsv2rgb(B,1,1))
+holoPos(2,entity():pos()+vec(1,1,1+sin(curtime()*10)*100))
+holoPos(2,entity():pos()+vec(1,1,1+sin(curtime()*10)*100))
+holoPos(2,entity():pos()+vec(1,1,1+sin(curtime()*10)*100))
+holoPos(2,entity():pos()+vec(1,1,1+sin(curtime()*10)*100))
+holoPos(2,entity():pos()+vec(1,1,1+sin(curtime()*10)*100))
+holoPos(2,entity():pos()+vec(1,1,1+sin(curtime()*10)*100))

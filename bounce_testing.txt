@@ -1,0 +1,101 @@
+@persist [Speed,N] [Point1]:vector [ColorArray,TempColors]:array
+if(first()){
+    Speed=50
+    ColorArray=array(
+    vec(255,0,0),
+    vec(255,32,0),
+    vec(255,64,0),
+    vec(255,96,0),
+    vec(255,128,0),
+    vec(255,160,0),
+    vec(255,192,0),
+    vec(255,224,0),
+    vec(255,255,0),
+    vec(224,255,0),
+    vec(192,255,0),
+    vec(160,255,0),
+    vec(128,255,0),
+    vec(96,255,0),
+    vec(64,255,0),
+    vec(32,255,0),
+    vec(0,255,0),
+    vec(0,255,32),
+    vec(0,255,64),
+    vec(0,255,96),
+    vec(0,255,128),
+    vec(0,255,160),
+    vec(0,255,192),
+    vec(0,255,224),
+    vec(0,255,255),
+    vec(0,224,255),
+    vec(0,192,255),
+    vec(0,160,255),
+    vec(0,128,255),
+    vec(0,96,255),
+    vec(0,64,255),
+    vec(0,32,255),
+    vec(0,0,255),
+    vec(32,0,255),
+    vec(64,0,255),
+    vec(96,0,255),
+    vec(128,0,255),
+    vec(160,0,255),
+    vec(192,0,255),
+    vec(224,0,255),
+    vec(255,0,255),
+    vec(255,0,224),
+    vec(255,0,192),
+    vec(255,0,160),
+    vec(255,0,124),
+    vec(255,0,96),
+    vec(255,0,64),
+    vec(255,0,32)
+    )
+    TempColors=array():add(ColorArray)
+    function void pointToPoint(Index,P1:vector ,P2:vector , Color:vector ) {
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),Color,"models/hunter/plates/plate8x8.mdl")
+        holoMaterial(Index,"effects/flicker_256")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoParent(Index,entity())
+        H:remove(10)
+    }
+    holoCreate(1,owner():toWorld(vec(0,0,owner():height()-10)),vec(0.5),owner():eyeAngles(),vec(255),"models/freeman/compact_printer.mdl")
+    timer("Move",250)
+    N=3
+}
+if(clk("Move")){
+    I=1
+    E=holoEntity(I)
+    Eyes=rangerOffset(Speed, E:pos(), E:forward())
+    if(!Eyes:hit() || Eyes:entity():isPlayer()){
+        holoPos(I,E:toWorld(vec(Speed-1,0,0)))
+    }else{
+        Point2=Eyes:pos()
+        if(Point1!=vec()){
+            N++
+            if(TempColors:count()>0){
+                pointToPoint(N,Point1,Point2,TempColors:popVector())
+                Point1=Point2
+            }else{
+                N=2
+                TempColors=array():add(ColorArray)
+                pointToPoint(N,Point1,Point2,TempColors:popVector())
+            }
+        }else{
+            Point1=Point2
+        }
+        D=Eyes:distance()
+        holoPos(I,holoEntity(1):toWorld(vec(D,0,0)))
+        Angs=(Eyes:hitNormal()+E:forward():normalized())
+        holoAng(I,Angs:toAngle())
+        if(rangerOffset(Speed-D, E:pos(), E:forward()):hit()!=1){
+            holoPos(1,holoEntity(1):toWorld(vec(Speed-D,0,0)))
+        }
+    }
+    timer("Move",0)
+}

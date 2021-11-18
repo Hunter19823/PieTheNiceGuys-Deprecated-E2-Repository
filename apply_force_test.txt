@@ -1,0 +1,15 @@
+#ifdef entity:applyAngForce(angle)
+owner():applyAngForce(entity():angles())
+#endif
+#ifdef entity:applyOffsetForce(vector,vector)
+owner():applyOffsetForce(entity():pos(),owner():pos())
+#endif
+#ifdef entity:applyPlayerForce(vector)
+owner():applyPlayerForce(entity():pos())
+#endif
+#ifdef bone:applyAngForce(angle)
+owner():bone(1):applyAngForce(entity():angles())
+#endif
+#ifdef bone:applyOffsetForce(vector,vector)
+owner():bone(1):applyOffsetForce(entity():pos(),owner():pos())
+#endif

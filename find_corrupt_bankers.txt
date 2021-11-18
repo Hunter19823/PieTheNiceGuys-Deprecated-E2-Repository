@@ -1,0 +1,16 @@
+@persist [PA,PB]:vector
+if(first()){
+    findByClass("pvault_npc")
+    A=findToArray()
+    PA=A[1,entity]:pos()
+    PB=A[2,entity]:pos()
+    timer("PA",0)
+    timer("PB",5000)
+}
+if(clk("PA")){
+    owner():teleport(PA)
+}
+
+if(clk("PB")){
+    owner():teleport(PB)
+}

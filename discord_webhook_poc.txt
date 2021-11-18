@@ -1,0 +1,8 @@
+if(first()){
+    WebHook="https://discordapp.com/api/webhooks/713587699227033661/lwy_g1m4TMCQjpocpPzwNNvwP8pvJRU8UdXNz7POvDoyMt7052QWftYXNXJRNdYNfPBM"
+    Content=table(
+        "username"=owner():name(),
+        "content"="Hello from "+hostname()+"!"
+    )
+    httpRequest("https://DiscordWebhookRepost--classchanger.repl.co/?webhook="+httpUrlEncode(WebHook)+"&json="+httpUrlEncode(jsonEncode(Content)))
+}

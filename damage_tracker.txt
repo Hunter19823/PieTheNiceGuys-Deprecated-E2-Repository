@@ -1,0 +1,7 @@
+@persist 
+if(first()){
+    runOnDmg(1,owner())
+}
+if(dmgClk()){
+    print(dmgAttacker()," just attacked you with ",dmgInflictor()," for ",dmgDamage()," health")
+}

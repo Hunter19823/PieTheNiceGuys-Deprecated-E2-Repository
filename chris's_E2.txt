@@ -1,0 +1,30 @@
+@persist PORPARRAY:array NOPE:entity N STRING:string
+interval(150)
+
+
+
+if(changed(owner():keyAttack2())&owner():keyAttack2()==1){
+    N=0 entity():setAng(ang()) print(
+    "@persist N interval(100) entity():constraintBreak() if(propCanCreate()){N++ entity():setAng(ang())") 
+        STRING+="@persist N Entity:entityinterval(100) entity():constraintBreak() if(propCanCreate()){N++ entity():setAng(ang())"
+}
+if(changed(owner():keyAttack2()==0)&owner():keyAttack2()==0==1&first()==0){print("} if(N=="+N+"){selfDestruct()}") STRING+="} if(N=="+N+"){selfDestruct()}" }
+
+if(owner():keyAttack2()&1==1){interval(100) 
+findExcludeEntities(PORPARRAY)
+findInSphere(owner():aimEntity():pos(),1500) NOPE=findClosest(owner():aimPos()) if(changed(NOPE)){PORPARRAY[PORPARRAY:count()+1,entity]=NOPE}
+if(NOPE:owner()==owner():aimEntity():owner()&NOPE:model()!=""&changed(NOPE)){N++ print(" if(N=="+N+") {E"+randint(1,9999)+"=propSpawn("+toChar(34)+NOPE:model()+toChar(34)+",entity():toWorld(vec("+round((NOPE:pos()-owner():aimEntity():pos()):x())+","+round((NOPE:pos()-owner():aimEntity():pos()):y())+","+round((NOPE:pos()-owner():aimEntity():pos()):z())+")),ang("+round(NOPE:angles():pitch())+","+round(NOPE:angles():yaw())+","+round(NOPE:angles():roll())+"),1)}
+") 
+STRING+=" if(N=="+N+") {Entity=propSpawn("+toChar(34)+NOPE:model()+toChar(34)+",entity():toWorld(vec("+round((NOPE:pos()-owner():aimEntity():pos()):x())+","+round((NOPE:pos()-owner():aimEntity():pos()):y())+","+round((NOPE:pos()-owner():aimEntity():pos()):z())+")),ang("+round(NOPE:angles():pitch())+","+round(NOPE:angles():yaw())+","+round(NOPE:angles():roll())+"),1)}
+  Entity:setMaterial("+toChar(34)+NOPE:getMaterial()+toChar(34)+") Entity:setColor(vec("+NOPE:getColor():x()+","+NOPE:getColor():y()+","+NOPE:getColor():z()+")) Entity:setAlpha("+NOPE:getAlpha()+")  
+"  }
+}
+if(changed(time("min"))){entity():setAng(ang()) holoCreate(1,entity():toWorld(vec(2,0,2)),vec(0.2),ang(),vec(255),"hqsphere") holoParent(1,entity()) holoCreate(2,entity():toWorld(vec(-2,0,2)),vec(0.2),ang(),vec(255),"hqsphere") holoParent(2,entity())
+    holoCreate(3,entity():toWorld(vec(2,-1,2)),vec(0.1),ang(),vec(0),"hqsphere") holoParent(3,holoEntity(1)) holoCreate(4,entity():toWorld(vec(-2,-1,2)),vec(0.1),ang(),vec(0),"hqsphere") holoParent(4,holoEntity(2))
+    }
+holoAng(1,entity():toWorld(ang(0,sin(curtime()*400)*15,0))) holoAng(2,entity():toWorld(ang(0,sin(curtime()*400)*15,0)))
+if(changed(owner():keyPressed("6"))&owner():keyPressed("6")==1&fileCanWrite()){fileWrite("imchris.txt",STRING) print("file saved")}
+if(changed(owner():keyReload())&owner():keyReload()==1){print("reset") reset()}
+## 6 to save file r to reset array and mouse 2 to copy ##
+
+

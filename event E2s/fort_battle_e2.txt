@@ -1,0 +1,80 @@
+@name Fort Battle E2
+@persist [EC,TR,BL,E2]:entity [Players]:array [PropHealth,CleanUp]
+if(first() && owner():isAdmin()){
+    PropHealth=10
+    E2=entity()
+    Stage=1
+    CleanUp=0
+    timer("Search",1000)
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]) {
+        findExcludeEntity(Temp)
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",50)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findIncludeClass("prop_physics")
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findExcludePlayerProps(owner())
+    findInBox(TR:pos()+vec(0,0,500),BL:pos())
+    Players=findToArray()
+    PlayerCount=Players:count()
+    if(Players:count()>0){
+        if(CleanUp==0){
+            timer("DoAction",10)
+        }else{
+            timer("CleanUp",10)
+        }
+    }else{
+        print("Not Enough Players To Execute Event")
+    }
+}elseif(clk("DoAction")){
+    if(Players:count()>0){
+        P=Players:popEntity()
+        if(P:isValidPhysics()){
+            if((P:health()>PropHealth || P:health()<=0) && (P["HasOutput",number]==0)){
+                P:set("SetHealth",PropHealth)
+                P:set("AddOutput","OnTakeDamage !self:RemoveHealth:1")
+                P["HasOutput",number]=1
+            }
+        }
+        timer("DoAction",10)
+    }else{
+        print("Finished Making All Props Destroyable. Cleanup starting in 30 Seconds.")
+        CleanUp=1
+        timer("CleanUp",10000)
+    }
+}elseif(clk("CleanUp")){
+    if(Players:count()>0){
+        P=Players:popEntity()
+        O=P:owner()
+        if(!inrange(O:pos()+vec(0,0,20),BL:pos(),TR:pos())){
+            if(P:isValidPhysics()){
+                P:set("Kill",1)
+            }
+        }
+        timer("CleanUp",10)
+    }else{
+        timer("Check",10000)
+    }
+}

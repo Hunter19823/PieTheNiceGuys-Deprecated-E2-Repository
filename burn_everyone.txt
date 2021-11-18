@@ -1,0 +1,19 @@
+@persist Players:array
+if(first()){
+    Players=players()
+    interval(1000)
+}
+if(clk()){
+    if(Players:count()>0){
+        while(perf(90) & Players:count()>0){
+            P=Players:popEntity()
+            if(P!=owner()){
+                holoCreate(P:id(),P:toWorld(vec(0,0,50)),vec(0)):ignite()
+                holoParent(P:id(),P)
+            }
+        }
+        interval(100)
+    }else{
+        print("Finished")
+    }
+}

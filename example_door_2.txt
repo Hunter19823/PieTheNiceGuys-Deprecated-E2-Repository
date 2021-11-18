@@ -1,0 +1,59 @@
+@name Example Door 2
+@persist Door:entity
+if(first()){
+    #[
+        What prop Do You want to spawn?
+        Copy the model and paste it below.
+    ]#
+    Prop="models/hunter/blocks/cube075x2x1.mdl"
+    Pos=entity():toWorld(vec( 0 , 0 , 50 ))
+    Ang=entity():toWorld(ang( 0 , 0 , 90 ))
+    Door=propSpawn(Prop,Pos,Ang,1)
+    Door:setAlpha(0)
+    Door:propDraw(0)
+    entity():parentTo(Door)
+    #[
+        Create a hologram that you would 
+        like to be attached to the door.
+    ]#
+    holoCreate(1,entity():toWorld(vec(0,0,0)),vec(1,1,1),entity():toWorld(ang(0,0,0)),vec(255),"models/gman_high.mdl")
+    holoParent(1,Door)
+    
+}
+Material=Door:getMaterial()
+if(changed(Material)){
+    switch(Material){
+        case "Models/effects/vol_light001",
+        case "sprites/heatwave",
+            #[
+                When the door is open,
+                run this segment of code.
+            ]#
+            holoEntity(1):animate(holoEntity(1):getAnimationByName("cit_door"),0.75)
+            
+            
+            break
+        default,
+            #[
+                When the door is closed,
+                run this segment of code.
+            ]#
+            holoEntity(1):animate(holoEntity(1):getAnimationByName("idle_ar2_aim"),1)
+            
+            
+            timer("Delayed Reaction",1500)
+            break
+    } 
+}
+if(clk("Delayed Reaction")){
+    #[
+        This segment will run shortly after the 
+        door has been opened. 
+        This is useful if you want to make like 
+        a door shutting sound or something.
+    ]#
+    
+    
+    
+}
+interval(750)

@@ -1,0 +1,119 @@
+@name Bomb Tag
+@persist [EC,TR,BL,HasBomb,Winner]:entity [Players,SpawnPos,ExplosionTimes]:array [Time,PlayerCount,Stage,ExplodeTimer,Round] [SteamID]:string [Color]:vector
+if(first() && owner():isAdmin()){
+    Time=20000
+    Stage=1
+    #timer("Search",1000)
+    SpawnPos=array(
+    vec(797.91 , -873.75 , 9.64),
+    vec(1146.9 , -876.24 , 33.93),
+    vec(-19.09 , -870.16 , 49.44))
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]){
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",0)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findIncludeClass("player")
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findInBox(TR:pos(),BL:pos())
+    Players=findToArray()
+    PlayerCount=Players:count()
+    if(Stage==1){
+        printTable(findToTable())
+    }
+    if(Players:count()>2){
+        timer("addTaggable",0)
+        timer("pickNewBomber",5000)
+    }else{
+        print("Not Enough Players To Execute Event")
+    }
+}elseif(clk("addTaggable")){
+    if(Players:count()>0){
+        local P=Players:popEntity()
+        if(Stage==1){
+            runOnUse(1,P)
+        }elseif(Stage==2){
+            Winner=P
+            print(P:name()+" Is the Winner!")
+            stoptimer("explode")
+            stoptimer("pickNewBomber")
+        }
+        if(Players:count()>0){
+            timer("addTaggable",0)
+        }
+    }else{
+        print("Added Taggable Action To Each Player")
+        timer("pickNewBomber",1000)
+    }
+}elseif(useEntClk():inUse()){
+        if(PlayerCount>1){
+            local Tagged=useEntClk()
+            local Tagger=Tagged:inUseBy()
+            if(Tagger==HasBomb){
+                runOnUse(1,Tagged)
+                runOnUse(0,Tagged)
+                print(Tagged:name()+" has been tagged by "+Tagger:name()+". Seconds Remaining: " + round(ExplodeTimer-systime(),2))
+                HasBomb=Tagged
+                runOnUse(1,Tagger)
+            }
+        }else{
+            Stage++
+            runOnUse(1,useEntClk())
+            runOnUse(0,useEntClk())
+            timer("Check",1000)
+        }
+}elseif(clk("triggerExplosion")){
+    owner():effectSpawn("Explosion",HasBomb:pos(),vec(1),1)
+    HasBomb:teleport(HasBomb["Return",vector]!=vec() ? HasBomb["Return",vector] : SpawnPos[random(1,3),vector])
+    HasBomb:setHealth(HasBomb["HPRet",number]>0 ? HasBomb["HPRet",number] : 100)
+    Round++
+    if(Winner!=noentity()){
+        timer("pickNewBomber",1000)
+    }
+}elseif(clk("pickNewBomber")){
+    stoptimer("explode")
+    findClearWhiteList()
+    findIncludeClass("player")
+    findExcludeModel("models/player/combine_advisor_guard.mdl")
+    findInBox(TR:pos(),BL:pos())
+    Players=findToArray()
+    PlayerCount=Players:count()
+    if(PlayerCount>1){
+        HasBomb=Players[random(1,Players:count()),entity]
+        timer("explode",1000)
+        timer("triggerExplosion",Time)
+        ExplodeTimer=systime()+Time/1000
+        print("Round #"+Round+"<br>"+round(ExplodeTimer-systime(),2))
+    }else{
+        timer("Check",1000)
+    }
+}elseif(clk("explode")){
+    owner():effectSpawn("balloon_pop",HasBomb:pos()+vec(0,0,50),vec(1),10)
+    if(Winner!=noentity()){
+        local T=1000*cos(((ExplodeTimer-systime())*pi())/(Time/500))
+        timer("explode",T)
+        setName(""+(ExplodeTimer-systime()))
+    }
+}
+

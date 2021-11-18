@@ -1,0 +1,17 @@
+@outputs Entity:entity
+if(first())
+{
+    runOnKey(1)
+    runOnTick(1)
+    Entity=owner()
+}
+if (owner():keyReload())
+{
+    print("used")
+    Entity=owner():aimEntity()
+}
+if (owner():keyDuck())
+{
+    print("ducked")
+    Entity:setPos(Entity:pos() + vec(0,0,100))
+}

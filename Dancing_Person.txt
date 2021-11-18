@@ -1,0 +1,212 @@
+@name Dancing Man
+@persist Speed State Spacing [D1,D2,D3,D4,D5,D6]:entity
+if (first())
+{
+    function vector randomColor(){
+        R=random(255)
+        G=random(255)
+        B=random(255)
+        return vec(R,G,B)
+    }
+    Spacing=75
+    State=100
+    D1=holoCreate(1)
+    D2=holoCreate(2)
+    D3=holoCreate(3)
+    D4=holoCreate(4)
+    D5=holoCreate(5)
+    D6=holoCreate(6)
+    holoModel(1,"models/player/kleiner.mdl")
+    holoModel(2,"models/player/kleiner.mdl")
+    holoModel(3,"models/player/kleiner.mdl")
+    holoModel(4,"models/player/kleiner.mdl")
+    holoModel(5,"models/player/kleiner.mdl")
+    holoModel(6,"models/player/kleiner.mdl")
+    local Ang=ang(0,90,0)
+    local Distance=Spacing*3/6
+    holoAng(1,Ang)
+    holoAng(2,Ang)
+    holoAng(3,Ang)
+    holoAng(4,Ang)
+    holoAng(5,Ang)
+    holoAng(6,Ang)
+    holoPos(5,entity():pos()+vec((Distance/2)*5,0,0))
+    holoPos(1,entity():pos()+vec((Distance/2)*3,0,0))
+    holoPos(2,entity():pos()+vec(Distance/2,0,0))
+    holoPos(3,entity():pos()-vec(Distance/2,0,0))
+    holoPos(4,entity():pos()-vec((Distance/2)*3,0,0))
+    holoPos(6,entity():pos()-vec((Distance/2)*5,0,0))
+    local Size=vec(1)
+    holoScale(1,Size)
+    holoScale(2,Size)
+    holoScale(3,Size)
+    holoScale(4,Size)
+    holoScale(5,Size)
+    holoScale(6,Size)
+    #[
+    holoAng(1,ang(0,45,0))
+    holoAng(2,ang(0,-135,0))
+    holoAng(3,ang(0,135,0))
+    holoAng(4,ang(0,-45,0))
+    holoPos(1,entity():pos()+vec(10,10,0))
+    holoPos(2,entity():pos()+vec(-10,-10,0))
+    holoPos(3,entity():pos()+vec(-10,10,0))
+    holoPos(4,entity():pos()+vec(10,-10,0))
+    holoScale(1,vec(2))
+    holoScale(2,vec(2))
+    holoScale(3,vec(2))
+    holoScale(4,vec(2))
+    ]#
+    #[holoAng(1,ang(0,45,180))
+    holoAng(2,ang(0,-135,180))
+    holoAng(3,ang(0,135,180))
+    holoAng(4,ang(0,-45,180))
+    holoPos(1,entity():pos()+vec(10,10,holoEntity(1):height()))
+    holoPos(2,entity():pos()+vec(-10,-10,holoEntity(2):height()))
+    holoPos(3,entity():pos()+vec(-10,10,holoEntity(3):height()))
+    holoPos(4,entity():pos()+vec(10,-10,holoEntity(4):height()))]#
+    Speed=1
+    timer("dance",0)
+    timer("State",1000)
+}
+
+if (lastSpoke()==owner()){
+    C=owner():lastSaid():explode(" ")
+    if (C[1,string]=="s"){
+        Speed=C[2,string]:toNumber()
+        stopAllTimers()
+        timer("dance",0)
+    }
+}
+if (clk("dance")){
+    if (Speed==0)
+    {
+        D1:animate(3,1)
+        D2:animate(3,1)
+        D3:animate(3,1)
+        D4:animate(3,1)
+        D5:animate(3,1)
+        D6:animate(3,1)
+    }
+    else{
+        D1:animate(305,Speed)
+        D2:animate(305,Speed)
+        D3:animate(305,Speed)
+        D4:animate(305,Speed)
+        D5:animate(305,Speed)
+        D6:animate(305,Speed)
+    }
+    # 1x=9500
+    stoptimer("dance")
+    timer("dance",9500/Speed)
+}
+if(clk("State")){
+    switch(State){
+        case 100,
+            entity():setfLight(entity():pos()+vec(0,0,100),randomColor(),entity():angles()+ang(90,0,0),"cs_havana/white",100,500,1)
+            State++
+            break
+        case 101,
+            holoCreate(State,entity():pos()+vec(0,0,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 102,
+            holoCreate(State,entity():pos()+vec(Spacing,0,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 103,
+            holoCreate(State,entity():pos()+vec(0,Spacing,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 104,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,0,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 105,
+            holoCreate(State,entity():pos()+vec(0,(Spacing)*-1,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 106,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,Spacing,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 107,
+            holoCreate(State,entity():pos()+vec((Spacing)*-1,(Spacing)*-1,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 108,
+            holoCreate(State,entity():pos()+vec(Spacing,(Spacing)*-1,0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 109,
+            holoCreate(State,entity():pos()+vec((Spacing),(Spacing),0),vec(1),ang(0),randomColor())
+            holoScaleUnits(State,vec(Spacing,Spacing,1))
+            State++
+            break
+        case 110,
+            timer("TileColor",1000)
+            timer("playerColor",500)
+            State=111
+            break
+        default,
+            break
+    }
+    if(State>110){
+        stoptimer("State")
+    } else{
+        timer("State",1000)
+    }
+}
+if(clk("playerColor")){
+    entity():fLightColor(randomColor())
+    local Count=0
+    Count++
+    #2
+    holoPlayerColor(Count,vec(0,255,0))
+    #3
+    Count++
+    holoPlayerColor(Count,vec(0,0,255))
+    #4
+    Count++
+    holoPlayerColor(Count,vec(255,0,0))
+    Count++
+    #5
+    holoPlayerColor(Count,vec(0,255,0))
+    Count++
+    #1
+    holoPlayerColor(Count,vec(255,0,0))
+    Count++
+    #6
+    holoPlayerColor(Count,vec(0,0,255))
+}
+if(clk("TileColor")){
+    entity():fLightColor(randomColor())
+    local Count=100
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    Count++
+    holoColor(Count,randomColor())
+    timer("TileColor",1000)
+}

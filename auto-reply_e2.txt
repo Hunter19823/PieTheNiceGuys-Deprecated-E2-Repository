@@ -1,0 +1,43 @@
+@name Auto-Reply E2
+@persist [ChatCommands]:table [Signature]:string
+if(first()){
+    Signature="(Auto-triggered Message)"
+    runOnChat(1)
+    ChatCommands=table(
+    "how,door,fading"="// You can have 3 fading doors as doors. 3 fading doors as protection against your raidables.",
+    "what,cooldown,raid"="// Raid cooldown is 10 minutes for a different base, and 15 minutes to raid the same base and bank/pd.",
+    "what,cooldown,mug"="// The cooldown for a mug is 5 minutes for different people. 15 minutes for the same person.",
+    "what,cooldown,terror"="// The cooldown for a Terror/Peace Is Over/Killing Spree/Mafia Attack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,teror"="// The cooldown for a Terror/Peace Is Over/Killing Spree/Mafia Attack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,peace,over"="// The cooldown for a Terror/PeaceIsOver/KillingSpree/MafiaAttack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,peece,over"="// The cooldown for a Terror/PeaceIsOver/KillingSpree/MafiaAttack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,kill,spre"="// The cooldown for a Terror/PeaceIsOver/KillingSpree/MafiaAttack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,mafia,spre"="// The cooldown for a Terror/PeaceIsOver/KillingSpree/MafiaAttack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,gang,war"="// The cooldown for a Terror/PeaceIsOver/KillingSpree/MafiaAttack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,caust,holo"="// The cooldown for a Terror/PeaceIsOver/KillingSpree/MafiaAttack/Holocaust/GangWar is 15 minutes.",
+    "what,cooldown,kid,nap"="// Kidnapper must wait a 10-minute cool down in between kidnaps, 30 minutes for the same person."
+    
+    
+    
+    
+    
+    )
+    
+}
+if(chatClk()){
+    Message=lastSaid()
+    MessageLower=lastSaid():lower()
+    foreach(Index,KeyWords:string = ChatCommands:keys()){
+        MatchesKeyWords=1
+        foreach(SecondIndex,KeyWord:string = KeyWords:explode(",")){
+            if(!MessageLower:find(KeyWord)!=0){
+                MatchesKeyWords=0
+                break
+            }
+        }
+        if(MatchesKeyWords){
+            concmd("say \""+ChatCommands[KeyWords,string]:replace("{player}",lastSpoke():name())+Signature+"\"")
+        }
+    }
+    
+}

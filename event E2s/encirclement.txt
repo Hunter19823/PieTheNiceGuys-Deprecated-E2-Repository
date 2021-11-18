@@ -1,0 +1,40 @@
+@name Close In The Arena
+@persist [Speed,Distance] [Walls,WallParents]:array
+if(first()){
+    Distance=50
+    Speed=100
+    runOnChat(1)
+}
+if(chatClk(owner())){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]){
+        case "enclose",
+            Dist=LS[2,string]:toNumber()
+            if(Dist>0){
+                Distance=Dist
+            }else{
+                Distance=50
+            }
+            timer("FindWalls",Speed)
+            break
+    }
+}
+if(clk("FindWalls")){
+    findIncludePlayerProps(owner())
+    findByModel("models/hunter/blocks/cube8x8x1.mdl")
+    Walls=findToArray()
+    print("Moving "+Walls:count()+" walls.")
+    timer("Move",Speed)
+}
+if(clk("Move")){
+    if(Walls:count()>0){
+        W=Walls:popEntity()
+        Parent=W:parent()
+        W:unParent()
+        W:setPos(W:toWorld(vec(0,0,-1*Distance)))
+        W:effectSpawn("Explosion",W:pos(),1)
+        timer(clkName(),Speed)
+    }else{
+        print("Arena Closed In")
+    }
+}

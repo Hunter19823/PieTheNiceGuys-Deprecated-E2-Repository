@@ -1,0 +1,29 @@
+@name Find Pie
+if(first()){
+    function void entity:compass(Index,P2:vector ) {
+        local P1=This:toWorld(vec(0,0,25))
+        local Target=P2
+        local EyePos=P1
+        local H=holoCreate(Index,EyePos,vec(0.1),ang(),vec(255,0,0),"models/hunter/plates/plate8x8.mdl")
+        H:setRenderMode(9)
+        holoMaterial(Index,"cs_havana/lightbareon01")
+        holoScaleUnits(Index,vec(100,5,5))
+        holoAng(Index,-1*H:heading(Target))
+        holoDisableShading(Index,1)
+        holoPos(Index,P1)
+        holoParent(Index,This)
+    }
+    function void entity:miniMe(Index,Entity:entity){
+        local C=This:toWorld(vec(0,0,30))
+        holoCreate(Index,C,vec(0.25),Entity:angles(),Entity:getColor(),Entity:model()):animate(Entity:getAnimation(),1)
+        #holoSkin(Index,Entity:getSkin())
+        holoAlpha(Index,Entity:getAlpha())
+    }
+    timer("Search",10)
+}
+if(clk("Search")){
+    E=findPlayerBySteamID("STEAM_0:0:120063239")
+    entity():compass(1,E:pos())
+    entity():miniMe(2,E)
+    timer(clkName(),250)
+}

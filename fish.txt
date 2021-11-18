@@ -1,0 +1,44 @@
+@name Fish
+@persist Players:array Timer
+if(first()){
+    #holoCreate(1,entity():pos()+vec(0,0,25),vec(0.1),ang(),vec(255),"models/props_genesys/shark_01.mdl")
+    entity():noDraw(1)
+    hideMyAss(1)
+    noDuplications()
+    Players=players()
+    Timer=10
+    timer("Check",10)
+}
+if(clk("Check")){
+    if(Players:count()>0){
+        P=Players:popEntity()
+        KS=P["SessionKills",number]
+        NewKS=P:frags()
+        Money=P["SessionMoney",number]
+        NewMoney=P:money()
+        if(P["SessionKills",number]!=0){
+            if(KS!=NewKS){
+                dsSend("ChatCLK",owner():steamID64(),"("+lastSpoke():steamID()+") "+lastSpoke():name()+": Gained "+(NewKS-KS)+" Kill(s), Total: "+NewKS)
+            }
+        }
+        P["SessionKills",number]=NewKS
+        if(P["SessionMoney",number]!=0){
+            T=date()
+            Date="["+T["day",number]+"/"+T["month",number]+"/"+T["year",number]+"] "+"["+T["hour",number]+":"+T["min",number]+":"+T["sec",number]+"]"
+            if(Money!=NewMoney){
+                if(NewMoney-Money>0){
+                    String="("+lastSpoke():steamID()+") "+lastSpoke():name()+": Earned $"+(NewMoney-Money)+", Total: $"+NewMoney
+                    dsSend("ChatCLK",owner():steamID64(),String)
+                }else{
+                    String="("+lastSpoke():steamID()+") "+lastSpoke():name()+": Lost $"+(abs(NewMoney-Money))+", Total: $"+NewMoney
+                    dsSend("ChatCLK",owner():steamID64(),String)
+                }
+                fileAppend("money.txt",Date+" "+String+"\n")
+            }
+        }
+        P["SessionMoney",number]=NewMoney
+        timer(clkName(),Timer)
+    }else{
+        reset()
+    }
+}

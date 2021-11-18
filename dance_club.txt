@@ -1,0 +1,61 @@
+@name Dance Club
+@persist [Mode,I,Holograms,Range,AnimationNumber,AnimationDelay,Scale]:number [Model]:string
+if(first()){
+    Holograms=200
+    Range=100
+    Scale=0.65
+    Mode=1
+    #Model=""
+    Model=owner():model()
+    
+    AnimationNumber=305
+    AnimationDelay=9500
+    I=0
+    timer("Generate",100)
+}
+if(clkName():find("Generate")){
+    if(I < Holograms){
+        A=0.0624*Range
+        while(I<Holograms & perf(65) & holoCanCreate()){
+            I++
+            if(Mode==1){
+                X = A*(16*(sin(I*2)^3))
+                Y = A*(13*cos(I*2)-5*cos(2*I*2)-2*cos(3*I*2)-cos(4*I*2))
+            }elseif(Mode==0){
+                X = random()*Range*2-Range
+                Y = random()*Range*2-Range
+            }
+            #local Scale=vec(random()*Scale*2 - Scale,random()*Scale*2 - Scale,random()*Scale)
+            local Scale=vec(vec2(random()*Scale*2 - Scale),random()*Scale)
+            
+            local Angle=ang(0,random()*360,0)
+            #holoCreate(I,entity():toWorld(vec(random()*Range-Range/2,random()*Range-Range/2,0)),vec(random()*Scale*2 - Scale,random()*Scale*2 - Scale,random()*Scale*2 - Scale),ang(0,random()*360,random()*360),vec(random()*255,random()*255,random()*255),Model):animate(AnimationNumber,1)
+            holoCreate(I,entity():toWorld(vec(X,Y,0)),Scale,entity():toWorld(Angle),vec(random()*255,random()*255,random()*255),Model):animate(AnimationNumber,1)
+            holoParent(I,entity())
+            timer(I+";"+AnimationNumber+";"+AnimationDelay+";Dance",AnimationDelay)
+        }
+        #timer(clkName(),100)
+    }else{
+        print("Now Watch The Madness")
+        #timer("Rotate",100)
+    }
+}
+if(clkName():find("Dance")){
+    if(perf(80)){
+        Param=clkName():explode(";")
+        holoEntity(Param[1,string]:toNumber()):animate(Param[2,string]:toNumber(),1)
+        timer(clkName(),Param[3,string]:toNumber())
+        if(I<Holograms & holoCanCreate()){
+            timer("Generate"+random(),2000*random())
+        }
+    }else{
+        timer(clkName(),100)
+    }
+}
+if(clk("Rotate")){
+    Theta=curtime()%(360)
+    Speed=0.1
+    Angle=ang(0,180*cos(Theta),0)
+    entity():setAng(entity():toWorld(Speed*Angle))
+    timer(clkName(),150)
+}

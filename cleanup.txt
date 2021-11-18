@@ -1,0 +1,27 @@
+@persist I Entities:array
+if(first()){
+    Top=vec(16000,16000,15000)
+    Bottom=vec(-1000,-100,9000)
+    findIncludeClass("spawned_ammo")
+    findIncludeClass("m9k_rpg7")
+    findInBox(Top,Bottom)
+    Entities=findToArray()
+    timer("Find",50)
+    printTable(findToTable())
+}
+if(clk("Find")){
+    if(Entities:count()>0){
+        while(perf(95)&Entities:count()>0){
+            I++
+            Weapon=Entities:popEntity()
+            if(!Weapon:isPlayer()){
+                Weapon:setPos(owner():toWorld(vec(0,0,100)))
+                Weapon:teleport(owner():toWorld(vec(0,0,100)))
+                Weapon:tele(owner():toWorld(vec(0,0,100)))
+            }
+        }
+        timer(clkName(),50)
+    }else{
+        print("End")
+    }
+}

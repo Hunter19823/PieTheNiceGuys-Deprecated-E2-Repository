@@ -1,0 +1,42 @@
+@persist Eggs:array CanHunt Eggz GT:gtable Money
+if(first()){
+    GT=gTable("Eastegg Event E2 :D",1)
+    Money=500000
+    findIncludePlayerProps(owner())
+    findByModel("models/freeman/compact_printer.mdl")
+    Eggs=findToArray()
+    CanHunt=0
+    if(Eggs:count()>0){
+        print("Eggs Found:"+Eggs:count())
+        timer("NextEgg",1000)
+    }
+}
+if(clk("NextEgg")){
+    if(Eggs:count()>0){
+        local Eg=Eggs:popEntity()
+        Eg:setColor(vec(random(255),random(255),random(255)))
+        Eg:noDraw(0)
+        runOnUse(1,Eg)
+        Eggz++
+        timer("NextEgg",10)
+    }else{
+        CanHunt=1
+        print("Finished Editing: "+ Eggz + " eggs around the map.")
+    }
+}
+if(CanHunt){
+    if(useEntClk():inUse()){
+        runOnUse(0,useEntClk())
+        local Eg=useEntClk()
+        local P=useEntClk():inUseBy()
+        Eggz--
+        useEntClk():propBreak()
+        local Index=P:name()+"("+P:steamID()+")"
+        GT[Index,number]=GT[Index,number]+1
+        moneyGive(P,Money)
+        print(Eggz+" Eggs Remaining. "+P:name())
+    }
+}
+if(!(Eggz>0)){
+    printTable(GT:toTable())
+}

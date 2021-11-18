@@ -1,0 +1,45 @@
+@name Pies TTS
+@inputs AntiBoom:entity
+@persist RunCount [AntiBoom,G]:entity
+if(first()){
+    #noDuplications()
+    if(->AntiBoom){
+        if(AntiBoom:isValid()){
+            timer("Find",2000)
+        }
+    }
+}
+
+if(->AntiBoom && ~AntiBoom){
+    AntiBoom:noDraw(1)
+    AntiBoom:setPos(entity():pos()-vec(0,0,500))
+    AntiBoom:setAng(ang())
+    timer("Find",2000)
+}
+
+if(clk("Find")){
+    RunCount++
+    findIncludeClass("m9k_thrown_m61")
+    findInSphere(entity():pos(),1000)
+    E=findClosest(entity():pos())
+    if(E:isValid()){
+        G=E
+        timer("Stop",10)
+    }else{
+        if(RunCount<=10){
+            timer("Find",500)
+        }else{
+            reset()
+        }
+    }
+}
+
+if(clk("Stop")){
+    if(AntiBoom:isValid() && G:isValid()){
+        AntiBoom:setPos(G:pos())
+        timer("Stop",10)
+    }else{
+        AntiBoom:setPos(entity():pos()-vec(0,0,500))
+        timer("Find",500)
+    }
+}

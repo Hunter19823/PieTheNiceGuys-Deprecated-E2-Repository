@@ -1,0 +1,30 @@
+@persist Array:array Time Table:table
+if(first()){
+    Time=10
+    Table=table()
+    timer("Reset",10)
+    timer("GetNextArrayObject",100)
+}
+if(clk("Reset")){
+    Array=players()
+}
+if(clk("GetNextArrayObject")){
+    if(Array:count()>0){
+        Object=Array:popEntity()
+        Object["Kills",number]=Object:frags()
+        timer("GetNextArrayObject",Time)
+    }else{
+        timer("Reset",1)
+        timer("NextThingToDoAfterLooping",1000)
+    }
+}
+if(clk("NextThingToDoAfterLooping")){
+    if(Array:count()>0){
+        Object=Array:popEntity()
+        Table[Object:steamID(),number]=Object["Kills",number]
+        timer("NextThingToDoAfterLooping",Time)
+    }else{
+        print("Finished")
+        printTable(Table)
+    }
+}

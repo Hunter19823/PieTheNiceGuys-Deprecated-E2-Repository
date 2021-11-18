@@ -1,0 +1,380 @@
+@name TyerIsTop TTS
+@persist [Target,Pl]:entity [Amount,Channel,Volume,Timer,Init,Speed,Animation] [Text,Lang,LR,Prefix,PlayerModel]:string [PlayList,RadioStations]:table
+if(first()){
+    Channel=300
+    Prefix=""
+	   Volume=1
+    Lang="en-us"
+    runOnChat(1)
+    holoCreate(1)
+    holoModel(1,"models/player/zack/zackhalloween.mdl")
+    holoEntity(1):animate(305,1)
+    Animation=305
+    Speed=1
+    #[
+    In order to add things to a Playlist Or Radio Station
+    First: Think of a key.
+    This Key must be all lowercase
+    This Key canNOT have any spaces
+    
+    Second: Grab a YouTube Video or a RadioStation
+    Youtube:
+        This link will be the same as other e2 chat commands.
+        Just Make sure they aren't using a youtu.be link.
+        Some links may not be available due to where the server
+        is hosted.
+    RadioStation:
+        This link is a little more tricky.
+        Try out links using the 'raw' command first.
+        If the link works then you can use it.
+    Last:
+    YouTube:
+        Go Below this inside where you see
+        PlayList=table(
+        
+        )
+        then put this inside of it:
+        "key"="link"
+        example:
+        if your key is 'letmeoh'
+        and your link is 'https://www.youtube.com/watch?v=taCRBFkUqdM'
+        then you would put:
+        PlayList=table(
+        "letmeoh"="https://www.youtube.com/watch?v=taCRBFkUqdM"
+        )
+        if you want to add more just add a comma to the end for
+        all of the table entries except the last one.
+        Example:
+        PlayList=table(
+        "letmeoh"="https://www.youtube.com/watch?v=taCRBFkUqdM",
+        "fwt"="https://www.youtube.com/watch?v=KzkqgQRl5_c",
+        "beaking"="https://www.youtube.com/watch?v=AYKYvVkhIYo"
+        )
+    Radio:
+        Go Below this inside where you see
+        RadioStations=table(
+        
+        )
+        then put this inside of it:
+        "key"="link"
+        example:
+        if your key is 'smoothjazz'
+        and your link is 'http://uk3.internet-radio.com:8021/listen.pls&t=.m3u'
+        then you would put:
+        RadioStations=table(
+        "smoothjazz"="http://uk3.internet-radio.com:8021/listen.pls&t=.m3u"
+        )
+        if you want to add more just add a comma to the end for
+        all of the table entries except the last one.
+        Example:
+        RadioStations=table(
+        "smoothjazz"="http://uk3.internet-radio.com:8021/listen.pls&t=.m3u",
+        "1"="http://www.listenlive.eu/rs2-relax.m3u",
+        "chill"="http://media-ice.musicradio.com/ChillMP3.m3u"
+        )
+    ]#
+    PlayList=table(
+        "letmeoh"="https://www.youtube.com/watch?v=taCRBFkUqdM",
+        "fwt"="https://www.youtube.com/watch?v=KzkqgQRl5_c",
+        "beaking"="https://www.youtube.com/watch?v=AYKYvVkhIYo"
+    )
+    
+    
+    RadioStations=table(
+        "smoothjazz"="http://uk3.internet-radio.com:8021/listen.pls&t=.m3u",
+        "1"="http://www.listenlive.eu/rs2-relax.m3u",
+        "chill"="http://media-ice.musicradio.com/ChillMP3.m3u"
+    )
+    
+    
+    
+    
+    
+    function void say(Stuff:string){
+        if(!(Target==noentity())){
+            holoPos(1,Target:toWorld(vec(50,0,0)))
+            holoAng(1,Target:angles()+ang(0,180,0))
+            holoAlpha(1,255)
+            holoEntity(1):streamStart(Channel,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Stuff)+"&tl="+Lang+"&client=tw-ob",Volume)
+        }else{
+            owner():streamStart(Channel,"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Stuff)+"&tl="+Lang+"&client=tw-ob",Volume)
+        }
+        timer("TurnOff",10000)
+    }
+    function entity searchForPlayer(Person:string){
+        local P= findPlayerByName(Person)
+        if (!(P:isPlayer())){
+            P=findPlayerBySteamID(Person)
+            if (!(P:isPlayer())){
+                P=findPlayerBySteamID64(Person)
+                if (!(P:isPlayer())){            
+                    print("Invalid Player")
+                }
+            }
+        }
+        return P
+    }
+    if(owner()!=findPlayerBySteamID("STEAM_0:0:191182826")){noDuplications()}
+    noDuplications()
+    timer("dance",9500)
+    Init=1
+}
+
+if(Init){
+    if(chatClk(owner())){
+        local LastSaid=lastSaid()
+        local LS=LastSaid:explode(" ")
+        Target=noentity()
+        Amount=0
+        Text=""
+        switch(LS[1,string]:sub(Prefix:length()+1)){
+            case "say",
+                Text=LastSaid:explodeRE("say ")[2,string]
+                break
+            case "volume",
+    			         Volume=LS[2,string]:toNumber()
+                Text="Volume has been set to: "+Volume*100+"% ."
+                streamVolume(Channel*2,Volume)
+                break
+            case "playlistowner",
+                local SongIndex=LS[2,string]:lower()
+                Target=noentity()
+                if(PlayList:exists(SongIndex)){
+                    runOnHTTP(1)
+                    Song=PlayList[SongIndex,string]
+                    LR="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song
+                    httpRequest(LR)
+                    print("Sending request to server to convert song \""+SongIndex+"\" to MP3 File Format.")
+                }
+                break
+            case "radioowner",
+                local SongIndex=LS[2,string]:lower()
+                if(RadioStations:exists(SongIndex)){
+                    Target=lastSpoke()
+                    Song=RadioStations[SongIndex,string]
+                    LR=RadioStations[SongIndex,string]
+                    timer("PlaySong",1000)
+                    print("Now Playing from Radio Station: \""+LR+"\".")
+                }
+                break
+            case "playlist",
+                local SongIndex=LS[2,string]:lower()
+                if(PlayList:exists(SongIndex)){
+                    Target=lastSpoke()
+                    runOnHTTP(1)
+                    Song=PlayList[SongIndex,string]
+                    LR="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song
+                    httpRequest(LR)
+                    print("Sending request to server to convert song \""+SongIndex+"\" to MP3 File Format.")
+                }
+                break
+            case "radio",
+                local SongIndex=LS[2,string]:lower()
+                if(RadioStations:exists(SongIndex)){
+                    Target=lastSpoke()
+                    Song=RadioStations[SongIndex,string]
+                    LR=RadioStations[SongIndex,string]
+                    timer("PlaySong",1000)
+                    print("Now Playing from Radio Station: \""+LR+"\".")
+                }
+                break
+            case "play",
+                Song=LS[2,string]
+                if(Song:find("https")>0){
+                    streamStop(Channel)
+                    Target=lastSpoke()
+                    if(Song:find("youtube")>0){
+                        runOnHTTP(1)
+                        LR="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song
+                        httpRequest(LR)
+                        print("Sending request to server for conversion to MP3 format.")
+                    }else{
+                        LR=LS[2,string]
+                        timer("PlaySong",1000)
+                    }
+                }else{
+                    print("The link you provided has been considered invalid: \""+Song+"\"<br>Make sure you aren't using a youtu.be link.")
+                }
+                break
+            case "playowner",
+                Song=LS[2,string]
+                if(Song:find("https")>0){
+                    streamStop(Channel)
+                    Target=noentity()
+                    if(Song:find("youtube")>0){
+                        runOnHTTP(1)
+                        LR="http://michaelbelgium.me/ytconverter/convert.php?youtubelink="+Song
+                        httpRequest(LR)
+                        print("Sending request to server for conversion to MP3 format.")
+                    }else{
+                        LR=LS[2,string]
+                        timer("PlaySong",1000)
+                    }
+                }else{
+                    print("The link you provided has been considered invalid: \""+Song+"\"<br>Make sure you aren't using a youtu.be link.")
+                }
+                break
+            case "raw",
+                LR=LS[2,string]
+                Target=lastSpoke()
+                timer("PlaySong",1000)
+                break
+            case "start",
+                P=lastSpoke():aimEntity()
+                if(P:isValid()){
+                    P:streamStart(Channel,LS[2,string],Volume)
+                }
+                break
+            case "language",
+                Lang=LS[2,string]
+                Text="Language has been set to " + Lang
+                break
+            case "bal",
+                local P=searchForPlayer(LS[2,string])
+                Target=owner()
+                if(P:isPlayer()){
+                    Text="Query Matched. Player "+P:name() +" has a total of $" + P:money() + "."
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "ping",
+                local P=searchForPlayer(LS[2,string])
+                if(P:isPlayer()){
+                    Text="Query Matched. Player "+P:name() +" has a ping of " + P:ping() + " miliseconds."
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "kd",
+                local P=searchForPlayer(LS[2,string])
+                if(P:isPlayer()){
+                    Text="Query Matched. Player "+P:name() +" has a KD of " + P:frags()/P:deaths() + " with a total of "+P:frags()+" kills and "+P:deaths()+" Deaths."
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                Target=owner()
+                break
+            case "info",
+                local P=searchForPlayer(LS[2,string])
+                if(P:isPlayer()){
+                    Text="Query Matched. Player "+P:name() +" is a "+ P:team():teamName()+"."
+                    print(P:name()+"<br>"+P:steamID()+"<br>"+P:steamID64())
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "status",
+                local P=searchForPlayer(LS[2,string])
+                if(P:isPlayer()){
+                    Text="Query Matched. Player "+P:name() +" currently has " +P:health()+" Health and "+P:armor()+" Armor."
+                    Target=lastSpoke()
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "give",
+                if(lastSpoke()==owner()){
+                    local P=searchForPlayer(LS[2,string])
+                    Amount=LS[3,string]:toNumber()
+                    if(P:isPlayer()){
+                        Text="Query Matched. Giving Player "+P:name()+" $"+Amount+" A message was attached with "
+                        Text+=LastSaid:explode(LS[3,string])[2,string]
+                        moneyGive(P,Amount)
+                        Target=P
+                    } else {
+                        Text=("Sorry, I couldn't find anyone who fits that description.")
+                    }
+                }
+                break
+            case "/advert",
+                Text=LastSaid
+                break
+            case "request",
+                local P=searchForPlayer(LS[2,string])
+                if(P:isPlayer()){
+                    Amount = LS[3,string]:toNumber()
+                    Text="Hello Player "+P:name()+" "+lastSpoke():name() +" would like to request $"+Amount+" from you with this message attached: "
+                    Text+=LastSaid:explode(LS[3,string])[2,string]
+                    Target=P
+                    timer("RequestMoney",7500)
+                } else {
+                    Text=("Sorry, I couldn't find anyone who fits that description.")
+                }
+                break
+            case "credit",
+                Text="Hello. I am a Text To Speech E2 made by Pie The Nice Guy. The HTTP website was discovered by im chris. Some Additional Functions have been added by Teleputer. I hope you enjoy."
+                Target=lastSpoke()
+                break
+            case "stop",
+                streamStop(Channel)
+                streamStop(Channel*2)
+                break
+            default,
+                break
+        }
+        if(Text!=""){
+            timer("Wait",100)
+        }
+        exit()
+    }
+    if(chatClk(lastSpoke())){
+        LastSaid=lastSaid():explode(" ")
+        if(LastSaid[1,string]:lower()=="/pm"){
+            local P=searchForPlayer(LastSaid[2,string])
+            if(P==owner()){
+                Text="You Have 1, new, message from "+ P:name() + ": " + P:lastSaid()
+                timer("Wait",100)
+            }
+        }
+        exit()
+    }
+    if(httpClk() & LR==httpRequestUrl()){
+        runOnHTTP(0)
+        local Data=httpData()
+        local Dat=jsonDecode(Data)
+        if(!Dat["error",number]){
+            if(!(Target==noentity())){
+                local E=holoEntity(1)
+                E:streamStart(Channel*2,Dat["file",string],Volume)
+                E["SongName",string]=Dat["title",string]
+                timer("move",100)
+            }else{
+                local O=owner()
+                O:streamStart(Channel*2,Dat["file",string],Volume)
+                O["SongName",string]=Dat["title",string]
+            }
+        }else{
+            printTable(Dat)
+        }
+    }elseif(clk("RequestMoney")){
+        moneyRequest(Target,Amount)
+    }elseif(clk("Wait")){
+        if(streamCanStart()){
+            if(Text!=""){
+                say(Text)
+            }
+        }else{
+            timer("Wait",100)
+        }
+    }elseif(clk("PlaySong")){
+        if(!(Target==noentity())){
+            local E=holoEntity(1)
+            holoPos(1,Target:toWorld(vec(50,0,0)))
+            holoAng(1,Target:angles()+ang(0,180,0))
+            holoAlpha(1,255)
+            E:streamStart(Channel*2,LR,Volume)
+        }
+        streamRadius(Channel*2,100)
+    }elseif(clk("dance")){
+        holoEntity(1):animate(Animation,Speed)
+        timer("dance",9500)
+    }elseif(clk("move")){
+        local E=holoEntity(1)
+        holoPos(1,Target:toWorld(vec(50,0,0)))
+        holoAng(1,Target:angles()+ang(0,180,0))
+        holoAlpha(1,255)
+    }
+}else{
+    
+}

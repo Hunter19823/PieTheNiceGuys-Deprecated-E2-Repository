@@ -1,0 +1,13 @@
+@name Attempt at BHOP E2
+@persist I
+if(first()){
+    runOnTick(1)
+}
+if(tickClk()){
+    I=!I
+    if(I){
+        concmd("-jump")
+    }else{
+        concmd("+jump")
+    }
+}

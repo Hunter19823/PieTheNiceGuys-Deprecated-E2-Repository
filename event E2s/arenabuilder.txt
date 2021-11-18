@@ -1,0 +1,83 @@
+@name Arena Builder v1
+@persist [Model]:string [Max,Min,OffSet]:vector [Size,I,PropsNeeded,Delay,Levels,RenderMode]
+if(first()){
+    RenderMode=9
+    Size=2000
+    holoCreate(999,entity():pos(),vec(0),entity():angles(),vec(255),"models/hunter/tubes/tube4x4x4.mdl")
+    holoScaleUnits(999,vec(1000*2,1000*2,1))
+    Delay=500
+    Levels=1
+    Model="models/hunter/blocks/cube8x8x1.mdl"
+    P=propSpawn(Model,entity():pos(),ang(),0)
+    Max=P:aabbMax()
+    Min=P:aabbMin()
+    P:propDelete()
+    PropsNeeded=ceil(Size/(Max:x()*1))
+    Size=PropsNeeded*Max:x()
+    print("Props Needed: "+PropsNeeded*4*Levels)
+    local E=entity()
+    E["TopLeft",entity]=holoCreate(998,entity():toWorld(vec(Size,Size,Levels*Max:x()*2)))
+    E["BottomRight",entity]=holoCreate(997,entity():toWorld(-1*vec(Size,Size,0)))
+    E["IsGuine",number]=1
+    E["Radius",number]=Size
+    timer("Layer",Delay)
+}
+if(clk("NextWallX")){
+    if(I<PropsNeeded){
+        P=propSpawn(Model,entity():toWorld(vec((PropsNeeded/2-I)*Max:x()*2-Max:x(),Size,0)+OffSet),entity():toWorld(ang(90,90,0)),1)
+        P:parentTo(entity())
+        P:setKeyValue("rendermode",RenderMode)
+        I++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWallY",Delay)
+    }
+}
+if(clk("NextWallY")){
+    if(I<PropsNeeded){
+        P=propSpawn(Model,entity():toWorld(vec(Size,(PropsNeeded/2-I)*Max:x()*2-Max:x(),0)+OffSet),entity():toWorld(ang(90,0,0)),1)
+        P:parentTo(entity())
+        P:setKeyValue("rendermode",RenderMode)
+        I++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWall-X",Delay)
+    }
+}
+if(clk("NextWall-X")){
+    if(I<PropsNeeded){
+        P=propSpawn(Model,entity():toWorld(-1*vec((PropsNeeded/2-I)*Max:x()*2-Max:x(),Size,0)+OffSet),entity():toWorld(ang(90,-90,0)),1)
+        P:parentTo(entity())
+        P:setKeyValue("rendermode",RenderMode)
+        I++
+        timer(clkName(),Delay)
+    }else{
+        I=0
+        timer("NextWall-Y",Delay)
+    }
+}
+if(clk("NextWall-Y")){
+    if(I<PropsNeeded){
+        P=propSpawn(Model,entity():toWorld(-1*vec(Size,(PropsNeeded/2-I)*Max:x()*2-Max:x(),0)+OffSet),entity():toWorld(ang(90,0+180,0)),1)
+        P:parentTo(entity())
+        P:setKeyValue("rendermode",RenderMode)
+        I++
+        timer(clkName(),Delay)
+    }else{
+        timer("Layer",Delay)
+    }
+}
+if(clk("Layer")){
+    if(Levels>=1){
+        print("Finished Layer: "+Levels)
+        Levels--
+        OffSet=vec(0,0,Max:x()*Levels*2+Max:x())
+        I=0
+        timer("NextWallX",Delay)
+    }else{
+        
+        print("Arena Finished")
+    }
+}

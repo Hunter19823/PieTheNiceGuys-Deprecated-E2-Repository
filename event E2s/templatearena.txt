@@ -1,0 +1,94 @@
+@name ArenaDupe
+@persist [Platform]:entity [Diff,Building]
+@model models/props_docks/channelmarker_gib01.mdl
+if(first() #[&& owner():isAdmin()]#){
+    Diff=20
+    Platform=holoCreate(1,entity():pos()-entity():height()/2,vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(2,Platform:pos()+vec(0,1518,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(3,Platform:pos()-vec(0,1518,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(4,Platform:pos()+vec(1138,1518,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(5,Platform:pos()-vec(1138,1518,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(6,Platform:pos()+vec(-1138,1518,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(7,Platform:pos()-vec(-1138,1518,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(8,Platform:pos()+vec(1138,0,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    holoCreate(9,Platform:pos()-vec(1138,0,0),vec(1),ang(),vec(255),"models/hunter/plates/plate24x32.mdl")
+    timer("MoreHolos",1000)
+    timer("Wall1",1000)
+    Building=1
+}
+if(Building){
+    if(clk("MoreHolos")){
+        local E=entity()
+        E["TopLeft",entity]=holoCreate(10,Platform:pos()+vec(576*3,768*3,500),vec(1),ang())
+        E["BottomRight",entity]=holoCreate(11,Platform:pos()-vec(576*3,768*3,1),vec(1),ang())
+        E["IsGuine",number]=1
+    }
+    if(clk("Wall1")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()+vec(576*3-Diff,0,570),ang(90,90,90),1):parentTo(Platform)
+        timer("Wall2",1000)
+    }
+    if(clk("Wall2")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()-vec(576*3-Diff,0,-570),ang(90,90,90),1):parentTo(Platform)
+        timer("Wall3",1000)
+    }
+    if(clk("Wall3")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()+vec(0,768*3-Diff*2,570),ang(90,0,90),1):parentTo(Platform)
+        timer("Wall4",1000)
+    }
+    if(clk("Wall4")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()-vec(0,768*3-Diff*2,-570),ang(90,0,90),1):parentTo(Platform)
+        timer("Wall5",1000)
+    }
+    if(clk("Wall5")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()+vec(576*3-Diff,768*2-Diff*2,570),ang(90,90,90),1):parentTo(Platform) 
+        timer("Wall6",1000)
+    }
+    if(clk("Wall6")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()-vec(576*3-Diff,768*2-Diff*2,-570),ang(90,90,90),1):parentTo(Platform)
+        timer("Wall7",1000)
+    }
+    if(clk("Wall7")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()+vec(576*2,768*3-Diff*2,570),ang(90,0,90),1):parentTo(Platform)
+        timer("Wall8",1000)
+    }
+    if(clk("Wall8")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()-vec(576*2,768*3-Diff*2,-570),ang(90,0,90),1):parentTo(Platform)
+        timer("Wall9",1000)
+    }
+    if(clk("Wall9")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()+vec(576*3-Diff,-768*2+Diff*2,570),ang(90,90,90),1):parentTo(Platform)
+        timer("Wall10",1000)
+    }
+    if(clk("Wall10")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()-vec(576*3-Diff,-768*2+Diff*2,-570),ang(90,90,90),1):parentTo(Platform)
+        timer("Wall11",1000)
+    }
+    if(clk("Wall11")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()+vec(-576*2,768*3-Diff*2,570),ang(90,0,90),1):parentTo(Platform)
+        timer("Wall12",1000)
+    }
+    if(clk("Wall12")){
+        propSpawn("models/hunter/plates/plate24x32.mdl",Platform:pos()-vec(-576*2,768*3-Diff*2,-570),ang(90,0,90),1):parentTo(Platform)
+        timer("Wall13",0)
+    }
+    if(clk("Wall13")){
+        holoParent(1,entity())
+        holoParent(2,Platform)
+        holoParent(3,Platform)
+        holoParent(4,Platform)
+        holoParent(5,Platform)
+        timer("Wall14",0)
+    }
+    if(clk("Wall14")){
+        holoParent(6,Platform)
+        holoParent(7,Platform)
+        holoParent(8,Platform)
+        holoParent(9,Platform)
+        holoParent(10,Platform)
+        holoParent(11,Platform)
+        timer("Wall15",0)
+        Building=0
+    }
+}else{
+    print("Arena Ready")
+}

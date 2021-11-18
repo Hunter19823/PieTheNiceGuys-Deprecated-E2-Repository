@@ -1,0 +1,241 @@
+@name Donation Leaderboard
+@persist [DonationTable]:gtable [Prefix,DonationPhrase]:string [P1,P2,P3,P4]:entity [LastUsed,Volume]
+if(first()){
+    DonationTable=gTable(owner():steamID()+"'s Donation Board",1)
+    DonationPhrase="donate"
+    Volume=0.5
+    Prefix=""
+    runOnChat(1)
+    streamDisable3D(1)
+    timer("UpdateLeaderboard",1000)
+}
+if(chatClk()){
+    LS=lastSaid():explode(" ")
+    switch(LS[1,string]:lower()){
+        case Prefix+DonationPhrase,
+            moneyRequest(lastSpoke(),LS[2,string]:toNumber(),"Would you like to donate $"+LS[2,string]:toNumber()+" to '"+owner():name()+"'?")
+            break
+        case "check",
+            timer("UpdateLeaderboard",100)
+            break
+    }
+}
+if(moneyClk()){
+    Player=moneyClkPlayer()
+    PlayerIndex=Player:steamID()
+    if(!DonationTable:toTable():exists(PlayerIndex)){
+        DonationTable[PlayerIndex,number]=moneyClkAmount()
+    }else{
+        DonationTable[PlayerIndex,number]=DonationTable[PlayerIndex,number]+moneyClkAmount()
+    }
+    CurrentTotal=DonationTable[PlayerIndex,number]
+    switch(PlayerIndex){
+        case DonationTable["FifthPlace",string],
+            if(CurrentTotal>=DonationTable[DonationTable["FourthPlace",string],number]){
+                DonationTable["FifthPlace",string]=DonationTable["FourthPlace",string]
+                DonationTable["FourthPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["ThirdPlace",string],number]){
+                DonationTable["FourthPlace",string]=DonationTable["ThirdPlace",string]
+                DonationTable["ThirdPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["SecondPlace",string],number]){
+                DonationTable["ThirdPlace",string]=DonationTable["SecondPlace",string]
+                DonationTable["SecondPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["FirstPlace",string],number]){
+                DonationTable["SecondPlace",string]=DonationTable["FirstPlace",string]
+                DonationTable["FirstPlace",string]=PlayerIndex
+            }
+            break
+        case DonationTable["FourthPlace",string],
+            if(CurrentTotal>=DonationTable[DonationTable["ThirdPlace",string],number]){
+                DonationTable["FourthPlace",string]=DonationTable["ThirdPlace",string]
+                DonationTable["ThirdPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["SecondPlace",string],number]){
+                DonationTable["ThirdPlace",string]=DonationTable["SecondPlace",string]
+                DonationTable["SecondPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["FirstPlace",string],number]){
+                DonationTable["SecondPlace",string]=DonationTable["FirstPlace",string]
+                DonationTable["FirstPlace",string]=PlayerIndex
+            }
+            break
+        case DonationTable["ThirdPlace",string],
+            if(CurrentTotal>=DonationTable[DonationTable["SecondPlace",string],number]){
+                DonationTable["ThirdPlace",string]=DonationTable["SecondPlace",string]
+                DonationTable["SecondPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["FirstPlace",string],number]){
+                DonationTable["SecondPlace",string]=DonationTable["FirstPlace",string]
+                DonationTable["FirstPlace",string]=PlayerIndex
+            }
+            break
+        case DonationTable["SecondPlace",string],
+            if(CurrentTotal>=DonationTable[DonationTable["FirstPlace",string],number]){
+                DonationTable["SecondPlace",string]=DonationTable["FirstPlace",string]
+                DonationTable["FirstPlace",string]=PlayerIndex
+            }
+            break
+        case DonationTable["FirstPlace",string],
+            
+            break
+        default,
+            if(CurrentTotal>=DonationTable[DonationTable["FifthPlace",string],number]){
+                DonationTable["FifthPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["FourthPlace",string],number]){
+                DonationTable["FifthPlace",string]=DonationTable["FourthPlace",string]
+                DonationTable["FourthPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["ThirdPlace",string],number]){
+                DonationTable["FourthPlace",string]=DonationTable["ThirdPlace",string]
+                DonationTable["ThirdPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["SecondPlace",string],number]){
+                DonationTable["ThirdPlace",string]=DonationTable["SecondPlace",string]
+                DonationTable["SecondPlace",string]=PlayerIndex
+            }
+            if(CurrentTotal>=DonationTable[DonationTable["FirstPlace",string],number]){
+                DonationTable["SecondPlace",string]=DonationTable["FirstPlace",string]
+                DonationTable["FirstPlace",string]=PlayerIndex
+            }
+            break
+    }
+    timer("UpdateLeaderboard",1000)
+}
+if(clk("UpdateLeaderboard")){
+    Donators=""
+    if(DonationTable[DonationTable["FirstPlace",string],number]){
+        Player=findPlayerBySteamID(DonationTable["FirstPlace",string])
+        if(Player:isPlayer()){
+            Donators+="In 1st place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+            holoCreate(1,P4:toWorld(vec(0,0,P4:height()/2)),vec(1),ang(),vec(255),Player:model()):animate(3)
+            holoParent(1,P4)
+        }
+    }
+    if(DonationTable[DonationTable["SecondPlace",string],number]){
+        Player=findPlayerBySteamID(DonationTable["SecondPlace",string])
+        if(Player:isPlayer()){
+            Donators+="In 2nd place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+            holoCreate(2,P3:toWorld(vec(0,0,P3:height()/2)),vec(0.75),ang(),vec(255),Player:model()):animate(3)
+            holoParent(2,P3)
+        }
+    }
+    if(DonationTable[DonationTable["ThirdPlace",string],number]){
+        Player=findPlayerBySteamID(DonationTable["ThirdPlace",string])
+        if(Player:isPlayer()){
+            Donators+="In 3rd place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+            holoCreate(3,P2:toWorld(vec(0,0,P2:height()/2)),vec(0.5),ang(),vec(255),Player:model()):animate(3)
+            holoParent(3,P2)
+        }
+    }
+    if(DonationTable[DonationTable["FourthPlace",string],number]){
+        Player=findPlayerBySteamID(DonationTable["FourthPlace",string])
+        if(Player:isPlayer()){
+            Donators+="In 4th place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+            holoCreate(4,P1:toWorld(vec(0,0,P1:height()/2)),vec(0.25),ang(),vec(255),Player:model()):animate(3)
+            holoParent(4,P1)
+        }
+    }
+    if(DonationTable[DonationTable["FifthPlace",string],number]){
+        Player=findPlayerBySteamID(DonationTable["FifthPlace",string])
+        Player
+        if(Player:isPlayer()){
+            Donators+="In 5th place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+        }
+    }
+    
+    if(curtime()-LastUsed>60){
+        LastUsed=curtime()
+        Donators+="All donations are appreciated."
+        Lang="en-na"
+        P1:streamStart(random(99),"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Donators)+"&tl="+Lang+"&client=tw-ob",Volume)
+    }
+}
+if(first()){
+    
+    P1=propSpawn("models/hunter/blocks/cube025x025x025.mdl",ang(),1)
+    P1:setPos(entity():toWorld(vec(0,40,P1:height()/2)))
+    P1["Value",string]="FourthPlace"
+    P1:setMaterial("models/props_combine/tpballglow")
+    runOnUse(1,P1)
+    
+    P2=propSpawn("models/hunter/blocks/cube05x05x05.mdl",ang(),1)
+    P2:setPos(entity():toWorld(vec(0,22,P2:height()/2)))
+    P2["Value",string]="ThirdPlace"
+    P2:setMaterial("effects/bluelaser1")
+    runOnUse(1,P2)
+    
+    P3=propSpawn("models/hunter/blocks/cube075x075x075.mdl",ang(),1)
+    P3:setPos(entity():toWorld(vec(0,-8,P3:height()/2)))
+    P3["Value",string]="SecondPlace"
+    P3:setMaterial("effects/flicker_256")
+    runOnUse(1,P3)
+    
+    P4=propSpawn("models/hunter/blocks/cube1x1x1.mdl",ang(),1)
+    P4:setPos(entity():toWorld(vec(0,-50,P4:height()/2)))
+    P4["Value",string]="FirstPlace"
+    P4:setMaterial("models/effects/portalrift_sheet")
+    runOnUse(1,P4)
+    
+    timer("Parent",1000)
+}
+if(clk("Parent")){
+    P3:parentTo(P4)
+    P2:parentTo(P4)
+    P1:parentTo(P4)
+    entity():parentTo(P4)
+}
+if(useEntClk():inUse()){
+    if(curtime()-LastUsed>20){
+        LastUsed=curtime()
+        if(streamCanStart()){
+            Prop=useEntClk()
+            Donators=""
+            if(DonationTable[DonationTable["FirstPlace",string],number]){
+                Player=findPlayerBySteamID(DonationTable["FirstPlace",string])
+                if(Player:isPlayer()){
+                    Donators+="In 1st place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+                    #holoCreate(1,P4:toWorld(vec(0,0,P4:height()/2)),vec(1),ang(),vec(255),Player:model()):animate(3)
+                    #holoParent(1,P4)
+                }
+            }
+            if(DonationTable[DonationTable["SecondPlace",string],number]){
+                Player=findPlayerBySteamID(DonationTable["SecondPlace",string])
+                if(Player:isPlayer()){
+                    Donators+="In 2nd place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+                    #holoCreate(2,P3:toWorld(vec(0,0,P3:height()/2)),vec(0.75),ang(),vec(255),Player:model()):animate(3)
+                    #holoParent(2,P3)
+                }
+            }
+            if(DonationTable[DonationTable["ThirdPlace",string],number]){
+                Player=findPlayerBySteamID(DonationTable["ThirdPlace",string])
+                if(Player:isPlayer()){
+                    Donators+="In 3rd place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+                    #holoCreate(3,P2:toWorld(vec(0,0,P2:height()/2)),vec(0.5),ang(),vec(255),Player:model()):animate(3)
+                    #holoParent(3,P2)
+                }
+            }
+            if(DonationTable[DonationTable["FourthPlace",string],number]){
+                Player=findPlayerBySteamID(DonationTable["FourthPlace",string])
+                if(Player:isPlayer()){
+                    Donators+="In 4th place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+                    #holoCreate(4,P1:toWorld(vec(0,0,P1:height()/2)),vec(0.25),ang(),vec(255),Player:model()):animate(3)
+                    #holoParent(4,P1)
+                }
+            }
+            if(DonationTable[DonationTable["FifthPlace",string],number]){
+                Player=findPlayerBySteamID(DonationTable["FifthPlace",string])
+                Player
+                if(Player:isPlayer()){
+                    Donators+="In 5th place "+Player:name()+" with $"+DonationTable[Player:steamID(),number]+"..."
+                }
+            }
+            print(Donators)
+            Lang="en-na"
+            Prop:streamStart(random(99),"http://translate.google.com/translate_tts?ie=utf8&q="+httpUrlEncode(Donators)+"&tl="+Lang+"&client=tw-ob",Volume)
+        }
+    }
+}

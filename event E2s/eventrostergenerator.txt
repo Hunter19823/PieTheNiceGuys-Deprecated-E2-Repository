@@ -1,0 +1,108 @@
+@name Create Teams
+@inputs EventArena:entity
+@persist [EC,TR,BL]:entity [Players]:array [Teams,GTable]:gtable [MaxTeams,TeamSize,Stage] [HasAlreadyWhitelist]:string
+if(first()){
+    local R=floor(random(0,999))
+    #local R=338
+    HasAlreadyWhitelist=""+R
+    Teams=gTable("EventTeamTable"+R,1)
+    #Teams:clear()
+    print("key EventTeamTable"+R)
+    O=owner()
+    O[HasAlreadyWhitelist,number]=0
+    MaxTeams=15
+    TeamSize=5
+    Teams["MaxTeams",number]=MaxTeams
+    Teams["TeamSize",number]=TeamSize
+    if(->EventArena){
+        EC=EventArena
+        timer("Corners",1000)
+    }
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            Teams["Center",entity]=EC
+            Teams["Radius",number]=EC["Radius",number]
+            Teams["LeftCorner",vector]=TR:pos()
+            Teams["RightCorner",vector]=BL:pos()
+            print("Boundaries Found")
+            runOnChat(1)
+        }else{
+            print("Failed To Find Boundaries. Make Sure to wire this E2 to the arena center.")
+        }
+    }
+}elseif(->EventArena && ~EventArena){
+    EC=EventArena
+    timer("Corners",1000)
+}elseif(chatClk(lastSpoke())){
+    LastSpoke=lastSpoke()
+    if(LastSpoke!=owner()){
+        P=LastSpoke:pos()
+        T=TR:pos()
+        B=BL:toWorld(vec(0,0,-10))
+        if(inrange(P,B,T) && LastSpoke[HasAlreadyWhitelist,number]==0){
+            LS=lastSaid():explode(" ")
+            TeamNumber=LS[1,string]:toNumber()
+            if(TeamNumber<=MaxTeams && TeamNumber>0){
+                if(Teams[TeamNumber+"HasInit",number]){
+                    if(Teams[TeamNumber,table]["Members",array]:count()<TeamSize){
+                        Teams[TeamNumber,table]["Members",array]:pushEntity(LastSpoke)
+                        LastSpoke[HasAlreadyWhitelist,number]=TeamNumber
+                        moneyGive(LastSpoke,1)
+                        printTable(Teams[TeamNumber,table])
+                    }else{
+                        print("Team "+TeamNumber+" Full")
+                    }
+                }else{
+                    Teams[TeamNumber,table]=table("Members"=array(LastSpoke))
+                    Teams[TeamNumber+"HasInit",number]=1
+                    LastSpoke[HasAlreadyWhitelist,number]=TeamNumber
+                    moneyGive(LastSpoke,1)
+                    printTable(Teams[TeamNumber,table])
+                }
+            }
+        }
+    }else{
+        LS=LastSpoke:lastSaid():explode(" ")
+        if(lastSpoke()==owner()){
+            if(LS[1,string]=="key"){
+                GTable=gTable(LS[2,string],1)
+                print(LS[2,string])
+                printTable(GTable:toTable())
+            }elseif(LS[1,string]=="team"){
+                Tim=LS[2,string]:toNumber()
+                printTable(Teams[Tim,table])
+            }elseif(LS[1,string]=="check"){
+                Person=owner():aimEntity()
+                if(Person[HasAlreadyWhitelist,number]==0){
+                    print(Person:name()+" does not belong to a team.")
+                }else{
+                    print(Person:name()+" already belongs to team #"+Person[HasAlreadyWhitelist,number])
+                }
+            }elseif(LS[1,string]=="force"){
+                Tim=LS[2,string]:toNumber()
+                Person=owner():aimEntity()
+                if(Person[HasAlreadyWhitelist,number]==0){
+                    if(Teams[Tim,table][Tim+"HasInit",number]){
+                        if(Teams[Tim,table]["Members",array]:count()<TeamSize){
+                            Teams[Tim,table]["Members",array]:pushEntity(Person)
+                            Person[HasAlreadyWhitelist,number]=Tim
+                            print(Person:name()+" has been assigned to team #"+Person[HasAlreadyWhitelist,number])
+                        }else{
+                            print("Team #"+Tim+" Full")
+                        }
+                    }else{
+                        Teams[Tim,table]=table("Members"=array(Person))
+                        Teams[Tim+"HasInit",number]=1
+                        Person[HasAlreadyWhitelist,number]=Tim
+                        print(Person:name()+" has created team #"+Person[HasAlreadyWhitelist,number])
+                    }
+                }else{
+                    print(Person:name()+" already belongs to team #"+Person[HasAlreadyWhitelist,number])
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+@persist [Per,Burn]:entity
+if(first()){
+    #owner():setColor(vec4(255,255,255,255))
+    runOnKeys(owner(),1)
+    print(cpuUsage())
+}elseif(keyClkPressed()=="r"& keyClk(keyClk())==1){
+    Thing=owner():aimEntity()
+    if(Thing:isValid()){
+        Thing:extinguish()
+    }
+}elseif(keyClkPressed()=="g"& keyClk(keyClk())==1){
+    Thing=owner():aimEntity()
+    if(Thing:isValid()){
+        Thing:propBreak()
+    }
+}elseif(keyClkPressed()=="o"& keyClk(keyClk())==1){
+    Thing=owner():aimEntity()
+    if(Thing:isValid()&Thing:isPlayer()){
+        moneyGive(Thing,100)
+    }
+}elseif(keyClkPressed()=="k"& keyClk(keyClk())==1){
+    Thing=owner():aimEntity()
+    if(Thing:isValid()){
+        Thing:setColor(vec(1))
+    }
+}elseif(keyClkPressed()=="pad_8"& keyClk(keyClk())==1){
+    Thing=owner():aimEntity()
+    if(Thing:isValid()){
+        owner():setPos(Thing:pos()+vec(0,0,Thing:height()))
+    }
+}
+

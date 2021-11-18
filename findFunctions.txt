@@ -1,0 +1,36 @@
+@name testing Find Functions
+
+if(first()){
+    function void entity:traceShot(Index) {
+        local H=holoCreate(Index)
+        local Target=This:aimPos()
+        local EyePos=This:shootPos()+This:eye()
+        holoModel(Index,"models/hunter/plates/plate8x8.mdl")
+        holoScaleUnits(Index,vec(EyePos:distance(Target),1,1))
+        holoAng(Index,This:eyeAngles())
+        holoDisableShading(Index,1)
+        holoPos(Index,EyePos-((EyePos-Target)/2))
+        holoColor(Index,vec(255,0,0))
+        setName(opcounter():toString())
+    }
+    function void array:tracePlayer(Index){
+        local Player=This[Index,entity]
+        if(Player:isValid()&Player:isPlayer()){
+            Player:traceShot(Index)
+            local Players=players()
+            holoVisible(Index,Players,0)
+            holoVisible(Index,owner(),1)
+        }
+    }
+    timer("find",1000)
+}
+if(clk("find")){
+    findIncludeClass("player")
+    findExcludeEntity(owner())
+    findInBox(entity():pos()-vec(250),entity():pos()+vec(250))
+    findSortByDistance(entity():pos())
+    local Arr=findToArray()
+    Arr:tracePlayer(1)
+    Arr:tracePlayer(2)
+    timer("find",1000)
+}

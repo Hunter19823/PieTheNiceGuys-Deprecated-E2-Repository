@@ -1,0 +1,65 @@
+@name Randomize Weapons
+@persist [EC,TR,BL]:entity [Guns]:array [Size]
+if(first() && owner():isAdmin()){
+    Size=500
+    holoCreate(1)
+    holoScaleUnits(1,-vec(Size*2,Size*2,Size*2))
+    holoParent(1,entity())
+    holoVisible(1,players(),0)
+    holoVisible(1,owner(),1)
+    timer("Search",1000)
+}elseif(clk("Corners")){
+    if(EC!=noentity()){
+        TR=EC["TopLeft",entity]
+        BL=EC["BottomRight",entity]
+        if(TR!=noentity() && BL!=noentity()){
+            print("Boundaries Found")
+            timer("Check",2000)
+        }else{
+            print("Failed To Find Boundaries")
+            reset()
+        }
+        
+    }
+}elseif(clk("Search")){
+    findClearWhiteList()
+    findIncludeClass("gmod_wire_expression2")
+    findByClass("gmod_wire_expression2")
+    local Temp=findClosest(entity():pos())
+    if(!Temp["IsGuine",number]) {
+        findExcludeEntity(Temp)
+        print("Searching")
+        timer("Search",1000)
+    }else{
+        EC=Temp
+        print("E2 has been Paired")
+        timer("Corners",0)
+    }
+}elseif(clk("Check")){
+    findClearWhiteList()
+    findClearBlackList()
+    local TopLeft=holoEntity(1):pos()+vec(Size)
+    local BottomRight=holoEntity(1):pos()-vec(Size)
+    findInBox(BottomRight,TopLeft)
+    Guns=findToArray()
+    if(Guns:count()>0){
+        timer("TeleportGun",0)
+    }else{
+        timer("Check",1000)
+    }
+}elseif(clk("TeleportGun")){
+        if(Guns:count()>0){
+            Gun=Guns:popEntity()
+            if(Gun:isWeapon()){
+                local TRV=TR:pos()
+                local BLV=BL:pos()
+                local RandomX=abs(TRV:x()-BLV:x())
+                local RandomY=abs(TRV:y()-BLV:y())
+                local Z=BLV:z()
+                Gun:setPos(vec(random(10,RandomX),random(10,RandomY),50)+BLV)
+            }
+            timer("TeleportGun",10)
+        }else{
+            timer("Check",1000)
+        }
+}

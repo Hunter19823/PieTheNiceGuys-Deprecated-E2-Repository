@@ -1,0 +1,19 @@
+#@model models/fishy/furniture/piano_seat.mdl
+if(first()){
+    runOnKey(1)
+    runOnDeath(1)
+}
+if(clKeyPress(17)){
+    concmd("say /uniammo")
+}
+if(clKeyPress(18) | (deathClk() & lastDeath()==owner())){
+    spawn()
+}
+if(clKeyPress(38)){
+    entity():setPos(entity():toWorld(vec(10,0,0)))
+}
+if(clKeyPress(37)){
+    entity():setPos(owner():pos())
+}
+
+

@@ -1,0 +1,13 @@
+@inputs Hud:wirelink
+if(first()){
+    entity():createWire(entity():isWeldedTo(),"Hud","wirelink")
+}
+if(->Hud){
+    Color=vec(0,0,255)
+    Position=egpScrSize(owner())/2
+    Hud:egpClear()
+    Hud:egpBox(1,Position+vec2(0,1),vec2(26,2))
+    Hud:egpColor(1,Color)
+    Hud:egpBox(2,Position,vec2(2,26))
+    Hud:egpColor(2,Color)
+}

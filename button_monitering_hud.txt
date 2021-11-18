@@ -1,0 +1,65 @@
+@name Button Monitering HUD
+@persist Find:array [IsFinished,Timer,Trackers,OneTime] [Owner]:entity
+@inputs HUD:wirelink
+if(first()){
+    Owner=owner()
+    IsFinished=1
+    Timer=1000
+    OneTime=0
+    timer("Start",Timer)
+    timer("Clear",Timer)
+}
+if(clk("Clear")){
+    HUD:egpClear()
+    timer("Clear",60000)
+}
+if(clk("Start")){
+    if(->HUD && !OneTime){
+        HUD:egpClear()
+        timer("Update",1000)
+        OneTime=1
+    }else{
+        timer("Start",Timer)
+    }
+}
+if(clk("NewParent")){
+    if(->HUD){
+        if(Find:count()>0){
+            local Ent=Find:popEntity()
+            Owner["IDList",number]=Owner["IDList",number]+1
+            Ent["ID",number]=Owner["IDList",number]
+            local Tracker=Ent["ID",number]*-1
+            local ID=Ent["ID",number]
+            local String=Ent:type()
+            HUD:egpUnParent(Tracker)
+            HUD:egp3DTracker(Tracker,Ent:pos())
+            HUD:egpText(ID,String,vec2(-10,10))
+            HUD:egpPos(Tracker,Ent:pos())
+            HUD:egpSetText(ID,String)
+            HUD:egpSize(ID,10)
+            HUD:egpParent(ID,Tracker)
+            timer("NewParent",Timer)
+            Trackers--
+        }else{
+            IsFinished=1
+            timer("Update",Timer)
+        }
+    }
+}
+
+
+
+if(clk("Update")){
+    if(IsFinished){
+        findExcludeEntity(entity())
+        findByClass("func_button")
+        #findByClass("prop_physics")
+        findSortByDistance(entity():pos())
+        Find=findToArray()
+        Trackers=Find:count()
+        IsFinished=0
+        timer("NewParent",Timer)
+    }else{
+        #timer("Update",Timer*5)
+    }
+}

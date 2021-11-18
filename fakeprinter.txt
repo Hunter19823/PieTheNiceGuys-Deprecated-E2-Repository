@@ -1,0 +1,13 @@
+@name FakePrinter
+@persist P:entity
+if(first()){
+    P=propSpawn("models/freeman/compact_printer.mdl",entity():toWorld(vec(0,0,0)),ang(),1)
+    P:setSkin(1)
+    P:setBodygroup(1,1)
+    P:soundPlay(1,0,"ambient\\levels\\labs\\equipment_printer_loop1.wav")
+    holoCreate(1,P:toWorld(vec(0,-5.5,2.3)),vec(1.55,1.35,1.13),P:angles(),vec(83,200,255))
+    holoDisableShading(1,1)
+    holoParent(1,P)
+    holoMaterial(1,"cs_havana/lightbareon01")
+    entity():parentTo(P)
+}
